@@ -5,6 +5,7 @@ import { ArrowRight, Mail, Phone, MapPin, Clock, Send, CheckCircle, AlertCircle 
 import { RevealSection } from '@/components/reveal-section'
 import { MagneticButton } from '@/components/magnetic-button'
 import { Footer } from '@/components/footer'
+import { sendEmail } from '@/actions/contact'
 
 // Form field types
 type FormData = {
@@ -74,17 +75,23 @@ export default function ContactPage() {
     return Object.keys(newErrors).length === 0
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
+   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    
+
     if (!validateForm()) return
 
     setIsSubmitting(true)
     setSubmitError('')
 
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500))
+      const form = new FormData(e.currentTarget)
+      const res = await sendEmail(form)
+
+      if (res?.error) {
+        setSubmitError(res.error)
+        return
+      }
+
       setIsSubmitted(true)
     } catch {
       setSubmitError('送信に失敗しました。しばらく経ってから再度お試しください。')
