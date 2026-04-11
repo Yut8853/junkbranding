@@ -183,7 +183,7 @@ export default function ContactPage() {
                 <div>
                   <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">お問い合わせ先</h2>
                   <p className="text-sm sm:text-base text-muted-foreground leading-relaxed text-pretty">
-                    フォームまたはお電話にてお気軽にご連絡ください。2営業日以内にご返信いたします。
+                    フォームまたはお電話にてお気軽にご連絡ください。1営業日以内にご返信いたします。
                   </p>
                 </div>
 
