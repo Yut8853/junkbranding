@@ -171,7 +171,7 @@ export function LoadingScreen({ progress }: LoadingScreenProps) {
             className="text-6xl md:text-8xl font-bold tracking-tighter"
             style={{ fontFamily: 'var(--font-syne)' }}
           >
-            {'Junk'.split('').map((char, i) => (
+            {'JunkBranding'.split('').map((char, i) => (
               <span
                 key={i}
                 className="inline-block"
