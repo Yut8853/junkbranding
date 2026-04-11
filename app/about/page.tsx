@@ -248,7 +248,7 @@ export default function AboutPage() {
                   <p className="text-xs sm:text-sm text-primary mb-2">{member.role}</p>
                   <h3 className="text-2xl sm:text-3xl font-bold mb-1">{member.name}</h3>
                   <p className="text-xs sm:text-sm text-muted-foreground mb-3 sm:mb-4">{member.nameEn}</p>
-                  <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
+                  <p className="text-sm sm:text-base text-muted-foreground leading-relaxed whitespace-pre-wrap">
                     {member.description}
                   </p>
                 </div>
