@@ -1,7 +1,7 @@
 'use client'
 
-import { ArrowRight, Phone, Heart, Lightbulb, Users, Clock, CheckCircle } from 'lucide-react'
-import { RevealSection } from '@/components/reveal-section'
+import { ArrowRight, Phone, Heart, Lightbulb, Users, Clock } from 'lucide-react'
+import { TextReveal, SectionReveal, LineReveal } from '@/components/text-reveal'
 import { MagneticButton } from '@/components/magnetic-button'
 import { Footer } from '@/components/footer'
 
@@ -143,17 +143,23 @@ export default function AboutPage() {
       {/* Hero Section */}
       <section className="relative min-h-[70svh] sm:min-h-[80svh] flex items-center justify-center">
         <div className="container mx-auto px-4 sm:px-6 md:px-12 py-24 sm:py-32 text-center">
-          <RevealSection direction="blur" duration={1.5}>
+          <LineReveal delay={0}>
             <p className="text-xs sm:text-sm uppercase tracking-[0.2em] sm:tracking-[0.3em] text-primary mb-4 sm:mb-6">
               About Us
             </p>
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-bold tracking-tight mb-6 sm:mb-8">
-              私たちについて
-            </h1>
+          </LineReveal>
+          <TextReveal
+            text="私たちについて"
+            as="h1"
+            className="text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-bold tracking-tight mb-6 sm:mb-8"
+            delay={0.2}
+            gradient
+          />
+          <LineReveal delay={0.6}>
             <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed text-balance">
               2人だけの小さなスタジオだからこそ、できることがあります。
             </p>
-          </RevealSection>
+          </LineReveal>
         </div>
       </section>
 
@@ -161,26 +167,40 @@ export default function AboutPage() {
       <section className="py-24 sm:py-32 md:py-48 glass-light">
         <div className="container mx-auto px-4 sm:px-6 md:px-12">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-24 items-center">
-            <RevealSection>
-              <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6 sm:mb-8 leading-tight">
-                大手にはできない、
-                <br />
-                丁寧なものづくり
-              </h2>
+            <div>
+              <TextReveal
+                text="大手にはできない、"
+                as="h2"
+                className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-tight"
+                delay={0}
+              />
+              <TextReveal
+                text="丁寧なものづくり"
+                as="h2"
+                className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6 sm:mb-8 leading-tight"
+                delay={0.3}
+                gradient
+              />
               <div className="space-y-5 text-base sm:text-lg text-muted-foreground leading-relaxed">
-                <p className="text-pretty">
-                  JunkBrandingは、茨城・東京・千葉を中心に活動する、2人だけのブランディング&Web制作スタジオです。
-                </p>
-                <p className="text-pretty">
-                  大きな組織では難しい「一人ひとりと向き合う」ことを大切に、クライアントと同じ目線で、一緒に考え、一緒に創ります。
-                </p>
-                <p className="text-pretty">
-                  「ちょっとした相談」から「本格的なリブランディング」まで、まずはお気軽にお声がけください。
-                </p>
+                <SectionReveal delay={0.6}>
+                  <p className="text-pretty">
+                    JunkBrandingは、茨城・東京・千葉を中心に活動する、2人だけのブランディング&Web制作スタジオです。
+                  </p>
+                </SectionReveal>
+                <SectionReveal delay={0.7}>
+                  <p className="text-pretty">
+                    大きな組織では難しい「一人ひとりと向き合う」ことを大切に、クライアントと同じ目線で、一緒に考え、一緒に創ります。
+                  </p>
+                </SectionReveal>
+                <SectionReveal delay={0.8}>
+                  <p className="text-pretty">
+                    「ちょっとした相談」から「本格的なリブランディング」まで、まずはお気軽にお声がけください。
+                  </p>
+                </SectionReveal>
               </div>
-            </RevealSection>
+            </div>
 
-            <RevealSection delay={0.2}>
+            <SectionReveal delay={0.4}>
               <div className="relative aspect-square rounded-2xl overflow-hidden bg-card border border-border">
                 <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-accent/10" />
                 <div className="absolute inset-0 flex items-center justify-center">
@@ -190,7 +210,7 @@ export default function AboutPage() {
                   </div>
                 </div>
               </div>
-            </RevealSection>
+            </SectionReveal>
           </div>
         </div>
       </section>
@@ -198,18 +218,24 @@ export default function AboutPage() {
       {/* Team Section */}
       <section className="py-24 sm:py-32 md:py-48 glass-card">
         <div className="container mx-auto px-4 sm:px-6 md:px-12">
-          <RevealSection className="text-center mb-16 sm:mb-20 md:mb-32">
-            <p className="text-xs sm:text-sm uppercase tracking-[0.2em] sm:tracking-[0.3em] text-primary mb-4 sm:mb-6">
-              Team
-            </p>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
-              チームメンバー
-            </h2>
-          </RevealSection>
+          <div className="text-center mb-16 sm:mb-20 md:mb-32">
+            <LineReveal delay={0}>
+              <p className="text-xs sm:text-sm uppercase tracking-[0.2em] sm:tracking-[0.3em] text-primary mb-4 sm:mb-6">
+                Team
+              </p>
+            </LineReveal>
+            <TextReveal
+              text="チームメンバー"
+              as="h2"
+              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight"
+              delay={0.2}
+              gradient
+            />
+          </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 max-w-4xl mx-auto">
             {team.map((member, index) => (
-              <RevealSection key={member.name} delay={index * 0.15}>
+              <SectionReveal key={member.name} delay={0.3 + index * 0.15}>
                 <div className="group">
                   <div className="relative aspect-[3/4] mb-6 sm:mb-8 rounded-2xl overflow-hidden bg-card border border-border">
                     <div className="absolute inset-0 bg-gradient-to-b from-transparent to-foreground/5" />
@@ -226,7 +252,7 @@ export default function AboutPage() {
                     {member.description}
                   </p>
                 </div>
-              </RevealSection>
+              </SectionReveal>
             ))}
           </div>
         </div>
@@ -235,18 +261,24 @@ export default function AboutPage() {
       {/* Values Section */}
       <section className="py-24 sm:py-32 md:py-48 glass-light">
         <div className="container mx-auto px-4 sm:px-6 md:px-12">
-          <RevealSection className="text-center mb-16 sm:mb-20 md:mb-32">
-            <p className="text-xs sm:text-sm uppercase tracking-[0.2em] sm:tracking-[0.3em] text-primary mb-4 sm:mb-6">
-              Values
-            </p>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
-              大切にしていること
-            </h2>
-          </RevealSection>
+          <div className="text-center mb-16 sm:mb-20 md:mb-32">
+            <LineReveal delay={0}>
+              <p className="text-xs sm:text-sm uppercase tracking-[0.2em] sm:tracking-[0.3em] text-primary mb-4 sm:mb-6">
+                Values
+              </p>
+            </LineReveal>
+            <TextReveal
+              text="大切にしていること"
+              as="h2"
+              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight"
+              delay={0.2}
+              gradient
+            />
+          </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-12">
             {values.map((value, index) => (
-              <RevealSection key={value.title} delay={index * 0.1}>
+              <SectionReveal key={value.title} delay={0.3 + index * 0.1}>
                 <div className="group text-center p-6 sm:p-8 md:p-10 rounded-2xl bg-background border border-border hover:border-accent/30 transition-all duration-500">
                   <div className="w-14 h-14 md:w-16 md:h-16 mx-auto mb-4 md:mb-6 rounded-full bg-accent/10 flex items-center justify-center group-hover:bg-accent/20 transition-colors duration-300">
                     <value.icon className="w-6 h-6 md:w-7 md:h-7 text-accent" />
@@ -261,7 +293,7 @@ export default function AboutPage() {
                     {value.description}
                   </p>
                 </div>
-              </RevealSection>
+              </SectionReveal>
             ))}
           </div>
         </div>
@@ -270,22 +302,30 @@ export default function AboutPage() {
       {/* Process Section */}
       <section className="py-24 sm:py-32 md:py-48 glass-card">
         <div className="container mx-auto px-4 sm:px-6 md:px-12">
-          <RevealSection className="text-center mb-12 md:mb-32">
-            <p className="text-xs sm:text-sm uppercase tracking-[0.2em] sm:tracking-[0.3em] text-primary mb-4 md:mb-6">
-              Process
-            </p>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6 md:mb-8">
-              制作の流れ
-            </h2>
-            <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              お問い合わせから公開、そしてその後まで。
-              私たちがどのようにプロジェクトを進めていくのか、6つのステップでご紹介します。
-            </p>
-          </RevealSection>
+          <div className="text-center mb-12 md:mb-32">
+            <LineReveal delay={0}>
+              <p className="text-xs sm:text-sm uppercase tracking-[0.2em] sm:tracking-[0.3em] text-primary mb-4 md:mb-6">
+                Process
+              </p>
+            </LineReveal>
+            <TextReveal
+              text="制作の流れ"
+              as="h2"
+              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6 md:mb-8"
+              delay={0.2}
+              gradient
+            />
+            <SectionReveal delay={0.5}>
+              <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+                お問い合わせから公開、そしてその後まで。
+                私たちがどのようにプロジェクトを進めていくのか、6つのステップでご紹介します。
+              </p>
+            </SectionReveal>
+          </div>
 
           <div className="max-w-5xl mx-auto space-y-10 md:space-y-24">
             {process.map((item, index) => (
-              <RevealSection key={item.step} delay={index * 0.08}>
+              <SectionReveal key={item.step} delay={0.1 + index * 0.08}>
                 <div className="group relative">
                   {/* Step Header */}
                   <div className="flex flex-col md:flex-row md:items-center gap-4 md:gap-8 mb-6 md:mb-8">
@@ -344,55 +384,66 @@ export default function AboutPage() {
                     </p>
                   </div>
                 </div>
-              </RevealSection>
+              </SectionReveal>
             ))}
           </div>
           
           {/* Process CTA */}
-          <RevealSection delay={0.3} className="text-center mt-16 md:mt-24">
-            <p className="text-base sm:text-lg text-muted-foreground mb-6 md:mb-8">
-              ご不明点があれば、お気軽にお問い合わせください
-            </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <MagneticButton
-                href="/contact"
-                className="group w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 bg-foreground text-background rounded-full font-medium hover:bg-accent transition-all duration-300"
-              >
-                <span className="flex items-center justify-center gap-3">
-                  お問い合わせ
-                  <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
-                </span>
-              </MagneticButton>
-              <a 
-                href="tel:08091550426"
-                className="flex items-center justify-center gap-2 w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 bg-foreground text-background rounded-full font-medium hover:bg-accent transition-all duration-300"
-              >
-                <Phone size={18} />
-                <span>080-9155-0426</span>
-              </a>
+          <SectionReveal delay={0.3}>
+            <div className="text-center mt-16 md:mt-24">
+              <p className="text-base sm:text-lg text-muted-foreground mb-6 md:mb-8">
+                ご不明点があれば、お気軽にお問い合わせください
+              </p>
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <MagneticButton
+                  href="/contact"
+                  className="group w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 bg-foreground text-background rounded-full font-medium btn-gradient-hover transition-all duration-300"
+                >
+                  <span className="flex items-center justify-center gap-3">
+                    お問い合わせ
+                    <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
+                  </span>
+                </MagneticButton>
+                <a 
+                  href="tel:08091550426"
+                  className="flex items-center justify-center gap-2 w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 bg-foreground text-background rounded-full font-medium btn-gradient-hover transition-all duration-300"
+                >
+                  <Phone size={18} />
+                  <span>080-9155-0426</span>
+                </a>
+              </div>
             </div>
-          </RevealSection>
+          </SectionReveal>
         </div>
       </section>
 
       {/* CTA Section */}
       <section className="py-24 sm:py-32 md:py-48 glass-light">
         <div className="container mx-auto px-4 sm:px-6 md:px-12 text-center">
-          <RevealSection direction="blur" duration={1.5}>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6 sm:mb-8">
-              一緒に、
-              <span className="gradient-text">つくりませんか？</span>
-            </h2>
+          <TextReveal
+            text="一緒に、"
+            as="h2"
+            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight"
+            delay={0}
+          />
+          <TextReveal
+            text="つくりませんか？"
+            as="span"
+            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6 sm:mb-8 block"
+            delay={0.3}
+            gradient
+          />
+          <SectionReveal delay={0.6}>
             <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 sm:mb-12 leading-relaxed text-balance">
               私たちは、あなたのビジネスの成長を本気で応援します。まずは気軽にお話しさせてください。
             </p>
-          </RevealSection>
+          </SectionReveal>
 
-          <RevealSection delay={0.3}>
+          <SectionReveal delay={0.8}>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6">
               <MagneticButton
                 href="/contact"
-                className="group w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 bg-foreground text-background rounded-full font-medium hover:bg-accent transition-all duration-300"
+                className="group w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 bg-foreground text-background rounded-full font-medium btn-gradient-hover transition-all duration-300"
                 data-cursor="Contact"
               >
                 <span className="flex items-center justify-center gap-3">
@@ -403,13 +454,13 @@ export default function AboutPage() {
               
               <a 
                 href="tel:08091550426"
-                className="group flex items-center justify-center gap-3 w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 bg-foreground text-background rounded-full font-medium hover:bg-accent transition-all duration-300"
+                className="group flex items-center justify-center gap-3 w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 bg-foreground text-background rounded-full font-medium btn-gradient-hover transition-all duration-300"
               >
                 <Phone size={18} />
                 <span>080-9155-0426</span>
               </a>
             </div>
-          </RevealSection>
+          </SectionReveal>
         </div>
       </section>
 

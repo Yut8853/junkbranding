@@ -1,8 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { ArrowRight, Mail, Phone, MapPin, Clock, Send, CheckCircle, AlertCircle } from 'lucide-react'
-import { RevealSection } from '@/components/reveal-section'
+import { TextReveal, SectionReveal, LineReveal } from '@/components/text-reveal'
 import { MagneticButton } from '@/components/magnetic-button'
 import { Footer } from '@/components/footer'
 import { sendEmail } from '@/actions/contact'
@@ -53,6 +53,12 @@ export default function ContactPage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [submitError, setSubmitError] = useState('')
+
+  useEffect(() => {
+    if (isSubmitted) {
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    }
+  }, [isSubmitted])
 
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {}
@@ -111,9 +117,9 @@ export default function ContactPage() {
   if (isSubmitted) {
     return (
       <>
-        <section className="min-h-[100svh] flex items-center justify-center">
-          <div className="container mx-auto px-4 sm:px-6 md:px-12 py-24 sm:py-32 text-center">
-            <RevealSection direction="scale" duration={1}>
+        <section className="min-h-[100svh] flex items-center justify-center pt-20 sm:pt-24">
+          <div className="container mx-auto px-4 sm:px-6 md:px-12 py-16 sm:py-24 text-center">
+            <SectionReveal>
               <div className="max-w-lg mx-auto">
                 <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-6 sm:mb-8 rounded-full bg-primary/10 flex items-center justify-center">
                   <CheckCircle className="w-8 h-8 sm:w-10 sm:h-10 text-primary" />
@@ -126,7 +132,7 @@ export default function ContactPage() {
                 </p>
                 <MagneticButton
                   href="/"
-                  className="group px-6 sm:px-8 py-3.5 sm:py-4 bg-foreground text-background rounded-full font-medium hover:bg-accent transition-all duration-300"
+                  className="group px-6 sm:px-8 py-3.5 sm:py-4 bg-foreground text-background rounded-full font-medium btn-gradient-hover transition-all duration-300"
                 >
                   <span className="flex items-center gap-3">
                     トップに戻る
@@ -134,7 +140,7 @@ export default function ContactPage() {
                   </span>
                 </MagneticButton>
               </div>
-            </RevealSection>
+            </SectionReveal>
           </div>
         </section>
         <Footer />
@@ -147,17 +153,23 @@ export default function ContactPage() {
       {/* Hero Section */}
       <section className="relative min-h-[50svh] sm:min-h-[60svh] flex items-center justify-center">
         <div className="container mx-auto px-4 sm:px-6 md:px-12 py-24 sm:py-32 text-center">
-          <RevealSection direction="blur" duration={1.5}>
+          <LineReveal delay={0}>
             <p className="text-xs sm:text-sm uppercase tracking-[0.2em] sm:tracking-[0.3em] text-primary mb-4 sm:mb-6">
               Contact
             </p>
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-bold tracking-tight mb-6 sm:mb-8">
-              お問い合わせ
-            </h1>
+          </LineReveal>
+          <TextReveal
+            text="お問い合わせ"
+            as="h1"
+            className="text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-bold tracking-tight mb-6 sm:mb-8"
+            delay={0.2}
+            gradient
+          />
+          <LineReveal delay={0.6}>
             <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed text-balance">
               プロジェクトのご相談、お見積りなど、お気軽にお問い合わせください。
             </p>
-          </RevealSection>
+          </LineReveal>
         </div>
       </section>
 
@@ -166,7 +178,7 @@ export default function ContactPage() {
         <div className="container mx-auto px-4 sm:px-6 md:px-12">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 md:gap-16">
             {/* Contact Info */}
-            <RevealSection className="lg:col-span-1">
+            <SectionReveal className="lg:col-span-1">
               <div className="space-y-8 sm:space-y-10">
                 <div>
                   <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">お問い合わせ先</h2>
@@ -224,10 +236,10 @@ export default function ContactPage() {
                   </div>
                 </div>
               </div>
-            </RevealSection>
+            </SectionReveal>
 
             {/* Contact Form */}
-            <RevealSection delay={0.2} className="lg:col-span-2">
+            <SectionReveal delay={0.2} className="lg:col-span-2">
               <form onSubmit={handleSubmit} className="space-y-6 sm:space-y-8">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                   {/* Name */}
@@ -357,7 +369,7 @@ export default function ContactPage() {
                     onChange={handleChange}
                     rows={6}
                     className={`w-full px-4 py-3 rounded-lg bg-card border ${errors.message ? 'border-destructive' : 'border-border'} focus:border-primary focus:outline-none transition-colors resize-none`}
-                    placeholder="プロジェクトの概要や、ご相談内容をご記入ください。"
+                    placeholder="プロジェクトの概要や、ご相談内容をご記入��ださい。"
                   />
                   {errors.message && (
                     <p className="mt-1 text-sm text-destructive flex items-center gap-1">
@@ -377,7 +389,7 @@ export default function ContactPage() {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full sm:w-auto px-8 sm:px-10 py-3.5 sm:py-4 bg-foreground text-background rounded-full font-medium hover:bg-accent transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3"
+                  className="w-full sm:w-auto px-8 sm:px-10 py-3.5 sm:py-4 bg-foreground text-background rounded-full font-medium btn-gradient-hover transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3"
                 >
                   {isSubmitting ? (
                     <>
@@ -392,7 +404,7 @@ export default function ContactPage() {
                   )}
                 </button>
               </form>
-            </RevealSection>
+            </SectionReveal>
           </div>
         </div>
       </section>

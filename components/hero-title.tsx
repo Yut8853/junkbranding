@@ -32,9 +32,9 @@ export function HeroTitle() {
   }, [isMounted])
 
   const lines = [
-    { text: 'あなたの', delay: 0 },
-    { text: '「らしさ」を', delay: 0.15, highlight: true },
-    { text: 'カタチに。', delay: 0.3, gradient: true },
+    { text: 'あなたの', delay: 0, size: 'normal' },
+    { text: '「らしさ」を', delay: 0.15, highlight: true, size: 'large' },
+    { text: 'カタチに。', delay: 0.3, gradient: true, size: 'normal' },
   ]
 
   if (!isMounted) {
@@ -50,7 +50,7 @@ export function HeroTitle() {
   }
 
   return (
-    <div ref={containerRef} className="relative py-8">
+    <div ref={containerRef} className="relative py-2 sm:pb-20 md:pb-2">
       {/* Main text with mouse parallax */}
       <h1 
         className="relative z-10 text-5xl md:text-7xl lg:text-[6rem] xl:text-[7rem] font-bold leading-[1.05] tracking-tight"
@@ -60,7 +60,10 @@ export function HeroTitle() {
         }}
       >
         {lines.map((line, lineIndex) => (
-          <span key={lineIndex} className="block overflow-hidden py-1">
+          <span 
+            key={lineIndex} 
+            className={`block overflow-hidden py-1 ${line.size === 'large' ? 'text-[1.15em]' : ''}`}
+          >
             <span 
               className="inline-block relative"
               style={{

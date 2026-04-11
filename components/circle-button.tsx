@@ -27,8 +27,15 @@ export function CircleButton({ href, children, size = 'md', className }: CircleB
       )}
       data-cursor="Start"
     >
-      {/* Background hover effect */}
-      <span className="absolute inset-0 bg-accent scale-0 rounded-full transition-transform duration-500 ease-out group-hover:scale-100" />
+      {/* Background hover effect - gradient animation like "カタチに。" */}
+      <span 
+        className="absolute inset-0 scale-0 rounded-full transition-transform duration-500 ease-out group-hover:scale-100"
+        style={{
+          background: 'linear-gradient(135deg, oklch(0.55 0.22 280), oklch(0.6 0.2 320), oklch(0.65 0.18 360), oklch(0.7 0.2 40), oklch(0.55 0.22 280))',
+          backgroundSize: '400% 100%',
+          animation: 'btnGradientFlow 3s ease-in-out infinite',
+        }}
+      />
       
       {/* Text */}
       <span className="relative z-10 uppercase tracking-wider">

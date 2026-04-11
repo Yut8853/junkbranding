@@ -2,9 +2,8 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import Image from 'next/image'
-import { ArrowRight, ArrowUpRight, ExternalLink, Phone, MessageCircle, Filter, X } from 'lucide-react'
-import { RevealSection } from '@/components/reveal-section'
+import { ArrowRight, ArrowUpRight, Phone, MessageCircle, Filter } from 'lucide-react'
+import { TextReveal, SectionReveal, LineReveal } from '@/components/text-reveal'
 import { MagneticButton } from '@/components/magnetic-button'
 import { Footer } from '@/components/footer'
 
@@ -30,7 +29,6 @@ const works = [
     image: '/works/luz-real.jpg',
     year: '2024',
   },
-
 ]
 
 // Categories for filter
@@ -49,17 +47,23 @@ export default function WorksPage() {
       {/* Hero Section */}
       <section className="relative min-h-[60svh] sm:min-h-[70svh] flex items-center justify-center">
         <div className="container mx-auto px-4 sm:px-6 md:px-12 py-24 sm:py-32 text-center">
-          <RevealSection direction="blur" duration={1.5}>
+          <LineReveal delay={0}>
             <p className="text-xs sm:text-sm uppercase tracking-[0.2em] sm:tracking-[0.3em] text-primary mb-4 sm:mb-6">
               Works
             </p>
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-bold tracking-tight mb-6 sm:mb-8">
-              制作実績
-            </h1>
+          </LineReveal>
+          <TextReveal
+            text="制作実績"
+            as="h1"
+            className="text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-bold tracking-tight mb-6 sm:mb-8"
+            delay={0.2}
+            gradient
+          />
+          <LineReveal delay={0.6}>
             <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed text-balance">
               クライアントと共に創り上げたプロジェクトをご紹介します。
             </p>
-          </RevealSection>
+          </LineReveal>
         </div>
       </section>
 
@@ -124,7 +128,7 @@ export default function WorksPage() {
         <div className="container mx-auto px-4 sm:px-6 md:px-12">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 md:gap-12">
             {filteredWorks.map((work, index) => (
-              <RevealSection key={work.id} delay={index * 0.1}>
+              <SectionReveal key={work.id} delay={index * 0.1}>
                 <Link 
                   href={work.url}
                   target={work.url.startsWith('http') ? '_blank' : undefined}
@@ -165,7 +169,7 @@ export default function WorksPage() {
                     <span className="text-sm text-muted-foreground shrink-0">{work.year}</span>
                   </div>
                 </Link>
-              </RevealSection>
+              </SectionReveal>
             ))}
           </div>
 
@@ -182,7 +186,7 @@ export default function WorksPage() {
       {/* Contact CTA */}
       <section className="py-16 sm:py-24 md:py-32 glass-card">
         <div className="container mx-auto px-4 sm:px-6 md:px-12">
-          <RevealSection className="text-center">
+          <SectionReveal className="text-center">
             <div className="max-w-3xl mx-auto p-8 sm:p-12 md:p-16 rounded-2xl bg-background border border-border">
               <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-6">
                 もっと詳しく見たい方へ
@@ -195,7 +199,7 @@ export default function WorksPage() {
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                 <MagneticButton
                   href="/contact"
-                  className="group w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 bg-foreground text-background rounded-full font-medium hover:bg-accent transition-all duration-300"
+                  className="group w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 bg-foreground text-background rounded-full font-medium btn-gradient-hover transition-all duration-300"
                   data-cursor="Contact"
                 >
                   <span className="flex items-center justify-center gap-3">
@@ -207,42 +211,50 @@ export default function WorksPage() {
                 
                 <a 
                   href="tel:08091550426"
-                  className="flex items-center justify-center gap-2 w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 bg-foreground text-background rounded-full font-medium hover:bg-accent transition-all duration-300"
+                  className="flex items-center justify-center gap-2 w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 bg-foreground text-background rounded-full font-medium btn-gradient-hover transition-all duration-300"
                 >
                   <Phone size={18} />
                   <span>電話で相談する</span>
                 </a>
               </div>
             </div>
-          </RevealSection>
+          </SectionReveal>
         </div>
       </section>
 
       {/* Bottom CTA */}
       <section className="py-24 sm:py-32 md:py-48 glass-light">
         <div className="container mx-auto px-4 sm:px-6 md:px-12 text-center">
-          <RevealSection direction="blur" duration={1.5}>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6 sm:mb-8">
-              あなたのプロジェクトを
-
-              <span className="gradient-text">形にしませんか？</span>
-            </h2>
+          <TextReveal
+            text="あなたのプロジェクトを"
+            as="h2"
+            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight"
+            delay={0}
+          />
+          <TextReveal
+            text="形にしませんか？"
+            as="span"
+            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6 sm:mb-8 block"
+            delay={0.3}
+            gradient
+          />
+          <SectionReveal delay={0.6}>
             <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 sm:mb-12 leading-relaxed text-balance">
               私たちは、あなたのビジネスの成長を本気で応援します。まずは気軽にお話しさせてください。
             </p>
-          </RevealSection>
+          </SectionReveal>
 
-          <RevealSection delay={0.2}>
+          <SectionReveal delay={0.8}>
             <MagneticButton 
               href="/contact"
-              className="group inline-flex items-center justify-center w-36 h-36 sm:w-40 sm:h-40 rounded-full bg-foreground text-background font-medium hover:bg-accent transition-all duration-300"
+              className="group inline-flex items-center justify-center w-36 h-36 sm:w-40 sm:h-40 rounded-full bg-foreground text-background font-medium btn-gradient-hover transition-all duration-300"
               data-cursor="Start"
             >
               <span className="relative z-10 uppercase tracking-wider text-xs sm:text-sm">
                 お問い合わせ
               </span>
             </MagneticButton>
-          </RevealSection>
+          </SectionReveal>
         </div>
       </section>
 

@@ -325,6 +325,87 @@
   background-clip: text;
 }
 
+/* Important text with gradient animation - same as "カタチに。" */
+.gradient-highlight {
+  background: linear-gradient(135deg, oklch(0.55 0.22 280), oklch(0.6 0.2 320), oklch(0.65 0.18 360), oklch(0.6 0.2 60));
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradientFlow 5s ease-in-out infinite;
+}
+
+/* Hover gradient effect for interactive elements */
+.hover-gradient {
+  position: relative;
+  transition: color 0.3s ease;
+}
+
+.hover-gradient::before {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, oklch(0.55 0.22 280), oklch(0.6 0.2 320), oklch(0.65 0.18 360), oklch(0.6 0.2 60));
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradientFlow 5s ease-in-out infinite;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.hover-gradient:hover::before {
+  opacity: 1;
+}
+
+.hover-gradient:hover {
+  -webkit-text-fill-color: transparent;
+}
+
+/* Button/Link hover with gradient background */
+.btn-gradient-hover {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  isolation: isolate;
+}
+
+.btn-gradient-hover::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg, 
+    oklch(0.55 0.22 280), 
+    oklch(0.6 0.2 320), 
+    oklch(0.65 0.18 360), 
+    oklch(0.7 0.2 40),
+    oklch(0.55 0.22 280)
+  );
+  background-size: 400% 100%;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  z-index: -1;
+  border-radius: inherit;
+}
+
+.btn-gradient-hover:hover::before {
+  opacity: 1;
+  animation: btnGradientFlow 3s ease-in-out infinite;
+}
+
+.btn-gradient-hover > * {
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes btnGradientFlow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
 @keyframes gradientFlow {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
@@ -492,6 +573,55 @@
 .horizontal-scroll > * {
   scroll-snap-align: start;
   flex-shrink: 0;
+}
+
+/* Stagger children animation helper */
+.stagger-children > * {
+  transition-delay: calc(var(--stagger-index, 0) * 0.1s);
+}
+
+.stagger-children > *:nth-child(1) { --stagger-index: 0; }
+.stagger-children > *:nth-child(2) { --stagger-index: 1; }
+.stagger-children > *:nth-child(3) { --stagger-index: 2; }
+.stagger-children > *:nth-child(4) { --stagger-index: 3; }
+.stagger-children > *:nth-child(5) { --stagger-index: 4; }
+.stagger-children > *:nth-child(6) { --stagger-index: 5; }
+
+/* Eye-catching reveal animation */
+@keyframes reveal-swing {
+  0% {
+    opacity: 0;
+    transform: translateY(80px) rotate(-5deg) scale(0.95);
+  }
+  60% {
+    transform: translateY(-10px) rotate(1deg) scale(1.02);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) rotate(0deg) scale(1);
+  }
+}
+
+@keyframes reveal-clip {
+  from {
+    clip-path: polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%);
+  }
+  to {
+    clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+  }
+}
+
+@keyframes reveal-split {
+  0% {
+    opacity: 0;
+    transform: translateY(50px);
+    letter-spacing: 0.5em;
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    letter-spacing: normal;
+  }
 }
 
 /* Focus visible styles for accessibility */
