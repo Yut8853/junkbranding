@@ -125,10 +125,10 @@ export default function ContactPage() {
                   <CheckCircle className="w-8 h-8 sm:w-10 sm:h-10 text-primary" />
                 </div>
                 <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 sm:mb-6">
-                  送信完了
+                  送信完了しました。
                 </h1>
                 <p className="text-base sm:text-lg text-muted-foreground mb-8 sm:mb-10 leading-relaxed text-balance">
-                  お問い合わせいただきありがとうございます。内容を確認の上、2営業日以内にご連絡いたします。
+                  お問い合わせいただきありがとうございます。内容を確認の上、1営業日以内にご連絡いたします。
                 </p>
                 <MagneticButton
                   href="/"
