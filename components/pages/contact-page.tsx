@@ -39,7 +39,7 @@ const budgetOptions = [
   '未定・相談したい',
 ]
 
-export default function ContactPage() {
+export default function ContactPageClient() {
   const [formData, setFormData] = useState<FormData>({
     name: '',
     email: '',
@@ -125,7 +125,7 @@ export default function ContactPage() {
                   <CheckCircle className="w-8 h-8 sm:w-10 sm:h-10 text-primary" />
                 </div>
                 <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 sm:mb-6">
-                  送信完了いたしました。
+                  送信完了しました。
                 </h1>
                 <p className="text-base sm:text-lg text-muted-foreground mb-8 sm:mb-10 leading-relaxed text-balance">
                   お問い合わせいただきありがとうございます。内容を確認の上、1営業日以内にご連絡いたします。
@@ -369,7 +369,7 @@ export default function ContactPage() {
                     onChange={handleChange}
                     rows={6}
                     className={`w-full px-4 py-3 rounded-lg bg-card border ${errors.message ? 'border-destructive' : 'border-border'} focus:border-primary focus:outline-none transition-colors resize-none`}
-                    placeholder="プロジェクトの概要や、ご相談内容をご記入��ださい。"
+                    placeholder="プロジェクトの概要や、ご相談内容をご記入ください。"
                   />
                   {errors.message && (
                     <p className="mt-1 text-sm text-destructive flex items-center gap-1">

@@ -524,6 +524,17 @@
   background-clip: text;
 }
 
+/* Animate gradient text - for team member names */
+@keyframes gradient-text-flow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.animate-gradient-text {
+  animation: gradient-text-flow 3s ease-in-out infinite;
+}
+
 /* Rainbow border */
 .rainbow-border {
   position: relative;

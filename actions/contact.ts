@@ -100,7 +100,7 @@ JunkBranding
 〒300-0410
 茨城県稲敷郡美浦村みどり台767-43
 
-TEL：080-9155-0426
+TEL：080-9155-0426（お急ぎの場合お気軽にお電話ください）
 Email：hello@junkbranding.com
 Web：https://junkbranding.com
 
