@@ -1,26 +1,26 @@
-import type { Metadata, Viewport } from 'next'
-import { Inter, Syne } from 'next/font/google'
-import { Analytics } from '@vercel/analytics/next'
-import './globals.css'
-import { LoadingProvider } from '@/components/loading-provider'
-import { PageTransition } from '@/components/page-transition'
-import { Navigation } from '@/components/navigation'
-import { CustomCursor } from '@/components/custom-cursor'
-import { SmoothScroll } from '@/components/smooth-scroll'
-import { FloatingParticles } from '@/components/floating-particles'
-import { CookieConsent } from '@/components/cookie-consent'
+import type { Metadata, Viewport } from 'next';
+import { Inter, Syne } from 'next/font/google';
+import { Analytics } from '@vercel/analytics/next';
+import './globals.css';
+import { LoadingProvider } from '@/components/loading-provider';
+import { PageTransition } from '@/components/page-transition';
+import { Navigation } from '@/components/navigation';
+import { CustomCursor } from '@/components/custom-cursor';
+import { SmoothScroll } from '@/components/smooth-scroll';
+import { FloatingParticles } from '@/components/floating-particles';
+import { CookieConsent } from '@/components/cookie-consent';
 
-const inter = Inter({ 
+const inter = Inter({
   subsets: ['latin'],
   variable: '--font-inter',
   display: 'swap',
-})
+});
 
-const syne = Syne({ 
+const syne = Syne({
   subsets: ['latin'],
   variable: '--font-syne',
   display: 'swap',
-})
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://junkbranding.com'),
@@ -28,8 +28,21 @@ export const metadata: Metadata = {
     default: 'JunkBranding | 茨城・東京・千葉のブランディング & Web制作',
     template: '%s | JunkBranding',
   },
-  description: '茨城・東京・千葉を中心に活動する、2人だけの小さなブランディング&Web制作スタジオ。大手にはできない、丁寧なものづくりを。Webサイト制作、ロゴ制作、ブランディングならJunkBrandingへ。',
-  keywords: ['Web制作', 'ブランディング', 'Webデザイン', 'ロゴ制作', '茨城', '東京', '千葉', 'ホームページ制作', 'コーポレートサイト', 'ランディングページ', 'ECサイト'],
+  description:
+    '茨城・東京・千葉を中心に活動する、2人だけの小さなブランディング&Web制作スタジオ。大手にはできない、丁寧なものづくりを。Webサイト制作、ロゴ制作、ブランディングならJunkBrandingへ。',
+  keywords: [
+    'Web制作',
+    'ブランディング',
+    'Webデザイン',
+    'ロゴ制作',
+    '茨城',
+    '東京',
+    '千葉',
+    'ホームページ制作',
+    'コーポレートサイト',
+    'ランディングページ',
+    'ECサイト',
+  ],
   authors: [{ name: 'JunkBranding', url: 'https://junkbranding.com' }],
   creator: 'JunkBranding',
   publisher: 'JunkBranding',
@@ -47,7 +60,8 @@ export const metadata: Metadata = {
     url: 'https://junkbranding.com',
     siteName: 'JunkBranding',
     title: 'JunkBranding | 茨城・東京・千葉のブランディング & Web制作',
-    description: '茨城・東京・千葉を中心に活動する、2人だけの小さなブランディング&Web制作スタジオ。大手にはできない、丁寧なものづくりを。',
+    description:
+      '茨城・東京・千葉を中心に活動する、2人だけの小さなブランディング&Web制作スタジオ。大手にはできない、丁寧なものづくりを。',
     images: [
       {
         url: '/og-image.jpg',
@@ -60,7 +74,8 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'JunkBranding | 茨城・東京・千葉のブランディング & Web制作',
-    description: '茨城・東京・千葉を中心に活動する、2人だけの小さなブランディング&Web制作スタジオ。',
+    description:
+      '茨城・東京・千葉を中心に活動する、2人だけの小さなブランディング&Web制作スタジオ。',
     images: ['/og-image.jpg'],
   },
   robots: {
@@ -96,7 +111,7 @@ export const metadata: Metadata = {
   verification: {
     google: 'your-google-verification-code',
   },
-}
+};
 
 export const viewport: Viewport = {
   themeColor: [
@@ -108,7 +123,7 @@ export const viewport: Viewport = {
   maximumScale: 5,
   userScalable: true,
   viewportFit: 'cover',
-}
+};
 
 // JSON-LD structured data
 const jsonLd = {
@@ -119,7 +134,8 @@ const jsonLd = {
       '@id': 'https://junkbranding.com/#website',
       url: 'https://junkbranding.com',
       name: 'JunkBranding',
-      description: '茨城・東京・千葉を中心に活動するブランディング&Web制作スタジオ',
+      description:
+        '茨城・東京・千葉を中心に活動するブランディング&Web制作スタジオ',
       publisher: {
         '@id': 'https://junkbranding.com/#organization',
       },
@@ -157,7 +173,8 @@ const jsonLd = {
       '@type': 'LocalBusiness',
       '@id': 'https://junkbranding.com/#localbusiness',
       name: 'JunkBranding',
-      description: 'ブランディング&Web制作スタジオ。Webサイト制作、ロゴデザイン、ブランディングを提供。',
+      description:
+        'ブランディング&Web制作スタジオ。Webサイト制作、ロゴデザイン、ブランディングを提供。',
       url: 'https://junkbranding.com',
       telephone: '+81-80-9155-0426',
       email: 'hello@junkbranding.com',
@@ -188,15 +205,19 @@ const jsonLd = {
       },
     },
   ],
-}
+};
 
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode
+  children: React.ReactNode;
 }>) {
   return (
-    <html lang="ja" className={`${inter.variable} ${syne.variable}`} data-scroll-behavior="smooth">
+    <html
+      lang="ja"
+      className={`${inter.variable} ${syne.variable}`}
+      data-scroll-behavior="smooth"
+    >
       <head>
         <script
           type="application/ld+json"
@@ -205,14 +226,17 @@ export default function RootLayout({
       </head>
       <body className="font-sans antialiased bg-transparent text-foreground overflow-x-hidden">
         <LoadingProvider>
+          {/* ここがポイント：
+      SmoothScroll（transformがかかる場所）の外側に配置することで、
+      中の fixed が正常にビューポート基準で固定されます。
+    */}
           <FloatingParticles />
+
           <SmoothScroll>
             <CustomCursor />
             <Navigation />
             <PageTransition>
-              <main className="noise-overlay relative">
-                {children}
-              </main>
+              <main className="noise-overlay relative">{children}</main>
             </PageTransition>
           </SmoothScroll>
           <CookieConsent />
@@ -220,5 +244,5 @@ export default function RootLayout({
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
     </html>
-  )
+  );
 }
