@@ -108,9 +108,9 @@ export const metadata: Metadata = {
     },
     shortcut: '/favicon.jpg',
   },
-  verification: {
-    google: 'your-google-verification-code',
-  },
+verification: {
+  google: 'LEkZOcAeq4rXooCOsOS3EisHeiHwDTe9Zl7Rka0F0gQ',
+},
 };
 
 export const viewport: Viewport = {
