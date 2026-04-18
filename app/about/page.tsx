@@ -4,13 +4,12 @@ import AboutPageClient from '@/components/pages/about-page'
 
 export const metadata: Metadata = {
   title: '私たちについて',
-  description: '茨城・東京・千葉を中心に活動する、2人だけのブランディング&Web制作スタジオ。大手にはできない、丁寧なものづくりを。チームメンバー、大切にしていること、制作の流れをご紹介します。',
-  alternates: {
+description: 'JunkBrandingのチーム紹介。私たちが大切にしている価値観や、2人で制作する理由、ものづくりへの考え方をご紹介します。',  alternates: {
     canonical: 'https://junkbranding.com/about',
   },
   openGraph: {
     title: '私たちについて | JunkBranding',
-    description: '茨城・東京・千葉を中心に活動する、2人だけのブランディング&Web制作スタジオ。大手にはできない、丁寧なものづくりを。',
+    description: 'JunkBrandingのチーム紹介。私たちが大切にしている価値観や、2人で制作する理由、ものづくりへの考え方をご紹介します。',
     url: 'https://junkbranding.com/about',
     type: 'website',
   },
