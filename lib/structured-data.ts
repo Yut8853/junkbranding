@@ -274,6 +274,190 @@ export function generateServiceSchema() {
   }
 }
 
+// Pricing page schema with Service offerings
+export function generatePricingPageSchema() {
+  return {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'WebPage',
+        '@id': `${BASE_URL}/pricing/#webpage`,
+        url: `${BASE_URL}/pricing`,
+        name: '制作料金 | JunkBranding',
+        description: 'JunkBrandingの制作料金のご案内。Webサイト制作、CMS構築、アプリ開発、デザイン、紙媒体、動画制作、マーケティングまで幅広く対応。',
+        isPartOf: {
+          '@id': `${BASE_URL}/#website`,
+        },
+        about: {
+          '@id': `${BASE_URL}/#organization`,
+        },
+        inLanguage: 'ja',
+      },
+      {
+        '@type': 'ItemList',
+        name: 'サービス料金一覧',
+        itemListElement: [
+          {
+            '@type': 'ListItem',
+            position: 1,
+            item: {
+              '@type': 'Service',
+              name: 'Webサイト制作',
+              description: 'コーポレートサイト、ランディングページ、ECサイトなど',
+              offers: {
+                '@type': 'Offer',
+                priceSpecification: {
+                  '@type': 'PriceSpecification',
+                  price: '150000',
+                  priceCurrency: 'JPY',
+                  minPrice: '150000',
+                },
+              },
+              provider: { '@id': `${BASE_URL}/#organization` },
+            },
+          },
+          {
+            '@type': 'ListItem',
+            position: 2,
+            item: {
+              '@type': 'Service',
+              name: 'CMS構築',
+              description: 'WordPress、microCMS、Notion連携など',
+              offers: {
+                '@type': 'Offer',
+                priceSpecification: {
+                  '@type': 'PriceSpecification',
+                  price: '100000',
+                  priceCurrency: 'JPY',
+                  minPrice: '100000',
+                },
+              },
+              provider: { '@id': `${BASE_URL}/#organization` },
+            },
+          },
+          {
+            '@type': 'ListItem',
+            position: 3,
+            item: {
+              '@type': 'Service',
+              name: 'アプリ開発',
+              description: 'Webアプリ、PWA、LINE連携、業務効率化ツール',
+              offers: {
+                '@type': 'Offer',
+                priceSpecification: {
+                  '@type': 'PriceSpecification',
+                  price: '500000',
+                  priceCurrency: 'JPY',
+                  minPrice: '500000',
+                },
+              },
+              provider: { '@id': `${BASE_URL}/#organization` },
+            },
+          },
+          {
+            '@type': 'ListItem',
+            position: 4,
+            item: {
+              '@type': 'Service',
+              name: 'デザイン',
+              description: 'ロゴ、名刺、バナー、UIデザイン、ブランドガイドライン',
+              offers: {
+                '@type': 'Offer',
+                priceSpecification: {
+                  '@type': 'PriceSpecification',
+                  price: '10000',
+                  priceCurrency: 'JPY',
+                  minPrice: '10000',
+                },
+              },
+              provider: { '@id': `${BASE_URL}/#organization` },
+            },
+          },
+          {
+            '@type': 'ListItem',
+            position: 5,
+            item: {
+              '@type': 'Service',
+              name: '紙媒体',
+              description: 'チラシ、パンフレット、ポスター、会社案内',
+              offers: {
+                '@type': 'Offer',
+                priceSpecification: {
+                  '@type': 'PriceSpecification',
+                  price: '10000',
+                  priceCurrency: 'JPY',
+                  minPrice: '10000',
+                },
+              },
+              provider: { '@id': `${BASE_URL}/#organization` },
+            },
+          },
+          {
+            '@type': 'ListItem',
+            position: 6,
+            item: {
+              '@type': 'Service',
+              name: '動画制作',
+              description: 'SNSショート動画、サービス紹介、企業紹介、モーショングラフィックス',
+              offers: {
+                '@type': 'Offer',
+                priceSpecification: {
+                  '@type': 'PriceSpecification',
+                  price: '100000',
+                  priceCurrency: 'JPY',
+                  minPrice: '100000',
+                },
+              },
+              provider: { '@id': `${BASE_URL}/#organization` },
+            },
+          },
+          {
+            '@type': 'ListItem',
+            position: 7,
+            item: {
+              '@type': 'Service',
+              name: 'マーケティング',
+              description: 'SNS運用、Web広告、SEO対策、アクセス解析、MEO対策',
+              offers: {
+                '@type': 'Offer',
+                priceSpecification: {
+                  '@type': 'PriceSpecification',
+                  price: '30000',
+                  priceCurrency: 'JPY',
+                  minPrice: '30000',
+                  billingDuration: 'P1M',
+                },
+              },
+              provider: { '@id': `${BASE_URL}/#organization` },
+            },
+          },
+          {
+            '@type': 'ListItem',
+            position: 8,
+            item: {
+              '@type': 'Service',
+              name: '保守・運用',
+              description: 'サイト更新、バックアップ、セキュリティ対策',
+              offers: {
+                '@type': 'Offer',
+                priceSpecification: {
+                  '@type': 'PriceSpecification',
+                  price: '5000',
+                  priceCurrency: 'JPY',
+                  minPrice: '5000',
+                  billingDuration: 'P1M',
+                },
+              },
+              provider: { '@id': `${BASE_URL}/#organization` },
+            },
+          },
+        ],
+      },
+      organizationSchema,
+    ],
+  }
+}
+
 // BreadcrumbList schema generator
 export function generateBreadcrumbSchema(items: { name: string; url: string }[]) {
   return {

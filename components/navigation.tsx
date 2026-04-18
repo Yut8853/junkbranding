@@ -9,6 +9,7 @@ const navItems = [
   { href: '/', label: 'Home', labelJa: 'トップ' },
   { href: '/about', label: 'About', labelJa: '私たちについて' },
   { href: '/works', label: 'Works', labelJa: '実績' },
+  { href: '/pricing', label: 'Pricing', labelJa: '料金' },
   { href: '/contact', label: 'Contact', labelJa: 'お問い合わせ' },
 ]
 
