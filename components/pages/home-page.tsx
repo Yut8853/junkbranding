@@ -43,16 +43,15 @@ export default function HomePageClient() {
   return (
     <>
       {/* Hero Section - 左寄せ */}
-      <section className="relative min-h-[100svh] flex items-center overflow-hidden pb-16 sm:pb-20 md:pb-28">
-        <div className="container mx-auto px-4 sm:px-6 md:px-12 py-20 md:py-32">
-          <div className="max-w-6xl">
-            <SectionReveal delay={0.2} duration={1.2}>
-              <div className="mb-4 sm:mb-6 md:mb-8">
+<section className="relative min-h-[80vh] flex items-start overflow-hidden pb-16 sm:pb-20 md:pb-28">
+  <div className="container mx-auto px-6 sm:px-6 md:px-12 pt-32 pb-3 md:pt-40 md:pb-32">          <div className="max-w-6xl">
+            <SectionReveal delay={0.2} duration={1.2} className="mx-6">
+              <div className="sm:mb-6 md:mb-8">
                 <EnglishLabel delay={0.3} align="left">
                   Beyond Good Design
                 </EnglishLabel>
                 <EnglishLabel delay={0.3} align="left">
-                  by JUNK BLANDING
+                  by JUNK BLANDING                  
                 </EnglishLabel>
               </div>
             </SectionReveal>

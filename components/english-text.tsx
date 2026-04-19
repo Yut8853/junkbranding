@@ -125,10 +125,10 @@ export function EnglishLabel({ children, className, delay = 0, align = 'left' }:
                 return (
                   <span
                     key={currentIndex}
-                    className="inline-block overflow-hidden"
+                    className="inline-block"
                   >
                     <span
-                      className="inline-block font-display uppercase text-[2.5rem] sm:text-[4rem] md:text-[6rem] lg:text-[8rem] xl:text-[60rem] tracking-[0.02em] font-normal text-primary leading-[0.85]"
+                      className="inline-block font-display uppercase text-[2.5rem] sm:text-[4rem] md:text-[6rem] lg:text-[8rem] xl:text-[36rem] tracking-[0.02em] font-normal text-primary leading-[0.01]"
                       style={{
                         transform: hasAnimated ? 'translateY(0) rotate(0deg)' : 'translateY(120%) rotate(8deg)',
                         opacity: hasAnimated ? 1 : 0,

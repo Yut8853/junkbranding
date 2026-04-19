@@ -62,7 +62,7 @@ export function HeroTitle() {
         {lines.map((line, lineIndex) => (
           <span 
             key={lineIndex} 
-            className={`block overflow-hidden py-1 ${line.size === 'large' ? 'text-[1.15em]' : ''}`}
+            className={`inline-flex py-1 ${line.size === 'large' ? 'text-[1.15em]' : ''}`}
           >
             <span 
               className="inline-block relative"
