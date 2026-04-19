@@ -1,11 +1,13 @@
 'use client'
 
-import { useRef, useEffect, useState } from 'react'
+import { useRef, useEffect, useState, useCallback } from 'react'
 import Link from 'next/link'
 import { ArrowRight, ArrowUpRight, Phone, MessageCircle } from 'lucide-react'
 import { TextReveal, SectionReveal, LineReveal } from '@/components/text-reveal'
 import { MagneticButton } from '@/components/magnetic-button'
+import { CircleButton } from '@/components/circle-button'
 import { Footer } from '@/components/footer'
+import { WorksWebGLScene } from '@/components/works-webgl-scene'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
@@ -20,9 +22,7 @@ const works = [
     description: '自身のクリエイティブと思想を表現するポートフォリオサイト。WebGLやアニメーションを活用し、ブランド体験としてのサイト設計を行いました。',
     tags: ['Web Design', 'Frontend', 'WebGL', 'Branding'],
     url: 'https://junkbranding.com/',
-    image: '/works/junkbranding.jpg',
     year: '2026',
-    color: 'from-[oklch(0.7_0.22_280)] to-[oklch(0.6_0.2_320)]',
   },
   {
     id: 2,
@@ -31,9 +31,7 @@ const works = [
     description: '不動産会社のコーポレートサイト。信頼感と先進性を両立したデザイン。',
     tags: ['Web Design', 'Development', 'Branding'],
     url: 'https://to-place.co.jp/',
-    image: '/works/to-place.jpg',
     year: '2024',
-    color: 'from-[oklch(0.7_0.2_25)] to-[oklch(0.75_0.18_60)]',
   },
   {
     id: 3,
@@ -42,24 +40,72 @@ const works = [
     description: '洗練されたビジュアルと使いやすさを追求したコーポレートサイト。',
     tags: ['Web Design', 'Development', 'Branding'],
     url: 'https://luz-real.com/',
-    image: '/works/luz-real.jpg',
     year: '2025',
-    color: 'from-[oklch(0.7_0.15_150)] to-[oklch(0.65_0.2_180)]',
   },
 ]
 
 // Categories for filter
 const categories = ['すべて', ...Array.from(new Set(works.map((work) => work.category)))]
 
-// Interactive Work Card with 3D tilt effect
-function WorkCard({ work, index }: { work: typeof works[0]; index: number }) {
+// Work card with scroll animation and hover effects
+function WorkCard({ 
+  work, 
+  index, 
+  onHover,
+  isHovered
+}: { 
+  work: typeof works[0]
+  index: number
+  onHover: (index: number | null, position?: { x: number; y: number }) => void
+  isHovered: boolean
+}) {
   const cardRef = useRef<HTMLAnchorElement>(null)
-  const numberRef = useRef<HTMLSpanElement>(null)
-  const contentRef = useRef<HTMLDivElement>(null)
+  const imageRef = useRef<HTMLDivElement>(null)
+  const formattedIndex = String(index + 1).padStart(2, '0')
 
+  const handleMouseEnter = (e: React.MouseEvent) => {
+    const rect = cardRef.current?.getBoundingClientRect()
+    if (rect) {
+      // Convert to normalized coordinates (-1 to 1)
+      const x = ((rect.left + rect.width / 2) / window.innerWidth) * 2 - 1
+      const y = -((rect.top + rect.height / 2) / window.innerHeight) * 2 + 1
+      onHover(index, { x, y })
+    }
+  }
+
+  const handleMouseLeave = () => {
+    onHover(null)
+  }
+
+  // Scroll animation
   useEffect(() => {
     const card = cardRef.current
     if (!card) return
+
+    gsap.set(card, { opacity: 0, y: 80 })
+
+    gsap.to(card, {
+      opacity: 1,
+      y: 0,
+      duration: 1,
+      ease: 'power3.out',
+      scrollTrigger: {
+        trigger: card,
+        start: 'top 85%',
+        toggleActions: 'play none none reverse',
+      },
+    })
+
+    return () => {
+      ScrollTrigger.getAll().forEach((t) => t.kill())
+    }
+  }, [])
+
+  // 3D tilt effect on hover
+  useEffect(() => {
+    const card = cardRef.current
+    const image = imageRef.current
+    if (!card || !image) return
 
     const handleMouseMove = (e: MouseEvent) => {
       const rect = card.getBoundingClientRect()
@@ -67,41 +113,25 @@ function WorkCard({ work, index }: { work: typeof works[0]; index: number }) {
       const y = e.clientY - rect.top
       const centerX = rect.width / 2
       const centerY = rect.height / 2
-      const rotateX = (y - centerY) / 20
-      const rotateY = (centerX - x) / 20
+      const rotateX = (y - centerY) / 30
+      const rotateY = (centerX - x) / 30
 
-      gsap.to(card, {
-        rotateX: rotateX,
+      gsap.to(image, {
+        rotateX: -rotateX,
         rotateY: rotateY,
-        duration: 0.3,
+        duration: 0.4,
         ease: 'power2.out',
         transformPerspective: 1000,
       })
-
-      // Parallax effect on number
-      if (numberRef.current) {
-        gsap.to(numberRef.current, {
-          x: (x - centerX) / 10,
-          y: (y - centerY) / 10,
-          duration: 0.3,
-        })
-      }
     }
 
     const handleMouseLeave = () => {
-      gsap.to(card, {
+      gsap.to(image, {
         rotateX: 0,
         rotateY: 0,
-        duration: 0.5,
+        duration: 0.6,
         ease: 'power2.out',
       })
-      if (numberRef.current) {
-        gsap.to(numberRef.current, {
-          x: 0,
-          y: 0,
-          duration: 0.5,
-        })
-      }
     }
 
     card.addEventListener('mousemove', handleMouseMove)
@@ -113,189 +143,154 @@ function WorkCard({ work, index }: { work: typeof works[0]; index: number }) {
     }
   }, [])
 
-  // Scroll animation
-  useEffect(() => {
-    const card = cardRef.current
-    const content = contentRef.current
-    if (!card || !content) return
-
-    gsap.set(card, { opacity: 0, y: 100, scale: 0.95 })
-    gsap.set(content, { opacity: 0, x: index % 2 === 0 ? -50 : 50 })
-
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: card,
-        start: 'top 85%',
-        end: 'top 50%',
-        toggleActions: 'play none none reverse',
-      },
-    })
-
-    tl.to(card, {
-      opacity: 1,
-      y: 0,
-      scale: 1,
-      duration: 1,
-      ease: 'power3.out',
-    }).to(
-      content,
-      {
-        opacity: 1,
-        x: 0,
-        duration: 0.8,
-        ease: 'power3.out',
-      },
-      '-=0.6'
-    )
-
-    return () => {
-      ScrollTrigger.getAll().forEach((t) => t.kill())
-    }
-  }, [index])
-
-  const isReversed = index % 2 !== 0
-  const formattedIndex = String(index + 1).padStart(2, '0')
-
   return (
-    <div
-      className={`flex flex-col ${isReversed ? 'lg:flex-row-reverse' : 'lg:flex-row'} items-center gap-8 lg:gap-16 py-16 sm:py-24 lg:py-32`}
+    <Link
+      ref={cardRef}
+      href={work.url}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="group block"
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     >
-      {/* Card with 3D effect */}
-      <Link
-        ref={cardRef}
-        href={work.url}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="group relative w-full lg:w-3/5 aspect-[16/10] rounded-2xl sm:rounded-3xl overflow-hidden bg-card border border-border/50 shadow-2xl"
-        style={{ transformStyle: 'preserve-3d' }}
-      >
-        {/* Gradient background */}
-        <div className={`absolute inset-0 bg-gradient-to-br ${work.color} opacity-20 group-hover:opacity-40 transition-opacity duration-700`} />
-        
-        {/* Large number decoration */}
-        <span
-          ref={numberRef}
-          className="absolute -left-4 sm:-left-8 -top-8 sm:-top-12 text-[12rem] sm:text-[16rem] lg:text-[20rem] font-bold leading-none text-foreground/[0.03] select-none pointer-events-none"
-          style={{ transform: 'translateZ(50px)' }}
-        >
-          {formattedIndex}
-        </span>
-
-        {/* Year badge */}
-        <div className="absolute top-4 sm:top-6 right-4 sm:right-6 z-10">
-          <span className="px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-mono bg-background/80 backdrop-blur-md rounded-full border border-border/50">
-            {work.year}
+      <div className={`grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-center py-12 sm:py-16 lg:py-20 px-4 sm:px-6 -mx-4 sm:-mx-6 border-b border-border/30 rounded-2xl transition-all duration-500 ${isHovered ? 'bg-card/50' : ''}`}>
+        {/* Index number - Desktop only */}
+        <div className="hidden lg:flex lg:col-span-1 items-center justify-center">
+          <span className={`text-6xl xl:text-7xl font-bold transition-all duration-500 ${isHovered ? 'gradient-text' : 'text-foreground/10'}`}>
+            {formattedIndex}
           </span>
         </div>
 
-        {/* Category badge */}
-        <div className="absolute top-4 sm:top-6 left-4 sm:left-6 z-10">
-          <span className="px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm bg-foreground text-background rounded-full">
-            {work.category}
-          </span>
-        </div>
+        {/* Image */}
+        <div className="lg:col-span-5">
+          <div 
+            ref={imageRef}
+            className={`relative aspect-[16/10] rounded-2xl overflow-hidden border border-border/50 shadow-lg transition-all duration-500 ${isHovered ? 'bg-card/70' : 'bg-card/80'}`}
+            style={{ transformStyle: 'preserve-3d' }}
+          >
+            {/* Gradient background */}
+            <div className={`absolute inset-0 bg-gradient-to-br from-primary/20 via-accent/15 to-primary/10 transition-opacity duration-700 ${isHovered ? 'opacity-100' : 'opacity-60'}`} />
+            
+            {/* Large letter decoration */}
+            <div className="absolute inset-0 flex items-center justify-center">
+              <span className={`text-[10rem] sm:text-[14rem] font-bold transition-all duration-700 ${isHovered ? 'gradient-text scale-110' : 'text-foreground/[0.03] scale-100'}`}>
+                {work.title.charAt(0)}
+              </span>
+            </div>
 
-        {/* Center content */}
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="text-center">
-            <h3 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 group-hover:scale-105 transition-transform duration-500">
-              <span className="gradient-text">{work.title}</span>
-            </h3>
-            <div className="flex flex-wrap justify-center gap-2 sm:gap-3 opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-500">
-              {work.tags.map((tag) => (
-                <span
-                  key={tag}
-                  className="text-xs px-3 py-1 bg-background/60 backdrop-blur-sm rounded-full border border-border/30"
-                >
-                  {tag}
-                </span>
-              ))}
+            {/* Category badge */}
+            <div className="absolute top-4 left-4 z-10">
+              <span className="px-3 py-1.5 text-xs bg-foreground text-background rounded-full">
+                {work.category}
+              </span>
+            </div>
+
+            {/* Year badge */}
+            <div className="absolute top-4 right-4 z-10">
+              <span className="px-3 py-1.5 text-xs font-mono bg-background/80 backdrop-blur-sm rounded-full border border-border/50">
+                {work.year}
+              </span>
+            </div>
+
+            {/* Hover overlay */}
+            <div className={`absolute inset-0 bg-foreground/90 rounded-2xl flex items-center justify-center transition-opacity duration-500 ${isHovered ? 'opacity-100' : 'opacity-0'}`}>
+              <span className="text-background flex items-center gap-3 text-lg font-medium">
+                View Project
+                <ArrowUpRight className="w-5 h-5" />
+              </span>
+            </div>
+
+            {/* Mobile index badge */}
+            <div className="lg:hidden absolute bottom-4 left-4 z-10">
+              <span className="text-4xl font-bold gradient-text">
+                {formattedIndex}
+              </span>
             </div>
           </div>
         </div>
 
-        {/* Hover overlay with CTA */}
-        <div className="absolute inset-0 bg-foreground/0 group-hover:bg-foreground/90 transition-all duration-500 flex items-center justify-center opacity-0 group-hover:opacity-100">
-          <span className="text-background flex items-center gap-3 text-lg sm:text-xl font-medium scale-75 group-hover:scale-100 transition-transform duration-500">
-            View Project
-            <ArrowUpRight className="w-5 h-5 sm:w-6 sm:h-6" />
-          </span>
+        {/* Content */}
+        <div className="lg:col-span-6">
+          <h3 className={`text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight mb-4 transition-all duration-500 ${isHovered ? 'gradient-text' : ''}`}>
+            {work.title}
+          </h3>
+          
+          <p className="text-base sm:text-lg text-muted-foreground leading-relaxed mb-6 text-balance">
+            {work.description}
+          </p>
+
+          {/* Tags */}
+          <div className="flex flex-wrap gap-2 mb-6">
+            {work.tags.map((tag) => (
+              <span
+                key={tag}
+                className={`text-xs px-3 py-1.5 rounded-full border transition-all duration-500 ${
+                  isHovered 
+                    ? 'border-primary/50 bg-primary/5 text-primary' 
+                    : 'border-border bg-card text-muted-foreground'
+                }`}
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+
+          {/* CTA */}
+          <div className={`flex items-center gap-2 text-sm font-medium transition-all duration-500 ${isHovered ? 'text-primary translate-x-2' : 'text-muted-foreground'}`}>
+            <span className="uppercase tracking-wider">詳しく見る</span>
+            <ArrowRight className={`w-4 h-4 transition-transform duration-300 ${isHovered ? 'translate-x-1' : ''}`} />
+          </div>
         </div>
-
-        {/* Decorative corner lines */}
-        <div className="absolute top-0 left-0 w-16 sm:w-24 h-16 sm:h-24 border-l-2 border-t-2 border-primary/20 rounded-tl-2xl sm:rounded-tl-3xl" />
-        <div className="absolute bottom-0 right-0 w-16 sm:w-24 h-16 sm:h-24 border-r-2 border-b-2 border-primary/20 rounded-br-2xl sm:rounded-br-3xl" />
-      </Link>
-
-      {/* Content side */}
-      <div
-        ref={contentRef}
-        className={`w-full lg:w-2/5 ${isReversed ? 'lg:text-right' : 'lg:text-left'} text-center lg:text-inherit`}
-      >
-        <span className="inline-block text-7xl sm:text-8xl lg:text-9xl font-bold gradient-text opacity-20 mb-4 lg:mb-6">
-          {formattedIndex}
-        </span>
-        <p className="text-base sm:text-lg text-muted-foreground leading-relaxed mb-6 sm:mb-8 max-w-md mx-auto lg:mx-0 lg:max-w-none text-balance">
-          {work.description}
-        </p>
-        <MagneticButton
-          href={work.url}
-          className="group inline-flex items-center gap-3 px-5 sm:px-6 py-2.5 sm:py-3 bg-foreground text-background rounded-full btn-gradient-hover transition-all duration-300"
-          data-cursor="View"
-        >
-          <span className="text-sm uppercase tracking-wider">詳しく見る</span>
-          <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
-        </MagneticButton>
       </div>
-    </div>
+    </Link>
   )
 }
 
 export default function WorksPageClient() {
   const [selectedCategory, setSelectedCategory] = useState('すべて')
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
+  const [hoveredPosition, setHoveredPosition] = useState<{ x: number; y: number } | null>(null)
 
-  const filteredWorks =
-    selectedCategory === 'すべて' ? works : works.filter((work) => work.category === selectedCategory)
+  const filteredWorks = selectedCategory === 'すべて' 
+    ? works 
+    : works.filter((work) => work.category === selectedCategory)
+
+  const handleHover = useCallback((index: number | null, position?: { x: number; y: number }) => {
+    setHoveredIndex(index)
+    setHoveredPosition(index !== null && position ? position : null)
+  }, [])
 
   return (
     <>
-      {/* Hero Section - More dramatic */}
-      <section className="relative min-h-[70svh] sm:min-h-[80svh] flex items-center justify-center overflow-hidden">
-        {/* Animated background orbs */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-1/4 left-1/4 w-64 sm:w-96 h-64 sm:h-96 bg-gradient-to-br from-primary/20 to-accent/20 rounded-full blur-3xl animate-pulse" />
-          <div className="absolute bottom-1/4 right-1/4 w-64 sm:w-96 h-64 sm:h-96 bg-gradient-to-br from-accent/20 to-primary/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
-        </div>
+      {/* WebGL Background - Subtle layer */}
+      <WorksWebGLScene hoveredIndex={hoveredIndex} hoveredPosition={hoveredPosition} />
 
-        <div className="container mx-auto px-4 sm:px-6 md:px-12 py-24 sm:py-32 text-center relative z-10">
+      {/* Hero Section */}
+      <section className="relative min-h-[60svh] sm:min-h-[70svh] flex items-center justify-center">
+        <div className="container mx-auto px-4 sm:px-6 md:px-12 py-24 sm:py-32 text-center">
           <LineReveal delay={0}>
-            <p className="text-xs sm:text-sm uppercase tracking-[0.3em] sm:tracking-[0.4em] text-primary mb-6 sm:mb-8">
-              Selected Works
+            <p className="text-xs sm:text-sm uppercase tracking-[0.2em] sm:tracking-[0.3em] text-primary mb-4 sm:mb-6">
+              Works
             </p>
           </LineReveal>
           
-          <div className="relative mb-8 sm:mb-12">
-            <TextReveal
-              text="制作実績"
-              as="h1"
-              className="text-5xl sm:text-6xl md:text-7xl lg:text-9xl font-bold tracking-tight"
-              delay={0.2}
-              gradient
-            />
-            {/* Decorative line */}
-            <div className="absolute -bottom-2 sm:-bottom-4 left-1/2 -translate-x-1/2 w-24 sm:w-32 h-1 bg-gradient-to-r from-transparent via-primary to-transparent" />
-          </div>
-
+          <TextReveal
+            text="制作実績"
+            as="h1"
+            className="text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-bold tracking-tight mb-6 sm:mb-8"
+            delay={0.2}
+            gradient
+          />
+          
           <LineReveal delay={0.6}>
             <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed text-balance">
-              クライアントと共に創り上げた、<br className="sm:hidden" />
-              <span className="gradient-highlight">想いが詰まったプロジェクト</span>をご紹介します。
+              クライアントと共に創り上げた、<span className="gradient-highlight">想いが詰まったプロジェクト</span>をご紹介します。
             </p>
           </LineReveal>
 
           {/* Scroll indicator */}
           <SectionReveal delay={1} className="mt-16 sm:mt-20">
-            <div className="flex flex-col items-center gap-2 animate-bounce">
+            <div className="flex flex-col items-center gap-2">
               <span className="text-xs text-muted-foreground uppercase tracking-widest">Scroll</span>
               <div className="w-px h-8 sm:h-12 bg-gradient-to-b from-primary to-transparent" />
             </div>
@@ -303,28 +298,25 @@ export default function WorksPageClient() {
         </div>
       </section>
 
-      {/* Filter Section - Stylized */}
-      <section className="py-8 sm:py-12 glass-light border-y border-border/20">
+      {/* Filter Section */}
+      <section className="py-6 sm:py-8 border-y border-border/30 glass-light sticky top-[72px] z-30">
         <div className="container mx-auto px-4 sm:px-6 md:px-12">
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6">
-            <span className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Filter by</span>
+            <span className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Filter</span>
             <div className="flex flex-wrap justify-center gap-2 sm:gap-3">
               {categories.map((category) => (
                 <button
                   key={category}
                   onClick={() => setSelectedCategory(category)}
-                  className={`relative px-4 sm:px-6 py-2 sm:py-2.5 text-xs sm:text-sm rounded-full transition-all duration-500 overflow-hidden group ${
+                  className={`relative px-4 sm:px-6 py-2 sm:py-2.5 text-xs sm:text-sm rounded-full transition-all duration-500 overflow-hidden ${
                     selectedCategory === category
                       ? 'bg-foreground text-background'
-                      : 'bg-transparent border border-border/50 hover:border-foreground/50'
+                      : 'bg-card border border-border hover:border-primary/50'
                   }`}
                 >
-                  {/* Hover gradient effect */}
-                  <span
-                    className={`absolute inset-0 bg-gradient-to-r from-primary/20 to-accent/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ${
-                      selectedCategory === category ? 'hidden' : ''
-                    }`}
-                  />
+                  {selectedCategory !== category && (
+                    <span className="absolute inset-0 bg-gradient-to-r from-primary/10 to-accent/10 opacity-0 hover:opacity-100 transition-opacity duration-300" />
+                  )}
                   <span className="relative z-10">{category}</span>
                 </button>
               ))}
@@ -333,11 +325,17 @@ export default function WorksPageClient() {
         </div>
       </section>
 
-      {/* Works Section - Full width alternating layout */}
-      <section className="glass-light">
+      {/* Works List */}
+      <section className="py-8 sm:py-12 glass-light">
         <div className="container mx-auto px-4 sm:px-6 md:px-12">
           {filteredWorks.map((work, index) => (
-            <WorkCard key={work.id} work={work} index={index} />
+            <WorkCard 
+              key={work.id} 
+              work={work} 
+              index={index} 
+              onHover={handleHover}
+              isHovered={hoveredIndex === index}
+            />
           ))}
 
           {filteredWorks.length === 0 && (
@@ -348,77 +346,82 @@ export default function WorksPageClient() {
         </div>
       </section>
 
-      {/* Contact CTA */}
-      <section className="py-16 sm:py-24 md:py-32 glass-card">
+      {/* CTA Section */}
+      <section className="py-24 sm:py-32 md:py-40 glass-card">
         <div className="container mx-auto px-4 sm:px-6 md:px-12">
-          <SectionReveal className="text-center">
-            <div className="max-w-3xl mx-auto p-8 sm:p-12 md:p-16 rounded-2xl bg-background border border-border">
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-6">
-                もっと詳しく見たい方へ
-              </h2>
-              <p className="text-sm sm:text-base md:text-lg text-muted-foreground mb-8 sm:mb-10 text-balance">
+          <div className="max-w-3xl mx-auto text-center">
+            <SectionReveal>
+              <p className="text-xs sm:text-sm uppercase tracking-[0.2em] sm:tracking-[0.3em] text-primary mb-4 sm:mb-6">
+                More Works
+              </p>
+            </SectionReveal>
+            
+            <TextReveal
+              text="もっと詳しく見たい方へ"
+              as="h2"
+              className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-6 sm:mb-8"
+              delay={0.1}
+              gradient
+            />
+            
+            <SectionReveal delay={0.3}>
+              <p className="text-base sm:text-lg text-muted-foreground mb-10 sm:mb-12 text-balance">
                 ポートフォリオの詳細や、掲載していない実績についてもお気軽にお問い合わせください。
               </p>
+            </SectionReveal>
+
+            <SectionReveal delay={0.5} className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <MagneticButton
+                href="/contact"
+                className="group w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 bg-foreground text-background rounded-full font-medium btn-gradient-hover transition-all duration-300"
+                data-cursor="Contact"
+              >
+                <span className="flex items-center justify-center gap-3">
+                  <MessageCircle size={18} />
+                  もっと実績を見せてもらう
+                  <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
+                </span>
+              </MagneticButton>
               
-              {/* CTA Buttons */}
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                <MagneticButton
-                  href="/contact"
-                  className="group w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 bg-foreground text-background rounded-full font-medium btn-gradient-hover transition-all duration-300"
-                  data-cursor="Contact"
-                >
-                  <span className="flex items-center justify-center gap-3">
-                    <MessageCircle size={18} />
-                    もっと実績を見せてもらう
-                    <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
-                  </span>
-                </MagneticButton>
-                
-                <a 
-                  href="tel:08091550426"
-                  className="flex items-center justify-center gap-2 w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 bg-foreground text-background rounded-full font-medium btn-gradient-hover transition-all duration-300"
-                >
-                  <Phone size={18} />
-                  <span>電話で相談する</span>
-                </a>
-              </div>
-            </div>
-          </SectionReveal>
+              <a 
+                href="tel:08091550426"
+                className="flex items-center justify-center gap-2 w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 bg-card text-foreground rounded-full font-medium border border-border hover:border-primary/50 transition-all duration-300"
+              >
+                <Phone size={18} />
+                <span>電話で相談する</span>
+              </a>
+            </SectionReveal>
+          </div>
         </div>
       </section>
 
       {/* Bottom CTA */}
-      <section className="py-24 sm:py-32 md:py-48 glass-light">
+      <section className="py-24 sm:py-32 md:py-48 overflow-hidden glass-light">
         <div className="container mx-auto px-4 sm:px-6 md:px-12 text-center">
-          <TextReveal
-            text="あなたのプロジェクトを"
-            as="h2"
-            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight"
-            delay={0}
-          />
-          <TextReveal
-            text="形にしませんか？"
-            as="span"
-            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6 sm:mb-8 block"
-            delay={0.3}
-            gradient
-          />
-          <SectionReveal delay={0.6}>
-            <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 sm:mb-12 leading-relaxed text-balance">
-              私たちは、あなたのビジネスの成長を本気で応援します。まずは気軽にお話しさせてください。
+          <SectionReveal duration={1}>
+            <p className="text-xs sm:text-sm uppercase tracking-[0.2em] sm:tracking-[0.3em] text-primary mb-4 sm:mb-6">
+              Contact
             </p>
           </SectionReveal>
-
-          <SectionReveal delay={0.8}>
-            <MagneticButton 
-              href="/contact"
-              className="group inline-flex items-center justify-center w-36 h-36 sm:w-40 sm:h-40 rounded-full bg-foreground text-background font-medium btn-gradient-hover transition-all duration-300"
-              data-cursor="Start"
-            >
-              <span className="relative z-10 uppercase tracking-wider text-xs sm:text-sm">
-                お問い合わせ
-              </span>
-            </MagneticButton>
+          <TextReveal 
+            as="h2" 
+            className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold tracking-tight mb-6 sm:mb-8"
+            delay={0.1}
+            stagger={0.025}
+            gradient
+          >
+            まずは、お話しませんか？
+          </TextReveal>
+          <SectionReveal delay={0.4} duration={1}>
+            <p className="text-base sm:text-lg text-muted-foreground max-w-xl mx-auto mb-10 sm:mb-12 text-balance">
+              「こんなこと頼めるのかな？」という段階でも大丈夫。お気軽にご連絡ください。
+            </p>
+          </SectionReveal>
+          
+          <SectionReveal delay={0.5} duration={1.2}>
+            <CircleButton href="/contact" size="lg">
+              080-9155-0426
+            </CircleButton>
           </SectionReveal>
         </div>
       </section>
