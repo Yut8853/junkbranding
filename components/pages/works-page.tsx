@@ -47,7 +47,7 @@ const works = [
 // Categories for filter
 const categories = ['すべて', ...Array.from(new Set(works.map((work) => work.category)))]
 
-// Work card with scroll animation and hover effects
+// Work card component
 function WorkCard({ 
   work, 
   index, 
@@ -66,7 +66,6 @@ function WorkCard({
   const handleMouseEnter = (e: React.MouseEvent) => {
     const rect = cardRef.current?.getBoundingClientRect()
     if (rect) {
-      // Convert to normalized coordinates (-1 to 1)
       const x = ((rect.left + rect.width / 2) / window.innerWidth) * 2 - 1
       const y = -((rect.top + rect.height / 2) / window.innerHeight) * 2 + 1
       onHover(index, { x, y })
@@ -77,29 +76,30 @@ function WorkCard({
     onHover(null)
   }
 
-  // Scroll animation
+  // Scroll animation using gsap.context for clean scoping
   useEffect(() => {
     const card = cardRef.current
     if (!card) return
 
-    gsap.set(card, { opacity: 0, y: 80 })
+    const ctx = gsap.context(() => {
+      gsap.set(card, { opacity: 0, y: 80 })
 
-    gsap.to(card, {
-      opacity: 1,
-      y: 0,
-      duration: 1,
-      ease: 'power3.out',
-      scrollTrigger: {
-        trigger: card,
-        start: 'top 85%',
-        toggleActions: 'play none none reverse',
-      },
-    })
+      gsap.to(card, {
+        opacity: 1,
+        y: 0,
+        duration: 1,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: card,
+          start: 'top 85%',
+          toggleActions: 'play none none reverse',
+          invalidateOnRefresh: true,
+        },
+      })
+    }, card)
 
-    return () => {
-      ScrollTrigger.getAll().forEach((t) => t.kill())
-    }
-  }, [])
+    return () => ctx.revert() // Cleanup only this card's triggers
+  }, [work.id]) // Re-run when the item itself changes via filter
 
   // 3D tilt effect on hover
   useEffect(() => {
@@ -154,45 +154,38 @@ function WorkCard({
       onMouseLeave={handleMouseLeave}
     >
       <div className={`grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-center py-12 sm:py-16 lg:py-20 px-4 sm:px-6 -mx-4 sm:-mx-6 border-b border-border/30 rounded-2xl transition-all duration-500 ${isHovered ? 'bg-card/50' : ''}`}>
-        {/* Index number - Desktop only */}
         <div className="hidden lg:flex lg:col-span-1 items-center justify-center">
           <span className={`text-6xl xl:text-7xl font-bold transition-all duration-500 ${isHovered ? 'gradient-text' : 'text-foreground/10'}`}>
             {formattedIndex}
           </span>
         </div>
 
-        {/* Image */}
         <div className="lg:col-span-5">
           <div 
             ref={imageRef}
             className={`relative aspect-[16/10] rounded-2xl overflow-hidden border border-border/50 shadow-lg transition-all duration-500 ${isHovered ? 'bg-card/70' : 'bg-card/80'}`}
             style={{ transformStyle: 'preserve-3d' }}
           >
-            {/* Gradient background */}
             <div className={`absolute inset-0 bg-gradient-to-br from-primary/20 via-accent/15 to-primary/10 transition-opacity duration-700 ${isHovered ? 'opacity-100' : 'opacity-60'}`} />
             
-            {/* Large letter decoration */}
             <div className="absolute inset-0 flex items-center justify-center">
               <span className={`text-[10rem] sm:text-[14rem] font-bold transition-all duration-700 ${isHovered ? 'gradient-text scale-110' : 'text-foreground/[0.03] scale-100'}`}>
                 {work.title.charAt(0)}
               </span>
             </div>
 
-            {/* Category badge */}
             <div className="absolute top-4 left-4 z-10">
               <span className="px-3 py-1.5 text-xs bg-foreground text-background rounded-full">
                 {work.category}
               </span>
             </div>
 
-            {/* Year badge */}
             <div className="absolute top-4 right-4 z-10">
               <span className="px-3 py-1.5 text-xs font-mono bg-background/80 backdrop-blur-sm rounded-full border border-border/50">
                 {work.year}
               </span>
             </div>
 
-            {/* Hover overlay */}
             <div className={`absolute inset-0 bg-foreground/90 rounded-2xl flex items-center justify-center transition-opacity duration-500 ${isHovered ? 'opacity-100' : 'opacity-0'}`}>
               <span className="text-background flex items-center gap-3 text-lg font-medium">
                 View Project
@@ -200,7 +193,6 @@ function WorkCard({
               </span>
             </div>
 
-            {/* Mobile index badge */}
             <div className="lg:hidden absolute bottom-4 left-4 z-10">
               <span className="text-4xl font-bold gradient-text">
                 {formattedIndex}
@@ -209,7 +201,6 @@ function WorkCard({
           </div>
         </div>
 
-        {/* Content */}
         <div className="lg:col-span-6">
           <h3 className={`text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight mb-4 transition-all duration-500 ${isHovered ? 'gradient-text' : ''}`}>
             {work.title}
@@ -219,7 +210,6 @@ function WorkCard({
             {work.description}
           </p>
 
-          {/* Tags */}
           <div className="flex flex-wrap gap-2 mb-6">
             {work.tags.map((tag) => (
               <span
@@ -235,7 +225,6 @@ function WorkCard({
             ))}
           </div>
 
-          {/* CTA */}
           <div className={`flex items-center gap-2 text-sm font-medium transition-all duration-500 ${isHovered ? 'text-primary translate-x-2' : 'text-muted-foreground'}`}>
             <span className="uppercase tracking-wider">詳しく見る</span>
             <ArrowRight className={`w-4 h-4 transition-transform duration-300 ${isHovered ? 'translate-x-1' : ''}`} />
@@ -255,6 +244,14 @@ export default function WorksPageClient() {
     ? works 
     : works.filter((work) => work.category === selectedCategory)
 
+  // Force ScrollTrigger to refresh when the list changes
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      ScrollTrigger.refresh()
+    }, 100)
+    return () => clearTimeout(timer)
+  }, [selectedCategory])
+
   const handleHover = useCallback((index: number | null, position?: { x: number; y: number }) => {
     setHoveredIndex(index)
     setHoveredPosition(index !== null && position ? position : null)
@@ -262,10 +259,8 @@ export default function WorksPageClient() {
 
   return (
     <>
-      {/* WebGL Background - Subtle layer */}
       <WorksWebGLScene hoveredIndex={hoveredIndex} hoveredPosition={hoveredPosition} />
 
-      {/* Hero Section */}
       <section className="relative min-h-[60svh] sm:min-h-[70svh] flex items-center justify-center">
         <div className="container mx-auto px-4 sm:px-6 md:px-12 py-24 sm:py-32 text-center">
           <LineReveal delay={0}>
@@ -288,7 +283,6 @@ export default function WorksPageClient() {
             </p>
           </LineReveal>
 
-          {/* Scroll indicator */}
           <SectionReveal delay={1} className="mt-16 sm:mt-20">
             <div className="flex flex-col items-center gap-2">
               <span className="text-xs text-muted-foreground uppercase tracking-widest">Scroll</span>
@@ -298,7 +292,6 @@ export default function WorksPageClient() {
         </div>
       </section>
 
-      {/* Filter Section */}
       <section className="py-6 sm:py-8 border-y border-border/30 glass-light sticky top-[72px] z-30">
         <div className="container mx-auto px-4 sm:px-6 md:px-12">
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6">
@@ -325,7 +318,6 @@ export default function WorksPageClient() {
         </div>
       </section>
 
-      {/* Works List */}
       <section className="py-8 sm:py-12 glass-light">
         <div className="container mx-auto px-4 sm:px-6 md:px-12">
           {filteredWorks.map((work, index) => (
@@ -346,7 +338,6 @@ export default function WorksPageClient() {
         </div>
       </section>
 
-      {/* CTA Section */}
       <section className="py-24 sm:py-32 md:py-40 glass-card">
         <div className="container mx-auto px-4 sm:px-6 md:px-12">
           <div className="max-w-3xl mx-auto text-center">
@@ -395,7 +386,6 @@ export default function WorksPageClient() {
         </div>
       </section>
 
-      {/* Bottom CTA */}
       <section className="py-24 sm:py-32 md:py-48 overflow-hidden glass-light">
         <div className="container mx-auto px-4 sm:px-6 md:px-12 text-center">
           <SectionReveal duration={1}>
