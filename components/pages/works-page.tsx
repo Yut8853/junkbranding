@@ -34,7 +34,7 @@ const works = [
     title: 'LUZ REAL',
     category: 'コーポレートサイト',
     description: '洗練されたビジュアルと使いやすさを追求したコーポレートサイト。',
-    tags: ['Web Design', 'Development'],
+    tags: ['Web Design', 'Development', 'Branding'],
     url: 'https://luz-real.com/',
     image: '/works/luz-real.jpg',
     year: '2025',
@@ -42,8 +42,10 @@ const works = [
 ]
 
 // Categories for filter
-const categories = ['すべて', 'コーポレートサイト', 'ランディングページ', 'ECサイト', 'ブランディング']
-
+const categories = [
+  'すべて',
+  ...Array.from(new Set(works.map(work => work.category)))
+]
 export default function WorksPageClient() {
   const [selectedCategory, setSelectedCategory] = useState('すべて')
   const [isFilterOpen, setIsFilterOpen] = useState(false)
