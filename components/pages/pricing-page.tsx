@@ -17,9 +17,9 @@ const serviceCategories = [
     services: [
       { name: 'コーポレートサイト', price: '25万円〜', note: '5〜10ページ程度' },
       { name: 'ランディングページ', price: '15万円〜', note: '1ページ構成' },
-      { name: 'ECサイト', price: '40万円〜', note: 'Shopify / BASE対応可' },
+      { name: 'ECサイト', price: '50万円〜', note: 'Shopify対応可' },
       { name: 'ポートフォリオサイト', price: '20万円〜', note: '作品紹介に特化' },
-      { name: 'メディアサイト', price: '30万円〜', note: 'ブログ・オウンドメディア' },
+      { name: 'メディアサイト', price: '40万円〜', note: 'ブログ・オウンドメディア' },
     ],
     features: ['レスポンシブ対応', 'SEO内部対策', 'SSL対応', 'お問い合わせフォーム', '修正無制限'],
   },
@@ -34,6 +34,8 @@ const serviceCategories = [
       { name: 'WordPress構築', price: '10万円〜', note: 'テーマカスタマイズ含む' },
       { name: 'microCMS構築', price: '8万円〜', note: 'ヘッドレスCMS' },
       { name: 'Notion連携サイト', price: '12万円〜', note: 'Notionをデータベースに' },
+      { name: 'Movable Type構築', price: '12万円〜', note: '静的生成・企業サイト向け' }, // :contentReference[oaicite:0]{index=0}
+      { name: 'Drupal構築', price: '15万円〜', note: '大規模・多言語サイト対応' }, // :contentReference[oaicite:1]{index=1}
       { name: 'オリジナルCMS', price: '25万円〜', note: '要件に合わせた開発' },
     ],
     features: ['管理画面レクチャー', 'マニュアル作成', '初期コンテンツ投入サポート', '修正無制限'],
@@ -79,7 +81,7 @@ const serviceCategories = [
     services: [
       { name: 'チラシ・フライヤー', price: '1万円〜', note: 'A4片面〜' },
       { name: 'パンフレット', price: '5万円〜', note: '4ページ〜' },
-      { name: 'ポスター', price: '2万円〜', note: 'A2〜B1' },
+      { name: 'ポスター', price: '3万円〜', note: 'A2〜B1' },
       { name: '会社案内', price: '10万円〜', note: '8ページ〜' },
       { name: 'ショップカード', price: '1万円〜', note: '両面' },
     ],
