@@ -11,6 +11,16 @@ import { Footer } from '@/components/footer'
 const works = [
   {
     id: 1,
+    title: 'JunkBranding',
+    category: 'ポートフォリオサイト',
+    description: '自身のクリエイティブと思想を表現するポートフォリオサイト。WebGLやアニメーションを活用し、ブランド体験としてのサイト設計を行いました。',
+    tags: ['Web Design', 'Frontend', 'WebGL', 'Branding'],
+    url: 'https://junkbranding.com/',
+    image: '/works/junkbranding.jpg',
+    year: '2026',
+  },
+  {
+    id: 2,
     title: 'TO PLACE',
     category: 'コーポレートサイト',
     description: '不動産会社のコーポレートサイト。信頼感と先進性を両立したデザイン。',
@@ -20,14 +30,14 @@ const works = [
     year: '2024',
   },
   {
-    id: 2,
+    id: 3,
     title: 'LUZ REAL',
     category: 'コーポレートサイト',
     description: '洗練されたビジュアルと使いやすさを追求したコーポレートサイト。',
     tags: ['Web Design', 'Development'],
     url: 'https://luz-real.com/',
     image: '/works/luz-real.jpg',
-    year: '2024',
+    year: '2025',
   },
 ]
 
