@@ -384,7 +384,7 @@ export default function ContactPageClient() {
                     onChange={handleChange}
                     rows={6}
                     className={`w-full px-4 py-3 rounded-lg bg-card border ${errors.message ? 'border-destructive' : 'border-border'} focus:border-primary focus:outline-none transition-colors resize-none`}
-                    placeholder="プロジェク���の概要や、ご相談内容をご記入ください。"
+                    placeholder="プロジェクトの概要や、ご相談内容をご記入ください。"
                   />
                   {errors.message && (
                     <p className="mt-1 text-sm text-destructive flex items-center gap-1">
