@@ -58,7 +58,7 @@ export function Navigation() {
             className="relative group"
             aria-label="JunkBranding"
           >
-            <span className="text-xl md:text-2xl font-bold tracking-tighter transition-colors duration-300 group-hover:text-accent font-display">
+            <span className="text-2xl md:text-3xl font-normal tracking-[0.02em] uppercase transition-colors duration-300 group-hover:text-accent font-display">
               JunkBranding
             </span>
             <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-accent transition-all duration-300 group-hover:w-full" />

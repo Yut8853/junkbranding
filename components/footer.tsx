@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { Phone, Mail, MapPin } from 'lucide-react'
 import { RevealSection } from './reveal-section'
-import { HorizontalScrollText } from './horizontal-scroll-text'
+
 import { MagneticButton } from './magnetic-button'
 
 const footerLinks = {
@@ -22,12 +22,17 @@ export function Footer() {
   return (
     <footer className="relative glass-card border-t border-border/30">
       {/* Marquee */}
-      <div className="py-12 md:py-16 border-b border-border/50 overflow-hidden">
-        <HorizontalScrollText
-          text="Let&apos;s create something extraordinary together"
-          className="text-6xl md:text-8xl lg:text-9xl font-black tracking-[-0.03em] text-foreground/10 font-display uppercase english-stroke hover:text-foreground/30 transition-all duration-700"
-          speed={40}
-        />
+      <div className="py-16 sm:py-20 md:py-24 border-b border-border/50 overflow-hidden">
+        <div className="flex whitespace-nowrap animate-marquee">
+          {['Branding', 'Web Design', 'Graphic Design', 'Print Media', 'Logo Design', 'Art Direction', 'Branding', 'Web Design', 'Graphic Design', 'Print Media', 'Logo Design', 'Art Direction', 'Branding', 'Web Design', 'Graphic Design', 'Print Media', 'Logo Design', 'Art Direction', 'Branding', 'Web Design', 'Graphic Design', 'Print Media', 'Logo Design', 'Art Direction'].map((text, i) => (
+            <span 
+              key={i} 
+              className="font-display uppercase text-[12rem] sm:text-[16rem] md:text-[20rem] lg:text-[26rem] xl:text-[32rem] font-normal tracking-[0.02em] leading-none english-stroke text-foreground/15 transition-all duration-700 hover:text-foreground/30 mx-8 sm:mx-12 md:mx-16"
+            >
+              {text}
+            </span>
+          ))}
+        </div>
       </div>
 
       {/* Main footer content */}
@@ -39,8 +44,8 @@ export function Footer() {
               href="/"
               className="inline-block mb-6"
             >
-              <span className="text-4xl md:text-5xl font-bold tracking-tighter font-display">
-                JunkBranding
+              <span className="text-5xl md:text-6xl font-normal tracking-[0.02em] uppercase font-display">
+                JUNKBRANDING
               </span>
             </Link>
             <p className="text-muted-foreground leading-relaxed max-w-sm mb-8 text-pretty">

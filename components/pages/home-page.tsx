@@ -37,7 +37,7 @@ const services = [
 ]
 
 // Marquee texts
-const marqueeTexts = ['Brand Strategy', 'Web Design', 'Development', 'UI/UX', 'Logo Design', 'Creative Direction']
+const marqueeTexts = ['Branding', 'Web Design', 'Graphic Design', 'Print Media', 'Logo Design', 'Art Direction']
 
 export default function HomePageClient() {
   return (
@@ -47,18 +47,21 @@ export default function HomePageClient() {
         <div className="container mx-auto px-4 sm:px-6 md:px-12 py-20 md:py-32">
           <div className="max-w-6xl">
             <SectionReveal delay={0.2} duration={1.2}>
-              <EnglishLabel delay={0.3} align="left">
-                Branding & Web
-              </EnglishLabel>
+              <div className="mb-[-4rem] sm:mb-[-6rem] md:mb-[-10rem]">
+                <EnglishLabel delay={0.3} align="left">
+                  Design Studio
+                </EnglishLabel>
+              </div>
             </SectionReveal>
 
-            <div className="mt-4 sm:mt-6">
+            <div className="mt-0">
               <HeroTitle />
             </div>
 
             <SectionReveal delay={0.8} duration={1.2}>
-              <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mt-8 sm:mt-10 leading-relaxed text-balance">
-                茨城・東京・千葉を中心に活動する、2人だけの小さなブランディング&Web制作スタジオ。大手にはできない、丁寧なものづくりを。
+              <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mt-6 sm:mt-8 leading-relaxed">
+                小さくても、本気のブランディングを。<br />
+                茨城発、2人だけのクリエイティブスタジオ。
               </p>
             </SectionReveal>
 
@@ -113,7 +116,7 @@ export default function HomePageClient() {
         <div className="container mx-auto px-4 sm:px-6 md:px-12">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-24 items-center">
             <LineReveal stagger={0.12}>
-              <div className="line mb-6 sm:mb-8">
+              <div className="line mb-[-1rem] sm:mb-[-2rem] md:mb-[-3rem]">
                 <EnglishLabel delay={0.1} align="left">
                   About Us
                 </EnglishLabel>
@@ -172,7 +175,7 @@ export default function HomePageClient() {
       <section className="py-24 sm:py-32 md:py-48 glass-card">
         <div className="container mx-auto px-4 sm:px-6 md:px-12">
           <div className="mb-16 sm:mb-20 md:mb-32">
-            <div className="mb-4 sm:mb-6">
+            <div className="mb-[-1rem] sm:mb-[-2rem] md:mb-[-3rem]">
               <EnglishLabel delay={0} align="left">
                 Services
               </EnglishLabel>
@@ -219,7 +222,7 @@ export default function HomePageClient() {
       <section className="py-24 sm:py-32 md:py-48 glass-light">
         <div className="container mx-auto px-4 sm:px-6 md:px-12">
           <div className="text-center mb-12 sm:mb-16 md:mb-20">
-            <div className="mb-4 sm:mb-6">
+            <div className="mb-[-1rem] sm:mb-[-2rem] md:mb-[-3rem]">
               <EnglishLabel delay={0} align="center">
                 Works
               </EnglishLabel>
@@ -263,7 +266,7 @@ export default function HomePageClient() {
       {/* Area Section - 中央寄せ */}
       <section className="py-24 sm:py-32 md:py-40 border-y border-border/30 glass-card overflow-hidden">
         <div className="container mx-auto px-4 sm:px-6 md:px-12 text-center">
-          <div className="mb-4 sm:mb-6">
+          <div className="mb-[-1rem] sm:mb-[-2rem] md:mb-[-3rem]">
             <EnglishLabel delay={0} align="center">
               Area
             </EnglishLabel>
@@ -297,7 +300,7 @@ export default function HomePageClient() {
       {/* CTA Section - 中央寄せ */}
       <section className="py-24 sm:py-32 md:py-48 overflow-hidden glass-light">
         <div className="container mx-auto px-4 sm:px-6 md:px-12 text-center">
-          <div className="mb-4 sm:mb-6">
+          <div className="mb-[-1rem] sm:mb-[-2rem] md:mb-[-3rem]">
             <EnglishLabel delay={0} align="center">
               Contact
             </EnglishLabel>

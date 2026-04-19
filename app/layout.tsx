@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import { Inter, Space_Grotesk } from 'next/font/google';
+import { Inter, Bebas_Neue } from 'next/font/google';
 import { Analytics } from '@vercel/analytics/next';
 import './globals.css';
 import { LoadingProvider } from '@/components/loading-provider';
@@ -16,11 +16,11 @@ const inter = Inter({
   display: 'swap',
 });
 
-const spaceGrotesk = Space_Grotesk({
+const bebasNeue = Bebas_Neue({
   subsets: ['latin'],
-  variable: '--font-space',
+  variable: '--font-display',
   display: 'swap',
-  weight: ['400', '500', '600', '700'],
+  weight: '400',
 });
 
 export const metadata: Metadata = {
@@ -216,7 +216,7 @@ export default function RootLayout({
   return (
     <html
       lang="ja"
-      className={`${inter.variable} ${spaceGrotesk.variable}`}
+      className={`${inter.variable} ${bebasNeue.variable}`}
       data-scroll-behavior="smooth"
     >
       <head>

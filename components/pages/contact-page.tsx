@@ -155,7 +155,7 @@ export default function ContactPageClient() {
       {/* Hero Section */}
       <section className="relative min-h-[50svh] sm:min-h-[60svh] flex items-center justify-center">
         <div className="container mx-auto px-4 sm:px-6 md:px-12 py-24 sm:py-32 text-center">
-          <div className="mb-6 sm:mb-8">
+          <div className="mb-[-1rem] sm:mb-[-2rem] md:mb-[-3rem]">
             <EnglishLabel delay={0.1} align="center">
               Contact
             </EnglishLabel>

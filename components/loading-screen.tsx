@@ -127,8 +127,9 @@ export function LoadingScreen({ progress }: LoadingScreenProps) {
 
   return (
     <div 
-      className="fixed inset-0 z-[100] flex items-center justify-center overflow-hidden"
+      className="fixed inset-0 z-[100] flex items-center justify-center overflow-hidden overscroll-none"
       style={{
+        touchAction: 'none',
         background: 'linear-gradient(135deg, oklch(0.99 0.01 280), oklch(0.97 0.02 330), oklch(0.98 0.015 25))',
         opacity: phase === 'exit' ? 0 : 1,
         transform: phase === 'exit' ? 'scale(1.1)' : 'scale(1)',
@@ -167,8 +168,8 @@ export function LoadingScreen({ progress }: LoadingScreenProps) {
       <div className="relative z-10 flex flex-col items-center gap-16">
         {/* Logo with morph animation */}
         <div className="relative">
-          <h1 className="text-6xl md:text-8xl font-bold tracking-tighter font-display">
-            {'JunkBranding'.split('').map((char, i) => (
+          <h1 className="text-7xl md:text-9xl font-normal tracking-[0.02em] uppercase font-display">
+            {'JUNKBRANDING'.split('').map((char, i) => (
               <span
                 key={i}
                 className="inline-block"

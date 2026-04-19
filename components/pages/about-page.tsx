@@ -102,7 +102,7 @@ const process = [
     fullDescription: 'ここで初めてビジュアルを作ります。ただし、感覚だけで作ることはありません。「なぜこのレイアウトなのか」「なぜこの余白なのか」説明できる状態で進めます。',
     duration: '約3〜8週間',
     details: [
-      { title: 'ファーストビュー設計', desc: '最初の3秒で��自分に関係ある」と思わせるための設計を徹底しま�����。' },
+      { title: 'ファーストビュー設計', desc: '最初の3��で��自分に関係ある」と思わせるための設計を徹底しま�����。' },
       { title: '情報の優先順位設計', desc: 'すべてを同じ強さで見せると、何も伝わりません。順番を作ります。' },
       { title: 'トーン＆マナー統一', desc: 'ブランドらしさを崩さないためのルールを細かく整えます。' },
       { title: 'レスポンシブ最適化', desc: '実際の閲覧環境を考え、スマホでの見え方を優先して調整します。' },
@@ -162,7 +162,7 @@ export default function AboutPageClient() {
       {/* Hero Section */}
       <section className="relative min-h-[70svh] sm:min-h-[80svh] flex items-center justify-center">
         <div className="container mx-auto px-4 sm:px-6 md:px-12 py-24 sm:py-32 text-center">
-          <div className="mb-6 sm:mb-8">
+          <div className="mb-[-1rem] sm:mb-[-2rem] md:mb-[-3rem]">
             <EnglishLabel delay={0.1} align="center">
               About Us
             </EnglishLabel>
@@ -244,7 +244,7 @@ export default function AboutPageClient() {
       <section className="py-24 sm:py-32 md:py-48 glass-card">
         <div className="container mx-auto px-4 sm:px-6 md:px-12">
           <div className="text-center mb-16 sm:mb-20 md:mb-32">
-            <div className="mb-6 sm:mb-8">
+            <div className="mb-[-1rem] sm:mb-[-2rem] md:mb-[-3rem]">
               <EnglishLabel delay={0} align="center">
                 Team
               </EnglishLabel>
@@ -298,7 +298,7 @@ export default function AboutPageClient() {
       <section className="py-24 sm:py-32 md:py-48 glass-light">
         <div className="container mx-auto px-4 sm:px-6 md:px-12">
           <div className="text-center mb-16 sm:mb-20 md:mb-32">
-            <div className="mb-6 sm:mb-8">
+            <div className="mb-[-1rem] sm:mb-[-2rem] md:mb-[-3rem]">
               <EnglishLabel delay={0} align="center">
                 Values
               </EnglishLabel>
@@ -339,7 +339,7 @@ export default function AboutPageClient() {
       <section className="py-24 sm:py-32 md:py-48 glass-card">
         <div className="container mx-auto px-4 sm:px-6 md:px-12">
           <div className="text-center mb-12 md:mb-32">
-            <div className="mb-6 sm:mb-8">
+            <div className="mb-[-1rem] sm:mb-[-2rem] md:mb-[-3rem]">
               <EnglishLabel delay={0} align="center">
                 Process
               </EnglishLabel>

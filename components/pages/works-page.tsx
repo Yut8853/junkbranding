@@ -279,7 +279,7 @@ export default function WorksPageClient() {
 
       <section className="relative min-h-[60svh] sm:min-h-[70svh] flex items-center justify-center">
         <div className="container mx-auto px-4 sm:px-6 md:px-12 py-24 sm:py-32 text-center">
-          <div className="mb-6 sm:mb-8">
+          <div className="mb-[-1rem] sm:mb-[-2rem] md:mb-[-3rem]">
             <EnglishLabel delay={0.1} align="center">
               Works
             </EnglishLabel>
@@ -359,7 +359,7 @@ export default function WorksPageClient() {
       <section className="py-24 sm:py-32 md:py-40 glass-card">
         <div className="container mx-auto px-4 sm:px-6 md:px-12">
           <div className="max-w-3xl mx-auto text-center">
-            <div className="mb-6 sm:mb-8">
+            <div className="mb-[-1rem] sm:mb-[-2rem] md:mb-[-3rem]">
               <EnglishLabel delay={0} align="center">
                 More Works
               </EnglishLabel>
@@ -406,7 +406,7 @@ export default function WorksPageClient() {
 
       <section className="py-24 sm:py-32 md:py-48 overflow-hidden glass-light">
         <div className="container mx-auto px-4 sm:px-6 md:px-12 text-center">
-          <div className="mb-6 sm:mb-8">
+          <div className="mb-[-1rem] sm:mb-[-2rem] md:mb-[-3rem]">
             <EnglishLabel delay={0} align="center">
               Contact
             </EnglishLabel>

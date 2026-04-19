@@ -61,17 +61,17 @@ export function EnglishLabel({ children, className, delay = 0, align = 'left' }:
   }, [isInView, hasAnimated])
 
   useEffect(() => {
-    if (!hasAnimated || isAnimationComplete) return
+    if (!hasAnimated) return
 
     const handleScroll = () => {
-      if (!ref.current) return
+      if (!ref.current || isAnimationComplete) return
       
       const rect = ref.current.getBoundingClientRect()
       const windowHeight = window.innerHeight
       const elementTop = rect.top
       
-      const startShrink = windowHeight * 0.85
-      const endShrink = windowHeight * 0.5
+      const startShrink = windowHeight * 0.9
+      const endShrink = windowHeight * 0.45
       
       if (elementTop < startShrink && elementTop > endShrink) {
         const progress = (startShrink - elementTop) / (startShrink - endShrink)
@@ -79,7 +79,6 @@ export function EnglishLabel({ children, className, delay = 0, align = 'left' }:
       } else if (elementTop <= endShrink) {
         setScrollProgress(1)
         setIsAnimationComplete(true)
-        window.removeEventListener('scroll', handleScroll)
       } else {
         setScrollProgress(0)
       }
@@ -93,8 +92,9 @@ export function EnglishLabel({ children, className, delay = 0, align = 'left' }:
 
   const words = children.split(' ')
   
-  const scale = 1 - (scrollProgress * 0.6)
-  const opacity = 1 - (scrollProgress * 0.3)
+  // スケール: 1.0 → 0.25 へ縮小（最終サイズは元の25%）
+  const scale = isAnimationComplete ? 0.25 : 1 - (scrollProgress * 0.75)
+  const opacity = isAnimationComplete ? 0.8 : 1 - (scrollProgress * 0.2)
 
   let letterIndex = 0
 
@@ -128,7 +128,7 @@ export function EnglishLabel({ children, className, delay = 0, align = 'left' }:
                     className="inline-block overflow-hidden"
                   >
                     <span
-                      className="inline-block font-display uppercase text-7xl sm:text-8xl md:text-9xl lg:text-[11rem] xl:text-[14rem] tracking-[-0.03em] font-black text-primary leading-[0.85]"
+                      className="inline-block font-display uppercase text-[10rem] sm:text-[14rem] md:text-[18rem] lg:text-[22rem] xl:text-[28rem] tracking-[0.02em] font-normal text-primary leading-[0.85]"
                       style={{
                         transform: hasAnimated ? 'translateY(0) rotate(0deg)' : 'translateY(120%) rotate(8deg)',
                         opacity: hasAnimated ? 1 : 0,
@@ -142,7 +142,7 @@ export function EnglishLabel({ children, className, delay = 0, align = 'left' }:
                 )
               })}
               {wordIndex < words.length - 1 && (
-                <span className="inline-block w-[0.3em]" />
+                <span className="inline-block w-[0.4em]" />
               )}
             </span>
           )
@@ -180,17 +180,17 @@ export function EnglishHeading({ children, className, delay = 0, outline = true,
   }, [isInView, hasAnimated])
 
   useEffect(() => {
-    if (!hasAnimated || isAnimationComplete) return
+    if (!hasAnimated) return
 
     const handleScroll = () => {
-      if (!ref.current) return
+      if (!ref.current || isAnimationComplete) return
       
       const rect = ref.current.getBoundingClientRect()
       const windowHeight = window.innerHeight
       const elementTop = rect.top
       
-      const startShrink = windowHeight * 0.85
-      const endShrink = windowHeight * 0.5
+      const startShrink = windowHeight * 0.9
+      const endShrink = windowHeight * 0.45
       
       if (elementTop < startShrink && elementTop > endShrink) {
         const progress = (startShrink - elementTop) / (startShrink - endShrink)
@@ -198,7 +198,6 @@ export function EnglishHeading({ children, className, delay = 0, outline = true,
       } else if (elementTop <= endShrink) {
         setScrollProgress(1)
         setIsAnimationComplete(true)
-        window.removeEventListener('scroll', handleScroll)
       } else {
         setScrollProgress(0)
       }
@@ -211,8 +210,8 @@ export function EnglishHeading({ children, className, delay = 0, outline = true,
   }, [hasAnimated, isAnimationComplete])
 
   const words = children.split(' ')
-  const scale = 1 - (scrollProgress * 0.55)
-  const opacity = 1 - (scrollProgress * 0.25)
+  const scale = isAnimationComplete ? 0.3 : 1 - (scrollProgress * 0.7)
+  const opacity = isAnimationComplete ? 0.85 : 1 - (scrollProgress * 0.15)
 
   return (
     <div
@@ -242,7 +241,7 @@ export function EnglishHeading({ children, className, delay = 0, outline = true,
               >
                 <span
                   className={cn(
-                    'inline-block font-display uppercase text-6xl sm:text-7xl md:text-8xl lg:text-9xl xl:text-[11rem] font-black tracking-[-0.03em] leading-[0.85]',
+                    'inline-block font-display uppercase text-[8rem] sm:text-[12rem] md:text-[16rem] lg:text-[20rem] xl:text-[24rem] font-normal tracking-[0.02em] leading-[0.85]',
                     outline && !isAnimationComplete ? 'english-stroke text-foreground/30' : 'text-foreground',
                   )}
                   style={{
@@ -257,7 +256,7 @@ export function EnglishHeading({ children, className, delay = 0, outline = true,
               </span>
             ))}
             {wordIndex < words.length - 1 && (
-              <span className="inline-block w-[0.25em]" />
+              <span className="inline-block w-[0.4em]" />
             )}
           </span>
         ))}
@@ -276,7 +275,7 @@ export function EnglishMarqueeText({ children, className }: EnglishMarqueeTextPr
   return (
     <span
       className={cn(
-        'font-display uppercase text-7xl sm:text-8xl md:text-9xl lg:text-[10rem] xl:text-[12rem] font-black tracking-[-0.03em] leading-none',
+        'font-display uppercase text-[12rem] sm:text-[16rem] md:text-[20rem] lg:text-[26rem] xl:text-[32rem] font-normal tracking-[0.02em] leading-none',
         'english-stroke text-foreground/15',
         'transition-all duration-700 hover:text-foreground/30',
         className
@@ -322,17 +321,17 @@ export function EnglishWords({
   }, [isInView, hasAnimated])
 
   useEffect(() => {
-    if (!hasAnimated || isAnimationComplete) return
+    if (!hasAnimated) return
 
     const handleScroll = () => {
-      if (!ref.current) return
+      if (!ref.current || isAnimationComplete) return
       
       const rect = ref.current.getBoundingClientRect()
       const windowHeight = window.innerHeight
       const elementTop = rect.top
       
-      const startShrink = windowHeight * 0.85
-      const endShrink = windowHeight * 0.5
+      const startShrink = windowHeight * 0.9
+      const endShrink = windowHeight * 0.45
       
       if (elementTop < startShrink && elementTop > endShrink) {
         const progress = (startShrink - elementTop) / (startShrink - endShrink)
@@ -340,7 +339,6 @@ export function EnglishWords({
       } else if (elementTop <= endShrink) {
         setScrollProgress(1)
         setIsAnimationComplete(true)
-        window.removeEventListener('scroll', handleScroll)
       } else {
         setScrollProgress(0)
       }
@@ -353,12 +351,12 @@ export function EnglishWords({
   }, [hasAnimated, isAnimationComplete])
 
   const words = children.split(' ')
-  const scale = 1 - (scrollProgress * 0.55)
-  const opacity = 1 - (scrollProgress * 0.25)
+  const scale = isAnimationComplete ? 0.3 : 1 - (scrollProgress * 0.7)
+  const opacity = isAnimationComplete ? 0.85 : 1 - (scrollProgress * 0.15)
 
   const variantStyles = {
-    display: 'text-7xl sm:text-8xl md:text-9xl lg:text-[11rem] tracking-[-0.02em] font-black leading-[0.8]',
-    massive: 'text-8xl sm:text-9xl md:text-[12rem] lg:text-[16rem] tracking-[-0.04em] font-black leading-[0.75]',
+    display: 'text-[10rem] sm:text-[14rem] md:text-[18rem] lg:text-[22rem] tracking-[0.02em] font-normal leading-[0.8]',
+    massive: 'text-[14rem] sm:text-[18rem] md:text-[24rem] lg:text-[32rem] tracking-[0.02em] font-normal leading-[0.75]',
   }
 
   return (
@@ -441,17 +439,17 @@ export function EnglishText({
   }, [isInView, hasAnimated])
 
   useEffect(() => {
-    if (!hasAnimated || variant === 'label' || isAnimationComplete) return
+    if (!hasAnimated || variant === 'label') return
 
     const handleScroll = () => {
-      if (!ref.current) return
+      if (!ref.current || isAnimationComplete) return
       
       const rect = ref.current.getBoundingClientRect()
       const windowHeight = window.innerHeight
       const elementTop = rect.top
       
-      const startShrink = windowHeight * 0.85
-      const endShrink = windowHeight * 0.5
+      const startShrink = windowHeight * 0.9
+      const endShrink = windowHeight * 0.45
       
       if (elementTop < startShrink && elementTop > endShrink) {
         const progress = (startShrink - elementTop) / (startShrink - endShrink)
@@ -459,7 +457,6 @@ export function EnglishText({
       } else if (elementTop <= endShrink) {
         setScrollProgress(1)
         setIsAnimationComplete(true)
-        window.removeEventListener('scroll', handleScroll)
       } else {
         setScrollProgress(0)
       }
@@ -472,13 +469,13 @@ export function EnglishText({
   }, [hasAnimated, variant, isAnimationComplete])
 
   const letters = children.split('')
-  const scale = variant === 'label' ? 1 : 1 - (scrollProgress * 0.5)
-  const opacity = variant === 'label' ? 1 : 1 - (scrollProgress * 0.25)
+  const scale = variant === 'label' ? 1 : (isAnimationComplete ? 0.3 : 1 - (scrollProgress * 0.7))
+  const opacity = variant === 'label' ? 1 : (isAnimationComplete ? 0.85 : 1 - (scrollProgress * 0.15))
 
   const variantStyles = {
-    label: 'text-2xl sm:text-3xl md:text-4xl tracking-[0.15em] font-bold text-primary',
-    heading: 'text-4xl sm:text-5xl md:text-6xl lg:text-7xl tracking-[0.05em] font-bold',
-    display: 'text-6xl sm:text-7xl md:text-9xl lg:text-[11rem] tracking-[-0.02em] font-black leading-[0.8]',
+    label: 'text-4xl sm:text-5xl md:text-6xl tracking-[0.1em] font-normal text-primary',
+    heading: 'text-6xl sm:text-8xl md:text-[10rem] lg:text-[14rem] tracking-[0.02em] font-normal',
+    display: 'text-[10rem] sm:text-[14rem] md:text-[18rem] lg:text-[22rem] tracking-[0.02em] font-normal leading-[0.8]',
   }
 
   return (

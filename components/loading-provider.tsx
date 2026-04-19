@@ -29,6 +29,21 @@ export function LoadingProvider({ children }: LoadingProviderProps) {
   const [progress, setProgress] = useState(0)
   const [isFirstLoad, setIsFirstLoad] = useState(true)
 
+  // ローディング中はスクロールを無効化
+  useEffect(() => {
+    if (isLoading && isFirstLoad) {
+      document.body.style.overflow = 'hidden'
+      document.documentElement.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = ''
+      document.documentElement.style.overflow = ''
+    }
+    return () => {
+      document.body.style.overflow = ''
+      document.documentElement.style.overflow = ''
+    }
+  }, [isLoading, isFirstLoad])
+
   useEffect(() => {
     if (isFirstLoad) {
       // Simulate loading progress

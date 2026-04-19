@@ -171,7 +171,7 @@ export default function PricingPageClient() {
       {/* Hero Section */}
       <section className="relative min-h-[60svh] sm:min-h-[70svh] flex items-center justify-center">
         <div className="container mx-auto px-4 sm:px-6 md:px-12 py-24 sm:py-32 text-center">
-          <div className="mb-6 sm:mb-8">
+          <div className="mb-[-1rem] sm:mb-[-2rem] md:mb-[-3rem]">
             <EnglishLabel delay={0.1} align="center">
               Pricing
             </EnglishLabel>
@@ -283,7 +283,7 @@ export default function PricingPageClient() {
       <section className="py-16 sm:py-24 md:py-32 glass-card">
         <div className="container mx-auto px-4 sm:px-6 md:px-12">
           <div className="text-center mb-12 md:mb-20">
-            <div className="mb-6 sm:mb-8">
+            <div className="mb-[-1rem] sm:mb-[-2rem] md:mb-[-3rem]">
               <EnglishLabel delay={0} align="center">
                 FAQ
               </EnglishLabel>
