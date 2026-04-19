@@ -28,21 +28,21 @@ const team = [
 const values = [
   {
     icon: Heart,
-    title: '丁寧さ',
-    titleEn: 'Sincerity',
-    description: '一つひとつのプロジェクトに心を込めて取り組みます。',
+    title: 'ちゃんと考える',
+    titleEn: 'Think First',
+    description: '「とりあえず作る」はやりません。誰に何を伝えるのかを整理してから、デザインに入ります。',
   },
   {
     icon: Lightbulb,
-    title: '創造性',
-    titleEn: 'Creativity',
-    description: '既存の枠にとらわれない、新しい価値を創造します。',
+    title: '売れる形にする',
+    titleEn: 'Make It Work',
+    description: 'かっこいいだけでは終わらせません。どうすればクリックされるか、選ばれるかを考えて作ります。',
   },
   {
     icon: Users,
-    title: 'パートナーシップ',
-    titleEn: 'Partnership',
-    description: 'クライアントと同じ目線で、一緒に考え、一緒に創ります。',
+    title: '一緒に悩む',
+    titleEn: 'Be a Partner',
+    description: '受け身で作るのではなく、課題から一緒に考えます。必要なら「それ違います」とも言います。',
   },
 ]
 
@@ -54,7 +54,7 @@ const process = [
     titleEn: 'Hearing',
     description: 'まずはお話をお聞かせください。',
     fullDescription: 'ビジネスの目標、現状の課題、ターゲット、競合など、プロジェクトに必要な情報を丁寧にヒアリングします。',
-    duration: '約1〜2週間',
+    duration: '約2〜3週間',
     details: [
       { title: 'ビジネスの現状確認', desc: '事業内容、強み、現在の課題をお聞きします' },
       { title: 'ターゲットの整理', desc: 'どんな人に届けたいか、ペルソナを明確に' },
@@ -69,7 +69,7 @@ const process = [
     titleEn: 'Proposal',
     description: '最適なプランをご提案します。',
     fullDescription: 'ヒアリング内容をもとに、サイト構成やデザインの方向性、スケジュール、お見積りをご提案します。',
-    duration: '約2週間',
+    duration: '約2〜3週間',
     details: [
       { title: 'コンセプト提案', desc: 'サイト全体の方向性やトーンをご提案' },
       { title: 'サイト構成案', desc: '必要なページと情報設計をまとめます' },
@@ -84,14 +84,14 @@ const process = [
     titleEn: 'Design',
     description: 'ビジュアルを形にします。',
     fullDescription: 'コンセプトに基づき、Webサイトのデザインを制作します。随時ご確認いただきながら進めます。',
-    duration: '約3〜8週間',
+    duration: '約3〜12週間',
     details: [
       { title: 'トップページデザイン', desc: 'サイトの顔となるページを丁寧に設計' },
       { title: '下層ページデザイン', desc: '各ページの役割に合わせたデザイン' },
       { title: 'レスポンシブ設計', desc: 'スマホ・タブレットでも美しく' },
       { title: '素材選定・撮影手配', desc: '写真やイラストの方向性を決定' },
     ],
-    note: '修正は2回まで無料で対応いたします。',
+    note: '修正は無制限でかつ無料で対応いたします。',
   },
   {
     step: 4,
