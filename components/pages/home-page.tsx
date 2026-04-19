@@ -49,7 +49,7 @@ export default function HomePageClient() {
             <SectionReveal delay={0.2} duration={1.2}>
               <div className="mb-[-4rem] sm:mb-[-6rem] md:mb-[-10rem]">
                 <EnglishLabel delay={0.3} align="left">
-                  Design Studio
+                  Beyond　Good　Design　by　JUNK　B
                 </EnglishLabel>
               </div>
             </SectionReveal>
