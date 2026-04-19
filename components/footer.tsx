@@ -22,12 +22,12 @@ export function Footer() {
   return (
     <footer className="relative glass-card border-t border-border/30">
       {/* Marquee */}
-      <div className="py-16 sm:py-20 md:py-24 border-b border-border/50 overflow-hidden">
+      <div className="py-8 sm:py-12 md:py-16 border-b border-border/50 overflow-hidden">
         <div className="flex whitespace-nowrap animate-marquee">
           {['Branding', 'Web Design', 'Graphic Design', 'Print Media', 'Logo Design', 'Art Direction', 'Branding', 'Web Design', 'Graphic Design', 'Print Media', 'Logo Design', 'Art Direction', 'Branding', 'Web Design', 'Graphic Design', 'Print Media', 'Logo Design', 'Art Direction', 'Branding', 'Web Design', 'Graphic Design', 'Print Media', 'Logo Design', 'Art Direction'].map((text, i) => (
             <span 
               key={i} 
-              className="font-display uppercase text-[12rem] sm:text-[16rem] md:text-[20rem] lg:text-[26rem] xl:text-[32rem] font-normal tracking-[0.02em] leading-none english-stroke text-foreground/15 transition-all duration-700 hover:text-foreground/30 mx-8 sm:mx-12 md:mx-16"
+              className="font-display uppercase text-[4rem] sm:text-[6rem] md:text-[8rem] lg:text-[10rem] xl:text-[12rem] font-normal tracking-[0.02em] leading-none english-stroke text-foreground/15 transition-all duration-700 hover:text-foreground/30 mx-4 sm:mx-8 md:mx-12"
             >
               {text}
             </span>
@@ -36,15 +36,15 @@ export function Footer() {
       </div>
 
       {/* Main footer content */}
-      <div className="container mx-auto px-6 md:px-12 py-16 md:py-24">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-8">
+      <div className="container mx-auto px-4 sm:px-6 md:px-12 py-12 sm:py-16 md:py-24">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-8 sm:gap-10 lg:gap-8">
           {/* Brand column */}
-          <RevealSection className="md:col-span-5" delay={0}>
+          <RevealSection className="sm:col-span-2 lg:col-span-5" delay={0}>
             <Link 
               href="/"
-              className="inline-block mb-6"
+              className="inline-block mb-4 sm:mb-6"
             >
-              <span className="text-5xl md:text-6xl font-normal tracking-[0.02em] uppercase font-display">
+              <span className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-normal tracking-[0.02em] uppercase font-display">
                 JUNKBRANDING
               </span>
             </Link>
@@ -62,8 +62,8 @@ export function Footer() {
           </RevealSection>
 
           {/* Navigation column */}
-          <RevealSection className="md:col-span-2" delay={0.1}>
-            <h3 className="text-sm uppercase tracking-[0.2em] text-primary/70 mb-6 font-display font-semibold">
+          <RevealSection className="lg:col-span-2" delay={0.1}>
+            <h3 className="text-sm uppercase tracking-[0.2em] text-primary/70 mb-4 sm:mb-6 font-display font-semibold">
               Menu
             </h3>
             <ul className="space-y-4">
@@ -81,8 +81,8 @@ export function Footer() {
           </RevealSection>
 
           {/* Contact column */}
-          <RevealSection className="md:col-span-3" delay={0.2}>
-            <h3 className="text-sm uppercase tracking-[0.2em] text-primary/70 mb-6 font-display font-semibold">
+          <RevealSection className="lg:col-span-3" delay={0.2}>
+            <h3 className="text-sm uppercase tracking-[0.2em] text-primary/70 mb-4 sm:mb-6 font-display font-semibold">
               Contact
             </h3>
             <div className="space-y-4">
@@ -104,8 +104,8 @@ export function Footer() {
           </RevealSection>
 
           {/* Address column */}
-          <RevealSection className="md:col-span-2" delay={0.3}>
-            <h3 className="text-sm uppercase tracking-[0.2em] text-primary/70 mb-6 font-display font-semibold">
+          <RevealSection className="lg:col-span-2" delay={0.3}>
+            <h3 className="text-sm uppercase tracking-[0.2em] text-primary/70 mb-4 sm:mb-6 font-display font-semibold">
               Address
             </h3>
             <div className="flex items-start gap-3 text-foreground">
@@ -122,7 +122,7 @@ export function Footer() {
 
       {/* Bottom bar */}
       <div className="border-t border-border/50">
-        <div className="container mx-auto px-6 md:px-12 py-6 flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="container mx-auto px-4 sm:px-6 md:px-12 py-4 sm:py-6 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
           <p className="text-sm text-muted-foreground">
             &copy; {currentYear} JunkBranding. All rights reserved.
           </p>

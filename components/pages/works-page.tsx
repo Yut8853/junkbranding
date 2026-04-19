@@ -157,9 +157,9 @@ function WorkCard({
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      <div className={`grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-center py-12 sm:py-16 lg:py-20 px-4 sm:px-6 -mx-4 sm:-mx-6 border-b border-border/30 rounded-2xl transition-all duration-500 ${isHovered ? 'bg-card/50' : ''}`}>
+      <div className={`grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 lg:gap-12 items-center py-8 sm:py-12 lg:py-16 px-3 sm:px-4 md:px-6 -mx-3 sm:-mx-4 md:-mx-6 border-b border-border/30 rounded-xl sm:rounded-2xl transition-all duration-500 ${isHovered ? 'bg-card/50' : ''}`}>
         <div className="hidden lg:flex lg:col-span-1 items-center justify-center">
-          <span className={`text-6xl xl:text-7xl font-bold transition-all duration-500 ${isHovered ? 'gradient-text' : 'text-foreground/10'}`}>
+          <span className={`text-4xl lg:text-5xl xl:text-6xl font-bold transition-all duration-500 ${isHovered ? 'gradient-text' : 'text-foreground/10'}`}>
             {formattedIndex}
           </span>
         </div>
@@ -173,7 +173,7 @@ function WorkCard({
             <div className={`absolute inset-0 bg-gradient-to-br from-primary/20 via-accent/15 to-primary/10 transition-opacity duration-700 ${isHovered ? 'opacity-100' : 'opacity-60'}`} />
             
             <div className="absolute inset-0 flex items-center justify-center">
-              <span className={`text-[10rem] sm:text-[14rem] font-bold transition-all duration-700 ${isHovered ? 'gradient-text scale-110' : 'text-foreground/[0.03] scale-100'}`}>
+              <span className={`text-[6rem] sm:text-[8rem] md:text-[10rem] font-bold transition-all duration-700 ${isHovered ? 'gradient-text scale-110' : 'text-foreground/[0.03] scale-100'}`}>
                 {work.title.charAt(0)}
               </span>
             </div>
@@ -206,7 +206,7 @@ function WorkCard({
         </div>
 
         <div className="lg:col-span-6">
-          <h3 className={`text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight mb-4 transition-all duration-500 ${isHovered ? 'gradient-text' : ''}`}>
+          <h3 className={`text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight mb-3 sm:mb-4 transition-all duration-500 ${isHovered ? 'gradient-text' : ''}`}>
             {work.title}
           </h3>
           

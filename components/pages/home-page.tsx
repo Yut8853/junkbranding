@@ -47,14 +47,14 @@ export default function HomePageClient() {
         <div className="container mx-auto px-4 sm:px-6 md:px-12 py-20 md:py-32">
           <div className="max-w-6xl">
             <SectionReveal delay={0.2} duration={1.2}>
-              <div className="mb-[-4rem] sm:mb-[-6rem] md:mb-[-10rem]">
+              <div className="mb-4 sm:mb-6 md:mb-8">
                 <EnglishLabel delay={0.3} align="left">
-                  Beyond　Good　Design　by　JUNK　B
+                  Beyond Good Design by JUNK B
                 </EnglishLabel>
               </div>
             </SectionReveal>
 
-            <div className="mt-0">
+            <div>
               <HeroTitle />
             </div>
 
@@ -101,10 +101,10 @@ export default function HomePageClient() {
       </section>
 
       {/* Marquee Section */}
-      <section className="py-16 sm:py-20 md:py-24 border-y border-border/30 glass-light overflow-hidden">
+      <section className="py-8 sm:py-12 md:py-16 border-y border-border/30 glass-light overflow-hidden">
         <div className="flex whitespace-nowrap animate-marquee">
           {[...marqueeTexts, ...marqueeTexts, ...marqueeTexts, ...marqueeTexts].map((text, i) => (
-            <EnglishMarqueeText key={i} className="mx-8 sm:mx-12 md:mx-16 text-foreground/15">
+            <EnglishMarqueeText key={i} className="mx-4 sm:mx-8 md:mx-12 text-foreground/15">
               {text}
             </EnglishMarqueeText>
           ))}

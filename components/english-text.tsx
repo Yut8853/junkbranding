@@ -128,7 +128,7 @@ export function EnglishLabel({ children, className, delay = 0, align = 'left' }:
                     className="inline-block overflow-hidden"
                   >
                     <span
-                      className="inline-block font-display uppercase text-[10rem] sm:text-[14rem] md:text-[18rem] lg:text-[22rem] xl:text-[28rem] tracking-[0.02em] font-normal text-primary leading-[0.85]"
+                      className="inline-block font-display uppercase text-[2.5rem] sm:text-[4rem] md:text-[6rem] lg:text-[8rem] xl:text-[10rem] tracking-[0.02em] font-normal text-primary leading-[0.85]"
                       style={{
                         transform: hasAnimated ? 'translateY(0) rotate(0deg)' : 'translateY(120%) rotate(8deg)',
                         opacity: hasAnimated ? 1 : 0,
@@ -142,7 +142,7 @@ export function EnglishLabel({ children, className, delay = 0, align = 'left' }:
                 )
               })}
               {wordIndex < words.length - 1 && (
-                <span className="inline-block w-[0.4em]" />
+                <span className="inline-block w-[0.3em]" />
               )}
             </span>
           )
@@ -241,7 +241,7 @@ export function EnglishHeading({ children, className, delay = 0, outline = true,
               >
                 <span
                   className={cn(
-                    'inline-block font-display uppercase text-[8rem] sm:text-[12rem] md:text-[16rem] lg:text-[20rem] xl:text-[24rem] font-normal tracking-[0.02em] leading-[0.85]',
+                    'inline-block font-display uppercase text-[2rem] sm:text-[3rem] md:text-[4.5rem] lg:text-[6rem] xl:text-[8rem] font-normal tracking-[0.02em] leading-[0.85]',
                     outline && !isAnimationComplete ? 'english-stroke text-foreground/30' : 'text-foreground',
                   )}
                   style={{
@@ -275,7 +275,7 @@ export function EnglishMarqueeText({ children, className }: EnglishMarqueeTextPr
   return (
     <span
       className={cn(
-        'font-display uppercase text-[12rem] sm:text-[16rem] md:text-[20rem] lg:text-[26rem] xl:text-[32rem] font-normal tracking-[0.02em] leading-none',
+        'font-display uppercase text-[4rem] sm:text-[6rem] md:text-[8rem] lg:text-[10rem] xl:text-[12rem] font-normal tracking-[0.02em] leading-none',
         'english-stroke text-foreground/15',
         'transition-all duration-700 hover:text-foreground/30',
         className
@@ -355,8 +355,8 @@ export function EnglishWords({
   const opacity = isAnimationComplete ? 0.85 : 1 - (scrollProgress * 0.15)
 
   const variantStyles = {
-    display: 'text-[10rem] sm:text-[14rem] md:text-[18rem] lg:text-[22rem] tracking-[0.02em] font-normal leading-[0.8]',
-    massive: 'text-[14rem] sm:text-[18rem] md:text-[24rem] lg:text-[32rem] tracking-[0.02em] font-normal leading-[0.75]',
+    display: 'text-[2.5rem] sm:text-[4rem] md:text-[6rem] lg:text-[8rem] tracking-[0.02em] font-normal leading-[0.8]',
+    massive: 'text-[3.5rem] sm:text-[5rem] md:text-[7rem] lg:text-[10rem] tracking-[0.02em] font-normal leading-[0.75]',
   }
 
   return (
@@ -473,9 +473,9 @@ export function EnglishText({
   const opacity = variant === 'label' ? 1 : (isAnimationComplete ? 0.85 : 1 - (scrollProgress * 0.15))
 
   const variantStyles = {
-    label: 'text-4xl sm:text-5xl md:text-6xl tracking-[0.1em] font-normal text-primary',
-    heading: 'text-6xl sm:text-8xl md:text-[10rem] lg:text-[14rem] tracking-[0.02em] font-normal',
-    display: 'text-[10rem] sm:text-[14rem] md:text-[18rem] lg:text-[22rem] tracking-[0.02em] font-normal leading-[0.8]',
+    label: 'text-2xl sm:text-3xl md:text-4xl tracking-[0.1em] font-normal text-primary',
+    heading: 'text-3xl sm:text-4xl md:text-5xl lg:text-6xl tracking-[0.02em] font-normal',
+    display: 'text-[2.5rem] sm:text-[4rem] md:text-[6rem] lg:text-[8rem] tracking-[0.02em] font-normal leading-[0.8]',
   }
 
   return (
