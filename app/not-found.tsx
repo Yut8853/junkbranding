@@ -333,10 +333,10 @@ export default function NotFound() {
         {/* Message */}
         <div className="text-center mb-12">
           <p className="text-white/80 text-lg md:text-xl mb-2 font-light tracking-wide">
-            迷子になってしまいました
+            迷子になってしまいましたね、、
           </p>
           <p className="text-white/50 text-sm md:text-base text-balance">
-            お探しのページは存在しないか、移動した可能性があります。
+            ご不便おかけして申し訳ありません。。。。
           </p>
         </div>
 
