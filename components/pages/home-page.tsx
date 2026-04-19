@@ -49,7 +49,10 @@ export default function HomePageClient() {
             <SectionReveal delay={0.2} duration={1.2}>
               <div className="mb-4 sm:mb-6 md:mb-8">
                 <EnglishLabel delay={0.3} align="left">
-                  Beyond Good Design by JUNK B
+                  Beyond Good Design
+                </EnglishLabel>
+                <EnglishLabel delay={0.3} align="left">
+                  by JUNK BLANDING
                 </EnglishLabel>
               </div>
             </SectionReveal>

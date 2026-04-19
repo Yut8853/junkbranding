@@ -128,7 +128,7 @@ export function EnglishLabel({ children, className, delay = 0, align = 'left' }:
                     className="inline-block overflow-hidden"
                   >
                     <span
-                      className="inline-block font-display uppercase text-[2.5rem] sm:text-[4rem] md:text-[6rem] lg:text-[8rem] xl:text-[10rem] tracking-[0.02em] font-normal text-primary leading-[0.85]"
+                      className="inline-block font-display uppercase text-[2.5rem] sm:text-[4rem] md:text-[6rem] lg:text-[8rem] xl:text-[60rem] tracking-[0.02em] font-normal text-primary leading-[0.85]"
                       style={{
                         transform: hasAnimated ? 'translateY(0) rotate(0deg)' : 'translateY(120%) rotate(8deg)',
                         opacity: hasAnimated ? 1 : 0,
@@ -241,7 +241,7 @@ export function EnglishHeading({ children, className, delay = 0, outline = true,
               >
                 <span
                   className={cn(
-                    'inline-block font-display uppercase text-[2rem] sm:text-[3rem] md:text-[4.5rem] lg:text-[6rem] xl:text-[8rem] font-normal tracking-[0.02em] leading-[0.85]',
+                    'inline-block font-display uppercase text-[2rem] sm:text-[3rem] md:text-[4.5rem] lg:text-[6rem] xl:text-[36rem] font-normal tracking-[0.02em] leading-[0.85]',
                     outline && !isAnimationComplete ? 'english-stroke text-foreground/30' : 'text-foreground',
                   )}
                   style={{
@@ -275,7 +275,7 @@ export function EnglishMarqueeText({ children, className }: EnglishMarqueeTextPr
   return (
     <span
       className={cn(
-        'font-display uppercase text-[4rem] sm:text-[6rem] md:text-[8rem] lg:text-[10rem] xl:text-[12rem] font-normal tracking-[0.02em] leading-none',
+        'font-display uppercase text-[4rem] sm:text-[6rem] md:text-[8rem] lg:text-[10rem] xl:text-[36rem] font-normal tracking-[0.02em] leading-none',
         'english-stroke text-foreground/15',
         'transition-all duration-700 hover:text-foreground/30',
         className
