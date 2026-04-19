@@ -53,6 +53,7 @@ export default function ContactPageClient() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [submitError, setSubmitError] = useState('')
+  const [formLoadTime] = useState(() => Date.now()) // ボット対策用タイムスタンプ
 
   useEffect(() => {
     if (isSubmitted) {
@@ -241,6 +242,20 @@ export default function ContactPageClient() {
             {/* Contact Form */}
             <SectionReveal delay={0.2} className="lg:col-span-2">
               <form onSubmit={handleSubmit} className="space-y-6 sm:space-y-8">
+                {/* ハニーポット（スパム対策） - CSSで非表示 */}
+                <div className="absolute -left-[9999px] opacity-0 pointer-events-none" aria-hidden="true">
+                  <label htmlFor="honeypot">このフィールドは空のままにしてください</label>
+                  <input
+                    type="text"
+                    id="honeypot"
+                    name="honeypot"
+                    tabIndex={-1}
+                    autoComplete="off"
+                  />
+                </div>
+                {/* タイムスタンプ（ボット対策） */}
+                <input type="hidden" name="timestamp" value={formLoadTime.toString()} />
+                
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                   {/* Name */}
                   <div>
@@ -369,7 +384,7 @@ export default function ContactPageClient() {
                     onChange={handleChange}
                     rows={6}
                     className={`w-full px-4 py-3 rounded-lg bg-card border ${errors.message ? 'border-destructive' : 'border-border'} focus:border-primary focus:outline-none transition-colors resize-none`}
-                    placeholder="プロジェクトの概要や、ご相談内容をご記入ください。"
+                    placeholder="プロジェク���の概要や、ご相談内容をご記入ください。"
                   />
                   {errors.message && (
                     <p className="mt-1 text-sm text-destructive flex items-center gap-1">

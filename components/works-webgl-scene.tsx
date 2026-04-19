@@ -19,7 +19,7 @@ function FloatingParticles({
   const pointsRef = useRef<THREE.Points>(null)
   const { viewport } = useThree()
 
-  const particleCount = 60
+  const particleCount = 30
 
   const [positions, colors, originalPositions, baseColors] = useMemo(() => {
     const pos = new Float32Array(particleCount * 3)
@@ -322,7 +322,7 @@ export function WorksWebGLScene({
     <div className="fixed inset-0 pointer-events-none" style={{ zIndex: 0 }}>
       <Canvas
         camera={{ position: [0, 0, 12], fov: 45 }}
-        dpr={[1, 1.5]}
+        dpr={[1, 1.25]}
         gl={{ antialias: true, alpha: true }}
         style={{ background: 'transparent' }}
       >

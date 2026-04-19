@@ -1,29 +1,85 @@
 'use server'
 
 import { ContactSchema } from '@/lib/schema'
+import { headers } from 'next/headers'
 import { Resend } from 'resend'
 
-// 🔥 環境変数チェック（本番事故防止）
+// 環境変数チェック（本番事故防止）
 if (!process.env.RESEND_API_KEY) {
   throw new Error('RESEND_API_KEY is not set')
 }
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 
-export async function sendEmail(formData: FormData) {
-  // 1. データ抽出（型安全寄りに）
-  const rawData = {
-    name: formData.get('name')?.toString() || '',
-    email: formData.get('email')?.toString() || '',
-    company: formData.get('company')?.toString() || '',
-    phone: formData.get('phone')?.toString() || '',
-    service: formData.get('service')?.toString() || '',
-    budget: formData.get('budget')?.toString() || '',
-    message: formData.get('message')?.toString() || '',
-    honeypot: formData.get('honeypot')?.toString() || '',
+// シンプルなインメモリレート制限（本番ではRedis推奨）
+const rateLimitMap = new Map<string, { count: number; resetTime: number }>()
+const RATE_LIMIT_WINDOW = 60 * 1000 // 1分
+const RATE_LIMIT_MAX = 3 // 1分間に3回まで
+
+function checkRateLimit(ip: string): boolean {
+  const now = Date.now()
+  const record = rateLimitMap.get(ip)
+
+  if (!record || now > record.resetTime) {
+    rateLimitMap.set(ip, { count: 1, resetTime: now + RATE_LIMIT_WINDOW })
+    return true
   }
 
-  // 2. バリデーション
+  if (record.count >= RATE_LIMIT_MAX) {
+    return false
+  }
+
+  record.count++
+  return true
+}
+
+// 古いレート制限レコードを定期的にクリーンアップ
+setInterval(() => {
+  const now = Date.now()
+  for (const [ip, record] of rateLimitMap.entries()) {
+    if (now > record.resetTime) {
+      rateLimitMap.delete(ip)
+    }
+  }
+}, 60 * 1000)
+
+export async function sendEmail(formData: FormData) {
+  // 0. レート制限チェック
+  const headersList = await headers()
+  const ip = headersList.get('x-forwarded-for')?.split(',')[0] || 
+             headersList.get('x-real-ip') || 
+             'unknown'
+
+  if (!checkRateLimit(ip)) {
+    return { error: '送信回数の上限に達しました。しばらく経ってから再度お試しください。' }
+  }
+
+  // 1. データ抽出（型安全寄りに）
+  const rawData = {
+    name: formData.get('name')?.toString().trim() || '',
+    email: formData.get('email')?.toString().trim().toLowerCase() || '',
+    company: formData.get('company')?.toString().trim() || '',
+    phone: formData.get('phone')?.toString().trim() || '',
+    service: formData.get('service')?.toString() || '',
+    budget: formData.get('budget')?.toString() || '',
+    message: formData.get('message')?.toString().trim() || '',
+    honeypot: formData.get('honeypot')?.toString() || '',
+    timestamp: formData.get('timestamp')?.toString() || '',
+  }
+
+  // 2. タイムスタンプチェック（ボット対策：3秒未満での送信はボットの可能性が高い）
+  if (rawData.timestamp) {
+    const submissionTime = parseInt(rawData.timestamp, 10)
+    const now = Date.now()
+    const timeDiff = now - submissionTime
+    
+    if (timeDiff < 3000) { // 3秒未満
+      console.warn(`Suspicious fast submission: ${timeDiff}ms from IP: ${ip}`)
+      return { success: true } // ボットには成功したように見せる
+    }
+  }
+
+  // 3. バリデーション
   const validatedFields = ContactSchema.safeParse(rawData)
 
   if (!validatedFields.success) {
@@ -34,9 +90,9 @@ export async function sendEmail(formData: FormData) {
 
   const data = validatedFields.data
 
-  // 3. スパム対策（ハニーポット）
+  // 4. スパム対策（ハニーポット）
   if (data.honeypot) {
-    console.warn('Spam detected via honeypot')
+    console.warn(`Spam detected via honeypot from IP: ${ip}`)
     return { success: true }
   }
 
