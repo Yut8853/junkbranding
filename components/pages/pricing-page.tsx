@@ -2,6 +2,7 @@
 
 import { ArrowRight, Phone, MessageCircle, Check, Sparkles, Globe, Smartphone, Palette, FileText, Video, TrendingUp, Layers, Wrench, HelpCircle } from 'lucide-react'
 import { TextReveal, SectionReveal, LineReveal } from '@/components/text-reveal'
+import { EnglishLabel } from '@/components/english-text'
 import { MagneticButton } from '@/components/magnetic-button'
 import { Footer } from '@/components/footer'
 
@@ -170,11 +171,11 @@ export default function PricingPageClient() {
       {/* Hero Section */}
       <section className="relative min-h-[60svh] sm:min-h-[70svh] flex items-center justify-center">
         <div className="container mx-auto px-4 sm:px-6 md:px-12 py-24 sm:py-32 text-center">
-          <LineReveal delay={0}>
-            <p className="text-xs sm:text-sm uppercase tracking-[0.2em] sm:tracking-[0.3em] text-primary mb-4 sm:mb-6">
+          <div className="mb-6 sm:mb-8">
+            <EnglishLabel delay={0.1} align="center">
               Pricing
-            </p>
-          </LineReveal>
+            </EnglishLabel>
+          </div>
           <TextReveal
             text="制作料金"
             as="h1"
@@ -227,7 +228,7 @@ export default function PricingPageClient() {
                         <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-1 md:mb-2">
                           {category.title}
                         </h2>
-                        <p className="text-xs sm:text-sm text-primary uppercase tracking-wider mb-2 md:mb-3">
+                        <p className="text-sm sm:text-base text-primary/70 uppercase tracking-[0.15em] mb-2 md:mb-3 font-display font-semibold">
                           {category.titleEn}
                         </p>
                         <p className="text-sm sm:text-base text-muted-foreground leading-relaxed max-w-xl">
@@ -282,11 +283,11 @@ export default function PricingPageClient() {
       <section className="py-16 sm:py-24 md:py-32 glass-card">
         <div className="container mx-auto px-4 sm:px-6 md:px-12">
           <div className="text-center mb-12 md:mb-20">
-            <LineReveal delay={0}>
-              <p className="text-xs sm:text-sm uppercase tracking-[0.2em] sm:tracking-[0.3em] text-primary mb-4 sm:mb-6">
+            <div className="mb-6 sm:mb-8">
+              <EnglishLabel delay={0} align="center">
                 FAQ
-              </p>
-            </LineReveal>
+              </EnglishLabel>
+            </div>
             <TextReveal
               text="よくあるご質問"
               as="h2"

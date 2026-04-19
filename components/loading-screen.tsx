@@ -167,10 +167,7 @@ export function LoadingScreen({ progress }: LoadingScreenProps) {
       <div className="relative z-10 flex flex-col items-center gap-16">
         {/* Logo with morph animation */}
         <div className="relative">
-          <h1 
-            className="text-6xl md:text-8xl font-bold tracking-tighter"
-            style={{ fontFamily: 'var(--font-syne)' }}
-          >
+          <h1 className="text-6xl md:text-8xl font-bold tracking-tighter font-display">
             {'JunkBranding'.split('').map((char, i) => (
               <span
                 key={i}

@@ -58,10 +58,7 @@ export function Navigation() {
             className="relative group"
             aria-label="JunkBranding"
           >
-            <span 
-              className="text-xl md:text-2xl font-bold tracking-tighter transition-colors duration-300 group-hover:text-accent"
-              style={{ fontFamily: 'var(--font-syne)' }}
-            >
+            <span className="text-xl md:text-2xl font-bold tracking-tighter transition-colors duration-300 group-hover:text-accent font-display">
               JunkBranding
             </span>
             <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-accent transition-all duration-300 group-hover:w-full" />
@@ -77,11 +74,13 @@ export function Navigation() {
                   onMouseLeave={() => setHoveredItem(null)}
                   aria-current={pathname === item.href ? 'page' : undefined}
                 >
-                  <span className={`text-sm uppercase tracking-wider whitespace-nowrap transition-colors duration-300 ${
-                    pathname === item.href 
-                      ? 'text-foreground' 
-                      : 'text-muted-foreground group-hover:text-foreground'
-                  }`}>
+                  <span 
+                    className={`text-sm uppercase tracking-[0.15em] whitespace-nowrap transition-all duration-500 font-display font-semibold ${
+                      pathname === item.href 
+                        ? 'text-foreground' 
+                        : 'text-muted-foreground group-hover:text-foreground'
+                    }`}
+                  >
                     {item.label}
                   </span>
                   
@@ -159,10 +158,9 @@ export function Navigation() {
                   aria-current={pathname === item.href ? 'page' : undefined}
                 >
                   <span 
-                    className={`text-4xl font-bold tracking-tighter transition-colors duration-300 ${
-                      pathname === item.href ? 'text-accent' : 'text-foreground group-hover:text-accent'
+                    className={`text-5xl sm:text-6xl font-black tracking-[-0.02em] transition-all duration-700 font-display uppercase ${
+                      pathname === item.href ? 'text-foreground' : 'text-foreground/30 english-stroke group-hover:text-foreground'
                     }`}
-                    style={{ fontFamily: 'var(--font-syne)' }}
                   >
                     {item.label}
                   </span>

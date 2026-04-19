@@ -6,6 +6,7 @@ import { TextReveal, SectionReveal, LineReveal } from '@/components/text-reveal'
 import { MagneticButton } from '@/components/magnetic-button'
 import { CircleButton } from '@/components/circle-button'
 import { Footer } from '@/components/footer'
+import { EnglishLabel, EnglishHeading, EnglishMarqueeText } from '@/components/english-text'
 
 // Service data
 const services = [
@@ -41,17 +42,19 @@ const marqueeTexts = ['Brand Strategy', 'Web Design', 'Development', 'UI/UX', 'L
 export default function HomePageClient() {
   return (
     <>
-      {/* Hero Section */}
-      <section className="relative min-h-[100svh] flex items-center justify-center overflow-hidden pb-16 sm:pb-20 md:pb-28">
+      {/* Hero Section - 左寄せ */}
+      <section className="relative min-h-[100svh] flex items-center overflow-hidden pb-16 sm:pb-20 md:pb-28">
         <div className="container mx-auto px-4 sm:px-6 md:px-12 py-20 md:py-32">
-          <div className="max-w-5xl">
+          <div className="max-w-6xl">
             <SectionReveal delay={0.2} duration={1.2}>
-              <p className="text-xs sm:text-sm uppercase tracking-[0.2em] sm:tracking-[0.3em] text-muted-foreground mb-6 sm:mb-8">
-                Branding & Web Production
-              </p>
+              <EnglishLabel delay={0.3} align="left">
+                Branding & Web
+              </EnglishLabel>
             </SectionReveal>
 
-            <HeroTitle />
+            <div className="mt-4 sm:mt-6">
+              <HeroTitle />
+            </div>
 
             <SectionReveal delay={0.8} duration={1.2}>
               <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mt-8 sm:mt-10 leading-relaxed text-balance">
@@ -87,7 +90,7 @@ export default function HomePageClient() {
 
         {/* Scroll indicator */}
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 hidden md:flex flex-col items-center gap-4">
-          <span className="text-xs uppercase tracking-widest text-muted-foreground rotate-90 origin-center translate-y-8">
+          <span className="text-xs uppercase tracking-widest text-muted-foreground rotate-90 origin-center translate-y-8 font-display">
             Scroll
           </span>
           <div className="w-[1px] h-16 bg-gradient-to-b from-border to-transparent" />
@@ -95,28 +98,25 @@ export default function HomePageClient() {
       </section>
 
       {/* Marquee Section */}
-      <section className="py-10 sm:py-12 md:py-16 border-y border-border/30 glass-light overflow-hidden">
+      <section className="py-16 sm:py-20 md:py-24 border-y border-border/30 glass-light overflow-hidden">
         <div className="flex whitespace-nowrap animate-marquee">
           {[...marqueeTexts, ...marqueeTexts, ...marqueeTexts, ...marqueeTexts].map((text, i) => (
-            <span
-              key={i}
-              className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold mx-4 sm:mx-6 md:mx-8 text-foreground/10"
-            >
+            <EnglishMarqueeText key={i} className="mx-8 sm:mx-12 md:mx-16 text-foreground/15">
               {text}
-            </span>
+            </EnglishMarqueeText>
           ))}
         </div>
       </section>
 
-      {/* About Preview Section */}
+      {/* About Preview Section - 左寄せ */}
       <section className="py-24 sm:py-32 md:py-48 glass-light">
         <div className="container mx-auto px-4 sm:px-6 md:px-12">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-24 items-center">
             <LineReveal stagger={0.12}>
-              <div className="line">
-                <p className="text-xs sm:text-sm uppercase tracking-[0.2em] sm:tracking-[0.3em] text-primary mb-4 sm:mb-6">
+              <div className="line mb-6 sm:mb-8">
+                <EnglishLabel delay={0.1} align="left">
                   About Us
-                </p>
+                </EnglishLabel>
               </div>
               <div className="line">
                 <TextReveal 
@@ -168,15 +168,15 @@ export default function HomePageClient() {
         </div>
       </section>
 
-      {/* Services Section */}
+      {/* Services Section - 左寄せ */}
       <section className="py-24 sm:py-32 md:py-48 glass-card">
         <div className="container mx-auto px-4 sm:px-6 md:px-12">
           <div className="mb-16 sm:mb-20 md:mb-32">
-            <SectionReveal duration={1}>
-              <p className="text-xs sm:text-sm uppercase tracking-[0.2em] sm:tracking-[0.3em] text-primary mb-4 sm:mb-6">
+            <div className="mb-4 sm:mb-6">
+              <EnglishLabel delay={0} align="left">
                 Services
-              </p>
-            </SectionReveal>
+              </EnglishLabel>
+            </div>
             <TextReveal 
               as="h2" 
               className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight"
@@ -196,15 +196,15 @@ export default function HomePageClient() {
                 duration={1}
               >
                 <div className="group py-8 sm:py-10 md:py-12 border-t border-border hover:bg-card/30 transition-colors duration-500">
-                  <div className="flex flex-col md:flex-row md:items-center gap-4 md:gap-8">
-                    <span className="text-xs sm:text-sm text-muted-foreground font-mono shrink-0 w-8">{service.num}</span>
+                  <div className="flex flex-col md:flex-row md:items-start gap-4 md:gap-8">
+                    <span className="text-xs sm:text-sm text-muted-foreground font-mono shrink-0 w-8 pt-2 md:pt-4">{service.num}</span>
                     <div className="flex-1 min-w-0">
-                      <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-1 sm:mb-2 group-hover:text-primary transition-colors duration-300 whitespace-nowrap">
+                      <EnglishHeading delay={0.1 + index * 0.05} outline align="left">
                         {service.title}
-                      </h3>
-                      <p className="text-xs sm:text-sm text-primary whitespace-nowrap">{service.titleJa}</p>
+                      </EnglishHeading>
+                      <p className="text-sm sm:text-base text-primary mt-3 font-medium">{service.titleJa}</p>
                     </div>
-                    <p className="text-sm sm:text-base text-muted-foreground max-w-md leading-relaxed text-pretty shrink-0 md:w-96">
+                    <p className="text-sm sm:text-base text-muted-foreground max-w-md leading-relaxed text-pretty shrink-0 md:w-80 lg:w-96 md:pt-4">
                       {service.description}
                     </p>
                   </div>
@@ -215,15 +215,15 @@ export default function HomePageClient() {
         </div>
       </section>
 
-      {/* Works Section */}
+      {/* Works Section - 中央寄せ */}
       <section className="py-24 sm:py-32 md:py-48 glass-light">
         <div className="container mx-auto px-4 sm:px-6 md:px-12">
           <div className="text-center mb-12 sm:mb-16 md:mb-20">
-            <SectionReveal duration={1}>
-              <p className="text-xs sm:text-sm uppercase tracking-[0.2em] sm:tracking-[0.3em] text-primary mb-4 sm:mb-6">
+            <div className="mb-4 sm:mb-6">
+              <EnglishLabel delay={0} align="center">
                 Works
-              </p>
-            </SectionReveal>
+              </EnglishLabel>
+            </div>
             <TextReveal 
               as="h2" 
               className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6 sm:mb-8"
@@ -260,14 +260,14 @@ export default function HomePageClient() {
         </div>
       </section>
 
-      {/* Area Section */}
+      {/* Area Section - 中央寄せ */}
       <section className="py-24 sm:py-32 md:py-40 border-y border-border/30 glass-card overflow-hidden">
         <div className="container mx-auto px-4 sm:px-6 md:px-12 text-center">
-          <SectionReveal duration={1}>
-            <p className="text-xs sm:text-sm uppercase tracking-[0.2em] sm:tracking-[0.3em] text-primary mb-4 sm:mb-6">
+          <div className="mb-4 sm:mb-6">
+            <EnglishLabel delay={0} align="center">
               Area
-            </p>
-          </SectionReveal>
+            </EnglishLabel>
+          </div>
           <TextReveal 
             as="h2" 
             className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6 sm:mb-8"
@@ -294,14 +294,14 @@ export default function HomePageClient() {
         </div>
       </section>
 
-      {/* CTA Section */}
+      {/* CTA Section - 中央寄せ */}
       <section className="py-24 sm:py-32 md:py-48 overflow-hidden glass-light">
         <div className="container mx-auto px-4 sm:px-6 md:px-12 text-center">
-          <SectionReveal duration={1}>
-            <p className="text-xs sm:text-sm uppercase tracking-[0.2em] sm:tracking-[0.3em] text-primary mb-4 sm:mb-6">
+          <div className="mb-4 sm:mb-6">
+            <EnglishLabel delay={0} align="center">
               Contact
-            </p>
-          </SectionReveal>
+            </EnglishLabel>
+          </div>
           <TextReveal 
             as="h2" 
             className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold tracking-tight mb-6 sm:mb-8"

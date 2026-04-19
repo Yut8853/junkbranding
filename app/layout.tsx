@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import { Inter, Syne } from 'next/font/google';
+import { Inter, Space_Grotesk } from 'next/font/google';
 import { Analytics } from '@vercel/analytics/next';
 import './globals.css';
 import { LoadingProvider } from '@/components/loading-provider';
@@ -16,10 +16,11 @@ const inter = Inter({
   display: 'swap',
 });
 
-const syne = Syne({
+const spaceGrotesk = Space_Grotesk({
   subsets: ['latin'],
-  variable: '--font-syne',
+  variable: '--font-space',
   display: 'swap',
+  weight: ['400', '500', '600', '700'],
 });
 
 export const metadata: Metadata = {
@@ -215,7 +216,7 @@ export default function RootLayout({
   return (
     <html
       lang="ja"
-      className={`${inter.variable} ${syne.variable}`}
+      className={`${inter.variable} ${spaceGrotesk.variable}`}
       data-scroll-behavior="smooth"
     >
       <head>

@@ -7,6 +7,7 @@ import { TextReveal, SectionReveal, LineReveal } from '@/components/text-reveal'
 import { MagneticButton } from '@/components/magnetic-button'
 import { CircleButton } from '@/components/circle-button'
 import { Footer } from '@/components/footer'
+import { EnglishLabel } from '@/components/english-text'
 import { WorksWebGLScene } from '@/components/works-webgl-scene'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
@@ -190,9 +191,9 @@ function WorkCard({
             </div>
 
             <div className={`absolute inset-0 bg-foreground/90 rounded-2xl flex items-center justify-center transition-opacity duration-500 ${isHovered ? 'opacity-100' : 'opacity-0'}`}>
-              <span className="text-background flex items-center gap-3 text-lg font-medium">
+              <span className="text-background flex items-center gap-3 text-xl sm:text-2xl font-bold uppercase tracking-[0.15em] font-display">
                 View Project
-                <ArrowUpRight className="w-5 h-5" />
+                <ArrowUpRight className="w-6 h-6" />
               </span>
             </div>
 
@@ -278,11 +279,11 @@ export default function WorksPageClient() {
 
       <section className="relative min-h-[60svh] sm:min-h-[70svh] flex items-center justify-center">
         <div className="container mx-auto px-4 sm:px-6 md:px-12 py-24 sm:py-32 text-center">
-          <LineReveal delay={0}>
-            <p className="text-xs sm:text-sm uppercase tracking-[0.2em] sm:tracking-[0.3em] text-primary mb-4 sm:mb-6">
+          <div className="mb-6 sm:mb-8">
+            <EnglishLabel delay={0.1} align="center">
               Works
-            </p>
-          </LineReveal>
+            </EnglishLabel>
+          </div>
           
           <TextReveal
             text="制作実績"
@@ -310,7 +311,9 @@ export default function WorksPageClient() {
       <section className="py-6 sm:py-8 border-y border-border/30 glass-light sticky top-[72px] z-30">
         <div className="container mx-auto px-4 sm:px-6 md:px-12">
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6">
-            <span className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Filter</span>
+            <span className="text-sm uppercase tracking-[0.25em] text-primary font-display font-semibold">
+              Filter
+            </span>
             <div className="flex flex-wrap justify-center gap-2 sm:gap-3">
               {categories.map((category) => (
                 <button
@@ -356,11 +359,11 @@ export default function WorksPageClient() {
       <section className="py-24 sm:py-32 md:py-40 glass-card">
         <div className="container mx-auto px-4 sm:px-6 md:px-12">
           <div className="max-w-3xl mx-auto text-center">
-            <SectionReveal>
-              <p className="text-xs sm:text-sm uppercase tracking-[0.2em] sm:tracking-[0.3em] text-primary mb-4 sm:mb-6">
+            <div className="mb-6 sm:mb-8">
+              <EnglishLabel delay={0} align="center">
                 More Works
-              </p>
-            </SectionReveal>
+              </EnglishLabel>
+            </div>
             
             <TextReveal
               text="もっと詳しく見たい方へ"
@@ -403,11 +406,11 @@ export default function WorksPageClient() {
 
       <section className="py-24 sm:py-32 md:py-48 overflow-hidden glass-light">
         <div className="container mx-auto px-4 sm:px-6 md:px-12 text-center">
-          <SectionReveal duration={1}>
-            <p className="text-xs sm:text-sm uppercase tracking-[0.2em] sm:tracking-[0.3em] text-primary mb-4 sm:mb-6">
+          <div className="mb-6 sm:mb-8">
+            <EnglishLabel delay={0} align="center">
               Contact
-            </p>
-          </SectionReveal>
+            </EnglishLabel>
+          </div>
           <TextReveal 
             as="h2" 
             className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold tracking-tight mb-6 sm:mb-8"

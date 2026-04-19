@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { ArrowRight, Mail, Phone, MapPin, Clock, Send, CheckCircle, AlertCircle } from 'lucide-react'
 import { TextReveal, SectionReveal, LineReveal } from '@/components/text-reveal'
+import { EnglishLabel } from '@/components/english-text'
 import { MagneticButton } from '@/components/magnetic-button'
 import { Footer } from '@/components/footer'
 import { sendEmail } from '@/actions/contact'
@@ -154,11 +155,11 @@ export default function ContactPageClient() {
       {/* Hero Section */}
       <section className="relative min-h-[50svh] sm:min-h-[60svh] flex items-center justify-center">
         <div className="container mx-auto px-4 sm:px-6 md:px-12 py-24 sm:py-32 text-center">
-          <LineReveal delay={0}>
-            <p className="text-xs sm:text-sm uppercase tracking-[0.2em] sm:tracking-[0.3em] text-primary mb-4 sm:mb-6">
+          <div className="mb-6 sm:mb-8">
+            <EnglishLabel delay={0.1} align="center">
               Contact
-            </p>
-          </LineReveal>
+            </EnglishLabel>
+          </div>
           <TextReveal
             text="お問い合わせ"
             as="h1"
@@ -197,7 +198,9 @@ export default function ContactPageClient() {
                       <Mail size={18} className="text-muted-foreground group-hover:text-primary transition-colors sm:w-5 sm:h-5" />
                     </div>
                     <div>
-                      <p className="text-xs sm:text-sm text-muted-foreground">Email</p>
+                      <p className="text-sm text-primary/80 font-display font-semibold tracking-[0.15em] uppercase">
+                        Email
+                      </p>
                       <p className="text-sm sm:text-base font-medium group-hover:text-primary transition-colors">hello@junkbranding.com</p>
                     </div>
                   </a>
@@ -210,7 +213,9 @@ export default function ContactPageClient() {
                       <Phone size={18} className="text-muted-foreground group-hover:text-primary transition-colors sm:w-5 sm:h-5" />
                     </div>
                     <div>
-                      <p className="text-xs sm:text-sm text-muted-foreground">Phone</p>
+                      <p className="text-sm text-primary/80 font-display font-semibold tracking-[0.15em] uppercase">
+                        Phone
+                      </p>
                       <p className="text-sm sm:text-base font-medium group-hover:text-primary transition-colors">080-9155-0426</p>
                     </div>
                   </a>
@@ -220,7 +225,9 @@ export default function ContactPageClient() {
                       <MapPin size={18} className="text-muted-foreground sm:w-5 sm:h-5" />
                     </div>
                     <div>
-                      <p className="text-xs sm:text-sm text-muted-foreground">Address</p>
+                      <p className="text-sm text-primary/80 font-display font-semibold tracking-[0.15em] uppercase">
+                        Address
+                      </p>
                       <p className="text-sm sm:text-base font-medium">〒300-0410</p>
                       <p className="text-sm text-muted-foreground">茨城県稲敷郡美浦村みどり台767-43</p>
                     </div>
@@ -231,7 +238,9 @@ export default function ContactPageClient() {
                       <Clock size={18} className="text-muted-foreground sm:w-5 sm:h-5" />
                     </div>
                     <div>
-                      <p className="text-xs sm:text-sm text-muted-foreground">Business Hours</p>
+                      <p className="text-sm text-primary/80 font-display font-semibold tracking-[0.15em] uppercase">
+                        Business Hours
+                      </p>
                       <p className="text-sm sm:text-base font-medium">平日 10:00 - 18:00</p>
                     </div>
                   </div>

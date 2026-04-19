@@ -8,6 +8,7 @@ interface HorizontalScrollTextProps {
   speed?: number
   direction?: 'left' | 'right'
   pauseOnHover?: boolean
+  style?: React.CSSProperties
 }
 
 export function HorizontalScrollText({
@@ -16,6 +17,7 @@ export function HorizontalScrollText({
   speed = 30,
   direction = 'left',
   pauseOnHover = true,
+  style,
 }: HorizontalScrollTextProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const [isPaused, setIsPaused] = useState(false)
@@ -27,6 +29,7 @@ export function HorizontalScrollText({
     <div
       ref={containerRef}
       className={`overflow-hidden whitespace-nowrap ${className}`}
+      style={style}
       onMouseEnter={() => pauseOnHover && setIsPaused(true)}
       onMouseLeave={() => pauseOnHover && setIsPaused(false)}
       aria-hidden="true"

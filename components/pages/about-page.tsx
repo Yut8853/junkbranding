@@ -5,6 +5,7 @@ import { ArrowRight, Phone, Heart, Lightbulb, Users, Clock } from 'lucide-react'
 import { TextReveal, SectionReveal, LineReveal } from '@/components/text-reveal'
 import { MagneticButton } from '@/components/magnetic-button'
 import { Footer } from '@/components/footer'
+import { EnglishLabel, EnglishText } from '@/components/english-text'
 
 // Team data
 const team = [
@@ -58,7 +59,7 @@ const process = [
     details: [
       { title: '現状の課題整理', desc: '「なんとなくうまくいっていない」を、そのままにしません。曖昧な状態を一つずつ言語化していきます。' },
       { title: 'ターゲットの具体化', desc: '年齢や性別だけでなく、「どんな場面で迷い、何に反応するのか」まで掘り下げます。' },
-      { title: '競合の見え方確認', desc: '競合がどう見えているかを、作り手ではなくユーザーの視点で整理します。' },
+      { title: '競合の見え方確認', desc: '競合がどう見えてい���かを、作り手ではなくユーザーの視点で整理します。' },
       { title: 'ゴール設計', desc: '問い合わせなのか、購入なのか。「どこまでいけば成功か」を明確にします。' },
     ],
     note: 'ここを曖昧にしたまま進めることはありません。',
@@ -101,7 +102,7 @@ const process = [
     fullDescription: 'ここで初めてビジュアルを作ります。ただし、感覚だけで作ることはありません。「なぜこのレイアウトなのか」「なぜこの余白なのか」説明できる状態で進めます。',
     duration: '約3〜8週間',
     details: [
-      { title: 'ファーストビュー設計', desc: '最初の3秒で「自分に関係ある」と思わせるための設計を徹底します。' },
+      { title: 'ファーストビュー設計', desc: '最初の3秒で��自分に関係ある」と思わせるための設計を徹底しま�����。' },
       { title: '情報の優先順位設計', desc: 'すべてを同じ強さで見せると、何も伝わりません。順番を作ります。' },
       { title: 'トーン＆マナー統一', desc: 'ブランドらしさを崩さないためのルールを細かく整えます。' },
       { title: 'レスポンシブ最適化', desc: '実際の閲覧環境を考え、スマホでの見え方を優先して調整します。' },
@@ -161,11 +162,11 @@ export default function AboutPageClient() {
       {/* Hero Section */}
       <section className="relative min-h-[70svh] sm:min-h-[80svh] flex items-center justify-center">
         <div className="container mx-auto px-4 sm:px-6 md:px-12 py-24 sm:py-32 text-center">
-          <LineReveal delay={0}>
-            <p className="text-xs sm:text-sm uppercase tracking-[0.2em] sm:tracking-[0.3em] text-primary mb-4 sm:mb-6">
+          <div className="mb-6 sm:mb-8">
+            <EnglishLabel delay={0.1} align="center">
               About Us
-            </p>
-          </LineReveal>
+            </EnglishLabel>
+          </div>
           <TextReveal
             text="私たちについて"
             as="h1"
@@ -243,11 +244,11 @@ export default function AboutPageClient() {
       <section className="py-24 sm:py-32 md:py-48 glass-card">
         <div className="container mx-auto px-4 sm:px-6 md:px-12">
           <div className="text-center mb-16 sm:mb-20 md:mb-32">
-            <LineReveal delay={0}>
-              <p className="text-xs sm:text-sm uppercase tracking-[0.2em] sm:tracking-[0.3em] text-primary mb-4 sm:mb-6">
+            <div className="mb-6 sm:mb-8">
+              <EnglishLabel delay={0} align="center">
                 Team
-              </p>
-            </LineReveal>
+              </EnglishLabel>
+            </div>
             <TextReveal
               text="チームメンバー"
               as="h2"
@@ -274,7 +275,9 @@ export default function AboutPageClient() {
                     <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-br from-primary/20 via-transparent to-accent/20" />
                     {/* Name overlay with gradient animation */}
                     <div className="absolute bottom-4 left-4 right-4 sm:bottom-6 sm:left-6 sm:right-6">
-                      <p className="text-xs sm:text-sm text-foreground/70 mb-1">{member.role}</p>
+                      <p className="text-sm sm:text-base text-foreground/80 mb-1 font-display font-semibold tracking-wider uppercase">
+                        {member.role}
+                      </p>
                       <h3 className="text-xl sm:text-2xl md:text-3xl font-bold animate-gradient-text bg-gradient-to-r from-foreground via-primary to-foreground bg-[length:200%_auto] bg-clip-text text-transparent">
                         {member.name}
                       </h3>
@@ -295,11 +298,11 @@ export default function AboutPageClient() {
       <section className="py-24 sm:py-32 md:py-48 glass-light">
         <div className="container mx-auto px-4 sm:px-6 md:px-12">
           <div className="text-center mb-16 sm:mb-20 md:mb-32">
-            <LineReveal delay={0}>
-              <p className="text-xs sm:text-sm uppercase tracking-[0.2em] sm:tracking-[0.3em] text-primary mb-4 sm:mb-6">
+            <div className="mb-6 sm:mb-8">
+              <EnglishLabel delay={0} align="center">
                 Values
-              </p>
-            </LineReveal>
+              </EnglishLabel>
+            </div>
             <TextReveal
               text="大切にしていること"
               as="h2"
@@ -319,7 +322,7 @@ export default function AboutPageClient() {
                   <h3 className="text-lg sm:text-xl md:text-2xl font-bold mb-2">
                     {value.title}
                   </h3>
-                  <p className="text-xs sm:text-sm text-accent mb-3 md:mb-4">
+                  <p className="text-sm sm:text-base text-primary/70 mb-3 md:mb-4 font-display font-semibold tracking-[0.2em] uppercase">
                     {value.titleEn}
                   </p>
                   <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
@@ -336,11 +339,11 @@ export default function AboutPageClient() {
       <section className="py-24 sm:py-32 md:py-48 glass-card">
         <div className="container mx-auto px-4 sm:px-6 md:px-12">
           <div className="text-center mb-12 md:mb-32">
-            <LineReveal delay={0}>
-              <p className="text-xs sm:text-sm uppercase tracking-[0.2em] sm:tracking-[0.3em] text-primary mb-4 md:mb-6">
+            <div className="mb-6 sm:mb-8">
+              <EnglishLabel delay={0} align="center">
                 Process
-              </p>
-            </LineReveal>
+              </EnglishLabel>
+            </div>
             <TextReveal
               text="制作の流れ"
               as="h2"
@@ -370,7 +373,7 @@ export default function AboutPageClient() {
                         <h3 className="text-xl sm:text-2xl md:text-3xl font-bold mb-1">
                           {item.title}
                         </h3>
-                        <p className="text-xs sm:text-sm text-muted-foreground uppercase tracking-wider">
+                        <p className="text-sm sm:text-base text-primary/70 uppercase tracking-[0.15em] font-display font-semibold">
                           {item.titleEn}
                         </p>
                       </div>
