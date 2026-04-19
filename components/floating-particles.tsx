@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from 'react'
 interface Particle {
   x: number
   y: number
+  baseX: number
   baseY: number
   vx: number
   vy: number
@@ -24,6 +25,8 @@ export function FloatingParticles() {
   const animationRef = useRef<number>(0)
   const timeRef = useRef(0)
   const lastFrameTime = useRef(0)
+  const mouseRef = useRef({ x: 0, y: 0 })
+  const targetMouseRef = useRef({ x: 0, y: 0 })
 
   useEffect(() => {
     setIsMounted(true)
@@ -69,6 +72,7 @@ export function FloatingParticles() {
         particlesRef.current.push({
           x,
           y,
+          baseX: x,
           baseY: y,
           vx: 0,
           vy: 0,
@@ -83,8 +87,14 @@ export function FloatingParticles() {
       }
     }
 
+    // Mouse move handler
+    const handleMouseMove = (e: MouseEvent) => {
+      targetMouseRef.current = { x: e.clientX, y: e.clientY }
+    }
+
     resize()
     window.addEventListener('resize', resize, { passive: true })
+    window.addEventListener('mousemove', handleMouseMove, { passive: true })
 
     // Animation loop with frame rate limiting (30fps)
     const animate = (currentTime: number) => {
@@ -98,27 +108,56 @@ export function FloatingParticles() {
       timeRef.current += 1
       const time = timeRef.current
 
+      // Smooth mouse position interpolation (faster response)
+      mouseRef.current.x += (targetMouseRef.current.x - mouseRef.current.x) * 0.25
+      mouseRef.current.y += (targetMouseRef.current.y - mouseRef.current.y) * 0.25
+
       ctx.clearRect(0, 0, width, height)
 
       particlesRef.current.forEach((p) => {
-        p.x += p.speed
+        // Base movement
+        p.baseX += p.speed
 
         const wave = Math.sin(time * p.frequency + p.phase) * p.amplitude
-        p.y = p.baseY + wave
+        
+        // Calculate distance from mouse
+        const dx = mouseRef.current.x - p.x
+        const dy = mouseRef.current.y - p.y
+        const distance = Math.sqrt(dx * dx + dy * dy)
+        
+        // Mouse attraction effect - particles are drawn toward cursor
+        const attractionRadius = 400
+        const attractionStrength = 0.25
+        
+        if (distance < attractionRadius && distance > 0) {
+          const force = (1 - distance / attractionRadius) * attractionStrength
+          p.vx += (dx / distance) * force * 4
+          p.vy += (dy / distance) * force * 4
+        }
 
+        // Apply velocity with damping (less damping for faster movement)
         p.x += p.vx
         p.y += p.vy
-        p.vx *= 0.98
-        p.vy *= 0.98
+        p.vx *= 0.88
+        p.vy *= 0.88
 
-        if (p.x > width + 50) {
+        // Gradually return to base position
+        const returnStrength = 0.02
+        p.x += (p.baseX - p.x) * returnStrength
+        p.y += (p.baseY + wave - p.y) * returnStrength
+
+        // Reset when particle goes off screen
+        if (p.baseX > width + 50) {
+          p.baseX = -30
           p.x = -30
           p.baseY = Math.random() * height
           p.y = p.baseY
           p.hue = Math.random() * 360
         }
 
-        p.hue = (p.hue + 0.015) % 360
+        // Color shift based on proximity to mouse
+        const colorShift = distance < attractionRadius ? (1 - distance / attractionRadius) * 30 : 0
+        p.hue = (p.hue + 0.015 + colorShift * 0.1) % 360
 
         // Simplified gradient with fewer stops
         const glowSize = p.size * 50
@@ -140,6 +179,7 @@ export function FloatingParticles() {
 
     return () => {
       window.removeEventListener('resize', resize)
+      window.removeEventListener('mousemove', handleMouseMove)
       cancelAnimationFrame(animationRef.current)
     }
   }, [isMounted])
