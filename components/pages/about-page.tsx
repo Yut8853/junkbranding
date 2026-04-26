@@ -203,7 +203,7 @@ export default function AboutPageClient() {
               <div className="space-y-5 text-base sm:text-lg text-muted-foreground leading-relaxed">
                 <SectionReveal delay={0.6}>
                   <p className="text-pretty">
-                    JunkBrandingは、茨城・東京・千葉を中心に活動する、2人だけのブランディング&Web制作スタジオです。
+                    JunkBrandingは、茨城・東京・神奈川を中心に活動する、2人だけのブランディング&Web制作スタジオです。
                   </p>
                 </SectionReveal>
                 <SectionReveal delay={0.7}>

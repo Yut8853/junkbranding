@@ -299,7 +299,7 @@ export default function HomePageClient() {
             duration={0.7}
             gradient
           >
-            茨城・東京・神奈川・千葉
+            茨城・東京・神奈川
           </TextReveal>
           <SectionReveal delay={0.5} duration={1}>
             <p className="text-sm sm:text-base md:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed text-balance">

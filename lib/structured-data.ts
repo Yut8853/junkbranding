@@ -2,6 +2,23 @@
 
 const BASE_URL = 'https://junkbranding.com'
 
+type JsonLdNode = Record<string, unknown>
+
+export function generateJsonLdGraph(items: JsonLdNode[]) {
+  return {
+    '@context': 'https://schema.org',
+    '@graph': items.flatMap((item) => {
+      if (Array.isArray(item['@graph'])) {
+        return item['@graph'] as JsonLdNode[]
+      }
+
+      const node = { ...item }
+      delete node['@context']
+      return [node]
+    }),
+  }
+}
+
 // Organization schema - base for all pages
 export const organizationSchema = {
   '@type': 'Organization',
@@ -69,7 +86,7 @@ export function generateAboutPageSchema() {
         '@id': `${BASE_URL}/about/#webpage`,
         url: `${BASE_URL}/about`,
         name: '私たちについて | JunkBranding',
-        description: '茨城・東京・千葉を中心に活動する、2人だけのブランディング&Web制作スタジオ。大手にはできない、丁寧なものづくりを。',
+        description: '茨城・東京・神奈川を中心に活動する、2人だけのブランディング&Web制作スタジオ。大手にはできない、丁寧なものづくりを。',
         isPartOf: {
           '@id': `${BASE_URL}/#website`,
         },

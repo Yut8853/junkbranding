@@ -26,11 +26,11 @@ const bebasNeue = Bebas_Neue({
 export const metadata: Metadata = {
   metadataBase: new URL('https://junkbranding.com'),
   title: {
-    default: 'JunkBranding | 茨城・東京・千葉のブランディング & Web制作',
+    default: 'JunkBranding | 茨城・東京・神奈川のブランディング & Web制作',
     template: '%s | JunkBranding',
   },
   description:
-    '茨城・東京・千葉を中心に活動する、2人だけの小さなブランディング&Web制作スタジオ。大手にはできない、丁寧なものづくりを。Webサイト制作、ロゴ制作、ブランディングならJunkBrandingへ。',
+    '茨城・東京・神奈川を中心に活動する、2人だけの小さなブランディング&Web制作スタジオ。大手にはできない、丁寧なものづくりを。Webサイト制作、ロゴ制作、ブランディングならJunkBrandingへ。',
   keywords: [
     'Web制作',
     'ブランディング',
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
     'ロゴ制作',
     '茨城',
     '東京',
-    '千葉',
+    '神奈川',
     'ホームページ制作',
     'コーポレートサイト',
     'ランディングページ',
@@ -60,12 +60,12 @@ export const metadata: Metadata = {
     locale: 'ja_JP',
     url: 'https://junkbranding.com',
     siteName: 'JunkBranding',
-    title: 'JunkBranding | 茨城・東京・千葉のブランディング & Web制作',
+    title: 'JunkBranding | 茨城・東京・神奈川のブランディング & Web制作',
     description:
-      '茨城・東京・千葉を中心に活動する、2人だけの小さなブランディング&Web制作スタジオ。大手にはできない、丁寧なものづくりを。',
+      '茨城・東京・神奈川を中心に活動する、2人だけの小さなブランディング&Web制作スタジオ。大手にはできない、丁寧なものづくりを。',
     images: [
       {
-        url: '/og-image.jpg',
+        url: '/opengraph-image',
         width: 1200,
         height: 630,
         alt: 'JunkBranding - ブランディング & Web制作スタジオ',
@@ -74,10 +74,10 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'JunkBranding | 茨城・東京・千葉のブランディング & Web制作',
+    title: 'JunkBranding | 茨城・東京・神奈川のブランディング & Web制作',
     description:
-      '茨城・東京・千葉を中心に活動する、2人だけの小さなブランディング&Web制作スタジオ。',
-    images: ['/og-image.jpg'],
+      '茨城・東京・神奈川を中心に活動する、2人だけの小さなブランディング&Web制作スタジオ。',
+    images: ['/opengraph-image'],
   },
   robots: {
     index: true,
@@ -136,7 +136,7 @@ const jsonLd = {
       url: 'https://junkbranding.com',
       name: 'JunkBranding',
       description:
-        '茨城・東京・千葉を中心に活動するブランディング&Web制作スタジオ',
+        '茨城・東京・神奈川を中心に活動するブランディング&Web制作スタジオ',
       publisher: {
         '@id': 'https://junkbranding.com/#organization',
       },
@@ -195,7 +195,7 @@ const jsonLd = {
       areaServed: [
         { '@type': 'State', name: '茨城県' },
         { '@type': 'State', name: '東京都' },
-        { '@type': 'State', name: '千葉県' },
+        { '@type': 'State', name: '神奈川県' },
       ],
       priceRange: '¥¥',
       openingHoursSpecification: {

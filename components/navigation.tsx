@@ -203,7 +203,7 @@ export function Navigation() {
           >
             <span>JunkBranding</span>
             <span className="w-8 h-[1px] bg-border" />
-            <span>茨城 / 東京 / 千葉</span>
+            <span>茨城 / 東京 / 神奈川</span>
           </div>
         </nav>
       </div>
