@@ -280,8 +280,7 @@ export function EnglishMarqueeText({ children, className }: EnglishMarqueeTextPr
     <span
       className={cn(
         'font-display uppercase text-[4rem] sm:text-[6rem] md:text-[8rem] lg:text-[10rem] xl:text-[36rem] font-normal tracking-[0.02em] leading-none',
-        'english-stroke text-foreground/15',
-        'transition-all duration-700 hover:text-foreground/30',
+        'marquee-stroke text-foreground/20',
         className
       )}
     >

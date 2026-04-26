@@ -116,7 +116,7 @@ export default function HomePageClient() {
       <section className="py-8 sm:py-12 md:py-16 border-y border-border/30 glass-light overflow-hidden">
         <div className="flex whitespace-nowrap animate-marquee">
           {[...marqueeTexts, ...marqueeTexts, ...marqueeTexts, ...marqueeTexts].map((text, i) => (
-            <EnglishMarqueeText key={i} className="mx-4 sm:mx-8 md:mx-12 text-foreground/15">
+            <EnglishMarqueeText key={i} className="mx-4 sm:mx-8 md:mx-12">
               {text}
             </EnglishMarqueeText>
           ))}

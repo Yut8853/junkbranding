@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { Phone, Mail, MapPin } from 'lucide-react'
 import { RevealSection } from './reveal-section'
+import { EnglishMarqueeText } from './english-text'
 
 import { MagneticButton } from './magnetic-button'
 
@@ -16,21 +17,20 @@ const footerLinks = {
   ],
 }
 
+const marqueeTexts = ['Branding', 'Web Design', 'Graphic Design', 'Print Media', 'Logo Design', 'Art Direction']
+
 export function Footer() {
   const currentYear = new Date().getFullYear()
 
   return (
     <footer className="relative glass-card border-t border-border/30">
       {/* Marquee */}
-      <div className="py-8 sm:py-12 md:py-16 border-b border-border/50 overflow-hidden">
+      <div className="py-8 sm:py-12 md:py-16 border-b border-border/30 glass-light overflow-hidden">
         <div className="flex whitespace-nowrap animate-marquee">
-          {['Branding', 'Web Design', 'Graphic Design', 'Print Media', 'Logo Design', 'Art Direction', 'Branding', 'Web Design', 'Graphic Design', 'Print Media', 'Logo Design', 'Art Direction', 'Branding', 'Web Design', 'Graphic Design', 'Print Media', 'Logo Design', 'Art Direction', 'Branding', 'Web Design', 'Graphic Design', 'Print Media', 'Logo Design', 'Art Direction'].map((text, i) => (
-            <span 
-              key={i} 
-              className="font-display uppercase text-[4rem] sm:text-[6rem] md:text-[8rem] lg:text-[10rem] xl:text-[12rem] font-normal tracking-[0.02em] leading-none english-stroke text-foreground/15 transition-all duration-700 hover:text-foreground/30 mx-4 sm:mx-8 md:mx-12"
-            >
+          {[...marqueeTexts, ...marqueeTexts, ...marqueeTexts, ...marqueeTexts].map((text, i) => (
+            <EnglishMarqueeText key={i} className="mx-4 sm:mx-8 md:mx-12">
               {text}
-            </span>
+            </EnglishMarqueeText>
           ))}
         </div>
       </div>
