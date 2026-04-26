@@ -22,6 +22,7 @@ type PageMetadataOptions = {
   keywords?: string[]
   imageAlt?: string
   index?: boolean
+  category?: string
 }
 
 export function createPageMetadata({
@@ -31,6 +32,7 @@ export function createPageMetadata({
   keywords = [],
   imageAlt = `${SITE_NAME} - ブランディング & Web制作スタジオ`,
   index = true,
+  category = 'Web制作・ブランディング',
 }: PageMetadataOptions): Metadata {
   const url = `${SITE_URL}${path}`
   const mergedKeywords = [...defaultKeywords, ...keywords]
@@ -39,8 +41,15 @@ export function createPageMetadata({
     title,
     description,
     keywords: Array.from(new Set(mergedKeywords)),
+    authors: [{ name: SITE_NAME, url: SITE_URL }],
+    creator: SITE_NAME,
+    publisher: SITE_NAME,
+    category,
     alternates: {
       canonical: url,
+      languages: {
+        'ja-JP': url,
+      },
     },
     openGraph: {
       title: `${title} | ${SITE_NAME}`,

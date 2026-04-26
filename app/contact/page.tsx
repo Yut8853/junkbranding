@@ -6,9 +6,9 @@ import ContactPageClient from '@/components/pages/contact-page'
 export const metadata: Metadata = createPageMetadata({
   title: 'お問い合わせ',
   description:
-    'JunkBrandingへのお問い合わせページ。Webサイト制作、ブランディング、ロゴデザイン、動画制作、マーケティングのご相談はこちらからお気軽にご連絡ください。',
+    'JunkBrandingへのお問い合わせページ。茨城・東京・神奈川でのWebサイト制作、ブランディング、ロゴデザイン、動画制作、マーケティングのご相談・お見積もりはこちらからお気軽にご連絡ください。',
   path: '/contact',
-  keywords: ['お問い合わせ', 'Web制作相談', 'ブランディング相談', '見積もり相談', '無料相談'],
+  keywords: ['茨城 Web制作相談', '東京 ブランディング相談', '神奈川 ホームページ制作相談', 'お問い合わせ', '見積もり相談', '無料相談'],
 })
 
 const contactJsonLd = generateJsonLdGraph([

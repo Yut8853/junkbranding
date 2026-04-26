@@ -25,6 +25,7 @@ const bebasNeue = Bebas_Neue({
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://junkbranding.com'),
+  applicationName: 'JunkBranding',
   title: {
     default: 'JunkBranding | 茨城・東京・神奈川のブランディング & Web制作',
     template: '%s | JunkBranding',
@@ -47,6 +48,8 @@ export const metadata: Metadata = {
   authors: [{ name: 'JunkBranding', url: 'https://junkbranding.com' }],
   creator: 'JunkBranding',
   publisher: 'JunkBranding',
+  category: 'Web制作・ブランディング',
+  manifest: '/manifest.webmanifest',
   formatDetection: {
     email: false,
     address: false,
@@ -54,6 +57,9 @@ export const metadata: Metadata = {
   },
   alternates: {
     canonical: 'https://junkbranding.com',
+    languages: {
+      'ja-JP': 'https://junkbranding.com',
+    },
   },
   openGraph: {
     type: 'website',
@@ -68,7 +74,7 @@ export const metadata: Metadata = {
         url: '/opengraph-image',
         width: 1200,
         height: 630,
-        alt: 'JunkBranding - ブランディング & Web制作スタジオ',
+        alt: 'JunkBranding - 茨城・東京・神奈川のブランディング & Web制作スタジオ',
       },
     ],
   },
@@ -93,9 +99,9 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       {
-        url: '/favicon.jpg',
+        url: '/icon.svg',
         sizes: '32x32',
-        type: 'image/jpeg',
+        type: 'image/svg+xml',
       },
       {
         url: '/icon.svg',
@@ -103,15 +109,15 @@ export const metadata: Metadata = {
       },
     ],
     apple: {
-      url: '/apple-icon.jpg',
-      sizes: '180x180',
-      type: 'image/jpeg',
+      url: '/icon.svg',
+      sizes: '32x32',
+      type: 'image/svg+xml',
     },
-    shortcut: '/favicon.jpg',
+    shortcut: '/icon.svg',
   },
-verification: {
-  google: 'LEkZOcAeq4rXooCOsOS3EisHeiHwDTe9Zl7Rka0F0gQ',
-},
+  verification: {
+    google: 'LEkZOcAeq4rXooCOsOS3EisHeiHwDTe9Zl7Rka0F0gQ',
+  },
 };
 
 export const viewport: Viewport = {
@@ -149,10 +155,15 @@ const jsonLd = {
       url: 'https://junkbranding.com',
       logo: {
         '@type': 'ImageObject',
-        url: 'https://junkbranding.com/logo.jpg',
-        width: 512,
-        height: 512,
+        url: 'https://junkbranding.com/icon.svg',
+        width: 32,
+        height: 32,
       },
+      image: 'https://junkbranding.com/opengraph-image',
+      description:
+        '茨城・東京・神奈川を中心に活動するブランディング&Web制作スタジオ',
+      email: 'hello@junkbranding.com',
+      telephone: '+81-80-9155-0426',
       contactPoint: {
         '@type': 'ContactPoint',
         telephone: '+81-80-9155-0426',
@@ -169,6 +180,15 @@ const jsonLd = {
         addressCountry: 'JP',
       },
       sameAs: [],
+      knowsAbout: [
+        'Web制作',
+        'ホームページ制作',
+        'ブランディング',
+        'Webデザイン',
+        'ロゴ制作',
+        'SEO対策',
+        'マーケティング',
+      ],
     },
     {
       '@type': 'LocalBusiness',
@@ -177,6 +197,7 @@ const jsonLd = {
       description:
         'ブランディング&Web制作スタジオ。Webサイト制作、ロゴデザイン、ブランディングを提供。',
       url: 'https://junkbranding.com',
+      image: 'https://junkbranding.com/opengraph-image',
       telephone: '+81-80-9155-0426',
       email: 'hello@junkbranding.com',
       address: {
@@ -197,6 +218,17 @@ const jsonLd = {
         { '@type': 'State', name: '東京都' },
         { '@type': 'State', name: '神奈川県' },
       ],
+      makesOffer: {
+        '@type': 'OfferCatalog',
+        name: 'JunkBrandingのサービス',
+        itemListElement: [
+          { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Webサイト制作' } },
+          { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'ブランディング' } },
+          { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'ロゴデザイン' } },
+          { '@type': 'Offer', itemOffered: { '@type': 'Service', name: '動画制作' } },
+          { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'マーケティング支援' } },
+        ],
+      },
       priceRange: '¥¥',
       openingHoursSpecification: {
         '@type': 'OpeningHoursSpecification',

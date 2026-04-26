@@ -9,6 +9,7 @@ export const metadata: Metadata = createPageMetadata({
     'JunkBrandingのプライバシーポリシー。個人情報の取り扱い、Cookieの使用、お客様の権利、外部サービス利用時の情報管理についてご説明します。',
   path: '/privacy',
   keywords: ['プライバシーポリシー', '個人情報保護', 'Cookie', '個人情報の取り扱い'],
+  category: 'ポリシー',
 })
 
 // Structured data for privacy page
