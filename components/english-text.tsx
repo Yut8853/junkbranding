@@ -39,11 +39,12 @@ function useInView(ref: React.RefObject<Element | null>, options?: { once?: bool
 interface EnglishLabelProps {
   children: string
   className?: string
+  textClassName?: string
   delay?: number
   align?: 'left' | 'center'
 }
 
-export function EnglishLabel({ children, className, delay = 0, align = 'left' }: EnglishLabelProps) {
+export function EnglishLabel({ children, className, textClassName, delay = 0, align = 'left' }: EnglishLabelProps) {
   const ref = useRef<HTMLDivElement>(null)
   const isInView = useInView(ref, { once: true, margin: '-5% 0px' })
   const [hasAnimated, setHasAnimated] = useState(false)
@@ -128,7 +129,10 @@ export function EnglishLabel({ children, className, delay = 0, align = 'left' }:
                     className="inline-block"
                   >
                     <span
-                      className="inline-block font-display uppercase text-[2.5rem] sm:text-[4rem] md:text-[6rem] lg:text-[8rem] xl:text-[36rem] tracking-[0.02em] font-normal text-primary leading-[0.01]"
+                      className={cn(
+                        'inline-block font-display uppercase text-[2.5rem] sm:text-[4rem] md:text-[6rem] lg:text-[8rem] xl:text-[36rem] tracking-[0.02em] font-normal text-primary leading-[0.01]',
+                        textClassName
+                      )}
                       style={{
                         transform: hasAnimated ? 'translateY(0) rotate(0deg)' : 'translateY(120%) rotate(8deg)',
                         opacity: hasAnimated ? 1 : 0,
@@ -142,7 +146,7 @@ export function EnglishLabel({ children, className, delay = 0, align = 'left' }:
                 )
               })}
               {wordIndex < words.length - 1 && (
-                <span className="inline-block w-[0.3em]" />
+                <span className={cn('inline-block w-[0.3em]', textClassName)} />
               )}
             </span>
           )

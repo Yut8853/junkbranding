@@ -43,20 +43,30 @@ export default function HomePageClient() {
   return (
     <>
       {/* Hero Section - 左寄せ */}
-<section className="relative min-h-[80vh] flex items-start overflow-hidden pb-16 sm:pb-20 md:pb-28">
-  <div className="container mx-auto px-6 sm:px-6 md:px-12 pt-32 pb-3 md:pt-40 md:pb-32">          <div className="max-w-6xl">
-            <SectionReveal delay={0.2} duration={1.2} className="mx-6">
-              <div className="sm:mb-6 md:mb-8">
-                <EnglishLabel delay={0.3} align="left">
+      <section className="relative min-h-[80vh] flex items-start overflow-hidden pb-16 sm:pb-20 md:pb-28">
+        <div className="container mx-auto px-6 sm:px-6 md:px-12 pt-32 pb-3 md:pt-40 md:pb-32">
+          <div className="max-w-6xl">
+            <SectionReveal delay={0.2} duration={1.2} className="-mx-1 sm:mx-0 md:mx-2">
+              <div className="mb-0 sm:mb-1 md:mb-2">
+                <EnglishLabel
+                  delay={0.3}
+                  align="left"
+                  textClassName="text-[clamp(3.35rem,16vw,8rem)] sm:text-[clamp(5rem,15vw,10rem)] md:text-[clamp(6.5rem,12vw,12rem)] lg:text-[clamp(8rem,10vw,14rem)] xl:text-[clamp(10rem,12vw,18rem)] leading-[0.74]"
+                >
                   Beyond Good Design
                 </EnglishLabel>
-                <EnglishLabel delay={0.3} align="left">
-                  by JUNK BLANDING                  
+                <EnglishLabel
+                  className="-mt-[clamp(1.35rem,6vw,6.5rem)]"
+                  delay={0.36}
+                  align="left"
+                  textClassName="text-[clamp(2.55rem,12vw,6.25rem)] sm:text-[clamp(3.75rem,11vw,8rem)] md:text-[clamp(4.75rem,9vw,9.5rem)] lg:text-[clamp(6rem,8vw,11rem)] xl:text-[clamp(7rem,9vw,14rem)] leading-[0.74] text-foreground/85"
+                >
+                  by JUNK BLANDING
                 </EnglishLabel>
               </div>
             </SectionReveal>
 
-            <div>
+            <div className="-mt-1 sm:-mt-2 md:mt-0">
               <HeroTitle />
             </div>
 
