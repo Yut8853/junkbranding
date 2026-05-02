@@ -84,7 +84,7 @@ export async function sendEmail(formData: FormData) {
 
   if (!validatedFields.success) {
     const errorMessage =
-      validatedFields.error.errors[0]?.message || '入力内容に不備があります。'
+      validatedFields.error.issues[0]?.message || '入力内容に不備があります。'
     return { error: errorMessage }
   }
 

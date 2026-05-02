@@ -3,9 +3,8 @@
 import Link from 'next/link'
 import { Phone, Mail, MapPin } from 'lucide-react'
 import { RevealSection } from './reveal-section'
-import { EnglishMarqueeText } from './english-text'
-
 import { MagneticButton } from './magnetic-button'
+import { TransitionLink } from '@/components/transition-link'
 
 const footerLinks = {
   navigation: [
@@ -17,64 +16,51 @@ const footerLinks = {
   ],
 }
 
-const marqueeTexts = ['Branding', 'Web Design', 'Graphic Design', 'Print Media', 'Logo Design', 'Art Direction']
-
 export function Footer() {
   const currentYear = new Date().getFullYear()
 
   return (
-    <footer className="relative glass-card border-t border-border/30">
-      {/* Marquee */}
-      <div className="py-8 sm:py-12 md:py-16 border-b border-border/30 glass-light overflow-hidden">
-        <div className="flex whitespace-nowrap animate-marquee">
-          {[...marqueeTexts, ...marqueeTexts, ...marqueeTexts, ...marqueeTexts].map((text, i) => (
-            <EnglishMarqueeText key={i} className="mx-4 sm:mx-8 md:mx-12">
-              {text}
-            </EnglishMarqueeText>
-          ))}
-        </div>
-      </div>
-
+    <footer className="relative glass-card border-t border-border/20">
       {/* Main footer content */}
-      <div className="container mx-auto px-4 sm:px-6 md:px-12 py-12 sm:py-16 md:py-24">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-8 sm:gap-10 lg:gap-8">
+      <div className="container mx-auto px-6 md:px-12 lg:px-16 py-16 md:py-20 lg:py-28">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-12">
           {/* Brand column */}
           <RevealSection className="sm:col-span-2 lg:col-span-5" delay={0}>
-            <Link 
+            <TransitionLink 
               href="/"
-              className="inline-block mb-4 sm:mb-6"
+              className="inline-block mb-6 lg:mb-8"
             >
-              <span className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-normal tracking-[0.02em] uppercase font-display">
+              <span className="text-2xl sm:text-3xl md:text-4xl font-normal tracking-tight uppercase font-display">
                 JUNKBRANDING
               </span>
-            </Link>
-            <p className="text-muted-foreground leading-relaxed max-w-sm mb-8 text-pretty">
+            </TransitionLink>
+            <p className="text-muted-foreground leading-[1.8] tracking-wide max-w-sm mb-10 lg:mb-12 text-pretty text-sm md:text-base">
               小さなチームだからこそできる、丁寧なものづくり。お客様一人ひとりと向き合い、本当に必要なブランディングとWebデザインを提供します。
             </p>
             <MagneticButton
               href="/contact"
-              className="group inline-flex items-center gap-3 text-foreground"
+              className="group inline-flex items-center gap-4 text-foreground"
               data-cursor="Start"
             >
-              <span className="text-sm uppercase tracking-wider">お問い合わせ</span>
+              <span className="text-sm uppercase tracking-widest font-medium">お問い合わせ</span>
               <span className="w-8 h-[1px] bg-foreground transition-all duration-300 group-hover:w-12 group-hover:bg-accent" />
             </MagneticButton>
           </RevealSection>
 
           {/* Navigation column */}
           <RevealSection className="lg:col-span-2" delay={0.1}>
-            <h3 className="text-sm uppercase tracking-[0.2em] text-primary/70 mb-4 sm:mb-6 font-display font-semibold">
+            <h3 className="text-xs uppercase tracking-[0.25em] text-muted-foreground mb-6 lg:mb-8 font-medium">
               Menu
             </h3>
             <ul className="space-y-4">
               {footerLinks.navigation.map((link) => (
                 <li key={link.href} className="overflow-hidden">
-                  <Link
+                  <TransitionLink
                     href={link.href}
-                    className="block text-base font-display font-semibold text-foreground hover:text-primary transition-all duration-500 uppercase tracking-wider hover:translate-x-2"
+                    className="block text-sm font-display font-medium text-foreground/80 hover:text-foreground transition-all duration-300 uppercase tracking-wider hover:translate-x-1"
                   >
                     {link.label}
-                  </Link>
+                  </TransitionLink>
                 </li>
               ))}
             </ul>
@@ -82,7 +68,7 @@ export function Footer() {
 
           {/* Contact column */}
           <RevealSection className="lg:col-span-3" delay={0.2}>
-            <h3 className="text-sm uppercase tracking-[0.2em] text-primary/70 mb-4 sm:mb-6 font-display font-semibold">
+            <h3 className="text-xs uppercase tracking-[0.25em] text-muted-foreground mb-6 lg:mb-8 font-medium">
               Contact
             </h3>
             <div className="space-y-4">
@@ -105,7 +91,7 @@ export function Footer() {
 
           {/* Address column */}
           <RevealSection className="lg:col-span-2" delay={0.3}>
-            <h3 className="text-sm uppercase tracking-[0.2em] text-primary/70 mb-4 sm:mb-6 font-display font-semibold">
+            <h3 className="text-xs uppercase tracking-[0.25em] text-muted-foreground mb-6 lg:mb-8 font-medium">
               Address
             </h3>
             <div className="flex items-start gap-3 text-foreground">
@@ -121,18 +107,18 @@ export function Footer() {
       </div>
 
       {/* Bottom bar */}
-      <div className="border-t border-border/50">
-        <div className="container mx-auto px-4 sm:px-6 md:px-12 py-4 sm:py-6 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
-          <p className="text-sm text-muted-foreground">
+      <div className="border-t border-border/20">
+        <div className="container mx-auto px-6 md:px-12 lg:px-16 py-6 md:py-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p className="text-xs text-muted-foreground tracking-wide">
             &copy; {currentYear} JunkBranding. All rights reserved.
           </p>
-          <div className="flex items-center gap-6 text-sm text-muted-foreground">
-            <Link 
+          <div className="flex items-center gap-6 text-xs text-muted-foreground">
+            <TransitionLink 
               href="/privacy" 
-              className="hover:text-foreground transition-all duration-300 font-display font-medium uppercase tracking-wider"
+              className="hover:text-foreground transition-all duration-300 font-medium uppercase tracking-wider"
             >
               Privacy Policy
-            </Link>
+            </TransitionLink>
           </div>
         </div>
       </div>

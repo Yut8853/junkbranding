@@ -1,0 +1,372 @@
+'use client'
+
+import { useEffect, useRef, useState, useCallback } from 'react'
+import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { ScatterText } from './scatter-text'
+import { useTransition } from '@/contexts/transition-context'
+
+gsap.registerPlugin(ScrollTrigger)
+
+interface Particle {
+  id: number
+  x: number
+  y: number
+  size: number
+  speedX: number
+  speedY: number
+  opacity: number
+  hue: number
+}
+
+export function CTASectionV2() {
+  const sectionRef = useRef<HTMLElement>(null)
+  const buttonRef = useRef<HTMLDivElement>(null)
+  const textRef = useRef<HTMLDivElement>(null)
+  const canvasRef = useRef<HTMLCanvasElement>(null)
+  
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
+  const [buttonPos, setButtonPos] = useState({ x: 0, y: 0 })
+  const [isHovering, setIsHovering] = useState(false)
+  const [ripples, setRipples] = useState<Array<{ id: number; x: number; y: number }>>([])
+  const particlesRef = useRef<Particle[]>([])
+  const animationFrameRef = useRef<number | null>(null)
+  const { navigateWithTransition } = useTransition()
+  
+
+  // Initialize particles
+  useEffect(() => {
+    const particles: Particle[] = []
+    for (let i = 0; i < 50; i++) {
+      particles.push({
+        id: i,
+        x: Math.random() * window.innerWidth,
+        y: Math.random() * 600,
+        size: Math.random() * 3 + 1,
+        speedX: (Math.random() - 0.5) * 0.5,
+        speedY: (Math.random() - 0.5) * 0.5,
+        opacity: Math.random() * 0.5 + 0.2,
+        hue: Math.random() * 60 + 300, // Purple to pink range
+      })
+    }
+    particlesRef.current = particles
+  }, [])
+
+  // Animate particles
+  useEffect(() => {
+    const canvas = canvasRef.current
+    if (!canvas) return
+
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return
+
+    const resizeCanvas = () => {
+      canvas.width = window.innerWidth
+      canvas.height = 600
+    }
+    resizeCanvas()
+    window.addEventListener('resize', resizeCanvas)
+
+    const animate = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height)
+      
+      particlesRef.current.forEach(particle => {
+        // Update position
+        particle.x += particle.speedX
+        particle.y += particle.speedY
+
+        // Boundary check
+        if (particle.x < 0 || particle.x > canvas.width) particle.speedX *= -1
+        if (particle.y < 0 || particle.y > canvas.height) particle.speedY *= -1
+
+        // Mouse attraction when hovering
+        if (isHovering && buttonRef.current) {
+          const rect = buttonRef.current.getBoundingClientRect()
+          const centerX = rect.left + rect.width / 2
+          const centerY = rect.top + rect.height / 2 - (sectionRef.current?.getBoundingClientRect().top || 0)
+          
+          const dx = centerX - particle.x
+          const dy = centerY - particle.y
+          const distance = Math.sqrt(dx * dx + dy * dy)
+          
+          if (distance < 300) {
+            particle.speedX += dx * 0.0003
+            particle.speedY += dy * 0.0003
+          }
+        }
+
+        // Draw particle
+        ctx.beginPath()
+        ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2)
+        ctx.fillStyle = `oklch(0.7 0.2 ${particle.hue} / ${particle.opacity})`
+        ctx.fill()
+      })
+
+      // Draw connections between nearby particles
+      particlesRef.current.forEach((p1, i) => {
+        particlesRef.current.slice(i + 1).forEach(p2 => {
+          const dx = p1.x - p2.x
+          const dy = p1.y - p2.y
+          const distance = Math.sqrt(dx * dx + dy * dy)
+          
+          if (distance < 100) {
+            ctx.beginPath()
+            ctx.moveTo(p1.x, p1.y)
+            ctx.lineTo(p2.x, p2.y)
+            ctx.strokeStyle = `oklch(0.7 0.15 310 / ${0.15 * (1 - distance / 100)})`
+            ctx.stroke()
+          }
+        })
+      })
+
+      animationFrameRef.current = requestAnimationFrame(animate)
+    }
+
+    animate()
+
+    return () => {
+      window.removeEventListener('resize', resizeCanvas)
+      if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current)
+    }
+  }, [isHovering])
+
+  // Magnetic button effect
+  const handleMouseMove = useCallback((e: React.MouseEvent) => {
+    if (!buttonRef.current) return
+    
+    const rect = buttonRef.current.getBoundingClientRect()
+    const centerX = rect.left + rect.width / 2
+    const centerY = rect.top + rect.height / 2
+    
+    const deltaX = e.clientX - centerX
+    const deltaY = e.clientY - centerY
+    const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY)
+    
+    // Magnetic pull when within range
+    if (distance < 200) {
+      const pull = (200 - distance) / 200
+      setButtonPos({
+        x: deltaX * pull * 0.4,
+        y: deltaY * pull * 0.4,
+      })
+    } else {
+      setButtonPos({ x: 0, y: 0 })
+    }
+
+    setMousePos({ x: e.clientX, y: e.clientY })
+  }, [])
+
+  const handleButtonClick = (e: React.MouseEvent) => {
+    e.preventDefault()
+    const rect = buttonRef.current?.getBoundingClientRect()
+    if (!rect) return
+
+    // Add ripple at click position
+    const x = e.clientX - rect.left
+    const y = e.clientY - rect.top
+    const newRipple = { id: Date.now(), x, y }
+    setRipples(prev => [...prev, newRipple])
+
+    // Remove ripple after animation
+    setTimeout(() => {
+      setRipples(prev => prev.filter(r => r.id !== newRipple.id))
+    }, 1000)
+    
+    // Navigate with transition
+    navigateWithTransition('/contact')
+  }
+
+  // GSAP scroll animation
+  useEffect(() => {
+    if (!sectionRef.current) return
+
+    const ctx = gsap.context(() => {
+      gsap.from(textRef.current, {
+        y: 40,
+        opacity: 0,
+        duration: 0.8,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: 'top bottom-=50',
+        },
+      })
+    }, sectionRef)
+
+    return () => ctx.revert()
+  }, [])
+
+  
+
+  return (
+    <section 
+      ref={sectionRef}
+      className="relative py-32 md:py-40 lg:py-56 overflow-hidden"
+      onMouseMove={handleMouseMove}
+      onMouseLeave={() => setButtonPos({ x: 0, y: 0 })}
+    >
+      {/* Particle canvas background */}
+      <canvas 
+        ref={canvasRef}
+        className="absolute inset-0 pointer-events-none"
+        style={{ opacity: 0.6 }}
+      />
+
+      {/* Background gradient */}
+      <div 
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: isHovering 
+            ? 'radial-gradient(ellipse 60% 50% at 50% 50%, oklch(0.75 0.15 310 / 0.2), transparent 70%)'
+            : 'transparent',
+          transition: 'background 0.8s ease',
+        }}
+      />
+
+      <div className="container mx-auto px-6 md:px-12 lg:px-16 relative z-10">
+        {/* Header text */}
+        <div ref={textRef} className="text-center mb-16 lg:mb-24">
+          <div className="mb-6 lg:mb-8">
+            <ScatterText
+              as="span"
+              className="font-display text-[clamp(3rem,10vw,7rem)] leading-none tracking-tight text-foreground/50 block"
+              scrollStart={50}
+              scrollEnd={350}
+              distance={500}
+              style={{
+                WebkitTextStroke: '1px currentColor',
+                WebkitTextFillColor: 'transparent',
+              }}
+            >
+              Contact
+            </ScatterText>
+          </div>
+          <ScatterText
+            as="h2"
+            className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-6 lg:mb-8"
+            scrollStart={50}
+            scrollEnd={350}
+            distance={400}
+            gradient
+          >
+            まずは、お話しませんか？
+          </ScatterText>
+          <ScatterText
+            as="p"
+            className="text-base md:text-lg text-muted-foreground max-w-lg mx-auto leading-[1.8] tracking-wide"
+            scrollStart={50}
+            scrollEnd={350}
+            distance={300}
+          >
+            「こんなこと頼めるのかな？」という段階でも大丈夫。お気軽にご連絡ください。
+          </ScatterText>
+        </div>
+
+        {/* Giant magnetic button - no scatter for this final CTA */}
+        <div className="flex justify-center">
+          <div
+            ref={buttonRef}
+            role="button"
+            tabIndex={0}
+            className="group relative w-[280px] h-[280px] md:w-[360px] md:h-[360px] lg:w-[420px] lg:h-[420px] rounded-full flex items-center justify-center cursor-pointer"
+            style={{
+              transform: `translate3d(${buttonPos.x}px, ${buttonPos.y}px, 0)`,
+              transition: isHovering 
+                ? 'transform 0.2s cubic-bezier(0.16, 1, 0.3, 1)' 
+                : 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
+            }}
+            onMouseEnter={() => setIsHovering(true)}
+            onMouseLeave={() => setIsHovering(false)}
+            onClick={handleButtonClick}
+            data-cursor="Contact"
+          >
+            {/* Outer glow ring */}
+            <div 
+              className="absolute inset-0 rounded-full"
+              style={{
+                background: 'conic-gradient(from 0deg, oklch(0.7 0.22 330 / 0.4), oklch(0.7 0.2 25 / 0.4), oklch(0.75 0.18 80 / 0.4), oklch(0.65 0.2 220 / 0.4), oklch(0.6 0.22 280 / 0.4), oklch(0.7 0.22 330 / 0.4))',
+                filter: isHovering ? 'blur(30px)' : 'blur(20px)',
+                transform: isHovering ? 'scale(1.15)' : 'scale(1)',
+                opacity: isHovering ? 1 : 0.6,
+                transition: 'all 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
+                animation: 'spin 10s linear infinite',
+              }}
+            />
+
+            {/* Main button circle */}
+            <div 
+              className="absolute inset-4 md:inset-6 rounded-full bg-foreground flex items-center justify-center overflow-hidden"
+              style={{
+                transform: isHovering ? 'scale(1.05)' : 'scale(1)',
+                transition: 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+              }}
+            >
+              {/* Gradient overlay on hover */}
+              <div 
+                className="absolute inset-0"
+                style={{
+                  background: 'linear-gradient(135deg, oklch(0.55 0.22 280), oklch(0.6 0.2 320), oklch(0.65 0.18 360))',
+                  opacity: isHovering ? 1 : 0,
+                  transition: 'opacity 0.5s ease',
+                }}
+              />
+
+              {/* Ripple effects */}
+              {ripples.map(ripple => (
+                <span
+                  key={ripple.id}
+                  className="absolute rounded-full bg-white/30 animate-ripple"
+                  style={{
+                    left: ripple.x,
+                    top: ripple.y,
+                    transform: 'translate(-50%, -50%)',
+                  }}
+                />
+              ))}
+
+              {/* Button content */}
+              <div className="relative z-10 text-center text-background">
+                <span 
+                  className="block font-display text-xl md:text-2xl lg:text-3xl tracking-wider mb-2"
+                  style={{
+                    transform: isHovering ? 'translateY(-8px)' : 'translateY(0)',
+                    transition: 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+                  }}
+                >
+                  CONTACT
+                </span>
+                <span 
+                  className="block text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight"
+                  style={{
+                    transform: isHovering ? 'scale(1.05)' : 'scale(1)',
+                    transition: 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+                  }}
+                >
+                  080-9155-0426
+                </span>
+                <span 
+                  className="block text-sm md:text-base mt-3 opacity-80"
+                  style={{
+                    transform: isHovering ? 'translateY(8px)' : 'translateY(0)',
+                    opacity: isHovering ? 1 : 0,
+                    transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+                  }}
+                >
+                  Click to contact
+                </span>
+              </div>
+            </div>
+
+            {/* Rotating border decoration */}
+            <div 
+              className="absolute inset-0 rounded-full border border-dashed border-foreground/20"
+              style={{
+                animation: 'spin 30s linear infinite reverse',
+              }}
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}

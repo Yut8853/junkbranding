@@ -1,14 +1,13 @@
 'use client'
 
-import { useRef, useEffect, useState, useCallback } from 'react'
+import { useRef, useEffect, useState, useCallback, useMemo } from 'react'
 import Link from 'next/link'
 import { ArrowRight, ArrowUpRight, Phone, MessageCircle } from 'lucide-react'
-import { TextReveal, SectionReveal, LineReveal } from '@/components/text-reveal'
-import { MagneticButton } from '@/components/magnetic-button'
-import { CircleButton } from '@/components/circle-button'
+import { SectionReveal } from '@/components/text-reveal'
 import { Footer } from '@/components/footer'
-import { EnglishLabel } from '@/components/english-text'
 import { WorksWebGLScene } from '@/components/works-webgl-scene'
+import { ScatterText } from '@/components/scatter-text'
+import { ScatterBlock } from '@/components/scatter-block'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
@@ -86,19 +85,39 @@ function WorkCard({
     if (!card) return
 
     const ctx = gsap.context(() => {
+      let hasRevealed = false
+
+      const revealCard = () => {
+        if (hasRevealed) return
+        hasRevealed = true
+
+        gsap.to(card, {
+          opacity: 1,
+          y: 0,
+          duration: 1,
+          ease: 'power3.out',
+        })
+      }
+
       gsap.set(card, { opacity: 0, y: 80 })
 
-      gsap.to(card, {
-        opacity: 1,
-        y: 0,
-        duration: 1,
-        ease: 'power3.out',
-        scrollTrigger: {
-          trigger: card,
-          start: 'top 85%',
-          toggleActions: 'play none none reverse',
-          invalidateOnRefresh: true,
+      const trigger = ScrollTrigger.create({
+        trigger: card,
+        start: 'top 85%',
+        invalidateOnRefresh: true,
+        onEnter: revealCard,
+        onLeaveBack: () => {
+          hasRevealed = false
+          gsap.set(card, { opacity: 0, y: 80 })
         },
+      })
+
+      requestAnimationFrame(() => {
+        if (card.getBoundingClientRect().top <= window.innerHeight * 0.85) {
+          revealCard()
+        } else {
+          trigger.refresh()
+        }
       })
     }, card)
 
@@ -256,12 +275,16 @@ export default function WorksPageClient() {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
   const [hoveredPosition, setHoveredPosition] = useState<{ x: number; y: number } | null>(null)
 
-  const filteredWorks = selectedCategory === 'すべて' 
-    ? works 
-    : works.filter((work) => work.category === selectedCategory)
+  const filteredWorks = useMemo(() => {
+    if (selectedCategory === 'すべて') return works
+    return works.filter((work) => work.category === selectedCategory)
+  }, [selectedCategory])
 
   // Force ScrollTrigger to refresh when the list changes
   useEffect(() => {
+    setHoveredIndex(null)
+    setHoveredPosition(null)
+
     const timer = setTimeout(() => {
       ScrollTrigger.refresh()
     }, 100)
@@ -278,57 +301,70 @@ export default function WorksPageClient() {
       <WorksWebGLScene hoveredIndex={hoveredIndex} hoveredPosition={hoveredPosition} />
 
       <section className="relative min-h-[60svh] sm:min-h-[70svh] flex items-center justify-center">
-        <div className="container mx-auto px-4 sm:px-6 md:px-12 py-24 sm:py-32 text-center">
-          <div className="mb-[-1rem] sm:mb-[-2rem] md:mb-[-3rem]">
-            <EnglishLabel delay={0.1} align="center">
+        <div className="container mx-auto px-6 md:px-12 lg:px-16 py-32 md:py-40 text-center">
+          <div className="mb-6 lg:mb-8">
+            <ScatterText
+              as="span"
+              className="font-display text-[clamp(3rem,10vw,7rem)] leading-none tracking-tight text-foreground/50 block"
+              scrollStart={50}
+              scrollEnd={350}
+              distance={500}
+              style={{
+                WebkitTextStroke: '1px currentColor',
+                WebkitTextFillColor: 'transparent',
+              }}
+            >
               Works
-            </EnglishLabel>
+            </ScatterText>
           </div>
           
-          <TextReveal
-            text="制作実績"
+          <ScatterText
             as="h1"
-            className="text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-bold tracking-tight mb-6 sm:mb-8"
-            delay={0.2}
+            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6 lg:mb-8"
+            scrollStart={50}
+            scrollEnd={350}
+            distance={400}
             gradient
-          />
+          >
+            制作実績
+          </ScatterText>
           
-          <LineReveal delay={0.6}>
-            <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed text-balance">
-              クライアントと共に創り上げた、<span className="gradient-highlight">想いが詰まったプロジェクト</span>をご紹介します。
-            </p>
-          </LineReveal>
-
-          <SectionReveal delay={1} className="mt-16 sm:mt-20">
-            <div className="flex flex-col items-center gap-2">
-              <span className="text-xs text-muted-foreground uppercase tracking-widest">Scroll</span>
-              <div className="w-px h-8 sm:h-12 bg-gradient-to-b from-primary to-transparent" />
-            </div>
-          </SectionReveal>
+          <ScatterText
+            as="p"
+            className="text-base md:text-lg text-muted-foreground max-w-lg mx-auto leading-[1.8] tracking-wide"
+            scrollStart={50}
+            scrollEnd={350}
+            distance={300}
+          >
+            クライアントと共に創り上げた、想いが詰まったプロジェクトをご紹介します。
+          </ScatterText>
         </div>
       </section>
 
-      <section className="py-6 sm:py-8 border-y border-border/30 glass-light sticky top-[72px] z-30">
-        <div className="container mx-auto px-4 sm:px-6 md:px-12">
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6">
-            <span className="text-sm uppercase tracking-[0.25em] text-primary font-display font-semibold">
+      <section className="relative z-10 py-6 border-y border-border/20 glass-light">
+        <div className="container mx-auto px-6 md:px-12 lg:px-16">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8">
+            <span className="text-xs uppercase tracking-widest text-muted-foreground font-medium">
               Filter
             </span>
-            <div className="flex flex-wrap justify-center gap-2 sm:gap-3">
+            <div className="flex flex-wrap justify-center gap-3">
               {categories.map((category) => (
                 <button
                   key={category}
-                  onClick={() => setSelectedCategory(category)}
-                  className={`relative px-4 sm:px-6 py-2 sm:py-2.5 text-xs sm:text-sm rounded-full transition-all duration-500 overflow-hidden ${
+                  type="button"
+                  onClick={(event) => {
+                    event.preventDefault()
+                    event.stopPropagation()
+                    setSelectedCategory(category)
+                  }}
+                  aria-pressed={selectedCategory === category}
+                  className={`px-5 py-2.5 text-xs rounded-full transition-all duration-300 ${
                     selectedCategory === category
                       ? 'bg-foreground text-background'
-                      : 'bg-card border border-border hover:border-primary/50'
+                      : 'bg-card border border-border/20 hover:border-foreground/20'
                   }`}
                 >
-                  {selectedCategory !== category && (
-                    <span className="absolute inset-0 bg-gradient-to-r from-primary/10 to-accent/10 opacity-0 hover:opacity-100 transition-opacity duration-300" />
-                  )}
-                  <span className="relative z-10">{category}</span>
+                  {category}
                 </button>
               ))}
             </div>
@@ -336,11 +372,11 @@ export default function WorksPageClient() {
         </div>
       </section>
 
-      <section className="py-8 sm:py-12 glass-light">
-        <div className="container mx-auto px-4 sm:px-6 md:px-12">
+      <section className="relative z-10 py-12 lg:py-16 glass-light">
+        <div className="container mx-auto px-6 md:px-12 lg:px-16">
           {filteredWorks.map((work, index) => (
             <WorkCard 
-              key={work.id} 
+              key={`${selectedCategory}-${work.id}`} 
               work={work} 
               index={index} 
               onHover={handleHover}
@@ -356,81 +392,120 @@ export default function WorksPageClient() {
         </div>
       </section>
 
-      <section className="py-24 sm:py-32 md:py-40 glass-card">
-        <div className="container mx-auto px-4 sm:px-6 md:px-12">
+      <section className="py-32 md:py-40 lg:py-56 glass-card">
+        <div className="container mx-auto px-6 md:px-12 lg:px-16">
           <div className="max-w-3xl mx-auto text-center">
-            <div className="mb-[-1rem] sm:mb-[-2rem] md:mb-[-3rem]">
-              <EnglishLabel delay={0} align="center">
+            <div className="mb-6 lg:mb-8">
+              <ScatterText
+                as="span"
+                className="font-display text-[clamp(2.5rem,8vw,5rem)] leading-none tracking-tight text-foreground/50 block"
+                scrollStart={50}
+                scrollEnd={350}
+                distance={500}
+                style={{
+                  WebkitTextStroke: '1px currentColor',
+                  WebkitTextFillColor: 'transparent',
+                }}
+              >
                 More Works
-              </EnglishLabel>
+              </ScatterText>
             </div>
             
-            <TextReveal
-              text="もっと詳しく見たい方へ"
+            <ScatterText
               as="h2"
-              className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-6 sm:mb-8"
-              delay={0.1}
+              className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-6 lg:mb-8"
+              scrollStart={50}
+              scrollEnd={350}
+              distance={400}
               gradient
-            />
+            >
+              もっと詳しく見たい方へ
+            </ScatterText>
             
-            <SectionReveal delay={0.3}>
-              <p className="text-base sm:text-lg text-muted-foreground mb-10 sm:mb-12 text-balance">
-                ポートフォリオの詳細や、掲載していない実績についてもお気軽にお問い合わせください。
-              </p>
-            </SectionReveal>
+            <ScatterText
+              as="p"
+              className="text-base md:text-lg text-muted-foreground mb-10 lg:mb-12 leading-[1.8] tracking-wide"
+              scrollStart={50}
+              scrollEnd={350}
+              distance={300}
+            >
+              ポートフォリオの詳細や、掲載していない実績についてもお気軽にお問い合わせください。
+            </ScatterText>
 
-            <SectionReveal delay={0.5} className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <MagneticButton
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <ScatterBlock
+                className="group w-full sm:w-auto px-8 py-4 bg-foreground text-background rounded-full font-medium tracking-widest uppercase text-sm cursor-pointer hover:bg-foreground/90 transition-colors"
+                scrollEnd={350}
+                distance={400}
+                seed={20}
                 href="/contact"
-                className="group w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 bg-foreground text-background rounded-full font-medium btn-gradient-hover transition-all duration-300"
-                data-cursor="Contact"
               >
-                <span className="flex items-center justify-center gap-3">
+                <span className="flex items-center justify-center gap-4">
                   <MessageCircle size={18} />
                   もっと実績を見せてもらう
                   <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
                 </span>
-              </MagneticButton>
+              </ScatterBlock>
               
-              <a 
-                href="tel:08091550426"
-                className="flex items-center justify-center gap-2 w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 bg-card text-foreground rounded-full font-medium border border-border hover:border-primary/50 transition-all duration-300"
+              <ScatterBlock
+                className="flex items-center justify-center gap-3 w-full sm:w-auto px-8 py-4 bg-card text-foreground rounded-full font-medium text-sm border border-border/20 cursor-pointer hover:border-foreground/20 transition-colors"
+                scrollEnd={350}
+                distance={400}
+                seed={21}
               >
                 <Phone size={18} />
                 <span>電話で相談する</span>
-              </a>
-            </SectionReveal>
+              </ScatterBlock>
+            </div>
           </div>
         </div>
       </section>
 
-      <section className="py-24 sm:py-32 md:py-48 overflow-hidden glass-light">
-        <div className="container mx-auto px-4 sm:px-6 md:px-12 text-center">
-          <div className="mb-[-1rem] sm:mb-[-2rem] md:mb-[-3rem]">
-            <EnglishLabel delay={0} align="center">
+      <section className="py-32 md:py-40 lg:py-56 overflow-hidden glass-light">
+        <div className="container mx-auto px-6 md:px-12 lg:px-16 text-center">
+          <div className="mb-6 lg:mb-8">
+            <ScatterText
+              as="span"
+              className="font-display text-[clamp(3rem,10vw,7rem)] leading-none tracking-tight text-foreground/50 block"
+              scrollStart={50}
+              scrollEnd={350}
+              distance={500}
+              style={{
+                WebkitTextStroke: '1px currentColor',
+                WebkitTextFillColor: 'transparent',
+              }}
+            >
               Contact
-            </EnglishLabel>
+            </ScatterText>
           </div>
-          <TextReveal 
+          <ScatterText 
             as="h2" 
-            className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold tracking-tight mb-6 sm:mb-8"
-            delay={0.1}
-            stagger={0.025}
+            className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-6 lg:mb-8"
+            scrollStart={50}
+            scrollEnd={350}
+            distance={400}
             gradient
           >
             まずは、お話しませんか？
-          </TextReveal>
-          <SectionReveal delay={0.4} duration={1}>
-            <p className="text-base sm:text-lg text-muted-foreground max-w-xl mx-auto mb-10 sm:mb-12 text-balance">
-              「こんなこと頼めるのかな？」という段階でも大丈夫。お気軽にご連絡ください。
-            </p>
-          </SectionReveal>
+          </ScatterText>
+          <ScatterText
+            as="p"
+            className="text-base md:text-lg text-muted-foreground max-w-lg mx-auto mb-10 lg:mb-12 leading-[1.8] tracking-wide"
+            scrollStart={50}
+            scrollEnd={350}
+            distance={300}
+          >
+            「こんなこと頼めるのかな？」という段階でも大丈夫。お気軽にご連絡ください。
+          </ScatterText>
           
-          <SectionReveal delay={0.5} duration={1.2}>
-            <CircleButton href="/contact" size="lg">
-              080-9155-0426
-            </CircleButton>
-          </SectionReveal>
+          <ScatterBlock
+            className="inline-flex items-center gap-4 px-8 py-4 bg-foreground text-background rounded-full text-sm font-medium tracking-widest uppercase cursor-pointer hover:bg-foreground/90 transition-colors"
+            scrollEnd={350}
+            distance={400}
+            seed={30}
+          >
+            080-9155-0426
+          </ScatterBlock>
         </div>
       </section>
 

@@ -1,8 +1,8 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import Link from 'next/link'
 import { X, Cookie, Settings, Check } from 'lucide-react'
+import { TransitionLink } from '@/components/transition-link'
 
 type CookiePreferences = {
   necessary: boolean
@@ -118,9 +118,9 @@ export function CookieConsent() {
             <>
               <p className="text-sm text-background/70 mb-5 leading-relaxed">
                 当サイトでは、ユーザー体験の向上とアクセス解析のためにCookieを使用しています。
-                <Link href="/privacy" className="text-accent hover:underline ml-1">
+                <TransitionLink href="/privacy" className="text-accent hover:underline ml-1">
                   プライバシーポリシー
-                </Link>
+                </TransitionLink>
               </p>
 
               {/* Quick action buttons */}
@@ -191,7 +191,7 @@ export function CookieConsent() {
                 {/* Marketing cookies */}
                 <div className="flex items-start justify-between gap-4 p-3 bg-background/5 rounded-xl">
                   <div className="flex-1">
-                    <h4 className="font-medium text-sm">マーケティングCookie</h4>
+                    <h4 className="font-medium text-sm">マ��ケティングCookie</h4>
                     <p className="text-xs text-background/60 mt-1">
                       パーソナライズされた広告を表示します
                     </p>

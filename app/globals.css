@@ -535,6 +535,49 @@
   animation: gradient-text-flow 3s ease-in-out infinite;
 }
 
+/* Gradient shift animation for text */
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Soft pastel rainbow gradient for text with flowing animation */
+.gradient-text-soft {
+  background: linear-gradient(
+    90deg,
+    hsl(350, 65%, 72%),
+    hsl(25, 70%, 72%),
+    hsl(50, 65%, 70%),
+    hsl(95, 45%, 65%),
+    hsl(175, 50%, 65%),
+    hsl(200, 60%, 72%),
+    hsl(240, 55%, 75%),
+    hsl(280, 50%, 72%),
+    hsl(320, 60%, 72%),
+    hsl(350, 65%, 72%)
+  );
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: rainbow-flow 8s linear infinite;
+}
+
+@keyframes rainbow-flow {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 300% 50%;
+  }
+}
+
+/* Rainbow line animation for hamburger menu */
+.animate-rainbow-line {
+  animation: rainbow-flow 3s linear infinite;
+}
+
 /* Rainbow border */
 .rainbow-border {
   position: relative;
@@ -692,6 +735,143 @@
   body.cursor-ready * {
     cursor: none !important;
   }
+}
+
+/* AWWWARDS-level animations */
+
+/* Scroll line animation for scroll indicator */
+@keyframes scroll-line {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(200%);
+  }
+}
+
+.animate-scroll-line {
+  animation: scroll-line 1.5s ease-in-out infinite;
+}
+
+/* Hero character float animation */
+.hero-char {
+  display: inline-block;
+  animation: hero-char-wave 3s ease-in-out infinite;
+  animation-delay: calc(var(--char-index, 0) * 0.05s);
+}
+
+@keyframes hero-char-wave {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+/* Gradient shift for buttons */
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.animate-gradient-shift {
+  animation: gradient-shift 3s ease infinite;
+}
+
+/* Ripple effect for CTA button */
+@keyframes ripple {
+  0% {
+    width: 0;
+    height: 0;
+    opacity: 0.5;
+  }
+  100% {
+    width: 500px;
+    height: 500px;
+    opacity: 0;
+  }
+}
+
+.animate-ripple {
+  animation: ripple 1s ease-out forwards;
+}
+
+/* Marquee animations - bidirectional */
+@keyframes marquee-left {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes marquee-right {
+  from {
+    transform: translateX(-50%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+/* Service card hover glow */
+@keyframes card-glow {
+  0%, 100% {
+    box-shadow: 0 0 20px oklch(0.7 0.15 300 / 0.2);
+  }
+  50% {
+    box-shadow: 0 0 40px oklch(0.7 0.2 320 / 0.3);
+  }
+}
+
+/* Spin animation (used for CTA) */
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Floating animation for decorative elements */
+@keyframes float-gentle {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-10px) rotate(1deg);
+  }
+  75% {
+    transform: translateY(5px) rotate(-1deg);
+  }
+}
+
+.animate-float-gentle {
+  animation: float-gentle 6s ease-in-out infinite;
+}
+
+/* Pulse scale for interactive elements */
+@keyframes pulse-scale {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+.animate-pulse-scale {
+  animation: pulse-scale 2s ease-in-out infinite;
+}
+
+/* Text reveal clip animation */
+@keyframes text-clip-reveal {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+.animate-text-clip {
+  animation: text-clip-reveal 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 /* Reduce motion */

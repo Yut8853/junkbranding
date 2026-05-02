@@ -1,10 +1,10 @@
 'use client'
 
 import { ArrowRight, Phone, MessageCircle, Check, Sparkles, Globe, Smartphone, Palette, FileText, Video, TrendingUp, Layers, Wrench, HelpCircle } from 'lucide-react'
-import { TextReveal, SectionReveal, LineReveal } from '@/components/text-reveal'
-import { EnglishLabel } from '@/components/english-text'
-import { MagneticButton } from '@/components/magnetic-button'
+import { SectionReveal } from '@/components/text-reveal'
 import { Footer } from '@/components/footer'
+import { ScatterText } from '@/components/scatter-text'
+import { ScatterBlock } from '@/components/scatter-block'
 
 // Service categories with pricing
 const serviceCategories = [
@@ -144,7 +144,7 @@ const faqs = [
     answer: 'はい、もちろんです。ご予算に応じて、機能やページ数を調整したり、段階的に制作を進めるなど、柔軟にご提案させていただきます。まずはお気軽にご相談ください。',
   },
   {
-    question: '見積りは無料ですか？',
+    question: '見積りは無料です��？',
     answer: 'はい、お見積りは無料です。ヒアリング後、ご要望に合わせた詳細なお見積りをご提示いたします。',
   },
   {
@@ -170,104 +170,113 @@ export default function PricingPageClient() {
     <>
       {/* Hero Section */}
       <section className="relative min-h-[60svh] sm:min-h-[70svh] flex items-center justify-center">
-        <div className="container mx-auto px-4 sm:px-6 md:px-12 py-24 sm:py-32 text-center">
-          <div className="mb-[-1rem] sm:mb-[-2rem] md:mb-[-3rem]">
-            <EnglishLabel delay={0.1} align="center">
+        <div className="container mx-auto px-6 md:px-12 lg:px-16 py-32 md:py-40 text-center">
+          <div className="mb-6 lg:mb-8">
+            <ScatterText
+              as="span"
+              className="font-display text-[clamp(3rem,10vw,7rem)] leading-none tracking-tight text-foreground/50 block"
+              scrollStart={50}
+              scrollEnd={350}
+              distance={500}
+              style={{
+                WebkitTextStroke: '1px currentColor',
+                WebkitTextFillColor: 'transparent',
+              }}
+            >
               Pricing
-            </EnglishLabel>
+            </ScatterText>
           </div>
-          <TextReveal
-            text="制作料金"
+          <ScatterText
             as="h1"
-            className="text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-bold tracking-tight mb-6 sm:mb-8"
-            delay={0.2}
+            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6 lg:mb-8"
+            scrollStart={50}
+            scrollEnd={350}
+            distance={400}
             gradient
-          />
-          <LineReveal delay={0.6}>
-            <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed text-balance">
-              あらゆるクリエイティブに、柔軟に対応します。
-              <br className="hidden sm:block" />
-              ご予算やご要望に合わせたご提案が可能です。
-            </p>
-          </LineReveal>
+          >
+            制作料金
+          </ScatterText>
+          <ScatterText
+            as="p"
+            className="text-base md:text-lg text-muted-foreground max-w-lg mx-auto leading-[1.8] tracking-wide"
+            scrollStart={50}
+            scrollEnd={350}
+            distance={300}
+          >
+            あらゆるクリエイティブに、柔軟に対応します。ご予算やご要望に合わせたご提案が可能です。
+          </ScatterText>
         </div>
       </section>
 
       {/* Notice Section */}
-      <section className="py-8 sm:py-12 glass-light border-y border-border/30">
-        <div className="container mx-auto px-4 sm:px-6 md:px-12">
-          <SectionReveal>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 text-center sm:text-left">
-              <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                <Sparkles className="w-5 h-5 text-primary" />
-              </div>
-              <p className="text-sm sm:text-base text-muted-foreground leading-relaxed text-balance">
-                下記料金は参考価格です。プロジェクトの内容・規模により変動いたします。
-                <br className="hidden sm:block" />
-                正式なお見積りは無料ヒアリング後にご提示いたしますので、お気軽にご相談ください。
-              </p>
+      <section className="py-8 glass-light border-y border-border/20">
+        <div className="container mx-auto px-6 md:px-12 lg:px-16">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 text-center sm:text-left">
+            <div className="w-10 h-10 rounded-full bg-foreground/5 flex items-center justify-center shrink-0">
+              <Sparkles className="w-4 h-4 text-muted-foreground" />
             </div>
-          </SectionReveal>
+            <p className="text-sm text-muted-foreground leading-[1.8] tracking-wide">
+              下記料金は参考価格です。プロジェクトの内容・規模により変動いたします。正式なお見積りは無料ヒアリング後にご提示いたしますので、お気軽にご相談ください。
+            </p>
+          </div>
         </div>
       </section>
 
       {/* Service Categories */}
-      <section className="py-16 sm:py-24 md:py-32 glass-light">
-        <div className="container mx-auto px-4 sm:px-6 md:px-12">
-          <div className="space-y-16 sm:space-y-24 md:space-y-32">
+      <section className="py-32 md:py-40 lg:py-56 glass-light">
+        <div className="container mx-auto px-6 md:px-12 lg:px-16">
+          <div className="space-y-20 lg:space-y-32">
             {serviceCategories.map((category, categoryIndex) => (
-              <SectionReveal key={category.id} delay={categoryIndex * 0.05}>
+              <SectionReveal key={category.id} delay={categoryIndex * 0.03}>
                 <div className="group">
                   {/* Category Header */}
-                  <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 md:gap-8 mb-8 md:mb-12 pb-6 md:pb-8 border-b border-border/50">
-                    <div className="flex items-start gap-4 md:gap-6">
-                      <div className="w-12 h-12 md:w-16 md:h-16 rounded-2xl bg-primary/10 flex items-center justify-center shrink-0 group-hover:bg-primary/20 transition-colors duration-300">
-                        <category.icon className="w-6 h-6 md:w-8 md:h-8 text-primary" />
+                  <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 md:gap-8 mb-10 lg:mb-12 pb-8 border-b border-border/20">
+                    <div className="flex items-start gap-5 md:gap-6">
+                      <div className="w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-foreground/5 flex items-center justify-center shrink-0 group-hover:bg-foreground/10 transition-colors duration-300">
+                        <category.icon className="w-5 h-5 md:w-6 md:h-6 text-foreground/60" />
                       </div>
                       <div>
-                        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-1 md:mb-2">
+                        <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-1 tracking-tight">
                           {category.title}
                         </h2>
-                        <p className="text-sm sm:text-base text-primary/70 uppercase tracking-[0.15em] mb-2 md:mb-3 font-display font-semibold">
+                        <p className="text-xs text-muted-foreground uppercase tracking-widest mb-3 font-medium">
                           {category.titleEn}
                         </p>
-                        <p className="text-sm sm:text-base text-muted-foreground leading-relaxed max-w-xl">
+                        <p className="text-sm md:text-base text-muted-foreground leading-[1.8] tracking-wide max-w-lg">
                           {category.description}
                         </p>
                       </div>
                     </div>
                     <div className="md:text-right shrink-0">
-                      <p className="text-xs sm:text-sm text-muted-foreground mb-1">参考価格</p>
-                      <p className="text-2xl sm:text-3xl md:text-4xl font-bold gradient-highlight">
+                      <p className="text-xs text-muted-foreground mb-1 tracking-wide">参考価格</p>
+                      <p className="text-2xl sm:text-3xl font-bold gradient-text-soft">
                         {category.priceRange}
                       </p>
                     </div>
                   </div>
 
                   {/* Services Grid */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 mb-6 md:mb-8">
-                    {category.services.map((service, serviceIndex) => (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6 mb-8 lg:mb-10">
+                    {category.services.map((service) => (
                       <div
                         key={service.name}
-                        className="p-5 sm:p-6 rounded-xl bg-background border border-border hover:border-primary/30 transition-all duration-300"
+                        className="p-6 lg:p-8 rounded-2xl bg-background border border-border/20 hover:border-foreground/10 transition-all duration-300"
                       >
-                        <div className="flex items-start justify-between gap-3 mb-2">
-                          <h3 className="text-base sm:text-lg font-bold">{service.name}</h3>
-                        </div>
-                        <p className="text-xl sm:text-2xl font-bold text-primary mb-2">{service.price}</p>
-                        <p className="text-xs sm:text-sm text-muted-foreground">{service.note}</p>
+                        <h3 className="text-sm md:text-base font-bold mb-2 tracking-tight">{service.name}</h3>
+                        <p className="text-lg md:text-xl font-bold text-foreground mb-2">{service.price}</p>
+                        <p className="text-xs text-muted-foreground tracking-wide">{service.note}</p>
                       </div>
                     ))}
                   </div>
 
                   {/* Features */}
-                  <div className="flex flex-wrap gap-2 sm:gap-3">
+                  <div className="flex flex-wrap gap-2">
                     {category.features.map((feature) => (
                       <span
                         key={feature}
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs sm:text-sm bg-card rounded-full border border-border"
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs bg-card rounded-full border border-border/20"
                       >
-                        <Check size={12} className="text-primary" />
+                        <Check size={10} className="text-muted-foreground" />
                         {feature}
                       </span>
                     ))}
@@ -280,34 +289,47 @@ export default function PricingPageClient() {
       </section>
 
       {/* FAQ Section */}
-      <section className="py-16 sm:py-24 md:py-32 glass-card">
-        <div className="container mx-auto px-4 sm:px-6 md:px-12">
-          <div className="text-center mb-12 md:mb-20">
-            <div className="mb-[-1rem] sm:mb-[-2rem] md:mb-[-3rem]">
-              <EnglishLabel delay={0} align="center">
+      <section className="py-32 md:py-40 lg:py-56 glass-card">
+        <div className="container mx-auto px-6 md:px-12 lg:px-16">
+          <div className="text-center mb-16 lg:mb-24">
+            <div className="mb-6 lg:mb-8">
+              <ScatterText
+                as="span"
+                className="font-display text-[clamp(3rem,10vw,7rem)] leading-none tracking-tight text-foreground/50 block"
+                scrollStart={50}
+                scrollEnd={350}
+                distance={500}
+                style={{
+                  WebkitTextStroke: '1px currentColor',
+                  WebkitTextFillColor: 'transparent',
+                }}
+              >
                 FAQ
-              </EnglishLabel>
+              </ScatterText>
             </div>
-            <TextReveal
-              text="よくあるご質問"
+            <ScatterText
               as="h2"
-              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight"
-              delay={0.2}
+              className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight"
+              scrollStart={50}
+              scrollEnd={350}
+              distance={400}
               gradient
-            />
+            >
+              よくあるご質問
+            </ScatterText>
           </div>
 
-          <div className="max-w-3xl mx-auto space-y-4 sm:space-y-6">
+          <div className="max-w-3xl mx-auto space-y-4 lg:space-y-6">
             {faqs.map((faq, index) => (
-              <SectionReveal key={faq.question} delay={index * 0.05}>
-                <div className="p-6 sm:p-8 rounded-2xl bg-background border border-border hover:border-primary/30 transition-all duration-300">
-                  <div className="flex items-start gap-3 sm:gap-4 mb-3 sm:mb-4">
-                    <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                      <HelpCircle size={16} className="text-primary" />
+              <SectionReveal key={faq.question} delay={index * 0.03}>
+                <div className="p-6 md:p-8 lg:p-10 rounded-3xl bg-background border border-border/20 hover:border-foreground/10 transition-all duration-300">
+                  <div className="flex items-start gap-4 mb-4">
+                    <div className="w-8 h-8 rounded-full bg-foreground/5 flex items-center justify-center shrink-0">
+                      <HelpCircle size={14} className="text-muted-foreground" />
                     </div>
-                    <h3 className="text-base sm:text-lg font-bold leading-relaxed">{faq.question}</h3>
+                    <h3 className="text-sm md:text-base font-bold leading-[1.6] tracking-tight">{faq.question}</h3>
                   </div>
-                  <p className="text-sm sm:text-base text-muted-foreground leading-relaxed pl-11 sm:pl-12">
+                  <p className="text-sm text-muted-foreground leading-[1.8] tracking-wide pl-12">
                     {faq.answer}
                   </p>
                 </div>
@@ -318,51 +340,62 @@ export default function PricingPageClient() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-24 sm:py-32 md:py-48 glass-light">
-        <div className="container mx-auto px-4 sm:px-6 md:px-12 text-center">
-          <TextReveal
-            text="まずは、"
+      <section className="py-32 md:py-40 lg:py-56 glass-light">
+        <div className="container mx-auto px-6 md:px-12 lg:px-16 text-center">
+          <ScatterText
             as="h2"
-            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight"
-            delay={0}
-          />
-          <TextReveal
-            text="お気軽にご相談ください"
+            className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-2"
+            scrollStart={50}
+            scrollEnd={350}
+            distance={400}
+          >
+            まずは、
+          </ScatterText>
+          <ScatterText
             as="span"
-            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6 sm:mb-8 block"
-            delay={0.3}
+            className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-6 lg:mb-8 block"
+            scrollStart={50}
+            scrollEnd={350}
+            distance={400}
             gradient
-          />
-          <SectionReveal delay={0.6}>
-            <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 sm:mb-12 leading-relaxed text-balance">
-              ご予算やご要望をお聞かせいただければ、最適なプランをご提案いたします。
-              <br className="hidden sm:block" />
-              お見積りは無料です。
-            </p>
-          </SectionReveal>
+          >
+            お気軽にご相談ください
+          </ScatterText>
+          <ScatterText
+            as="p"
+            className="text-base md:text-lg text-muted-foreground max-w-lg mx-auto mb-10 lg:mb-12 leading-[1.8] tracking-wide"
+            scrollStart={50}
+            scrollEnd={350}
+            distance={300}
+          >
+            ご予算やご要望をお聞かせいただければ、最適なプランをご提案いたします。お見積りは無料です。
+          </ScatterText>
 
-          <SectionReveal delay={0.8}>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <MagneticButton
-                href="/contact"
-                className="group w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 bg-foreground text-background rounded-full font-medium btn-gradient-hover transition-all duration-300"
-              >
-                <span className="flex items-center justify-center gap-3">
-                  <MessageCircle size={18} />
-                  無料で相談する
-                  <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
-                </span>
-              </MagneticButton>
-              
-              <a 
-                href="tel:08091550426"
-                className="flex items-center justify-center gap-2 w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 bg-foreground text-background rounded-full font-medium btn-gradient-hover transition-all duration-300"
-              >
-                <Phone size={18} />
-                <span>080-9155-0426</span>
-              </a>
-            </div>
-          </SectionReveal>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <ScatterBlock
+              className="group w-full sm:w-auto px-8 py-4 bg-foreground text-background rounded-full font-medium tracking-widths uppercase text-sm cursor-pointer hover:bg-foreground/90 transition-colors"
+              scrollEnd={350}
+              distance={400}
+              seed={40}
+              href="/contact"
+            >
+              <span className="flex items-center justify-center gap-4">
+                <MessageCircle size={18} />
+                無料で相談する
+                <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
+              </span>
+            </ScatterBlock>
+            
+            <ScatterBlock
+              className="flex items-center justify-center gap-3 w-full sm:w-auto px-8 py-4 bg-card text-foreground rounded-full font-medium text-sm border border-border/20 cursor-pointer hover:border-foreground/20 transition-colors"
+              scrollEnd={350}
+              distance={400}
+              seed={41}
+            >
+              <Phone size={18} />
+              <span>080-9155-0426</span>
+            </ScatterBlock>
+          </div>
         </div>
       </section>
 

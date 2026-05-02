@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, useEffect, ReactNode } from 'react'
+import { useRef, useEffect, ReactNode, createElement } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
@@ -30,7 +30,7 @@ export function TextReveal({
   once = true,
   gradient = false,
 }: TextRevealProps) {
-  const containerRef = useRef<HTMLDivElement>(null)
+  const containerRef = useRef<HTMLElement>(null)
   const hasAnimated = useRef(false)
 
   useEffect(() => {
@@ -48,7 +48,7 @@ export function TextReveal({
 
     const trigger = ScrollTrigger.create({
       trigger: containerRef.current,
-      start: 'top 90%',
+      start: 'top bottom-=50',
       onEnter: () => {
         if (once && hasAnimated.current) return
         hasAnimated.current = true
@@ -101,11 +101,7 @@ export function TextReveal({
     )
   })
 
-  return (
-    <Tag ref={containerRef as React.RefObject<HTMLElement>} className={className}>
-      {splitText}
-    </Tag>
-  )
+  return createElement(Tag, { ref: containerRef, className }, splitText)
 }
 
 // セクション全体のふわっとしたフェードイン（統一感のある動き）
@@ -140,7 +136,7 @@ export function SectionReveal({
 
     const trigger = ScrollTrigger.create({
       trigger: ref.current,
-      start: 'top 90%',
+      start: 'top bottom-=50',
       onEnter: () => {
         if (once && hasAnimated.current) return
         hasAnimated.current = true
@@ -198,7 +194,7 @@ export function WordReveal({
   as: Tag = 'div',
   once = true,
 }: WordRevealProps) {
-  const containerRef = useRef<HTMLDivElement>(null)
+  const containerRef = useRef<HTMLElement>(null)
   const hasAnimated = useRef(false)
 
   useEffect(() => {
@@ -216,7 +212,7 @@ export function WordReveal({
 
     const trigger = ScrollTrigger.create({
       trigger: containerRef.current,
-      start: 'top 90%',
+      start: 'top bottom-=50',
       onEnter: () => {
         if (once && hasAnimated.current) return
         hasAnimated.current = true
@@ -260,11 +256,7 @@ export function WordReveal({
     </span>
   ))
 
-  return (
-    <Tag ref={containerRef as React.RefObject<HTMLElement>} className={className}>
-      {splitWords}
-    </Tag>
-  )
+  return createElement(Tag, { ref: containerRef, className }, splitWords)
 }
 
 // 行ごとにふわっと出るアニメーション
@@ -303,7 +295,7 @@ export function LineReveal({
 
     const trigger = ScrollTrigger.create({
       trigger: containerRef.current,
-      start: 'top 90%',
+      start: 'top bottom-=50',
       onEnter: () => {
         if (once && hasAnimated.current) return
         hasAnimated.current = true

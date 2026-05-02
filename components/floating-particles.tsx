@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import { useTransition } from '@/contexts/transition-context'
 
 interface Particle {
   x: number
@@ -27,6 +28,11 @@ export function FloatingParticles() {
   const lastFrameTime = useRef(0)
   const mouseRef = useRef({ x: 0, y: 0 })
   const targetMouseRef = useRef({ x: 0, y: 0 })
+  const { isTransitioning } = useTransition()
+
+  useEffect(() => {
+    console.log('[v0] FloatingParticles isTransitioning changed:', isTransitioning)
+  }, [isTransitioning])
 
   useEffect(() => {
     setIsMounted(true)
@@ -189,10 +195,12 @@ export function FloatingParticles() {
   return (
     <canvas
       ref={canvasRef}
-      className="fixed top-0 left-0 pointer-events-none"
+      className="fixed inset-0 pointer-events-none"
       style={{
-        zIndex: 0,
-        filter: 'blur(8px)',
+        zIndex: isTransitioning ? 99999 : 0,
+        filter: isTransitioning ? 'blur(0px)' : 'blur(4px)',
+        opacity: isTransitioning ? 1 : 0.7,
+        transition: 'filter 0.3s ease, opacity 0.3s ease',
       }}
       aria-hidden="true"
     />

@@ -26,11 +26,11 @@ const serviceCatalog = {
   '@type': 'OfferCatalog',
   name: 'JunkBrandingのサービス',
   itemListElement: [
-    { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Webサイト制作' } },
-    { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'ブランディング' } },
-    { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'ロゴデザイン' } },
-    { '@type': 'Offer', itemOffered: { '@type': 'Service', name: '動画制作' } },
-    { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'マーケティング支援' } },
+    { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Webサイト制作', serviceType: 'Web Design and Development' } },
+    { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'ブランディング', serviceType: 'Brand Strategy and Identity Design' } },
+    { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'ロゴデザイン', serviceType: 'Logo Design' } },
+    { '@type': 'Offer', itemOffered: { '@type': 'Service', name: '動画制作', serviceType: 'Video Production' } },
+    { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'マーケティング支援', serviceType: 'Digital Marketing' } },
   ],
 }
 
@@ -57,6 +57,8 @@ export const organizationSchema = {
   '@id': `${BASE_URL}/#organization`,
   name: 'JunkBranding',
   legalName: 'JunkBranding',
+  alternateName: ['ジャンクブランディング', 'JUNKBRANDING'],
+  slogan: 'あなたの「らしさ」をカタチに。',
   description: '茨城・東京・神奈川を中心に活動するブランディング&Web制作スタジオ。',
   url: BASE_URL,
   logo: {
@@ -88,6 +90,94 @@ export const organizationSchema = {
   knowsAbout,
   makesOffer: serviceCatalog,
   sameAs: [],
+}
+
+export const localBusinessSchema = {
+  '@type': ['LocalBusiness', 'ProfessionalService'],
+  '@id': `${BASE_URL}/#localbusiness`,
+  name: 'JunkBranding',
+  url: BASE_URL,
+  image: OG_IMAGE_URL,
+  description:
+    '茨城県を拠点に、東京・神奈川・全国オンライン対応でWeb制作、ブランディング、ロゴ制作、マーケティング支援を行う小規模クリエイティブスタジオ。',
+  telephone: '+81-80-9155-0426',
+  email: 'hello@junkbranding.com',
+  priceRange: '¥¥',
+  address: organizationSchema.address,
+  geo: {
+    '@type': 'GeoCoordinates',
+    latitude: 35.9833,
+    longitude: 140.3167,
+  },
+  areaServed,
+  knowsAbout,
+  makesOffer: serviceCatalog,
+  parentOrganization: {
+    '@id': `${BASE_URL}/#organization`,
+  },
+  openingHoursSpecification: {
+    '@type': 'OpeningHoursSpecification',
+    dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+    opens: '10:00',
+    closes: '18:00',
+  },
+}
+
+export function generateWebsiteSchema() {
+  return {
+    '@type': 'WebSite',
+    '@id': `${BASE_URL}/#website`,
+    url: BASE_URL,
+    name: 'JunkBranding',
+    alternateName: ['ジャンクブランディング', 'JUNKBRANDING'],
+    description:
+      '茨城・東京・神奈川を中心に活動する、ブランディングとWeb制作のクリエイティブスタジオ。',
+    inLanguage: 'ja',
+    publisher: {
+      '@id': `${BASE_URL}/#organization`,
+    },
+    about: {
+      '@id': `${BASE_URL}/#organization`,
+    },
+    potentialAction: {
+      '@type': 'CommunicateAction',
+      name: 'Web制作・ブランディングについて相談する',
+      target: `${BASE_URL}/contact`,
+    },
+  }
+}
+
+export function generateFaqSchema() {
+  return {
+    '@type': 'FAQPage',
+    '@id': `${BASE_URL}/#faq`,
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: 'JunkBrandingはどの地域に対応していますか？',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: '茨城・東京・神奈川を中心に、オンラインで全国からのWeb制作・ブランディング相談に対応しています。',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'どのようなサービスを依頼できますか？',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Webサイト制作、ブランディング、ロゴデザイン、CMS構築、動画制作、SEO対策、マーケティング支援、保守運用に対応しています。',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'JunkBrandingの特徴は何ですか？',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: '2人だけの小さなチームとして、事業者一人ひとりのらしさに向き合い、ブランド体験と成果につながるWeb制作を丁寧に行うことです。',
+        },
+      },
+    ],
+  }
 }
 
 // WebPage schema generator

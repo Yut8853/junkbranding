@@ -2,10 +2,11 @@
 
 import Image from 'next/image'
 import { ArrowRight, Phone, Heart, Lightbulb, Users, Clock } from 'lucide-react'
-import { TextReveal, SectionReveal, LineReveal } from '@/components/text-reveal'
+import { SectionReveal } from '@/components/text-reveal'
 import { MagneticButton } from '@/components/magnetic-button'
 import { Footer } from '@/components/footer'
-import { EnglishLabel, EnglishText } from '@/components/english-text'
+import { ScatterText } from '@/components/scatter-text'
+import { ScatterBlock } from '@/components/scatter-block'
 
 // Team data
 const team = [
@@ -126,7 +127,7 @@ const process = [
   },
   {
     step: 5,
-    title: 'テスト・公開',
+    title: 'テスト・���開',
     titleEn: 'Launch',
     description: '安心して公開できる状態に仕上げます。',
     fullDescription: '公開直前が一番トラブルが起きやすい工程です。細かい部分までチェックし、問題のない状態でリリースします。',
@@ -161,66 +162,101 @@ export default function AboutPageClient() {
     <>
       {/* Hero Section */}
       <section className="relative min-h-[70svh] sm:min-h-[80svh] flex items-center justify-center">
-        <div className="container mx-auto px-4 sm:px-6 md:px-12 py-24 sm:py-32 text-center">
-          <div className="mb-[-1rem] sm:mb-[-2rem] md:mb-[-3rem]">
-            <EnglishLabel delay={0.1} align="center">
+        <div className="container mx-auto px-6 md:px-12 lg:px-16 py-32 md:py-40 text-center">
+          <div className="mb-6 lg:mb-8">
+            <ScatterText
+              as="span"
+              className="font-display text-[clamp(3rem,10vw,7rem)] leading-none tracking-tight text-foreground/50 block"
+              scrollStart={50}
+              scrollEnd={350}
+              distance={500}
+              style={{
+                WebkitTextStroke: '1px currentColor',
+                WebkitTextFillColor: 'transparent',
+              }}
+            >
               About Us
-            </EnglishLabel>
+            </ScatterText>
           </div>
-          <TextReveal
-            text="私たちについて"
+          <ScatterText
             as="h1"
-            className="text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-bold tracking-tight mb-6 sm:mb-8"
-            delay={0.2}
+            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6 lg:mb-8"
+            scrollStart={50}
+            scrollEnd={350}
+            distance={400}
             gradient
-          />
-          <LineReveal delay={0.6}>
-            <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed text-balance">
-              2人だけの小さなスタジオだからこそ、できることがあります。
-            </p>
-          </LineReveal>
+          >
+            私たちについて
+          </ScatterText>
+          <ScatterText
+            as="p"
+            className="text-base md:text-lg text-muted-foreground max-w-lg mx-auto leading-[1.8] tracking-wide"
+            scrollStart={50}
+            scrollEnd={350}
+            distance={300}
+          >
+            2人だけの小さなスタジオだからこそ、できることがあります。
+          </ScatterText>
         </div>
       </section>
 
       {/* Introduction Section */}
-      <section className="py-24 sm:py-32 md:py-48 glass-light">
-        <div className="container mx-auto px-4 sm:px-6 md:px-12">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-24 items-center">
-            <div>
-              <TextReveal
-                text="大手にはできない、"
+      <section className="py-32 md:py-40 lg:py-56 glass-light">
+        <div className="container mx-auto px-6 md:px-12 lg:px-16">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
+            <div className="lg:pr-8">
+              <ScatterText
                 as="h2"
-                className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-tight"
-                delay={0}
-              />
-              <TextReveal
-                text="丁寧なものづくり"
+                className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight leading-[1.2] mb-2"
+                scrollStart={50}
+                scrollEnd={350}
+                distance={400}
+              >
+                大手にはできない、
+              </ScatterText>
+              <ScatterText
                 as="h2"
-                className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6 sm:mb-8 leading-tight"
-                delay={0.3}
+                className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight leading-[1.2] mb-8 lg:mb-10"
+                scrollStart={50}
+                scrollEnd={350}
+                distance={400}
                 gradient
-              />
-              <div className="space-y-5 text-base sm:text-lg text-muted-foreground leading-relaxed">
-                <SectionReveal delay={0.6}>
-                  <p className="text-pretty">
-                    JunkBrandingは、茨城・東京・神奈川を中心に活動する、2人だけのブランディング&Web制作スタジオです。
-                  </p>
-                </SectionReveal>
-                <SectionReveal delay={0.7}>
-                  <p className="text-pretty">
-                    大きな組織では難しい「一人ひとりと向き合う」ことを大切に、クライアントと同じ目線で、一緒に考え、一緒に創ります。
-                  </p>
-                </SectionReveal>
-                <SectionReveal delay={0.8}>
-                  <p className="text-pretty">
-                    「ちょっとした相談」から「本格的なリブランディング」まで、まずはお気軽にお声がけください。
-                  </p>
-                </SectionReveal>
+              >
+                丁寧なものづくり
+              </ScatterText>
+              <div className="space-y-6 text-base md:text-lg text-muted-foreground leading-[1.8] tracking-wide">
+                <ScatterText
+                  as="p"
+                  className="text-base md:text-lg text-muted-foreground leading-[1.8] tracking-wide"
+                  scrollStart={50}
+                  scrollEnd={350}
+                  distance={300}
+                >
+                  JunkBrandingは、茨城・東京・神奈川を中心に活動する、2人だけのブランディング&Web制作スタジオです。
+                </ScatterText>
+                <ScatterText
+                  as="p"
+                  className="text-base md:text-lg text-muted-foreground leading-[1.8] tracking-wide"
+                  scrollStart={50}
+                  scrollEnd={350}
+                  distance={300}
+                >
+                  大きな組織では難しい「一人ひとりと向き合う」ことを大切に、クライアントと同じ目線で、一緒に考え、一緒に創ります。
+                </ScatterText>
+                <ScatterText
+                  as="p"
+                  className="text-base md:text-lg text-muted-foreground leading-[1.8] tracking-wide"
+                  scrollStart={50}
+                  scrollEnd={350}
+                  distance={300}
+                >
+                  「ちょっとした相談」から「本格的なリブランディング」まで、まずはお気軽にお声がけください。
+                </ScatterText>
               </div>
             </div>
 
-            <SectionReveal delay={0.4}>
-              <div className="relative aspect-square rounded-2xl overflow-hidden bg-card border border-border group">
+            <SectionReveal delay={0.2}>
+              <div className="relative aspect-square rounded-3xl overflow-hidden bg-card border border-border/20 group">
                 <Image
                   src="/images/studio.jpg"
                   alt="JunkBranding Studio - クリエイティブスタジオのワークスペース"
@@ -230,7 +266,7 @@ export default function AboutPageClient() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-background/20 to-transparent" />
                 <div className="absolute bottom-6 left-6 right-6">
-                  <p className="text-sm sm:text-base font-medium text-foreground/90 animate-gradient-text bg-gradient-to-r from-primary via-accent to-primary bg-[length:200%_auto] bg-clip-text text-transparent">
+                  <p className="text-sm font-medium gradient-text-soft">
                     JunkBranding Studio
                   </p>
                 </div>
@@ -241,28 +277,41 @@ export default function AboutPageClient() {
       </section>
 
       {/* Team Section */}
-      <section className="py-24 sm:py-32 md:py-48 glass-card">
-        <div className="container mx-auto px-4 sm:px-6 md:px-12">
-          <div className="text-center mb-16 sm:mb-20 md:mb-32">
-            <div className="mb-[-1rem] sm:mb-[-2rem] md:mb-[-3rem]">
-              <EnglishLabel delay={0} align="center">
+      <section className="py-32 md:py-40 lg:py-56 glass-card">
+        <div className="container mx-auto px-6 md:px-12 lg:px-16">
+          <div className="text-center mb-16 lg:mb-24">
+            <div className="mb-6 lg:mb-8">
+              <ScatterText
+                as="span"
+                className="font-display text-[clamp(3rem,10vw,7rem)] leading-none tracking-tight text-foreground/50 block"
+                scrollStart={50}
+                scrollEnd={350}
+                distance={500}
+                style={{
+                  WebkitTextStroke: '1px currentColor',
+                  WebkitTextFillColor: 'transparent',
+                }}
+              >
                 Team
-              </EnglishLabel>
+              </ScatterText>
             </div>
-            <TextReveal
-              text="チームメンバー"
+            <ScatterText
               as="h2"
-              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight"
-              delay={0.2}
+              className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight"
+              scrollStart={50}
+              scrollEnd={350}
+              distance={400}
               gradient
-            />
+            >
+              チームメンバー
+            </ScatterText>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 max-w-4xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-16 max-w-4xl mx-auto">
             {team.map((member, index) => (
-              <SectionReveal key={member.name} delay={0.3 + index * 0.15}>
+              <SectionReveal key={member.name} delay={0.2 + index * 0.1}>
                 <div className="group">
-                  <div className="relative aspect-[3/4] mb-6 sm:mb-8 rounded-2xl overflow-hidden bg-card border border-border">
+                  <div className="relative aspect-[3/4] mb-8 lg:mb-10 rounded-3xl overflow-hidden bg-card border border-border/20">
                     <Image
                       src={member.image}
                       alt={`${member.name} - ${member.role}`}
@@ -274,17 +323,17 @@ export default function AboutPageClient() {
                     {/* Animated gradient overlay on hover */}
                     <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-br from-primary/20 via-transparent to-accent/20" />
                     {/* Name overlay with gradient animation */}
-                    <div className="absolute bottom-4 left-4 right-4 sm:bottom-6 sm:left-6 sm:right-6">
-                      <p className="text-sm sm:text-base text-foreground/80 mb-1 font-display font-semibold tracking-wider uppercase">
+                    <div className="absolute bottom-6 left-6 right-6">
+                      <p className="text-xs text-foreground/70 mb-2 font-medium tracking-widest uppercase">
                         {member.role}
                       </p>
-                      <h3 className="text-xl sm:text-2xl md:text-3xl font-bold animate-gradient-text bg-gradient-to-r from-foreground via-primary to-foreground bg-[length:200%_auto] bg-clip-text text-transparent">
+                      <h3 className="text-xl sm:text-2xl font-bold gradient-text-soft">
                         {member.name}
                       </h3>
-                      <p className="text-xs sm:text-sm text-foreground/60 mt-1">{member.nameEn}</p>
+                      <p className="text-xs text-foreground/50 mt-1 tracking-wide">{member.nameEn}</p>
                     </div>
                   </div>
-                  <p className="text-sm sm:text-base text-muted-foreground leading-relaxed whitespace-pre-wrap">
+                  <p className="text-sm md:text-base text-muted-foreground leading-[1.8] tracking-wide whitespace-pre-wrap">
                     {member.description}
                   </p>
                 </div>
@@ -295,37 +344,50 @@ export default function AboutPageClient() {
       </section>
 
       {/* Values Section */}
-      <section className="py-24 sm:py-32 md:py-48 glass-light">
-        <div className="container mx-auto px-4 sm:px-6 md:px-12">
-          <div className="text-center mb-16 sm:mb-20 md:mb-32">
-            <div className="mb-[-1rem] sm:mb-[-2rem] md:mb-[-3rem]">
-              <EnglishLabel delay={0} align="center">
+      <section className="py-32 md:py-40 lg:py-56 glass-light">
+        <div className="container mx-auto px-6 md:px-12 lg:px-16">
+          <div className="text-center mb-16 lg:mb-24">
+            <div className="mb-6 lg:mb-8">
+              <ScatterText
+                as="span"
+                className="font-display text-[clamp(3rem,10vw,7rem)] leading-none tracking-tight text-foreground/50 block"
+                scrollStart={50}
+                scrollEnd={350}
+                distance={500}
+                style={{
+                  WebkitTextStroke: '1px currentColor',
+                  WebkitTextFillColor: 'transparent',
+                }}
+              >
                 Values
-              </EnglishLabel>
+              </ScatterText>
             </div>
-            <TextReveal
-              text="大切にしていること"
+            <ScatterText
               as="h2"
-              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight"
-              delay={0.2}
+              className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight"
+              scrollStart={50}
+              scrollEnd={350}
+              distance={400}
               gradient
-            />
+            >
+              大切にしていること
+            </ScatterText>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-12">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12">
             {values.map((value, index) => (
-              <SectionReveal key={value.title} delay={0.3 + index * 0.1}>
-                <div className="group text-center p-6 sm:p-8 md:p-10 rounded-2xl bg-background border border-border hover:border-accent/30 transition-all duration-500">
-                  <div className="w-14 h-14 md:w-16 md:h-16 mx-auto mb-4 md:mb-6 rounded-full bg-accent/10 flex items-center justify-center group-hover:bg-accent/20 transition-colors duration-300">
-                    <value.icon className="w-6 h-6 md:w-7 md:h-7 text-accent" />
+              <SectionReveal key={value.title} delay={0.2 + index * 0.1}>
+                <div className="group text-center p-8 md:p-10 lg:p-12 rounded-3xl bg-background border border-border/20 hover:border-foreground/10 transition-all duration-500">
+                  <div className="w-14 h-14 md:w-16 md:h-16 mx-auto mb-6 lg:mb-8 rounded-full bg-foreground/5 flex items-center justify-center group-hover:bg-foreground/10 transition-colors duration-300">
+                    <value.icon className="w-6 h-6 md:w-7 md:h-7 text-foreground/60" />
                   </div>
-                  <h3 className="text-lg sm:text-xl md:text-2xl font-bold mb-2">
+                  <h3 className="text-lg sm:text-xl md:text-2xl font-bold mb-2 tracking-tight">
                     {value.title}
                   </h3>
-                  <p className="text-sm sm:text-base text-primary/70 mb-3 md:mb-4 font-display font-semibold tracking-[0.2em] uppercase">
+                  <p className="text-xs text-muted-foreground mb-4 lg:mb-6 font-medium tracking-widest uppercase">
                     {value.titleEn}
                   </p>
-                  <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
+                  <p className="text-sm md:text-base text-muted-foreground leading-[1.8] tracking-wide">
                     {value.description}
                   </p>
                 </div>
@@ -336,86 +398,102 @@ export default function AboutPageClient() {
       </section>
 
       {/* Process Section */}
-      <section className="py-24 sm:py-32 md:py-48 glass-card">
-        <div className="container mx-auto px-4 sm:px-6 md:px-12">
-          <div className="text-center mb-12 md:mb-32">
-            <div className="mb-[-1rem] sm:mb-[-2rem] md:mb-[-3rem]">
-              <EnglishLabel delay={0} align="center">
+      <section className="py-32 md:py-40 lg:py-56 glass-card">
+        <div className="container mx-auto px-6 md:px-12 lg:px-16">
+          <div className="text-center mb-16 lg:mb-24">
+            <div className="mb-6 lg:mb-8">
+              <ScatterText
+                as="span"
+                className="font-display text-[clamp(3rem,10vw,7rem)] leading-none tracking-tight text-foreground/50 block"
+                scrollStart={50}
+                scrollEnd={350}
+                distance={500}
+                style={{
+                  WebkitTextStroke: '1px currentColor',
+                  WebkitTextFillColor: 'transparent',
+                }}
+              >
                 Process
-              </EnglishLabel>
+              </ScatterText>
             </div>
-            <TextReveal
-              text="制作の流れ"
+            <ScatterText
               as="h2"
-              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6 md:mb-8"
-              delay={0.2}
+              className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-6 lg:mb-8"
+              scrollStart={50}
+              scrollEnd={350}
+              distance={400}
               gradient
-            />
-            <SectionReveal delay={0.5}>
-              <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-                お問い合わせから公開、そしてその後まで。
-                私たちがどのようにプロジェクトを進めていくのか、6つのステップでご紹介します。
-              </p>
-            </SectionReveal>
+            >
+              制作の流れ
+            </ScatterText>
+            <ScatterText
+              as="p"
+              className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto leading-[1.8] tracking-wide"
+              scrollStart={50}
+              scrollEnd={350}
+              distance={300}
+            >
+              お問い合わせから公開、そしてその後まで。私たちがどのようにプロジェクトを進めていくのか、6つのステップでご紹介します。
+            </ScatterText>
           </div>
 
-          <div className="max-w-5xl mx-auto space-y-10 md:space-y-24">
+          <div className="max-w-5xl mx-auto space-y-12 lg:space-y-20">
             {process.map((item, index) => (
-              <SectionReveal key={item.step} delay={0.1 + index * 0.08}>
+              <SectionReveal key={item.step} delay={0.1 + index * 0.05}>
                 <div className="group relative">
                   {/* Step Header */}
-                  <div className="flex flex-col md:flex-row md:items-center gap-4 md:gap-8 mb-6 md:mb-8">
+                  <div className="flex flex-col md:flex-row md:items-center gap-4 md:gap-8 mb-8 lg:mb-10">
                     <div className="flex items-center gap-4 md:gap-6">
-                      <div className="w-14 h-14 md:w-20 md:h-20 rounded-full bg-background border-2 border-primary flex items-center justify-center group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-500 shrink-0">
-                        <span className="text-xl md:text-3xl font-bold">{item.step}</span>
+                      <div className="w-14 h-14 md:w-16 md:h-16 rounded-full bg-background border border-foreground/20 flex items-center justify-center group-hover:bg-foreground group-hover:text-background transition-all duration-500 shrink-0">
+                        <span className="text-lg md:text-xl font-bold">{item.step}</span>
                       </div>
                       <div>
-                        <h3 className="text-xl sm:text-2xl md:text-3xl font-bold mb-1">
+                        <h3 className="text-xl sm:text-2xl md:text-3xl font-bold mb-1 tracking-tight">
                           {item.title}
                         </h3>
-                        <p className="text-sm sm:text-base text-primary/70 uppercase tracking-[0.15em] font-display font-semibold">
+                        <p className="text-xs text-muted-foreground uppercase tracking-widest font-medium">
                           {item.titleEn}
                         </p>
                       </div>
                     </div>
-                    <div className="md:ml-auto flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 bg-primary/10 rounded-full w-fit">
-                      <Clock size={14} className="text-primary md:w-4 md:h-4" />
-                      <span className="text-xs sm:text-sm font-medium text-primary">{item.duration}</span>
+                    <div className="md:ml-auto flex items-center gap-2 px-4 py-2 bg-foreground/5 rounded-full w-fit">
+                      <Clock size={14} className="text-muted-foreground" />
+                      <span className="text-xs font-medium text-muted-foreground">{item.duration}</span>
                     </div>
                   </div>
                   
                   {/* Content Card */}
-                  <div className="ml-0 md:ml-28 p-6 sm:p-8 md:p-10 rounded-2xl bg-background border border-border group-hover:border-primary/30 transition-all duration-500">
+                  <div className="ml-0 md:ml-24 p-8 md:p-10 lg:p-12 rounded-3xl bg-background border border-border/20 group-hover:border-foreground/10 transition-all duration-500">
                     {/* Short Description */}
-                    <p className="text-base sm:text-lg md:text-xl text-foreground leading-relaxed mb-4 md:mb-6">
+                    <p className="text-base md:text-lg text-foreground leading-[1.6] mb-4 lg:mb-6 tracking-tight">
                       {item.description}
                     </p>
                     
                     {/* Full Description */}
-                    <p className="text-sm sm:text-base text-muted-foreground leading-relaxed mb-6 md:mb-10">
+                    <p className="text-sm md:text-base text-muted-foreground leading-[1.8] tracking-wide mb-8 lg:mb-10">
                       {item.fullDescription}
                     </p>
                     
                     {/* Details Grid */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-6 md:mb-8">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6 mb-8 lg:mb-10">
                       {item.details.map((detail, i) => (
                         <div 
                           key={detail.title} 
-                          className="flex items-start gap-3 md:gap-4 p-3 md:p-4 rounded-xl bg-card/50 border border-border/50"
+                          className="flex items-start gap-4 p-4 lg:p-5 rounded-2xl bg-card/30 border border-border/30"
                         >
-                          <div className="shrink-0 w-6 h-6 md:w-8 md:h-8 rounded-full bg-primary/10 flex items-center justify-center mt-0.5">
-                            <span className="text-xs md:text-sm font-bold text-primary">{i + 1}</span>
+                          <div className="shrink-0 w-7 h-7 rounded-full bg-foreground/5 flex items-center justify-center mt-0.5">
+                            <span className="text-xs font-bold text-muted-foreground">{i + 1}</span>
                           </div>
                           <div className="flex-1 min-w-0">
-                            <h4 className="text-sm sm:text-base font-bold mb-1 whitespace-nowrap">{detail.title}</h4>
-                            <p className="text-xs sm:text-sm text-muted-foreground text-pretty">{detail.desc}</p>
+                            <h4 className="text-sm md:text-base font-bold mb-1 tracking-tight">{detail.title}</h4>
+                            <p className="text-xs md:text-sm text-muted-foreground leading-[1.6]">{detail.desc}</p>
                           </div>
                         </div>
                       ))}
                     </div>
                     
                     {/* Note */}
-                    <p className="text-xs sm:text-sm text-primary bg-primary/5 px-3 py-2 md:px-4 md:py-3 rounded-lg border border-primary/20">
+                    <p className="text-xs md:text-sm text-muted-foreground bg-foreground/5 px-4 py-3 rounded-xl border border-foreground/5">
                       {item.note}
                     </p>
                   </div>
@@ -424,79 +502,100 @@ export default function AboutPageClient() {
             ))}
           </div>
           
-          {/* Process CTA */}
-          <SectionReveal delay={0.3}>
-            <div className="text-center mt-16 md:mt-24">
-              <p className="text-base sm:text-lg text-muted-foreground mb-6 md:mb-8">
-                ご不明点があれば、お気軽にお問い合わせください
-              </p>
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                <MagneticButton
-                  href="/contact"
-                  className="group w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 bg-foreground text-background rounded-full font-medium btn-gradient-hover transition-all duration-300"
-                >
-                  <span className="flex items-center justify-center gap-3">
-                    お問い合わせ
-                    <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
-                  </span>
-                </MagneticButton>
-                <a 
-                  href="tel:08091550426"
-                  className="flex items-center justify-center gap-2 w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 bg-foreground text-background rounded-full font-medium btn-gradient-hover transition-all duration-300"
-                >
-                  <Phone size={18} />
-                  <span>080-9155-0426</span>
-                </a>
-              </div>
+{/* Process CTA */}
+          <div className="text-center mt-16 lg:mt-24">
+            <ScatterText
+              as="p"
+              className="text-base md:text-lg text-muted-foreground mb-8 lg:mb-10 leading-[1.8]"
+              scrollStart={50}
+              scrollEnd={350}
+              distance={300}
+            >
+              ご不明点があれば、お気軽にお問い合わせください
+            </ScatterText>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <ScatterBlock
+                className="group w-full sm:w-auto px-8 py-4 bg-foreground text-background rounded-full font-medium tracking-widest uppercase text-sm cursor-pointer hover:bg-foreground/90 transition-colors"
+                scrollEnd={350}
+                distance={400}
+                seed={10}
+                href="/contact"
+              >
+                <span className="flex items-center justify-center gap-4">
+                  お問い合わせ
+                  <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
+                </span>
+              </ScatterBlock>
+              <ScatterBlock
+                className="flex items-center justify-center gap-3 w-full sm:w-auto px-8 py-4 bg-card text-foreground rounded-full font-medium text-sm border border-border/20 cursor-pointer hover:border-foreground/20 transition-colors"
+                scrollEnd={350}
+                distance={400}
+                seed={11}
+              >
+                <Phone size={18} />
+                <span>電話で相談する</span>
+              </ScatterBlock>
             </div>
-          </SectionReveal>
+          </div>
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="py-24 sm:py-32 md:py-48 glass-light">
-        <div className="container mx-auto px-4 sm:px-6 md:px-12 text-center">
-          <TextReveal
-            text="一緒に、"
+      <section className="py-32 md:py-40 lg:py-56 glass-light">
+        <div className="container mx-auto px-6 md:px-12 lg:px-16 text-center">
+          <ScatterText
             as="h2"
-            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight"
-            delay={0}
-          />
-          <TextReveal
-            text="つくりませんか？"
+            className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight"
+            scrollStart={50}
+            scrollEnd={350}
+            distance={400}
+          >
+            一緒に、
+          </ScatterText>
+          <ScatterText
             as="span"
-            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6 sm:mb-8 block"
-            delay={0.3}
+            className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-6 lg:mb-8 block"
+            scrollStart={50}
+            scrollEnd={350}
+            distance={400}
             gradient
-          />
-          <SectionReveal delay={0.6}>
-            <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 sm:mb-12 leading-relaxed text-balance">
-              私たちは、あなたのビジネスの成長を本気で応援します。まずは気軽にお話しさせてください。
-            </p>
-          </SectionReveal>
+          >
+            つくりませんか？
+          </ScatterText>
+          <ScatterText
+            as="p"
+            className="text-base md:text-lg text-muted-foreground max-w-lg mx-auto mb-10 lg:mb-12 leading-[1.8] tracking-wide"
+            scrollStart={50}
+            scrollEnd={350}
+            distance={300}
+          >
+            私たちは、あなたのビジネスの成長を本気で応援します。まずは気軽にお話しさせてください。
+          </ScatterText>
 
-          <SectionReveal delay={0.8}>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6">
-              <MagneticButton
-                href="/contact"
-                className="group w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 bg-foreground text-background rounded-full font-medium btn-gradient-hover transition-all duration-300"
-                data-cursor="Contact"
-              >
-                <span className="flex items-center justify-center gap-3">
-                  お問い合わせフォーム
-                  <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
-                </span>
-              </MagneticButton>
-              
-              <a 
-                href="tel:08091550426"
-                className="group flex items-center justify-center gap-3 w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 bg-foreground text-background rounded-full font-medium btn-gradient-hover transition-all duration-300"
-              >
-                <Phone size={18} />
-                <span>080-9155-0426</span>
-              </a>
-            </div>
-          </SectionReveal>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <ScatterBlock
+              className="group w-full sm:w-auto px-8 py-4 bg-foreground text-background rounded-full font-medium tracking-widest uppercase text-sm cursor-pointer hover:bg-foreground/90 transition-colors"
+              scrollEnd={350}
+              distance={400}
+              seed={20}
+              href="/contact"
+            >
+              <span className="flex items-center justify-center gap-4">
+                お問い合わせフォーム
+                <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
+              </span>
+            </ScatterBlock>
+            
+            <ScatterBlock
+              className="flex items-center justify-center gap-3 w-full sm:w-auto px-8 py-4 bg-card text-foreground rounded-full font-medium text-sm border border-border/20 cursor-pointer hover:border-foreground/20 transition-colors"
+              scrollEnd={350}
+              distance={400}
+              seed={21}
+            >
+              <Phone size={18} />
+              <span>080-9155-0426</span>
+            </ScatterBlock>
+          </div>
         </div>
       </section>
 
