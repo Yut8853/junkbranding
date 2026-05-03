@@ -19,22 +19,6 @@ export function NavigationMenuOverlay({
   const menuRef = useRef<HTMLDivElement>(null)
   const itemsRef = useRef<(HTMLLIElement | null)[]>([])
 
-  // Generate scatter positions for each menu item character
-  const scatterPositions = useMemo(() => {
-    return navItems.map((item, itemIndex) => {
-      return item.label.split('').map((_, charIndex) => {
-        const seed = itemIndex * 100 + charIndex * 7 + 13
-        return createScatterValue({
-          seed,
-          minDistance: 300,
-          distanceRange: 400,
-          rotationRange: 540,
-          scale: { min: 0.3, range: 0.4 },
-        })
-      })
-    })
-  }, [])
-
   // Generate scatter positions for background panels
   const bgPanelScatter = useMemo(() => {
     return Array.from({ length: 12 }, (_, i) => {
@@ -198,37 +182,23 @@ export function NavigationMenuOverlay({
                       {item.num}
                     </span>
 
-                    {/* Each character assembles from scattered position */}
+                    {/* Label assembles as a single layer to keep the menu lightweight. */}
                     <span
                       className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-display uppercase tracking-tight"
                       aria-hidden="true"
+                      style={{
+                        transform: isMobile
+                          ? 'none'
+                          : `translate(${(1 - assembleProgress) * (itemIndex % 2 === 0 ? -120 : 120)}px, ${(1 - assembleProgress) * 40}px) scale(${0.92 + assembleProgress * 0.08})`,
+                        opacity: assembleProgress,
+                        color: !isMobile && hoveredItem === item.href
+                          ? rainbowColors[itemIndex % rainbowColors.length]
+                          : 'white',
+                        transition: isMobile ? 'none' : 'color 0.3s ease',
+                        filter: isMobile ? 'none' : `blur(${(1 - assembleProgress) * 8}px)`,
+                      }}
                     >
-                      {item.label.split('').map((char, charIndex) => {
-                        const scatter = scatterPositions[itemIndex]?.[charIndex] || { x: 0, y: 0, rotation: 0, scale: 1 }
-                        const charDelay = charIndex * 0.03
-                        const adjustedProgress = isMobile ? 1 : clamp01((assembleProgress - charDelay) / (1 - charDelay))
-                        const inverseAdjusted = 1 - adjustedProgress
-                        const scatterScale = scatter.scale ?? 1
-
-                        return (
-                          <span
-                            key={charIndex}
-                            aria-hidden="true"
-                            className="inline-block transition-none"
-                            style={{
-                              transform: isMobile ? 'none' : `translate(${scatter.x * inverseAdjusted}px, ${scatter.y * inverseAdjusted}px) rotate(${scatter.rotation * inverseAdjusted}deg) scale(${scatterScale + (1 - scatterScale) * adjustedProgress})`,
-                              opacity: adjustedProgress,
-                              color: !isMobile && hoveredItem === item.href
-                                ? rainbowColors[(itemIndex + charIndex) % rainbowColors.length]
-                                : 'white',
-                              transition: isMobile ? 'none' : 'color 0.3s ease',
-                              filter: isMobile ? 'none' : `blur(${inverseAdjusted * 8}px)`,
-                            }}
-                          >
-                            {char}
-                          </span>
-                        )
-                      })}
+                      {item.label}
                     </span>
                   </div>
 

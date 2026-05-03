@@ -1,15 +1,11 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { ReactLenis, useLenis } from 'lenis/react'
-import { gsap } from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useIsMobile } from '@/hooks/use-mobile'
 import { useElementInView } from '@/hooks/use-element-in-view'
 import { useScrollProgress } from '@/hooks/use-scroll-progress'
 import type { SmoothScrollProps } from '@/types/component-props'
-
-gsap.registerPlugin(ScrollTrigger)
 
 export function SmoothScroll({ children }: SmoothScrollProps) {
   const isMobile = useIsMobile()
@@ -22,10 +18,11 @@ export function SmoothScroll({ children }: SmoothScrollProps) {
     <ReactLenis
       root
       options={{
-        lerp: 0.055,
+        autoRaf: true,
+        lerp: 0.08,
         smoothWheel: true,
         syncTouch: false,
-        wheelMultiplier: 0.72,
+        wheelMultiplier: 0.85,
         touchMultiplier: 1,
         infinite: false,
       }}
@@ -37,18 +34,44 @@ export function SmoothScroll({ children }: SmoothScrollProps) {
 }
 
 function LenisScrollTriggerSync() {
+  const [scrollTrigger, setScrollTrigger] = useState<typeof import('gsap/ScrollTrigger').ScrollTrigger | null>(null)
+
+  useEffect(() => {
+    let active = true
+
+    const loadScrollTrigger = async () => {
+      const [{ gsap }, { ScrollTrigger }] = await Promise.all([
+        import('gsap'),
+        import('gsap/ScrollTrigger'),
+      ])
+
+      gsap.registerPlugin(ScrollTrigger)
+      if (active) {
+        setScrollTrigger(() => ScrollTrigger)
+      }
+    }
+
+    void loadScrollTrigger()
+
+    return () => {
+      active = false
+    }
+  }, [])
+
   useLenis(() => {
-    ScrollTrigger.update()
+    scrollTrigger?.update()
   })
 
   useEffect(() => {
-    const updateScrollTrigger = () => ScrollTrigger.update()
+    if (!scrollTrigger) return
+
+    const updateScrollTrigger = () => scrollTrigger.update()
     window.addEventListener('resize', updateScrollTrigger, { passive: true })
 
     return () => {
       window.removeEventListener('resize', updateScrollTrigger)
     }
-  }, [])
+  }, [scrollTrigger])
 
   return null
 }

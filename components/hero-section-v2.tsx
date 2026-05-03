@@ -1,14 +1,12 @@
 'use client'
 
-import { useEffect, useRef, useState, useMemo } from 'react'
-import { createScatterValue } from '@/lib/scatter'
+import { useEffect, useRef, useState } from 'react'
 import { ScatterText } from '@/components/scatter-text'
 import { useIsMobile } from '@/hooks/use-mobile'
 
 export function HeroSectionV2() {
   const containerRef = useRef<HTMLElement>(null)
   const titleWrapperRef = useRef<HTMLDivElement>(null)
-  const charsRef = useRef<(HTMLSpanElement | null)[]>([])
   const bottomBarRef = useRef<HTMLDivElement>(null)
   const sideTextRef = useRef<HTMLDivElement>(null)
   const cornerRefs = useRef<(HTMLDivElement | null)[]>([])
@@ -24,21 +22,6 @@ export function HeroSectionV2() {
   const line1 = 'JUNK'
   const line2 = 'BRANDING'
   const line3 = 'あなたの「らしさ」をカタチに。'
-  
-  const totalChars = line1.length + line2.length + line3.length
-
-  // Pre-generate explosion values with randomness
-  const explosionValues = useMemo(() => {
-    return Array.from({ length: totalChars }, (_, i) => {
-      const seed = i * 13 + 17
-      return createScatterValue({
-        seed,
-        minDistance: 600,
-        distanceRange: 800,
-        rotationRange: 720,
-      })
-    })
-  }, [totalChars])
 
   useEffect(() => {
     if (isMobile) return
@@ -96,8 +79,6 @@ export function HeroSectionV2() {
   useEffect(() => {
     if (!containerRef.current || !isLoaded || isMobile) return
 
-    const container = containerRef.current
-    const validChars = charsRef.current.filter(Boolean) as HTMLSpanElement[]
     const otherElements = [
       bottomBarRef.current,
       sideTextRef.current,
@@ -111,13 +92,13 @@ export function HeroSectionV2() {
       const scrollProgress = Math.min(window.scrollY / 350, 1)
       if (Math.abs(scrollProgress - lastScrollProgress) < 0.01) return
       lastScrollProgress = scrollProgress
-      
-      // Apply explosion to each character
-      validChars.forEach((char, index) => {
-        const values = explosionValues[index]
-        char.style.transform = `translate(${values.x * scrollProgress}px, ${values.y * scrollProgress}px) rotate(${values.rotation * scrollProgress}deg) scale(${1 - 0.5 * scrollProgress})`
-        char.style.opacity = String(1 - scrollProgress)
-      })
+
+      if (titleWrapperRef.current) {
+        titleWrapperRef.current.style.opacity = String(1 - scrollProgress)
+        titleWrapperRef.current.style.filter = scrollProgress > 0
+          ? `blur(${Math.min(12, scrollProgress * 12)}px)`
+          : ''
+      }
 
       // Fade out other elements
       otherElements.forEach((el) => {
@@ -140,22 +121,7 @@ export function HeroSectionV2() {
       window.removeEventListener('scroll', handleScrollRaf)
       if (rafId) cancelAnimationFrame(rafId)
     }
-  }, [isLoaded, explosionValues, isMobile])
-
-  // Render character with soft gradient and animation
-  const renderChar = (char: string, index: number) => {
-    return (
-      <span
-        key={index}
-        ref={(el) => { charsRef.current[index] = el }}
-        className="inline-block gradient-text-soft md:will-change-transform"
-      >
-        {char === ' ' ? '\u00A0' : char}
-      </span>
-    )
-  }
-
-  let charIndex = 0
+  }, [isLoaded, isMobile])
 
   return (
     <section 
@@ -173,21 +139,21 @@ export function HeroSectionV2() {
           {/* Line 1 - JUNK */}
           <div className="overflow-visible">
             <h1 className="font-display text-[18vw] md:text-[16vw] leading-[0.85] tracking-[-0.02em] whitespace-nowrap">
-              {line1.split('').map((char) => renderChar(char, charIndex++))}
+              <span className="gradient-text-soft">{line1}</span>
             </h1>
           </div>
 
           {/* Line 2 - BRANDING */}
           <div className="overflow-visible -mt-[2vw]">
             <h1 className="font-display text-[18vw] md:text-[16vw] leading-[0.85] tracking-[-0.02em] whitespace-nowrap">
-              {line2.split('').map((char) => renderChar(char, charIndex++))}
+              <span className="gradient-text-soft">{line2}</span>
             </h1>
           </div>
 
           {/* Line 3 - Japanese tagline */}
           <div className="overflow-visible mt-[3vw]">
             <p className="text-[4vw] md:text-[2.5vw] tracking-[0.2em] font-light whitespace-nowrap">
-              {line3.split('').map((char) => renderChar(char, charIndex++))}
+              <span className="gradient-text-soft">{line3}</span>
             </p>
           </div>
         </div>

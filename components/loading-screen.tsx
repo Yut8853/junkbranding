@@ -79,21 +79,9 @@ export function LoadingScreen({ progress, canSelectAudio, audioChoice, onSelectA
         {/* Logo with morph animation */}
         <div className="relative w-full">
           <h1 id="loading-screen-title" className="text-center text-[clamp(3.8rem,12vw,9rem)] font-normal tracking-[0.02em] uppercase font-display drop-shadow-[0_10px_35px_rgba(255,255,255,0.08)]">
-            {'JUNKBRANDING'.split('').map((char, i) => (
-              <span
-                key={i}
-                className="inline-block gradient-text-soft"
-                style={{
-                  animationName: 'morphFloat, rainbow-flow',
-                  animationDuration: '3s, 8s',
-                  animationTimingFunction: 'ease-in-out, linear',
-                  animationIterationCount: 'infinite',
-                  animationDelay: `${i * 0.15}s, 0s`,
-                }}
-              >
-                {char}
-              </span>
-            ))}
+            <span className="gradient-text-soft">
+              JUNKBRANDING
+            </span>
           </h1>
         </div>
 

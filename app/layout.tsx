@@ -6,10 +6,8 @@ import './globals.css';
 
 import { PageTransition } from '@/components/page-transition';
 import { Navigation } from '@/components/navigation';
-import { CustomCursor } from '@/components/custom-cursor';
 import { SmoothScroll } from '@/components/smooth-scroll';
-import { FloatingParticles } from '@/components/floating-particles';
-import { BottomHeatHaze } from '@/components/bottom-heat-haze';
+import { DeferredVisualEffects } from '@/components/deferred-visual-effects';
 import { CookieConsent } from '@/components/cookie-consent';
 import { LoadingProvider } from '@/components/loading-provider';
 import { SoundToggle } from '@/components/sound-toggle';
@@ -179,7 +177,7 @@ export default function RootLayout({
       className={`${inter.variable} ${bebasNeue.variable}`}
     >
       <head>
-        <Script id="google-tag-manager" strategy="beforeInteractive">
+        <Script id="google-tag-manager" strategy="afterInteractive">
           {`
             (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
             new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -208,9 +206,8 @@ export default function RootLayout({
         </a>
         <TransitionProvider>
           <AudioProvider>
-            <CustomCursor />
             <LoadingProvider>
-              <FloatingParticles />
+              <DeferredVisualEffects />
 
               <SmoothScroll>
                 <Navigation />
@@ -220,7 +217,6 @@ export default function RootLayout({
                   </main>
                 </PageTransition>
               </SmoothScroll>
-              <BottomHeatHaze />
               <SoundToggle />
               <CookieConsent />
             </LoadingProvider>

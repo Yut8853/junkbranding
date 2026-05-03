@@ -59,19 +59,15 @@ export function EnglishLabel({ children, className, textClassName, delay = 0, al
     return () => window.removeEventListener('scroll', handleScroll)
   }, [hasAnimated, isAnimationComplete])
 
-  const words = children.split(' ')
-  
   // スケール: 1.0 → 0.25 へ縮小（最終サイズは元の25%）
   const scale = isAnimationComplete ? 0.25 : 1 - (scrollProgress * 0.75)
   const opacity = isAnimationComplete ? 0.8 : 1 - (scrollProgress * 0.2)
-
-  let letterIndex = 0
 
   return (
     <div
       ref={ref}
       className={cn(
-        'relative overflow-visible will-change-transform',
+        'relative overflow-visible',
         align === 'center' ? 'flex justify-center' : '',
         className
       )}
@@ -86,40 +82,19 @@ export function EnglishLabel({ children, className, textClassName, delay = 0, al
           transition: isAnimationComplete ? 'none' : 'transform 0.1s linear, opacity 0.1s linear',
         }}
       >
-        {words.map((word, wordIndex) => {
-          const wordElement = (
-            <span key={wordIndex} className="inline-block">
-              {word.split('').map((letter) => {
-                const currentIndex = letterIndex++
-                return (
-                  <span
-                    key={currentIndex}
-                    className="inline-block"
-                  >
-                    <span
-                      className={cn(
-                        'inline-block font-display uppercase text-[2.5rem] sm:text-[4rem] md:text-[6rem] lg:text-[8rem] xl:text-[36rem] tracking-[0.02em] font-normal text-primary leading-[0.01]',
-                        textClassName
-                      )}
-                      style={{
-                        transform: hasAnimated ? 'translateY(0) rotate(0deg)' : 'translateY(120%) rotate(8deg)',
-                        opacity: hasAnimated ? 1 : 0,
-                        transition: `transform 0.9s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.7s ease-out`,
-                        transitionDelay: `${currentIndex * 0.035}s`,
-                      }}
-                    >
-                      {letter}
-                    </span>
-                  </span>
-                )
-              })}
-              {wordIndex < words.length - 1 && (
-                <span className={cn('inline-block w-[0.3em]', textClassName)} />
-              )}
-            </span>
-          )
-          return wordElement
-        })}
+        <span
+          className={cn(
+            'inline-block font-display uppercase text-[2.5rem] sm:text-[4rem] md:text-[6rem] lg:text-[8rem] xl:text-[36rem] tracking-[0.02em] font-normal text-primary leading-[0.01]',
+            textClassName
+          )}
+          style={{
+            transform: hasAnimated ? 'translateY(0) rotate(0deg)' : 'translateY(120%) rotate(8deg)',
+            opacity: hasAnimated ? 1 : 0,
+            transition: 'transform 0.9s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.7s ease-out',
+          }}
+        >
+          {children}
+        </span>
       </span>
     </div>
   )
@@ -173,7 +148,6 @@ export function EnglishHeading({ children, className, delay = 0, outline = true,
     return () => window.removeEventListener('scroll', handleScroll)
   }, [hasAnimated, isAnimationComplete])
 
-  const words = children.split(' ')
   const scale = isAnimationComplete ? 0.3 : 1 - (scrollProgress * 0.7)
   const opacity = isAnimationComplete ? 0.85 : 1 - (scrollProgress * 0.15)
 
@@ -181,7 +155,7 @@ export function EnglishHeading({ children, className, delay = 0, outline = true,
     <div
       ref={ref}
       className={cn(
-        'relative overflow-visible will-change-transform',
+        'relative overflow-visible',
         align === 'center' ? 'text-center' : 'text-left',
         className
       )}
@@ -194,36 +168,20 @@ export function EnglishHeading({ children, className, delay = 0, outline = true,
     >
       <h3
         className="inline-block whitespace-nowrap"
-        aria-label={children}
       >
-        {words.map((word, wordIndex) => (
-          <span key={wordIndex} className="inline-block">
-            {word.split('').map((letter, letterIndex) => (
-              <span
-                key={letterIndex}
-                className="inline-block overflow-hidden"
-              >
-                <span
-                  className={cn(
-                    'inline-block font-display uppercase text-[2rem] sm:text-[3rem] md:text-[4.5rem] lg:text-[6rem] xl:text-[36rem] font-normal tracking-[0.02em] leading-[0.85]',
-                    outline && !isAnimationComplete ? 'english-stroke text-foreground/30' : 'text-foreground',
-                  )}
-                  style={{
-                    transform: hasAnimated ? 'translateY(0) rotate(0deg) scale(1)' : 'translateY(110%) rotate(5deg) scale(0.9)',
-                    opacity: hasAnimated ? 1 : 0,
-                    transition: `transform 1s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.8s ease-out, color 0.4s ease-out, -webkit-text-stroke 0.4s ease-out, -webkit-text-fill-color 0.4s ease-out`,
-                    transitionDelay: `${wordIndex * 0.1 + letterIndex * 0.03}s`,
-                  }}
-                >
-                  {letter}
-                </span>
-              </span>
-            ))}
-            {wordIndex < words.length - 1 && (
-              <span className="inline-block w-[0.4em]" />
-            )}
-          </span>
-        ))}
+        <span
+          className={cn(
+            'inline-block font-display uppercase text-[2rem] sm:text-[3rem] md:text-[4.5rem] lg:text-[6rem] xl:text-[36rem] font-normal tracking-[0.02em] leading-[0.85]',
+            outline && !isAnimationComplete ? 'english-stroke text-foreground/30' : 'text-foreground',
+          )}
+          style={{
+            transform: hasAnimated ? 'translateY(0) rotate(0deg) scale(1)' : 'translateY(110%) rotate(5deg) scale(0.9)',
+            opacity: hasAnimated ? 1 : 0,
+            transition: 'transform 1s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.8s ease-out, color 0.4s ease-out, -webkit-text-stroke 0.4s ease-out, -webkit-text-fill-color 0.4s ease-out',
+          }}
+        >
+          {children}
+        </span>
       </h3>
     </div>
   )
@@ -310,7 +268,7 @@ export function EnglishWords({
 
   return (
     <div
-      className="relative overflow-visible will-change-transform"
+      className="relative overflow-visible"
       style={{
         transform: `scale(${scale})`,
         transformOrigin: align === 'center' ? 'center top' : 'left top',
@@ -407,7 +365,6 @@ export function EnglishText({
     return () => window.removeEventListener('scroll', handleScroll)
   }, [hasAnimated, variant, isAnimationComplete])
 
-  const letters = children.split('')
   const scale = variant === 'label' ? 1 : (isAnimationComplete ? 0.3 : 1 - (scrollProgress * 0.7))
   const opacity = variant === 'label' ? 1 : (isAnimationComplete ? 0.85 : 1 - (scrollProgress * 0.15))
 
@@ -420,7 +377,7 @@ export function EnglishText({
   return (
     <div
       className={cn(
-        'relative overflow-visible will-change-transform inline-block',
+        'relative overflow-visible inline-block',
         align === 'center' ? 'text-center' : 'text-left'
       )}
       style={{
@@ -437,27 +394,18 @@ export function EnglishText({
           variantStyles[variant],
           className
         )}
-        aria-label={children}
       >
-        {letters.map((letter, index) => (
-          <span
-            key={index}
-            className="inline-block overflow-hidden"
-            style={{ lineHeight: 'inherit' }}
-          >
-            <span
-              className="inline-block"
-              style={{
-                transform: hasAnimated ? 'translateY(0) rotate(0deg)' : 'translateY(130%) rotate(10deg)',
-                opacity: hasAnimated ? 1 : 0,
-                transition: `transform 0.9s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease-out`,
-                transitionDelay: `${index * stagger}s`,
-              }}
-            >
-              {letter === ' ' ? '\u00A0' : letter}
-            </span>
-          </span>
-        ))}
+        <span
+          className="inline-block"
+          style={{
+            transform: hasAnimated ? 'translateY(0) rotate(0deg)' : 'translateY(130%) rotate(10deg)',
+            opacity: hasAnimated ? 1 : 0,
+            transition: 'transform 0.9s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease-out',
+            transitionDelay: `${delay + stagger}s`,
+          }}
+        >
+          {children}
+        </span>
       </Component>
     </div>
   )

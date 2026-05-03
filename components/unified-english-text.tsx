@@ -44,7 +44,6 @@ export function UnifiedEnglishText({
     }
   }, [isInView, hasAnimated, delay])
 
-  const letters = children.split('')
   const showFilled = isActive || isHovered
 
   const sizeStyles = {
@@ -73,41 +72,27 @@ export function UnifiedEnglishText({
       )}
       onMouseEnter={() => isLink && setIsHovered(true)}
       onMouseLeave={() => isLink && setIsHovered(false)}
-      aria-label={children}
     >
-      {letters.map((letter, index) => (
-        <span
-          key={index}
-          className="inline-block overflow-hidden"
-          style={{ lineHeight: 'inherit' }}
-        >
-          <span
-            className="inline-block will-change-transform"
-            style={{
-              // 出現アニメーション
-              transform: hasAnimated 
-                ? 'translateY(0) rotate(0deg)' 
-                : 'translateY(110%) rotate(8deg)',
-              opacity: hasAnimated ? 1 : 0,
-              // ストローク→塗り変化
-              WebkitTextStroke: strokeToFill && !showFilled ? '1.5px currentColor' : '0px',
-              WebkitTextFillColor: strokeToFill && !showFilled ? 'transparent' : 'currentColor',
-              color: showFilled && activeColor ? activeColor : 'inherit',
-              // トランジション
-              transition: `
-                transform 0.8s cubic-bezier(0.16, 1, 0.3, 1),
-                opacity 0.6s ease-out,
-                -webkit-text-stroke 0.4s ease,
-                -webkit-text-fill-color 0.4s ease,
-                color 0.4s ease
-              `,
-              transitionDelay: `${index * stagger}s`,
-            }}
-          >
-            {letter === ' ' ? '\u00A0' : letter}
-          </span>
-        </span>
-      ))}
+      <span
+        className="inline-block"
+        style={{
+          transform: hasAnimated ? 'translateY(0) rotate(0deg)' : 'translateY(110%) rotate(8deg)',
+          opacity: hasAnimated ? 1 : 0,
+          WebkitTextStroke: strokeToFill && !showFilled ? '1.5px currentColor' : '0px',
+          WebkitTextFillColor: strokeToFill && !showFilled ? 'transparent' : 'currentColor',
+          color: showFilled && activeColor ? activeColor : 'inherit',
+          transition: `
+            transform 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+            opacity 0.6s ease-out,
+            -webkit-text-stroke 0.4s ease,
+            -webkit-text-fill-color 0.4s ease,
+            color 0.4s ease
+          `,
+          transitionDelay: `${delay + stagger}s`,
+        }}
+      >
+        {children}
+      </span>
     </Component>
   )
 }
@@ -141,35 +126,24 @@ export function SectionTitle({ children, subtitle, className, delay = 0 }: Secti
  * マーキー用テキスト（ホバーで塗りに変化）
  */
 export function MarqueeText({ children, isHovered = false, className }: MarqueeTextProps) {
-  const letters = children.split('')
-
   return (
     <span
       className={cn(
         'font-display uppercase inline-flex text-4xl md:text-6xl lg:text-7xl xl:text-8xl tracking-wide',
         className
       )}
-      aria-label={children}
+      style={{
+        WebkitTextStroke: isHovered ? '0px' : '1.5px var(--foreground)',
+        WebkitTextFillColor: isHovered ? 'var(--foreground)' : 'transparent',
+        transform: isHovered ? 'scale(1.05)' : 'scale(1)',
+        transition: `
+          -webkit-text-stroke 0.4s ease,
+          -webkit-text-fill-color 0.4s ease,
+          transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)
+        `,
+      }}
     >
-      {letters.map((letter, index) => (
-        <span
-          key={index}
-          className="inline-block"
-          style={{
-            WebkitTextStroke: isHovered ? '0px' : '1.5px var(--foreground)',
-            WebkitTextFillColor: isHovered ? 'var(--foreground)' : 'transparent',
-            transform: isHovered ? 'scale(1.05)' : 'scale(1)',
-            transition: `
-              -webkit-text-stroke 0.4s ease,
-              -webkit-text-fill-color 0.4s ease,
-              transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)
-            `,
-            transitionDelay: `${index * 0.02}s`,
-          }}
-        >
-          {letter === ' ' ? '\u00A0' : letter}
-        </span>
-      ))}
+      {children}
     </span>
   )
 }
@@ -178,35 +152,24 @@ export function MarqueeText({ children, isHovered = false, className }: MarqueeT
  * サービスカード用タイトル（アクティブ時に塗り + 色変化）
  */
 export function ServiceTitle({ children, isActive = false, activeColor, className }: ServiceTitleProps) {
-  const letters = children.split('')
-
   return (
     <h3
       className={cn(
         'font-display uppercase inline-flex text-4xl md:text-5xl lg:text-6xl tracking-wide leading-none',
         className
       )}
-      aria-label={children}
+      style={{
+        WebkitTextStroke: isActive ? '0px' : '1.5px currentColor',
+        WebkitTextFillColor: isActive ? 'currentColor' : 'transparent',
+        color: isActive && activeColor ? activeColor : 'var(--foreground)',
+        transition: `
+          -webkit-text-stroke 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+          -webkit-text-fill-color 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+          color 0.5s ease
+        `,
+      }}
     >
-      {letters.map((letter, index) => (
-        <span
-          key={index}
-          className="inline-block"
-          style={{
-            WebkitTextStroke: isActive ? '0px' : '1.5px currentColor',
-            WebkitTextFillColor: isActive ? 'currentColor' : 'transparent',
-            color: isActive && activeColor ? activeColor : 'var(--foreground)',
-            transition: `
-              -webkit-text-stroke 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-              -webkit-text-fill-color 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-              color 0.5s ease
-            `,
-            transitionDelay: `${index * 0.015}s`,
-          }}
-        >
-          {letter === ' ' ? '\u00A0' : letter}
-        </span>
-      ))}
+      {children}
     </h3>
   )
 }

@@ -89,18 +89,11 @@ export function HeroTitle() {
                 />
               )}
               
-              {/* Character-by-character rendering */}
-              {line.text.split('').map((char, charIndex) => (
-                <span 
-                  key={charIndex}
-                  className={`inline-block ${isVisible ? (line.gradient ? 'animate-gradient-flow' : 'animate-char-float') : ''} ${line.gradient ? 'gradient-text-char' : ''}`}
-                  style={{
-                    ['--char-delay' as string]: `${charIndex * 0.08}s`,
-                  }}
-                >
-                  {char}
-                </span>
-              ))}
+              <span
+                className={`inline-block ${isVisible && line.gradient ? 'animate-gradient-flow' : ''} ${line.gradient ? 'gradient-text-char' : ''}`}
+              >
+                {line.text}
+              </span>
             </span>
           </span>
         ))}
