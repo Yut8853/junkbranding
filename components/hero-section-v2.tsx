@@ -89,8 +89,11 @@ export function HeroSectionV2() {
     let lastScrollProgress = -1
 
     const handleScroll = () => {
-      // 他のセクションと同じスピードで飛散（350pxで完了）
-      const scrollProgress = Math.min(window.scrollY / 350, 1)
+      const rect = containerRef.current?.getBoundingClientRect()
+      if (!rect) return
+
+      // Hero can live at the bottom of the inverted TOP page, so use local scroll.
+      const scrollProgress = Math.min(Math.max(-rect.top, 0) / 350, 1)
       if (Math.abs(scrollProgress - lastScrollProgress) < 0.01) return
       lastScrollProgress = scrollProgress
       setHeroScatterProgress(scrollProgress)

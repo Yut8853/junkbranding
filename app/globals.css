@@ -1171,6 +1171,79 @@
   animation: text-clip-reveal 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
+/* TOP desktop inverted scroll: page starts from the bottom HERO and climbs upward. */
+.home-ascent-page {
+  position: relative;
+}
+
+.home-ascent-page::before {
+  content: '';
+  position: fixed;
+  right: clamp(1rem, 3vw, 2.5rem);
+  top: 18vh;
+  bottom: 18vh;
+  width: 1px;
+  pointer-events: none;
+  background: linear-gradient(
+    to top,
+    transparent,
+    color-mix(in oklch, var(--primary) 45%, transparent),
+    transparent
+  );
+  opacity: 0.28;
+  z-index: 1;
+}
+
+.home-ascent-section {
+  position: relative;
+}
+
+.home-ascent-section::before {
+  content: attr(data-ascent-label);
+  position: absolute;
+  right: clamp(1rem, 3vw, 2.5rem);
+  top: clamp(2rem, 8vw, 6rem);
+  z-index: 2;
+  writing-mode: vertical-rl;
+  font-family: var(--font-display);
+  font-size: clamp(0.75rem, 1.2vw, 1.15rem);
+  letter-spacing: 0.22em;
+  line-height: 1;
+  color: color-mix(in oklch, var(--foreground) 30%, transparent);
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.home-ascent-deferred {
+  position: relative;
+}
+
+.home-inverted-scroll {
+  position: relative;
+}
+
+.home-inverted-scroll__viewport {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.home-inverted-scroll__content {
+  position: relative;
+  will-change: transform;
+}
+
+@media (min-width: 768px) {
+  .home-ascent-page {
+    min-height: 100vh;
+  }
+
+  .home-ascent-deferred {
+    display: block;
+  }
+}
+
 /* Reduce motion */
 @media (prefers-reduced-motion: reduce) {
   *,
@@ -1229,6 +1302,18 @@ html[data-performance-mode='lean'] .cta-secondary {
 html[data-performance-mode='lean'] .noise-overlay::before,
 html[data-performance-mode='lean'] .bottom-heat-haze {
   display: none !important;
+}
+
+html[data-performance-mode='lean'] .home-ascent-page::before,
+html[data-performance-mode='lean'] .home-ascent-section::before {
+  display: none;
+}
+
+html[data-performance-mode='lean'] .home-ascent-section {
+  transform: none;
+  opacity: 1;
+  transition: none;
+  will-change: auto;
 }
 
 /* SP optimization: keep content readable and remove decorative motion. */
@@ -1291,6 +1376,33 @@ html[data-performance-mode='lean'] .bottom-heat-haze {
   .hero-char,
   [style*='will-change'] {
     will-change: auto !important;
+  }
+
+  .home-ascent-page::before,
+  .home-ascent-section::before {
+    display: none !important;
+  }
+
+  .home-ascent-section {
+    transform: none !important;
+    opacity: 1 !important;
+    transition: none !important;
+    will-change: auto !important;
+  }
+
+  .home-inverted-scroll {
+    height: auto !important;
+  }
+
+  .home-inverted-scroll__viewport {
+    position: relative;
+    height: auto;
+    overflow: visible;
+  }
+
+  .home-inverted-scroll__content {
+    transform: none !important;
+    will-change: auto;
   }
 
   .py-56,

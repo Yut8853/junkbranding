@@ -11,7 +11,18 @@ const AUDIO_PREFERENCE_KEY = 'junkbranding-audio-preference'
 const FAST_START_AUDIO_FALLBACK_MS = 180
 const DEFAULT_AUDIO_FALLBACK_MS = 4500
 const FAST_START_COMPLETE_MS = 80
-const DEFAULT_COMPLETE_MS = 900
+const DEFAULT_COMPLETE_MS = 1100
+const DEFAULT_PROGRESS_STEPS = [
+  { value: 8, delay: 120 },
+  { value: 18, delay: 180 },
+  { value: 32, delay: 240 },
+  { value: 48, delay: 260 },
+  { value: 64, delay: 300 },
+  { value: 78, delay: 320 },
+  { value: 90, delay: 340 },
+  { value: 97, delay: 280 },
+  { value: 100, delay: 220 },
+]
 
 const wait = (ms: number) => new Promise<void>((resolve) => window.setTimeout(resolve, ms))
 
@@ -42,7 +53,7 @@ export function LoadingProvider({ children }: LoadingProviderProps) {
     document.documentElement.dataset.performanceMode = fastStart ? 'lean' : 'full'
     const hasSeenLoading = window.sessionStorage.getItem(LOADING_SEEN_KEY) === 'true'
 
-    if (hasSeenLoading) {
+    if (fastStart && hasSeenLoading) {
       setProgress(100)
       setPreloadComplete(true)
       setIsLoading(false)
@@ -91,13 +102,25 @@ export function LoadingProvider({ children }: LoadingProviderProps) {
         return
       }
 
-      setProgress(35)
-      await wait(160)
+      for (const step of DEFAULT_PROGRESS_STEPS) {
+        if (cancelled) return
 
-      if (!cancelled) {
-        setProgress(100)
-        setPreloadComplete(true)
+        setProgress(step.value)
+
+        if (step.value === 48 && document.fonts) {
+          await Promise.race([document.fonts.ready, wait(step.delay)])
+        } else if (step.value === 78) {
+          await new Promise<void>((resolve) => window.requestAnimationFrame(() => resolve()))
+          await wait(step.delay)
+        } else {
+          await wait(step.delay)
+        }
       }
+
+      if (cancelled) return
+
+      setProgress(100)
+      setPreloadComplete(true)
     }
 
     void runPreload()

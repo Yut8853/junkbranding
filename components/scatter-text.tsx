@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useRef, useMemo, useState } from 'react'
 import { clamp01, createScatterValue } from '@/lib/scatter'
-import { subscribeToScrollUpdates } from '@/lib/scroll-manager'
 import { useIsMobile } from '@/hooks/use-mobile'
 import { isSyntheticAudit } from '@/lib/performance-mode'
 import type { ScatterTextProps } from '@/types/component-props'
@@ -17,6 +16,10 @@ const SOFT_GRADIENT_STOPS = [
   [0.9, 'hsl(320, 60%, 72%)'],
   [1, 'hsl(350, 65%, 72%)'],
 ] as const
+
+const SCATTER_VISIBILITY_THRESHOLD = 0.015
+const TEXT_REENTRY_THRESHOLD = 0.12
+const ASSEMBLE_DURATION_MS = 720
 
 type CanvasContextWithLetterSpacing = CanvasRenderingContext2D & {
   letterSpacing?: string
@@ -54,16 +57,20 @@ export function ScatterText({
   const measurementCacheRef = useRef<MeasurementCache | null>(null)
   const isScatteringRef = useRef(false)
   const isVisibleRef = useRef(false)
+  const hasPlayedIntroRef = useRef(false)
+  const assembleFrameRef = useRef<number | null>(null)
   const progressRef = useRef(0)
   const [isVisible, setIsVisible] = useState(false)
   const [hasMounted, setHasMounted] = useState(false)
   const [isScattering, setIsScattering] = useState(false)
   const [isAudit, setIsAudit] = useState(false)
   const [hasActivatedCanvas, setHasActivatedCanvas] = useState(!deferUntilActive)
+  const [scatterRenderProgress, setScatterRenderProgress] = useState(0)
   const isMobile = useIsMobile()
   const canUseScatter = hasMounted && !isMobile && !isAudit
   const shouldPrepareScatter = canUseScatter && hasActivatedCanvas
   const hasControlledProgress = typeof scatterProgress === 'number'
+  const currentProgress = scatterRenderProgress
 
   const chars = useMemo(() => children.split(''), [children])
 
@@ -199,7 +206,7 @@ export function ScatterText({
     ctx.font = font
     ctx.textAlign = 'left'
     ctx.textBaseline = 'top'
-    ctx.globalAlpha = 1 - progress
+    ctx.globalAlpha = 1
     if (ctx.letterSpacing !== undefined) {
       ctx.letterSpacing = computedStyle.letterSpacing
     }
@@ -251,14 +258,15 @@ export function ScatterText({
 
   const applyScatter = useCallback((progress: number) => {
     progressRef.current = progress
+    setScatterRenderProgress(progress)
 
-    if (progress > 0 && deferUntilActive && !hasActivatedCanvas) {
+    if (progress > SCATTER_VISIBILITY_THRESHOLD && deferUntilActive && !hasActivatedCanvas) {
       setHasActivatedCanvas(true)
       setScatterState(true)
       return
     }
 
-    if (progress > 0) {
+    if (progress > SCATTER_VISIBILITY_THRESHOLD) {
       drawScatterCanvas(progress)
       setScatterState(true)
       return
@@ -268,68 +276,90 @@ export function ScatterText({
     setScatterState(false)
   }, [clearCanvas, deferUntilActive, drawScatterCanvas, hasActivatedCanvas, setScatterState])
 
-  // Combined scroll handler for fade-in and scatter
+  const playAssembleIntro = useCallback(() => {
+    if (hasPlayedIntroRef.current) return
+    hasPlayedIntroRef.current = true
+
+    const startedAt = performance.now()
+    setIsVisible(true)
+    isVisibleRef.current = true
+
+    const step = (now: number) => {
+      const elapsed = now - startedAt
+      const progress = clamp01(elapsed / ASSEMBLE_DURATION_MS)
+      const eased = 1 - (1 - progress) ** 3
+      applyScatter(1 - eased)
+
+      if (progress < 1) {
+        assembleFrameRef.current = requestAnimationFrame(step)
+        return
+      }
+
+      assembleFrameRef.current = null
+      applyScatter(0)
+    }
+
+    applyScatter(1)
+    assembleFrameRef.current = requestAnimationFrame(step)
+  }, [applyScatter])
+
+  // Controlled scatter is used by TOP/Menu. Normal page text only assembles once.
   useEffect(() => {
     if (!containerRef.current) return
 
-    if (isMobile) {
+    if (isMobile || isAudit) {
       isVisibleRef.current = true
       setIsVisible(true)
       return
     }
 
-    if (!canUseScatter) return
-
     if (hasControlledProgress) {
+      if (!canUseScatter) {
+        isVisibleRef.current = true
+        setIsVisible(true)
+        return
+      }
+
       isVisibleRef.current = true
       setIsVisible(true)
       const progress = clamp01(scatterProgress ?? 0)
-      if (progress === 0 && deferUntilActive && !hasActivatedCanvas) return
+      if (progress <= SCATTER_VISIBILITY_THRESHOLD && deferUntilActive && !hasActivatedCanvas) return
       applyScatter(progress)
       return
     }
 
     const container = containerRef.current
-    let hasScrolledPast = false
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry?.isIntersecting || hasPlayedIntroRef.current) return
 
-    return subscribeToScrollUpdates(container, ({ rect, viewportHeight, scrollY }) => {
-      // Fade-in: trigger when bottom of element is 50px above viewport bottom
-      const fadeInTrigger = viewportHeight - scrollStart
-      if (rect.top < fadeInTrigger && !isVisibleRef.current) {
+        if (canUseScatter) {
+          playAssembleIntro()
+          return
+        }
+
         isVisibleRef.current = true
         setIsVisible(true)
+        hasPlayedIntroRef.current = true
+      },
+      {
+        threshold: 0.12,
+        rootMargin: `0px 0px -${scrollStart}px 0px`,
       }
+    )
 
-      // Only start scattering after user has scrolled at least 100px
-      if (scrollY < 100) {
-        if (progressRef.current !== 0) {
-          progressRef.current = 0
-          applyScatter(0)
-        }
-        return
+    observer.observe(container)
+
+    return () => observer.disconnect()
+  }, [applyScatter, canUseScatter, deferUntilActive, hasActivatedCanvas, hasControlledProgress, isAudit, isMobile, playAssembleIntro, scatterProgress, scrollStart])
+
+  useEffect(() => {
+    return () => {
+      if (assembleFrameRef.current !== null) {
+        cancelAnimationFrame(assembleFrameRef.current)
       }
-
-      // Scatter: trigger when element is above 30% of viewport (scrolled up past trigger)
-      const scatterTriggerPoint = viewportHeight * 0.30
-      const elementCenter = rect.top + rect.height / 2
-
-      if (elementCenter < scatterTriggerPoint) {
-        hasScrolledPast = true
-        const distancePastTrigger = scatterTriggerPoint - elementCenter
-        const progress = clamp01(distancePastTrigger / scrollEnd)
-        if (Math.abs(progress - progressRef.current) > 0.01 || progress === 0 || progress === 1) {
-          progressRef.current = progress
-          applyScatter(progress)
-        }
-      } else if (hasScrolledPast) {
-        // Only reset if we've scrolled past before (prevent initial state scatter)
-        if (progressRef.current !== 0) {
-          progressRef.current = 0
-          applyScatter(0)
-        }
-      }
-    })
-  }, [applyScatter, canUseScatter, deferUntilActive, hasActivatedCanvas, hasControlledProgress, isMobile, scatterProgress, scrollEnd, scrollStart])
+    }
+  }, [])
 
   useEffect(() => {
     const clearMeasurements = () => {
@@ -342,12 +372,24 @@ export function ScatterText({
 
   const delay = Math.min(children.length * 0.008, 0.35)
   const shouldShowText = !hasMounted || isMobile || isVisible
+  const textOpacity = isScattering
+    ? currentProgress < TEXT_REENTRY_THRESHOLD
+      ? 1 - currentProgress / TEXT_REENTRY_THRESHOLD
+      : 0
+    : shouldShowText ? 1 : 0
+  const canvasOpacity = isScattering
+    ? currentProgress < TEXT_REENTRY_THRESHOLD
+      ? currentProgress / TEXT_REENTRY_THRESHOLD
+      : 1
+    : 0
   const textStyle = {
-    opacity: isScattering ? 0 : shouldShowText ? 1 : 0,
+    opacity: textOpacity,
     transform: shouldShowText ? 'translate3d(0,0,0)' : 'translate3d(0,28px,0)',
-    transition: !hasMounted || isMobile || isScattering
+    transition: !hasMounted || isMobile
       ? 'none'
-      : `opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1) ${delay}s, transform 0.55s cubic-bezier(0.16, 1, 0.3, 1) ${delay}s`,
+      : isScattering
+        ? 'opacity 0.12s linear'
+        : `opacity 0.42s cubic-bezier(0.16, 1, 0.3, 1) ${delay}s, transform 0.42s cubic-bezier(0.16, 1, 0.3, 1) ${delay}s`,
   }
 
   return (
@@ -374,7 +416,8 @@ export function ScatterText({
           className="pointer-events-none absolute left-0 top-0"
           style={{
             display: isScattering ? 'block' : 'none',
-            opacity: isScattering ? 1 : 0,
+            opacity: canvasOpacity,
+            transition: 'opacity 0.12s linear',
           }}
         />
       )}

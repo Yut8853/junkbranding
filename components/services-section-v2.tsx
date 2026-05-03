@@ -80,17 +80,25 @@ export function ServicesSectionV2() {
 
   // GSAP animations
   useEffect(() => {
-    if (isMobile) {
+    if (!sectionRef.current) return
+
+    const isInvertedHome = sectionRef.current.closest('.home-ascent-page--inverted') !== null
+
+    if (isMobile || isInvertedHome) {
       setCountedNumbers(services.map((service) => service.num))
+      if (headerRef.current) {
+        gsap.set(headerRef.current, { clearProps: 'all' })
+      }
+      itemsRef.current.forEach((item) => {
+        if (item) gsap.set(item, { clearProps: 'all' })
+      })
       return
     }
-
-    if (!sectionRef.current) return
 
     const ctx = gsap.context(() => {
       // Header reveal
       gsap.from(headerRef.current, {
-        y: 60,
+        y: 48,
         opacity: 0,
         duration: 0.8,
         ease: 'power3.out',
@@ -105,7 +113,7 @@ export function ServicesSectionV2() {
         if (!item) return
 
         gsap.from(item, {
-          y: 40,
+          y: 48,
           opacity: 0,
           duration: 0.8,
           ease: 'power3.out',

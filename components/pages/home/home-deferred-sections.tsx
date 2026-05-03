@@ -1,25 +1,19 @@
 'use client'
 
-import dynamic from 'next/dynamic'
 import { Footer } from '@/components/footer'
 import { ScatterBlock } from '@/components/scatter-block'
 import { ScatterText } from '@/components/scatter-text'
+import { HomeAscentSection } from '@/components/pages/home/home-ascent-section'
+import { ServicesSectionV2 } from '@/components/services-section-v2'
+import { CTASectionV2 } from '@/components/cta-section-v2'
 import type {
   HomeAreaSectionProps,
   HomeWorksPreviewSectionProps,
 } from '@/types/home-page'
 
-const ServicesSectionV2 = dynamic(
-  () => import('@/components/services-section-v2').then((mod) => mod.ServicesSectionV2),
-  { ssr: false }
-)
-
-const CTASectionV2 = dynamic(
-  () => import('@/components/cta-section-v2').then((mod) => mod.CTASectionV2),
-  { ssr: false }
-)
-
-type HomeDeferredSectionsProps = HomeWorksPreviewSectionProps & HomeAreaSectionProps
+type HomeDeferredSectionsProps = HomeWorksPreviewSectionProps & HomeAreaSectionProps & {
+  inverted?: boolean
+}
 
 function HomeWorksPreviewSection({
   worksPreview,
@@ -144,14 +138,47 @@ function HomeAreaSection({ area }: HomeAreaSectionProps) {
 export function HomeDeferredSections({
   worksPreview,
   area,
+  inverted = false,
 }: HomeDeferredSectionsProps) {
+  if (inverted) {
+    return (
+      <>
+        <HomeAscentSection label="FOOTER">
+          <Footer />
+        </HomeAscentSection>
+        <HomeAscentSection label="CONTACT">
+          <CTASectionV2 />
+        </HomeAscentSection>
+        <HomeAscentSection label="AREA">
+          <HomeAreaSection area={area} />
+        </HomeAscentSection>
+        <HomeAscentSection label="WORKS">
+          <HomeWorksPreviewSection worksPreview={worksPreview} />
+        </HomeAscentSection>
+        <HomeAscentSection label="SERVICES">
+          <ServicesSectionV2 />
+        </HomeAscentSection>
+      </>
+    )
+  }
+
   return (
     <>
-      <ServicesSectionV2 />
-      <HomeWorksPreviewSection worksPreview={worksPreview} />
-      <HomeAreaSection area={area} />
-      <CTASectionV2 />
-      <Footer />
+      <HomeAscentSection label="SERVICES">
+        <ServicesSectionV2 />
+      </HomeAscentSection>
+      <HomeAscentSection label="WORKS">
+        <HomeWorksPreviewSection worksPreview={worksPreview} />
+      </HomeAscentSection>
+      <HomeAscentSection label="AREA">
+        <HomeAreaSection area={area} />
+      </HomeAscentSection>
+      <HomeAscentSection label="CONTACT">
+        <CTASectionV2 />
+      </HomeAscentSection>
+      <HomeAscentSection label="FOOTER">
+        <Footer />
+      </HomeAscentSection>
     </>
   )
 }

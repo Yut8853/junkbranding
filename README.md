@@ -443,7 +443,9 @@ RESEND_API_KEY=your_resend_api_key
 - `components/loading-provider.tsx` では初回ロード中のページprefetch、動画/GTM preconnect、複数段階progress更新をやめ、SP/監査では即時にpreload完了へ寄せた。
 - `components/scatter-text.tsx` では、監査環境のCanvas散布を止め、通常PCでも `deferUntilActive` によりスクロールやメニュー操作が始まるまでCanvas生成、文字計測、描画を遅延するようにした。
 - `app/globals.css` とNavigation系では、SP/監査用の `data-performance-mode="lean"` で虹色/gradient/blur/backdrop-filterなどの非合成アニメーションを初期表示から外すようにした。
-- TOPの下層セクションは `components/pages/home/home-deferred-sections.tsx` に分け、`Services`、`Works preview`、`Area`、`CTA`、`Footer` をviewport接近後に読み込むようにした。
+- TOPのSP表示では下層セクションを `components/pages/home/home-deferred-sections.tsx` に分け、`Services`、`Works preview`、`Area`、`CTA`、`Footer` をviewport接近後に読み込む。
+- TOPのPC表示はCSS orderではなく、実際のレンダー順を `Footer`、`Contact`、`Area`、`Works`、`Services`、`About`、`Marquee`、`Hero` に分ける。スクロールバーは上から始め、仮想スクロールステージで最初にHeroが見えるようにする。
+- PCでは通常の下スクロール操作のまま、仮想ステージ内の見え方だけを `Hero` から上方向のセクションへ進める。SPでは通常の `Hero`、`Marquee`、`About`、`Services`、`Works`、`Area`、`Contact`、`Footer` の縦スクロールに戻す。
 - 実ユーザーデータのLCP 4.3秒前後は過去28日集計なので、デプロイ後しばらくしてから改善が反映される見込み。
 
 反省点:
