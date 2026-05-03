@@ -3,7 +3,7 @@
 import { createContext, useContext, useState, useRef, useEffect, useCallback, type ReactNode } from 'react'
 
 const BACKGROUND_AUDIO_SRC = '/audio/128_BPM124.mp3'
-const MAX_VOLUME = 0.15
+const MAX_VOLUME = 0.8
 const FADE_DURATION_MS = 1200
 
 class BackgroundAudioPlayer {
