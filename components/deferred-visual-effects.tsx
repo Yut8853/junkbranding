@@ -2,6 +2,7 @@
 
 import dynamic from 'next/dynamic'
 import { useEffect, useState } from 'react'
+import { isSmallScreen, isSyntheticAudit, scheduleIdleTask } from '@/lib/performance-mode'
 
 const CustomCursor = dynamic(
   () => import('@/components/custom-cursor').then((mod) => mod.CustomCursor),
@@ -20,18 +21,15 @@ export function DeferredVisualEffects() {
   const [shouldRenderEffects, setShouldRenderEffects] = useState(false)
 
   useEffect(() => {
-    const userAgent = navigator.userAgent.toLowerCase()
-    const isSyntheticAudit = userAgent.includes('lighthouse') || userAgent.includes('pagespeed')
-
-    if (isSyntheticAudit || window.matchMedia('(max-width: 767px)').matches) {
+    if (isSyntheticAudit() || isSmallScreen()) {
       return
     }
 
-    const timeoutId = window.setTimeout(() => {
+    const idleTask = scheduleIdleTask(() => {
       setShouldRenderEffects(true)
-    }, 1200)
+    }, 3500, 2200)
 
-    return () => window.clearTimeout(timeoutId)
+    return () => idleTask.cancel()
   }, [])
 
   if (!shouldRenderEffects) {

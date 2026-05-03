@@ -12,6 +12,7 @@ export function NavigationMenuOverlay({
   assembleProgress,
   closeMenu,
   hoveredItem,
+  isLeanMotion = false,
   isMobile,
   isOpen,
   pathname,
@@ -22,6 +23,8 @@ export function NavigationMenuOverlay({
 
   // Generate scatter positions for background panels
   const bgPanelScatter = useMemo(() => {
+    if (isLeanMotion) return []
+
     return Array.from({ length: 12 }, (_, i) => {
       const seed = i * 17 + 31
       return {
@@ -37,7 +40,7 @@ export function NavigationMenuOverlay({
         delay: seededRandom(seed + 7) * 0.3,
       }
     })
-  }, [])
+  }, [isLeanMotion])
 
   return (
     <div
@@ -54,7 +57,7 @@ export function NavigationMenuOverlay({
     >
       {/* Background fragments that assemble from scattered positions */}
       <div className="absolute inset-0 hidden overflow-visible pointer-events-none md:block">
-        {bgPanelScatter.map((panel, i) => {
+        {!isLeanMotion && bgPanelScatter.map((panel, i) => {
           const adjustedProgress = clamp01((assembleProgress - panel.delay) / (1 - panel.delay))
           const inverseProgress = 1 - adjustedProgress
           const panelScale = panel.scale ?? 1
@@ -91,7 +94,7 @@ export function NavigationMenuOverlay({
 
       {/* Floating particles that also assemble */}
       <div className="absolute inset-0 hidden overflow-visible pointer-events-none md:block">
-        {[...Array(40)].map((_, i) => {
+        {!isLeanMotion && [...Array(40)].map((_, i) => {
           const seed = i * 23 + 7
           const scatterX = (seededRandom(seed) - 0.5) * 2000
           const scatterY = (seededRandom(seed + 1) - 0.5) * 2000
@@ -188,8 +191,9 @@ export function NavigationMenuOverlay({
                       as="span"
                       className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-display uppercase tracking-tight"
                       distance={520}
-                      scatterProgress={isMobile ? 0 : 1 - assembleProgress}
+                      scatterProgress={isMobile || !isOpen ? 0 : 1 - assembleProgress}
                       ariaHidden
+                      deferUntilActive
                       style={{
                         transform: isMobile
                           ? 'none'
@@ -199,7 +203,7 @@ export function NavigationMenuOverlay({
                           ? rainbowColors[itemIndex % rainbowColors.length]
                           : 'white',
                         transition: isMobile ? 'none' : 'color 0.3s ease',
-                        filter: isMobile ? 'none' : `blur(${(1 - assembleProgress) * 8}px)`,
+                        filter: isMobile || isLeanMotion ? 'none' : `blur(${(1 - assembleProgress) * 8}px)`,
                       }}
                     >
                       {item.label}

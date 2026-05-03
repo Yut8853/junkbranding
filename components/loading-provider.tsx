@@ -2,61 +2,18 @@
 
 import { createContext, useContext, useState, useEffect, useLayoutEffect } from 'react'
 import { useAudio } from '@/contexts/audio-context'
-import { useTransition } from '@/contexts/transition-context'
 import { LoadingScreen } from './loading-screen'
+import { scheduleIdleTask, shouldUseFastStart } from '@/lib/performance-mode'
 import type { LoadingContextType, LoadingProviderProps } from '@/types/component-props'
 
 const LOADING_SEEN_KEY = 'junkbranding-loading-seen-session-v2'
 const AUDIO_PREFERENCE_KEY = 'junkbranding-audio-preference'
-const HOME_VIDEO_SRC = 'https://videos.pexels.com/video-files/3209211/3209211-uhd_2560_1440_25fps.mp4'
-const PRELOAD_ROUTES = ['/', '/about', '/works', '/pricing', '/contact', '/privacy']
-const FAST_START_AUDIO_FALLBACK_MS = 650
+const FAST_START_AUDIO_FALLBACK_MS = 180
 const DEFAULT_AUDIO_FALLBACK_MS = 4500
-const FAST_START_COMPLETE_MS = 180
+const FAST_START_COMPLETE_MS = 80
 const DEFAULT_COMPLETE_MS = 900
 
 const wait = (ms: number) => new Promise<void>((resolve) => window.setTimeout(resolve, ms))
-
-const addResourceHint = (rel: 'preconnect' | 'preload', href: string, options?: {
-  as?: string
-  type?: string
-  crossOrigin?: string
-}) => {
-  const selector = `link[rel="${rel}"][href="${href}"]`
-  if (document.head.querySelector(selector)) return
-
-  const link = document.createElement('link')
-  link.rel = rel
-  link.href = href
-  if (options?.as) link.as = options.as
-  if (options?.type) link.type = options.type
-  if (options?.crossOrigin) link.crossOrigin = options.crossOrigin
-  document.head.appendChild(link)
-}
-
-const scheduleIdleWarmup = (task: () => void) => {
-  const win = window as Window & {
-    requestIdleCallback?: (callback: IdleRequestCallback, options?: IdleRequestOptions) => number
-    cancelIdleCallback?: (handle: number) => void
-  }
-
-  if (win.requestIdleCallback && win.cancelIdleCallback) {
-    const idleId = win.requestIdleCallback(task, { timeout: 3000 })
-    return () => win.cancelIdleCallback?.(idleId)
-  }
-
-  const timeoutId = window.setTimeout(task, 1800)
-  return () => window.clearTimeout(timeoutId)
-}
-
-const shouldUseFastStart = () => {
-  const userAgent = navigator.userAgent.toLowerCase()
-  return (
-    window.matchMedia('(max-width: 767px)').matches ||
-    userAgent.includes('lighthouse') ||
-    userAgent.includes('pagespeed')
-  )
-}
 
 const LoadingContext = createContext<LoadingContextType | undefined>(undefined)
 
@@ -70,7 +27,6 @@ export function useLoading() {
 
 export function LoadingProvider({ children }: LoadingProviderProps) {
   const { startSound, stopSound } = useAudio()
-  const { prefetchRoute } = useTransition()
   const [hasCheckedLoadingState, setHasCheckedLoadingState] = useState(true)
   const [isLoading, setIsLoading] = useState(true)
   const [progress, setProgress] = useState(0)
@@ -81,7 +37,9 @@ export function LoadingProvider({ children }: LoadingProviderProps) {
   const [isFastStart, setIsFastStart] = useState(false)
 
   useEffect(() => {
-    setIsFastStart(shouldUseFastStart())
+    const fastStart = shouldUseFastStart()
+    setIsFastStart(fastStart)
+    document.documentElement.dataset.performanceMode = fastStart ? 'lean' : 'full'
     const hasSeenLoading = window.sessionStorage.getItem(LOADING_SEEN_KEY) === 'true'
 
     if (hasSeenLoading) {
@@ -126,31 +84,15 @@ export function LoadingProvider({ children }: LoadingProviderProps) {
 
     let cancelled = false
 
-    const criticalPreloadTasks = [
-      async () => {
-        PRELOAD_ROUTES.slice(1, 4).forEach(prefetchRoute)
-        await wait(120)
-      },
-      async () => {
-        addResourceHint('preconnect', 'https://www.googletagmanager.com', { crossOrigin: 'anonymous' })
-        addResourceHint('preconnect', new URL(HOME_VIDEO_SRC).origin, { crossOrigin: 'anonymous' })
-        await wait(80)
-      },
-      () => wait(220),
-    ]
-
     const runPreload = async () => {
-      setProgress(8)
-
-      for (let i = 0; i < criticalPreloadTasks.length; i += 1) {
-        if (cancelled) return
-
-        await criticalPreloadTasks[i]()
-
-        if (cancelled) return
-        const nextProgress = Math.round(((i + 1) / criticalPreloadTasks.length) * 100)
-        setProgress(Math.min(100, Math.max(8, nextProgress)))
+      if (isFastStart || shouldUseFastStart()) {
+        setProgress(100)
+        setPreloadComplete(true)
+        return
       }
+
+      setProgress(35)
+      await wait(160)
 
       if (!cancelled) {
         setProgress(100)
@@ -163,21 +105,21 @@ export function LoadingProvider({ children }: LoadingProviderProps) {
     return () => {
       cancelled = true
     }
-  }, [isFirstLoad, prefetchRoute])
+  }, [isFastStart, isFirstLoad])
 
   useEffect(() => {
     if (isLoading || isFirstLoad) return
     if (isFastStart) return
 
-    return scheduleIdleWarmup(() => {
+    const idleTask = scheduleIdleTask(() => {
       void Promise.allSettled([
         import('@/components/text-reveal'),
         import('@/components/scatter-text'),
         import('@/components/scatter-block'),
-        import('@/components/services-section-v2'),
-        import('@/components/cta-section-v2'),
       ])
-    })
+    }, 4500, 2600)
+
+    return () => idleTask.cancel()
   }, [isFastStart, isFirstLoad, isLoading])
 
   useEffect(() => {

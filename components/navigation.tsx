@@ -7,17 +7,20 @@ import { navItems } from '@/components/navigation/nav-config'
 import { useMenuAssembleAnimation } from '@/components/navigation/use-menu-assemble-animation'
 import { useTransition } from '@/contexts/transition-context'
 import { useIsMobile } from '@/hooks/use-mobile'
+import { shouldUseFastStart } from '@/lib/performance-mode'
 
 export function Navigation() {
   const pathname = usePathname()
   const [hasMounted, setHasMounted] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
   const [hoveredItem, setHoveredItem] = useState<string | null>(null)
+  const [isLeanMotion, setIsLeanMotion] = useState(false)
   const { prefetchRoute } = useTransition()
   const isMobile = useIsMobile()
 
   useEffect(() => {
     setHasMounted(true)
+    setIsLeanMotion(shouldUseFastStart())
   }, [])
 
   const prefetchMenuRoutes = useCallback(() => {
@@ -94,7 +97,7 @@ export function Navigation() {
             backgroundOrigin: 'border-box',
             backgroundClip: 'padding-box, border-box',
             backgroundSize: '100% 100%, 300% 100%',
-            animation: isMobile ? 'none' : 'rainbow-flow 4s linear infinite',
+            animation: isMobile || isLeanMotion ? 'none' : 'rainbow-flow 4s linear infinite',
           }}
         />
         
@@ -141,6 +144,7 @@ export function Navigation() {
           closeMenu={closeMenu}
           hoveredItem={hoveredItem}
           isMobile={isMobile}
+          isLeanMotion={isLeanMotion}
           isOpen={isOpen}
           pathname={pathname}
           setHoveredItem={setHoveredItem}

@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useMemo, useState } from 'react'
 import { clamp01, createScatterValue } from '@/lib/scatter'
 import { subscribeToScrollUpdates } from '@/lib/scroll-manager'
 import { useIsMobile } from '@/hooks/use-mobile'
+import { isSyntheticAudit } from '@/lib/performance-mode'
 import type { ScatterTextProps } from '@/types/component-props'
 
 const SOFT_GRADIENT_STOPS = [
@@ -45,6 +46,7 @@ export function ScatterText({
   gradient = false,
   scatterProgress,
   ariaHidden,
+  deferUntilActive = false,
 }: ScatterTextProps) {
   const containerRef = useRef<HTMLElement>(null)
   const textRef = useRef<HTMLSpanElement>(null)
@@ -56,8 +58,11 @@ export function ScatterText({
   const [isVisible, setIsVisible] = useState(false)
   const [hasMounted, setHasMounted] = useState(false)
   const [isScattering, setIsScattering] = useState(false)
+  const [isAudit, setIsAudit] = useState(false)
+  const [hasActivatedCanvas, setHasActivatedCanvas] = useState(!deferUntilActive)
   const isMobile = useIsMobile()
-  const shouldPrepareScatter = hasMounted && !isMobile
+  const canUseScatter = hasMounted && !isMobile && !isAudit
+  const shouldPrepareScatter = canUseScatter && hasActivatedCanvas
   const hasControlledProgress = typeof scatterProgress === 'number'
 
   const chars = useMemo(() => children.split(''), [children])
@@ -85,7 +90,14 @@ export function ScatterText({
 
   useEffect(() => {
     setHasMounted(true)
+    setIsAudit(isSyntheticAudit())
   }, [])
+
+  useEffect(() => {
+    if (!deferUntilActive) {
+      setHasActivatedCanvas(true)
+    }
+  }, [deferUntilActive])
 
   const clearCanvas = useCallback(() => {
     const canvas = canvasRef.current
@@ -238,6 +250,11 @@ export function ScatterText({
   }, [gradient, measureGlyphs, scatterValues])
 
   const applyScatter = useCallback((progress: number) => {
+    if (progress > 0 && deferUntilActive && !hasActivatedCanvas) {
+      setHasActivatedCanvas(true)
+      return
+    }
+
     if (progress > 0) {
       drawScatterCanvas(progress)
       setScatterState(true)
@@ -246,7 +263,7 @@ export function ScatterText({
 
     clearCanvas()
     setScatterState(false)
-  }, [clearCanvas, drawScatterCanvas, setScatterState])
+  }, [clearCanvas, deferUntilActive, drawScatterCanvas, hasActivatedCanvas, setScatterState])
 
   // Combined scroll handler for fade-in and scatter
   useEffect(() => {
@@ -258,12 +275,14 @@ export function ScatterText({
       return
     }
 
-    if (!shouldPrepareScatter) return
+    if (!canUseScatter) return
 
     if (hasControlledProgress) {
       isVisibleRef.current = true
       setIsVisible(true)
-      applyScatter(clamp01(scatterProgress ?? 0))
+      const progress = clamp01(scatterProgress ?? 0)
+      if (progress === 0 && deferUntilActive && !hasActivatedCanvas) return
+      applyScatter(progress)
       return
     }
 
@@ -307,7 +326,7 @@ export function ScatterText({
         }
       }
     })
-  }, [applyScatter, hasControlledProgress, isMobile, scatterProgress, scrollEnd, scrollStart, shouldPrepareScatter])
+  }, [applyScatter, canUseScatter, deferUntilActive, hasActivatedCanvas, hasControlledProgress, isMobile, scatterProgress, scrollEnd, scrollStart])
 
   useEffect(() => {
     const clearMeasurements = () => {

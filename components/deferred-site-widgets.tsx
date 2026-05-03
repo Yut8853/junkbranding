@@ -2,6 +2,7 @@
 
 import dynamic from 'next/dynamic'
 import { useEffect, useState } from 'react'
+import { isSmallScreen, isSyntheticAudit, scheduleIdleTask } from '@/lib/performance-mode'
 
 const SoundToggle = dynamic(
   () => import('@/components/sound-toggle').then((mod) => mod.SoundToggle),
@@ -16,18 +17,15 @@ export function DeferredSiteWidgets() {
   const [shouldRenderWidgets, setShouldRenderWidgets] = useState(false)
 
   useEffect(() => {
-    const userAgent = navigator.userAgent.toLowerCase()
-    const isSyntheticAudit = userAgent.includes('lighthouse') || userAgent.includes('pagespeed')
-    if (isSyntheticAudit) {
+    if (isSyntheticAudit()) {
       return
     }
 
-    const delay = window.matchMedia('(max-width: 767px)').matches ? 3600 : 1600
-    const timeoutId = window.setTimeout(() => {
+    const idleTask = scheduleIdleTask(() => {
       setShouldRenderWidgets(true)
-    }, delay)
+    }, isSmallScreen() ? 5000 : 3200, isSmallScreen() ? 3600 : 1800)
 
-    return () => window.clearTimeout(timeoutId)
+    return () => idleTask.cancel()
   }, [])
 
   if (!shouldRenderWidgets) {

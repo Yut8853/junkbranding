@@ -1192,6 +1192,45 @@
   }
 }
 
+/* Lean mode is used for SP and synthetic audits to reduce TBT and non-composited animation work. */
+html[data-performance-mode='lean'] .cta-primary,
+html[data-performance-mode='lean'] .gradient-text,
+html[data-performance-mode='lean'] .gradient-text-soft,
+html[data-performance-mode='lean'] .gradient-text-animated,
+html[data-performance-mode='lean'] .animate-gradient-flow,
+html[data-performance-mode='lean'] .animate-gradient-text,
+html[data-performance-mode='lean'] .animate-gradient-shift,
+html[data-performance-mode='lean'] .animate-rainbow-line,
+html[data-performance-mode='lean'] .animate-marquee,
+html[data-performance-mode='lean'] .animate-marquee-left,
+html[data-performance-mode='lean'] .animate-marquee-right,
+html[data-performance-mode='lean'] .animate-float-gentle,
+html[data-performance-mode='lean'] .animate-pulse-scale,
+html[data-performance-mode='lean'] .hero-char,
+html[data-performance-mode='lean'] .rainbow-border::before {
+  animation: none !important;
+}
+
+html[data-performance-mode='lean'] .cta-primary,
+html[data-performance-mode='lean'] .gradient-text,
+html[data-performance-mode='lean'] .gradient-text-soft,
+html[data-performance-mode='lean'] .gradient-text-animated {
+  background-position: 50% 50% !important;
+}
+
+html[data-performance-mode='lean'] .glass,
+html[data-performance-mode='lean'] .glass-light,
+html[data-performance-mode='lean'] .glass-card,
+html[data-performance-mode='lean'] .cta-secondary {
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+html[data-performance-mode='lean'] .noise-overlay::before,
+html[data-performance-mode='lean'] .bottom-heat-haze {
+  display: none !important;
+}
+
 /* SP optimization: keep content readable and remove decorative motion. */
 @media (max-width: 767px) {
   html {

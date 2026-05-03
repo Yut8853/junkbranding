@@ -75,11 +75,12 @@ export function MarqueeSectionV2() {
           className="font-display text-4xl md:text-6xl lg:text-7xl xl:text-8xl tracking-wide"
           distance={520}
           scatterProgress={scatterProgress}
+          deferUntilActive
           style={{
             WebkitTextStroke: hoveredItem === text ? '0px' : '1.5px var(--foreground)',
             WebkitTextFillColor: hoveredItem === text ? 'var(--foreground)' : 'transparent',
             transform: !isMobile && hoveredItem === text ? 'scale(1.1) translateY(-4px)' : 'scale(1)',
-            transition: isMobile ? 'none' : 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+            transition: isMobile ? 'none' : 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), -webkit-text-stroke-width 0.4s cubic-bezier(0.16, 1, 0.3, 1), -webkit-text-fill-color 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
           }}
         >
           {text}

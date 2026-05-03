@@ -38,6 +38,7 @@ export type NavigationMenuOverlayProps = {
   assembleProgress: number
   closeMenu: () => void
   hoveredItem: string | null
+  isLeanMotion?: boolean
   isMobile: boolean
   isOpen: boolean
   pathname: string
@@ -55,6 +56,7 @@ export type ScatterTextProps = {
   gradient?: boolean
   scatterProgress?: number
   ariaHidden?: boolean
+  deferUntilActive?: boolean
 }
 
 export type ScatterBlockProps = {

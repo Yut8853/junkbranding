@@ -144,6 +144,7 @@ export function HeroSectionV2() {
               distance={900}
               gradient
               scatterProgress={heroScatterProgress}
+              deferUntilActive
             >
               {line1}
             </ScatterText>
@@ -157,6 +158,7 @@ export function HeroSectionV2() {
               distance={900}
               gradient
               scatterProgress={heroScatterProgress}
+              deferUntilActive
             >
               {line2}
             </ScatterText>
@@ -170,6 +172,7 @@ export function HeroSectionV2() {
               distance={650}
               gradient
               scatterProgress={heroScatterProgress}
+              deferUntilActive
             >
               {line3}
             </ScatterText>
@@ -183,7 +186,7 @@ export function HeroSectionV2() {
           style={{
             opacity: isLoaded ? 1 : 0,
             transform: isLoaded ? 'translateY(0)' : 'translateY(30px)',
-            transition: isMobile ? 'none' : 'all 1s cubic-bezier(0.77, 0, 0.175, 1) 1s',
+            transition: isMobile ? 'none' : 'opacity 1s cubic-bezier(0.77, 0, 0.175, 1) 1s, transform 1s cubic-bezier(0.77, 0, 0.175, 1) 1s',
           }}
         >
           {/* Left - Location */}
@@ -219,7 +222,7 @@ export function HeroSectionV2() {
             textOrientation: 'mixed',
             opacity: isLoaded ? 1 : 0,
             transform: isLoaded ? 'translateY(-50%)' : 'translateY(-50%) translateX(-20px)',
-            transition: isMobile ? 'none' : 'all 1s cubic-bezier(0.77, 0, 0.175, 1) 1.2s',
+            transition: isMobile ? 'none' : 'opacity 1s cubic-bezier(0.77, 0, 0.175, 1) 1.2s, transform 1s cubic-bezier(0.77, 0, 0.175, 1) 1.2s',
           }}
         >
           <ScatterText
