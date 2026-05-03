@@ -9,6 +9,7 @@ import { CustomCursor } from '@/components/custom-cursor';
 import { SmoothScroll } from '@/components/smooth-scroll';
 import { FloatingParticles } from '@/components/floating-particles';
 import { CookieConsent } from '@/components/cookie-consent';
+import { LoadingProvider } from '@/components/loading-provider';
 import { SoundToggle } from '@/components/sound-toggle';
 import { AudioProvider } from '@/contexts/audio-context';
 import { TransitionProvider } from '@/contexts/transition-context';
@@ -176,17 +177,19 @@ export default function RootLayout({
       <body className="font-sans antialiased bg-transparent text-foreground overflow-x-hidden">
         <TransitionProvider>
           <AudioProvider>
-            <FloatingParticles />
+            <CustomCursor />
+            <LoadingProvider>
+              <FloatingParticles />
 
-            <SmoothScroll>
-              <CustomCursor />
-              <Navigation />
-              <PageTransition>
-                <main className="noise-overlay relative">{children}</main>
-              </PageTransition>
-            </SmoothScroll>
-            <SoundToggle />
-            <CookieConsent />
+              <SmoothScroll>
+                <Navigation />
+                <PageTransition>
+                  <main className="noise-overlay relative">{children}</main>
+                </PageTransition>
+              </SmoothScroll>
+              <SoundToggle />
+              <CookieConsent />
+            </LoadingProvider>
           </AudioProvider>
         </TransitionProvider>
         {process.env.NODE_ENV === 'production' && <Analytics />}

@@ -1,7 +1,10 @@
 'use client'
 
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
+import { createContext, useContext, useState, useEffect, type ReactNode } from 'react'
+import { useAudio } from '@/contexts/audio-context'
 import { LoadingScreen } from './loading-screen'
+
+const LOADING_SEEN_KEY = 'junkbranding-loading-seen'
 
 interface LoadingContextType {
   isLoading: boolean
@@ -25,9 +28,27 @@ interface LoadingProviderProps {
 }
 
 export function LoadingProvider({ children }: LoadingProviderProps) {
-  const [isLoading, setIsLoading] = useState(true)
+  const { startSound, stopSound } = useAudio()
+  const [hasCheckedLoadingState, setHasCheckedLoadingState] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
   const [progress, setProgress] = useState(0)
-  const [isFirstLoad, setIsFirstLoad] = useState(true)
+  const [isFirstLoad, setIsFirstLoad] = useState(false)
+  const [audioChoice, setAudioChoice] = useState<'sound-on' | 'sound-off' | null>(null)
+
+  useEffect(() => {
+    const hasSeenLoading = window.localStorage.getItem(LOADING_SEEN_KEY) === 'true'
+
+    if (hasSeenLoading) {
+      setProgress(100)
+      setIsLoading(false)
+      setIsFirstLoad(false)
+    } else {
+      setIsLoading(true)
+      setIsFirstLoad(true)
+    }
+
+    setHasCheckedLoadingState(true)
+  }, [])
 
   // ローディング中はスクロールを無効化
   useEffect(() => {
@@ -46,7 +67,6 @@ export function LoadingProvider({ children }: LoadingProviderProps) {
 
   useEffect(() => {
     if (isFirstLoad) {
-      // Simulate loading progress
       const intervals = [
         { delay: 100, progress: 15 },
         { delay: 300, progress: 35 },
@@ -56,26 +76,53 @@ export function LoadingProvider({ children }: LoadingProviderProps) {
         { delay: 1500, progress: 100 },
       ]
 
-      intervals.forEach(({ delay, progress }) => {
+      const timers = intervals.map(({ delay, progress }) =>
         setTimeout(() => setProgress(progress), delay)
-      })
+      )
 
-      // Complete loading after animation
-      const completeTimeout = setTimeout(() => {
-        setIsLoading(false)
-        setIsFirstLoad(false)
-      }, 2200)
-
-      return () => clearTimeout(completeTimeout)
+      return () => {
+        timers.forEach(clearTimeout)
+      }
     }
   }, [isFirstLoad])
 
+  useEffect(() => {
+    if (!isFirstLoad || progress < 100 || !audioChoice) return
+
+    const completeTimeout = setTimeout(() => {
+      window.localStorage.setItem(LOADING_SEEN_KEY, 'true')
+      setIsLoading(false)
+      setIsFirstLoad(false)
+    }, 900)
+
+    return () => clearTimeout(completeTimeout)
+  }, [audioChoice, isFirstLoad, progress])
+
+  const handleSelectAudio = async (withSound: boolean) => {
+    if (audioChoice) return
+
+    if (withSound) {
+      setAudioChoice('sound-on')
+      await startSound()
+      return
+    }
+
+    stopSound()
+    setAudioChoice('sound-off')
+  }
+
   return (
     <LoadingContext.Provider value={{ isLoading, setIsLoading, progress, setProgress }}>
-      {isLoading && isFirstLoad && <LoadingScreen progress={progress} />}
+      {isLoading && isFirstLoad && (
+        <LoadingScreen
+          progress={progress}
+          audioChoice={audioChoice}
+          onSelectAudio={handleSelectAudio}
+        />
+      )}
       <div 
         className={`transition-opacity duration-700 ${
-          isLoading && isFirstLoad ? 'opacity-0' : 'opacity-100'
+          !hasCheckedLoadingState || (isLoading && isFirstLoad) ? 'opacity-0' : 'opacity-100'
         }`}
       >
         {children}

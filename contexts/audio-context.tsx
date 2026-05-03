@@ -103,6 +103,8 @@ function getAudioPlayer() {
 interface AudioContextValue {
   isPlaying: boolean
   toggleSound: () => Promise<void>
+  startSound: () => Promise<boolean>
+  stopSound: () => void
   hasStarted: boolean
 }
 
@@ -119,36 +121,28 @@ export function AudioProvider({ children }: { children: ReactNode }) {
     // Sync state with audio player
     setIsPlaying(audioPlayerRef.current.isPlaying)
     
-    // Auto-start on first user interaction (required by browsers)
-    const startOnInteraction = async () => {
-      if (hasStarted) return
-      setHasStarted(true)
-      
-      if (audioPlayerRef.current && !audioPlayerRef.current.isPlaying) {
-        const playing = await audioPlayerRef.current.toggle()
-        setIsPlaying(playing)
-      }
-      
-      // Remove listeners after first interaction
-      document.removeEventListener('click', startOnInteraction)
-      document.removeEventListener('touchstart', startOnInteraction)
-      document.removeEventListener('scroll', startOnInteraction)
-    }
-    
-    if (!hasStarted) {
-      document.addEventListener('click', startOnInteraction, { once: true })
-      document.addEventListener('touchstart', startOnInteraction, { once: true })
-      document.addEventListener('scroll', startOnInteraction, { once: true })
-    }
-    
-    return () => {
-      document.removeEventListener('click', startOnInteraction)
-      document.removeEventListener('touchstart', startOnInteraction)
-      document.removeEventListener('scroll', startOnInteraction)
-    }
-  }, [hasStarted])
+  }, [])
+
+  const startSound = useCallback(async () => {
+    audioPlayerRef.current ??= getAudioPlayer()
+
+    const playing = await audioPlayerRef.current.start()
+    setIsPlaying(playing)
+    setHasStarted(true)
+    return playing
+  }, [])
+
+  const stopSound = useCallback(() => {
+    audioPlayerRef.current ??= getAudioPlayer()
+
+    audioPlayerRef.current.stop()
+    setIsPlaying(false)
+    setHasStarted(true)
+  }, [])
 
   const toggleSound = useCallback(async () => {
+    audioPlayerRef.current ??= getAudioPlayer()
+
     if (audioPlayerRef.current) {
       const playing = await audioPlayerRef.current.toggle()
       setIsPlaying(playing)
@@ -157,7 +151,7 @@ export function AudioProvider({ children }: { children: ReactNode }) {
   }, [hasStarted])
 
   return (
-    <AudioCtx.Provider value={{ isPlaying, toggleSound, hasStarted }}>
+    <AudioCtx.Provider value={{ isPlaying, toggleSound, startSound, stopSound, hasStarted }}>
       {children}
     </AudioCtx.Provider>
   )
