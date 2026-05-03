@@ -30,7 +30,10 @@ export function Footer() {
               href="/"
               className="inline-block mb-6 lg:mb-8"
             >
-              <span className="text-2xl sm:text-3xl md:text-4xl font-normal tracking-tight uppercase font-display">
+              <span 
+                id="footer-logo"
+                className="text-2xl sm:text-3xl md:text-4xl font-normal tracking-tight uppercase font-display transition-all duration-700"
+              >
                 JUNKBRANDING
               </span>
             </TransitionLink>

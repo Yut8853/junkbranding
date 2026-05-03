@@ -16,6 +16,10 @@ const BottomHeatHaze = dynamic(
   () => import('@/components/bottom-heat-haze').then((mod) => mod.BottomHeatHaze),
   { ssr: false }
 )
+const RisingRainbowOrb = dynamic(
+  () => import('@/components/rising-rainbow-orb').then((mod) => mod.RisingRainbowOrb),
+  { ssr: false }
+)
 
 export function DeferredVisualEffects() {
   const [shouldRenderEffects, setShouldRenderEffects] = useState(false)
@@ -40,6 +44,7 @@ export function DeferredVisualEffects() {
     <>
       <CustomCursor />
       <FloatingParticles />
+      <RisingRainbowOrb />
       <BottomHeatHaze />
     </>
   )
