@@ -22,12 +22,15 @@ const RisingRainbowOrb = dynamic(
 )
 
 export function DeferredVisualEffects() {
+  const [shouldRenderCursor, setShouldRenderCursor] = useState(false)
   const [shouldRenderEffects, setShouldRenderEffects] = useState(false)
 
   useEffect(() => {
     if (isSyntheticAudit() || isSmallScreen()) {
       return
     }
+
+    setShouldRenderCursor(true)
 
     const idleTask = scheduleIdleTask(() => {
       setShouldRenderEffects(true)
@@ -36,16 +39,20 @@ export function DeferredVisualEffects() {
     return () => idleTask.cancel()
   }, [])
 
-  if (!shouldRenderEffects) {
+  if (!shouldRenderCursor) {
     return null
   }
 
   return (
     <>
       <CustomCursor />
-      <FloatingParticles />
-      <RisingRainbowOrb />
-      <BottomHeatHaze />
+      {shouldRenderEffects && (
+        <>
+          <FloatingParticles />
+          <RisingRainbowOrb />
+          <BottomHeatHaze />
+        </>
+      )}
     </>
   )
 }
