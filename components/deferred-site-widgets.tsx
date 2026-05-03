@@ -16,9 +16,10 @@ export function DeferredSiteWidgets() {
   const [shouldRenderWidgets, setShouldRenderWidgets] = useState(false)
 
   useEffect(() => {
+    const delay = window.matchMedia('(max-width: 767px)').matches ? 3600 : 1600
     const timeoutId = window.setTimeout(() => {
       setShouldRenderWidgets(true)
-    }, 1600)
+    }, delay)
 
     return () => window.clearTimeout(timeoutId)
   }, [])

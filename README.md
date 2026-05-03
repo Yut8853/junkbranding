@@ -266,6 +266,10 @@ RESEND_API_KEY=your_resend_api_key
   ページ遷移時のフェード。
 - `components/smooth-scroll.tsx`
   LenisとScrollTriggerの同期。SPでは無効。
+- `components/deferred-visual-effects.tsx`
+  カスタムカーソル、背景パーティクル、下部陽炎を初回描画後に遅延読み込みする。
+- `components/deferred-site-widgets.tsx`
+  SoundToggleとCookieConsentを初回描画後に遅延読み込みする。
 - `components/loading-provider.tsx`
   初回ロード、session判定、プリロード、音楽選択ロック。
 - `components/loading-screen.tsx`
@@ -352,16 +356,95 @@ RESEND_API_KEY=your_resend_api_key
 ### 初回ロード
 
 `LoadingProvider` で初回ロード、進捗、音楽選択ロック、プリロードを管理している。  
-初回ロードを少し長めに使って、下層ページや重いコンポーネントも先に温める方針。
+以前は初回ロード中に下層ページ、Three.js、React Three Fiber、動画、音声まで先に温めていたが、PageSpeedでFCP/LCPを阻害しやすかった。  
+今は初回描画を優先し、重い演出やウィジェットは描画後に遅延読み込みする方針。
 
 ### パフォーマンス
 
 - PCは演出あり。
 - SPは演出を削って軽くする。
+- SPではLCP/FCPを最優先にする。ファーストビュー外の装飾、Canvas、WebGL、Cookie UI、音楽UIは急いで読まない。
 - `scroll-manager.ts` で散りアニメーションのスクロール更新を集約。
+- SEO用のHTMLテキストは残し、重い文字演出はCanvasや要素単位のアニメーションに寄せる。
+- 1文字ごとのDOM分割と常時 `will-change` はレイヤー数が増えやすいので避ける。
+- `ScatterText` はHTMLテキストを残し、散る瞬間だけ `aria-hidden` のCanvasで描画する。
+- SPでは `ScatterText` のCanvas、散布計算、スクロール購読を作らない。
+- `ScatterText` のCanvas描画では文字位置計測をキャッシュし、スクロール中の強制リフローを抑える。
+- `next/image` の最適化を使う。`next.config.mjs` ではAVIF/WebPと長期キャッシュを有効にする。
+- `SoundToggle`、`CookieConsent`、背景パーティクル、カスタムカーソル、下部陽炎は初回描画後に遅延する。
+- SPでは背景パーティクル、カスタムカーソル、下部陽炎のdynamic import自体を止める。
+- SPではファーストビュー外のセクションに `content-visibility: auto` を使い、初期描画コストを抑える。
+- GTMは `afterInteractive` で読み込む。
 - `requestAnimationFrame` を使う処理は、visibilityやSP判定で止められるところは止める。
 - IntersectionObserverの重複実装は `hooks/use-in-view.ts` に寄せる。
 - Lenisのスクロール進捗は `hooks/use-scroll-progress.ts` に分ける。
+
+#### 軽量化の履歴 2026-05-03
+
+きっかけ:
+
+- PageSpeed Insightsで最初は `NO_FCP` が出て、Lighthouseが描画を検出できないことがあった。
+- DevTools計測で `Layerize` と `Paint` の比率が高く、文字を1文字ずつDOM化する演出によりレイヤー数が増えていた。
+- 実ユーザーデータではLCPが約4.3〜4.4秒だったが、これは過去28日集計なので改善反映には時間がかかる。
+
+方針:
+
+- デザインと演出の印象は変えない。
+- SEO、アクセシビリティ用のテキストはHTMLとして残す。
+- 表示直後に不要なJS、WebGL、Canvas、Cookie UI、音楽UIは遅延する。
+- 1文字DOM、常時 `will-change`、初回の過剰プリロードを減らす。
+- 画像はNext.jsの画像最適化に任せる。
+
+改良箇所:
+
+- `components/scatter-text.tsx`
+  HTMLテキストを残し、PCでは散る表現だけCanvasで描画。文字位置計測はキャッシュする。SPではCanvas、散布計算、スクロール購読を作らない。
+- `components/hero-section-v2.tsx`
+  Hero見出しの1文字DOM分割をやめ、行単位のテキストに変更。
+- `components/marquee-section-v2.tsx`
+  Marqueeの1文字DOM分割とスクロール散布をやめ、テキスト単位の表示に変更。
+- `components/navigation/navigation-menu-overlay.tsx`
+  メニュー文字の1文字組み立てをやめ、ラベル単位の組み立てに変更。
+- `components/text-reveal/text-reveal.tsx`
+  1文字分割をやめ、要素単位のrevealに変更。
+- `components/english-text.tsx` / `components/unified-english-text.tsx` / `components/hero-title.tsx` / `components/loading-screen.tsx`
+  文字分割と常時レイヤー化を削減。
+- `components/deferred-visual-effects.tsx`
+  カスタムカーソル、背景パーティクル、下部WebGL陽炎を初回描画後に読み込む。SPでは読み込まない。
+- `components/deferred-site-widgets.tsx`
+  SoundToggleとCookieConsentを初回描画後に読み込む。SPではさらに遅延する。
+- `components/loading-provider.tsx`
+  初回ロード中の過剰なページ/ライブラリ/動画/音声プリロードを削減。PageSpeedのように音声選択できない環境では自動でSilent Startへ進める。
+- `components/smooth-scroll.tsx`
+  ScrollTrigger遅延読み込み時のruntime errorを修正。Lenis CSSと `autoRaf` を明示。SPではLenis/GSAP/ScrollTriggerを読み込まない。
+- `components/desktop-smooth-scroll.tsx`
+  LenisとScrollTrigger同期をPC専用に分離。
+- `app/layout.tsx`
+  GTMを `afterInteractive` に変更し、初回描画を邪魔しにくくした。
+- `app/globals.css`
+  SPでファーストビュー外セクションに `content-visibility: auto` を適用。
+- `next.config.mjs`
+  `images.unoptimized: true` をやめ、AVIF/WebP配信と長期キャッシュを有効化。
+- `components/pages/about/about-sections.tsx`
+  About画像に `quality` とSP実寸に近い `sizes` を指定。
+
+結果:
+
+- `https://junkbranding.com/about` のPageSpeed Insights デスクトップで、Performance 97、Accessibility 96、Best Practices 100、SEO 100。
+- ラボ値は FCP 0.7秒、LCP 0.8秒、TBT 80ms、CLS 0.005、Speed Index 1.6秒。
+- 以前の `NO_FCP` は解消。
+- 同じURLのSPでは、追加対応前にPerformance 78、FCP 2.1秒、LCP 4.4秒、TBT 70ms、CLS 0.008、Speed Index 5.5秒だった。
+- SP追加対応では、FCP/LCP/Speed Index改善を狙って、SPのCanvas生成停止、Lenis/GSAP読み込み停止、装飾dynamic import停止、下層セクションの `content-visibility` 適用を行った。
+- 実ユーザーデータのLCP 4.3秒前後は過去28日集計なので、デプロイ後しばらくしてから改善が反映される見込み。
+
+確認:
+
+```bash
+pnpm exec tsc --noEmit
+pnpm build
+```
+
+`pnpm lint` は環境によって `eslint: command not found` になる。IDE diagnosticsではエラーなし。
 
 ### ページ遷移
 
@@ -385,14 +468,19 @@ RESEND_API_KEY=your_resend_api_key
 - 状態を持つボタンには `aria-pressed` または `aria-checked`。
 - 入力エラーは見た目だけでなく `role="alert"` で伝える。
 - 装飾文字を1文字ずつ分解する場合は、親にラベルを持たせて子を `aria-hidden` にする。
+- ただしパフォーマンス上、基本は1文字DOM分割を避ける。必要ならSEO用HTMLテキストと `aria-hidden` のCanvas演出を分ける。
 
 ## 工夫したところ
 
 - ロード画面で音楽ON/OFFを選べるようにした。
 - 音楽OFFを選んだらページ遷移後も勝手に鳴らないようにした。
-- 初回ロードでページやアセットをできるだけ先読みするようにした。
+- 初回ロードはFCP/LCP優先。重い演出やウィジェットは描画後に遅延読み込みするようにした。
 - SPでは余計なアニメーションを止めた。
+- SPは全ページで、背景演出・Canvas散布・Lenis/GSAPを初期読み込みから外した。
+- SPのファーストビュー外セクションは `content-visibility: auto` で描画を遅らせるようにした。
 - 文字の散りアニメーションは `scroll-manager.ts` に寄せてスクロールリスナーを減らした。
+- 1文字DOM分割によるレイヤー増加を避けるため、`ScatterText` はHTMLテキスト + Canvas描画にした。
+- PageSpeed対策として `NO_FCP` 解消、LighthouseデスクトップPerformance 97まで改善した。
 - `about` / `works` / `pricing` / `contact` の表示データを `content/` に分けた。
 - TOPも `content/home-page.ts`、`components/pages/home/home-sections.tsx`、`use-lazy-video.ts` に分けた。
 - TOPは既存の大きな演出コンポーネントを活かしつつ、プレビュー系セクションと遅延動画読み込みだけページ配下に逃がした。

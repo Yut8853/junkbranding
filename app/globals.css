@@ -1198,6 +1198,12 @@
     scroll-behavior: auto;
   }
 
+  #main-content > section:nth-of-type(n + 2),
+  #main-content > div > section:nth-of-type(n + 2) {
+    content-visibility: auto;
+    contain-intrinsic-size: 780px;
+  }
+
   .noise-overlay::before,
   .bottom-heat-haze {
     display: none !important;

@@ -118,8 +118,8 @@ export function AboutIntroSection() {
                 alt="JunkBranding Studio - クリエイティブスタジオのワークスペース"
                 fill
                 className="object-cover transition-transform duration-700 group-hover:scale-105"
-                sizes="(max-width: 768px) 100vw, 50vw"
-                quality={72}
+                sizes="(max-width: 768px) calc(100vw - 48px), 50vw"
+                quality={64}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-background/75 via-background/15 to-transparent" />
               <div className="absolute bottom-6 left-6 right-6">
@@ -184,8 +184,8 @@ export function AboutTeamSection({ team }: AboutTeamSectionProps) {
                     alt={`${member.name} - ${member.role}`}
                     fill
                     className="object-cover transition-all duration-700 group-hover:scale-105 filter grayscale-[30%] group-hover:grayscale-0"
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    quality={72}
+                    sizes="(max-width: 768px) calc(100vw - 48px), (max-width: 1200px) 50vw, 33vw"
+                    quality={64}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-background/85 via-background/25 to-transparent" />
                   {/* Animated gradient overlay on hover */}

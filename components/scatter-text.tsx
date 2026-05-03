@@ -52,13 +52,17 @@ export function ScatterText({
   const isVisibleRef = useRef(false)
   const progressRef = useRef(0)
   const [isVisible, setIsVisible] = useState(false)
+  const [hasMounted, setHasMounted] = useState(false)
   const [isScattering, setIsScattering] = useState(false)
   const isMobile = useIsMobile()
+  const shouldPrepareScatter = hasMounted && !isMobile
 
   const chars = useMemo(() => children.split(''), [children])
 
   // Pre-generate scatter values
   const scatterValues = useMemo(() => {
+    if (!shouldPrepareScatter) return []
+
     return chars.map((_, i) => {
       const seed = i * 7 + 13
       return createScatterValue({
@@ -68,12 +72,16 @@ export function ScatterText({
         rotationRange: 720,
       })
     })
-  }, [chars, distance])
+  }, [chars, distance, shouldPrepareScatter])
 
   const setScatterState = useCallback((nextIsScattering: boolean) => {
     if (isScatteringRef.current === nextIsScattering) return
     isScatteringRef.current = nextIsScattering
     setIsScattering(nextIsScattering)
+  }, [])
+
+  useEffect(() => {
+    setHasMounted(true)
   }, [])
 
   const clearCanvas = useCallback(() => {
@@ -244,9 +252,10 @@ export function ScatterText({
     if (isMobile) {
       isVisibleRef.current = true
       setIsVisible(true)
-      applyScatter(0)
       return
     }
+
+    if (!shouldPrepareScatter) return
 
     const container = containerRef.current
     let hasScrolledPast = false
@@ -288,7 +297,7 @@ export function ScatterText({
         }
       }
     })
-  }, [applyScatter, isMobile, scrollEnd, scrollStart])
+  }, [applyScatter, isMobile, scrollEnd, scrollStart, shouldPrepareScatter])
 
   useEffect(() => {
     const clearMeasurements = () => {
@@ -300,10 +309,11 @@ export function ScatterText({
   }, [children])
 
   const delay = Math.min(children.length * 0.008, 0.35)
+  const shouldShowText = !hasMounted || isMobile || isVisible
   const textStyle = {
-    opacity: isScattering ? 0 : isMobile || isVisible ? 1 : 0,
-    transform: isMobile || isVisible ? 'translate3d(0,0,0)' : 'translate3d(0,28px,0)',
-    transition: isMobile
+    opacity: isScattering ? 0 : shouldShowText ? 1 : 0,
+    transform: shouldShowText ? 'translate3d(0,0,0)' : 'translate3d(0,28px,0)',
+    transition: !hasMounted || isMobile
       ? 'none'
       : `opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1) ${delay}s, transform 0.55s cubic-bezier(0.16, 1, 0.3, 1) ${delay}s`,
   }
@@ -324,15 +334,17 @@ export function ScatterText({
       >
         {children}
       </span>
-      <canvas
-        ref={canvasRef}
-        aria-hidden="true"
-        className="pointer-events-none absolute left-0 top-0"
-        style={{
-          display: isScattering ? 'block' : 'none',
-          opacity: isScattering ? 1 : 0,
-        }}
-      />
+      {shouldPrepareScatter && (
+        <canvas
+          ref={canvasRef}
+          aria-hidden="true"
+          className="pointer-events-none absolute left-0 top-0"
+          style={{
+            display: isScattering ? 'block' : 'none',
+            opacity: isScattering ? 1 : 0,
+          }}
+        />
+      )}
     </Component>
   )
 }

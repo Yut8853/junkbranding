@@ -20,6 +20,10 @@ export function DeferredVisualEffects() {
   const [shouldRenderEffects, setShouldRenderEffects] = useState(false)
 
   useEffect(() => {
+    if (window.matchMedia('(max-width: 767px)').matches) {
+      return
+    }
+
     const timeoutId = window.setTimeout(() => {
       setShouldRenderEffects(true)
     }, 1200)
