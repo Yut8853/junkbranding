@@ -49,6 +49,8 @@ export function MarqueeSectionV2() {
     if (!section) return
 
     const validChars = charsRef.current.filter(Boolean) as HTMLSpanElement[]
+    let rafId: number | null = null
+    let lastProgress = -1
 
     const handleScroll = () => {
       const rect = section.getBoundingClientRect()
@@ -58,6 +60,9 @@ export function MarqueeSectionV2() {
       
       const distancePastCenter = viewportCenter - elementCenter
       const scrollProgress = clamp01(distancePastCenter / 300)
+
+      if (Math.abs(scrollProgress - lastProgress) < 0.01) return
+      lastProgress = scrollProgress
       
       validChars.forEach((char, index) => {
         const values = scatterValues[index]
@@ -68,10 +73,21 @@ export function MarqueeSectionV2() {
       })
     }
 
-    window.addEventListener('scroll', handleScroll, { passive: true })
+    const handleScrollRaf = () => {
+      if (rafId) return
+      rafId = requestAnimationFrame(() => {
+        rafId = null
+        handleScroll()
+      })
+    }
+
+    window.addEventListener('scroll', handleScrollRaf, { passive: true })
     handleScroll()
 
-    return () => window.removeEventListener('scroll', handleScroll)
+    return () => {
+      window.removeEventListener('scroll', handleScrollRaf)
+      if (rafId) cancelAnimationFrame(rafId)
+    }
   }, [scatterValues])
 
   let charIndex = 0

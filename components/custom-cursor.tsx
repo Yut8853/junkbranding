@@ -14,9 +14,20 @@ interface Particle {
   size: number
 }
 
+const CURSOR_FRAME_INTERVAL_MS = 16
+const TRAIL_INTERVAL_MS = 80
+const MAX_PARTICLES = 45
+const getShouldReduceCursorEffects = () => {
+  const nav = navigator as Navigator & { deviceMemory?: number }
+  return (
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
+    (navigator.hardwareConcurrency || 8) <= 4 ||
+    (nav.deviceMemory ?? 8) <= 4
+  )
+}
+
 export function CustomCursor() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const [isHovering, setIsHovering] = useState(false)
   const [isVisible, setIsVisible] = useState(false)
   const [isMounted, setIsMounted] = useState(false)
   const positionRef = useRef({ x: 0, y: 0 })
@@ -26,8 +37,15 @@ export function CustomCursor() {
   const hueRef = useRef(0)
   const lastSpawnRef = useRef(0)
   const isClickingRef = useRef(false)
+  const isHoveringRef = useRef(false)
+  const isAnimatingRef = useRef(false)
+  const lastInteractionRef = useRef(0)
+  const reduceEffectsRef = useRef(false)
+  const wakeAnimationRef = useRef<(() => void) | null>(null)
 
   const spawnFireworkParticles = useCallback((x: number, y: number, count: number = 20) => {
+    if (reduceEffectsRef.current) return
+
     const newParticles: Particle[] = []
     for (let i = 0; i < count; i++) {
       const angle = (Math.PI * 2 * i) / count + Math.random() * 0.5
@@ -44,10 +62,12 @@ export function CustomCursor() {
         size: 3 + Math.random() * 4,
       })
     }
-    particlesRef.current = [...particlesRef.current, ...newParticles]
+    particlesRef.current = [...particlesRef.current, ...newParticles].slice(-MAX_PARTICLES)
   }, [])
 
   const spawnTrailParticle = useCallback((x: number, y: number) => {
+    if (reduceEffectsRef.current && particlesRef.current.length > 12) return
+
     const particle: Particle = {
       id: particleIdRef.current++,
       x: x + (Math.random() - 0.5) * 10,
@@ -60,6 +80,9 @@ export function CustomCursor() {
       size: 2 + Math.random() * 3,
     }
     particlesRef.current.push(particle)
+    if (particlesRef.current.length > MAX_PARTICLES) {
+      particlesRef.current.splice(0, particlesRef.current.length - MAX_PARTICLES)
+    }
     hueRef.current = (hueRef.current + 2) % 360
   }, [])
 
@@ -67,6 +90,7 @@ export function CustomCursor() {
     setIsMounted(true)
     
     if (typeof window === 'undefined') return
+    reduceEffectsRef.current = getShouldReduceCursorEffects()
     
     if (window.matchMedia('(pointer: fine)').matches) {
       setIsVisible(true)
@@ -75,6 +99,8 @@ export function CustomCursor() {
 
     const handleMouseMove = (e: MouseEvent) => {
       targetRef.current = { x: e.clientX, y: e.clientY }
+      lastInteractionRef.current = performance.now()
+      wakeAnimationRef.current?.()
     }
 
     const handleMouseEnter = () => setIsVisible(true)
@@ -82,7 +108,9 @@ export function CustomCursor() {
     
     const handleMouseDown = () => {
       isClickingRef.current = true
-      spawnFireworkParticles(targetRef.current.x, targetRef.current.y, 30)
+      spawnFireworkParticles(targetRef.current.x, targetRef.current.y, 18)
+      lastInteractionRef.current = performance.now()
+      wakeAnimationRef.current?.()
     }
     
     const handleMouseUp = () => {
@@ -92,19 +120,20 @@ export function CustomCursor() {
     const handleElementHover = (e: MouseEvent) => {
       const target = e.target as HTMLElement
       const interactiveElement = target.closest('a, button, [role="button"], input, textarea, select, [data-cursor]')
+      const nextIsHovering = Boolean(interactiveElement)
       
-      if (interactiveElement) {
-        if (!isHovering) {
-          spawnFireworkParticles(e.clientX, e.clientY, 15)
-        }
-        setIsHovering(true)
-      } else {
-        setIsHovering(false)
+      if (nextIsHovering === isHoveringRef.current) return
+
+      isHoveringRef.current = nextIsHovering
+      if (nextIsHovering) {
+        spawnFireworkParticles(e.clientX, e.clientY, 6)
+        lastInteractionRef.current = performance.now()
+        wakeAnimationRef.current?.()
       }
     }
 
-    document.addEventListener('mousemove', handleMouseMove)
-    document.addEventListener('mousemove', handleElementHover)
+    document.addEventListener('mousemove', handleMouseMove, { passive: true })
+    document.addEventListener('mousemove', handleElementHover, { passive: true })
     document.addEventListener('mouseenter', handleMouseEnter)
     document.addEventListener('mouseleave', handleMouseLeave)
     document.addEventListener('mousedown', handleMouseDown)
@@ -119,7 +148,7 @@ export function CustomCursor() {
       document.removeEventListener('mouseup', handleMouseUp)
       document.body.classList.remove('cursor-ready')
     }
-  }, [isHovering, spawnFireworkParticles])
+  }, [spawnFireworkParticles])
 
   useEffect(() => {
     if (!isMounted || !isVisible) return
@@ -139,24 +168,61 @@ export function CustomCursor() {
     window.addEventListener('resize', resizeCanvas)
 
     let animationFrame: number
+    let lastFrameTime = 0
+    let isPageVisible = document.visibilityState === 'visible'
 
-    const animate = () => {
+    const requestNextFrame = () => {
+      animationFrame = requestAnimationFrame(animate)
+    }
+
+    const wakeAnimation = () => {
+      if (isAnimatingRef.current) return
+      isAnimatingRef.current = true
+      requestNextFrame()
+    }
+
+    const handleVisibilityChange = () => {
+      isPageVisible = document.visibilityState === 'visible'
+      if (isPageVisible) {
+        lastFrameTime = performance.now()
+        wakeAnimation()
+      }
+    }
+
+    wakeAnimationRef.current = wakeAnimation
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+
+    const animate = (currentTime: number) => {
       if (!ctx || !canvas) return
+
+      if (!isPageVisible) {
+        isAnimatingRef.current = false
+        return
+      }
+
+      if (currentTime - lastFrameTime < CURSOR_FRAME_INTERVAL_MS) {
+        requestNextFrame()
+        return
+      }
+      lastFrameTime = currentTime
 
       ctx.clearRect(0, 0, canvas.width, canvas.height)
 
       // Smooth cursor movement
-      const ease = 0.15
+      const ease = 0.22
       positionRef.current.x += (targetRef.current.x - positionRef.current.x) * ease
       positionRef.current.y += (targetRef.current.y - positionRef.current.y) * ease
 
       const now = Date.now()
 
       // Spawn trail particles
-      if (now - lastSpawnRef.current > 30) {
+      const trailInterval = reduceEffectsRef.current ? TRAIL_INTERVAL_MS * 2 : TRAIL_INTERVAL_MS
+      if (now - lastSpawnRef.current > trailInterval) {
         spawnTrailParticle(positionRef.current.x, positionRef.current.y)
         lastSpawnRef.current = now
       }
+
+      let hasLiveParticles = false
 
       // Update and draw particles
       particlesRef.current = particlesRef.current.filter(particle => {
@@ -168,6 +234,7 @@ export function CustomCursor() {
         particle.life -= 0.02 / particle.maxLife
 
         if (particle.life <= 0) return false
+        hasLiveParticles = true
 
         const alpha = particle.life
         const size = particle.size * particle.life
@@ -181,7 +248,7 @@ export function CustomCursor() {
         ctx.fill()
 
         // Glow effect
-        ctx.shadowBlur = size * 3
+        ctx.shadowBlur = size * 1.4
         ctx.shadowColor = `hsl(${particle.hue}, 80%, 60%)`
         ctx.fill()
         ctx.restore()
@@ -190,7 +257,7 @@ export function CustomCursor() {
       })
 
       // Draw main cursor
-      const cursorSize = isHovering ? 50 : 24
+      const cursorSize = isHoveringRef.current ? 50 : 24
       const x = positionRef.current.x
       const y = positionRef.current.y
 
@@ -224,16 +291,29 @@ export function CustomCursor() {
       ctx.fill()
       ctx.restore()
 
-      animationFrame = requestAnimationFrame(animate)
+      const dx = targetRef.current.x - positionRef.current.x
+      const dy = targetRef.current.y - positionRef.current.y
+      const isCursorSettled = dx * dx + dy * dy < 0.25
+      const hasRecentInteraction = currentTime - lastInteractionRef.current < 600
+
+      if (hasLiveParticles || !isCursorSettled || hasRecentInteraction || isHoveringRef.current || isClickingRef.current) {
+        requestNextFrame()
+        return
+      }
+
+      isAnimatingRef.current = false
     }
 
-    animate()
+    wakeAnimation()
 
     return () => {
       window.removeEventListener('resize', resizeCanvas)
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
+      wakeAnimationRef.current = null
+      isAnimatingRef.current = false
       cancelAnimationFrame(animationFrame)
     }
-  }, [isMounted, isVisible, isHovering, spawnTrailParticle])
+  }, [isMounted, isVisible, spawnTrailParticle])
 
   if (!isMounted) return null
 

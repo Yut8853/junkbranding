@@ -16,7 +16,7 @@ export function SoundToggle() {
       onClick={handleClick}
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
-      className="fixed bottom-8 right-8 z-50 group"
+      className="fixed bottom-8 right-8 z-[999] group"
       aria-label={isPlaying ? 'Mute sound' : 'Play sound'}
     >
       <div 

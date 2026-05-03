@@ -5,11 +5,11 @@ import Link from 'next/link'
 import { ArrowRight, ArrowUpRight, Phone, MessageCircle } from 'lucide-react'
 import { SectionReveal } from '@/components/text-reveal'
 import { Footer } from '@/components/footer'
-import { WorksWebGLScene } from '@/components/works-webgl-scene'
 import { ScatterText } from '@/components/scatter-text'
 import { ScatterBlock } from '@/components/scatter-block'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import type { PortfolioWork, WorkCardProps } from '@/types/works-page'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -21,7 +21,7 @@ const works = [
     category: 'ポートフォリオサイト',
     description: '自身のクリエイティブと思想を表現するポートフォリオサイト。WebGLやアニメーションを活用し、ブランド体験としてのサイト設計を行いました。',
     tags: ['Web Design', 'Development', 'Branding'],
-    stack: ['Next.js', 'TypeScript', 'Three.js', 'GSAP'], 
+    stack: ['Next.js', 'TypeScript', 'Three.js', 'GSAP'],
     url: 'https://junkbranding.com/',
     year: '2026',
   },
@@ -31,7 +31,7 @@ const works = [
     category: 'コーポレートサイト',
     description: '不動産会社のコーポレートサイト。信頼感と先進性を両立したデザイン。',
     tags: ['Web Design', 'Development', 'Branding'],
-    stack: ['Three.js', 'GSAP'], 
+    stack: ['Three.js', 'GSAP'],
     url: 'https://to-place.co.jp/',
     year: '2024',
   },
@@ -41,11 +41,11 @@ const works = [
     category: 'コーポレートサイト',
     description: '洗練されたビジュアルと使いやすさを追求したコーポレートサイト。',
     tags: ['Web Design', 'Development', 'Branding'],
-    stack: ['Three.js', 'GSAP'], 
+    stack: ['Three.js', 'GSAP'],
     url: 'https://luz-real.com/',
     year: '2025',
   },
-]
+] satisfies PortfolioWork[]
 
 // Categories for filter
 const categories = ['すべて', ...Array.from(new Set(works.map((work) => work.category)))]
@@ -56,23 +56,13 @@ function WorkCard({
   index, 
   onHover,
   isHovered
-}: { 
-  work: typeof works[0]
-  index: number
-  onHover: (index: number | null, position?: { x: number; y: number }) => void
-  isHovered: boolean
-}) {
+}: WorkCardProps) {
   const cardRef = useRef<HTMLAnchorElement>(null)
   const imageRef = useRef<HTMLDivElement>(null)
   const formattedIndex = String(index + 1).padStart(2, '0')
 
-  const handleMouseEnter = (e: React.MouseEvent) => {
-    const rect = cardRef.current?.getBoundingClientRect()
-    if (rect) {
-      const x = ((rect.left + rect.width / 2) / window.innerWidth) * 2 - 1
-      const y = -((rect.top + rect.height / 2) / window.innerHeight) * 2 + 1
-      onHover(index, { x, y })
-    }
+  const handleMouseEnter = () => {
+    onHover(index)
   }
 
   const handleMouseLeave = () => {
@@ -176,20 +166,26 @@ function WorkCard({
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      <div className={`grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 lg:gap-12 items-center py-8 sm:py-12 lg:py-16 px-3 sm:px-4 md:px-6 -mx-3 sm:-mx-4 md:-mx-6 border-b border-border/30 rounded-xl sm:rounded-2xl transition-all duration-500 ${isHovered ? 'bg-card/50' : ''}`}>
+      <div className={`grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 lg:gap-12 items-center py-8 sm:py-12 lg:py-16 px-4 sm:px-6 md:px-8 rounded-3xl rainbow-border transition-all duration-500 ${isHovered ? 'glass-card shadow-[0_24px_80px_rgba(0,0,0,0.06)]' : 'bg-card/35'}`}>
         <div className="hidden lg:flex lg:col-span-1 items-center justify-center">
-          <span className={`text-4xl lg:text-5xl xl:text-6xl font-bold transition-all duration-500 ${isHovered ? 'gradient-text' : 'text-foreground/10'}`}>
+          <ScatterText
+            as="span"
+            className={`inline-flex min-w-[1.4em] whitespace-nowrap text-4xl lg:text-5xl xl:text-6xl font-bold tabular-nums transition-all duration-500 ${isHovered ? 'gradient-text' : 'text-foreground/10'}`}
+            scrollStart={50}
+            scrollEnd={350}
+            distance={180}
+          >
             {formattedIndex}
-          </span>
+          </ScatterText>
         </div>
 
         <div className="lg:col-span-5">
           <div 
             ref={imageRef}
-            className={`relative aspect-[16/10] rounded-2xl overflow-hidden border border-border/50 shadow-lg transition-all duration-500 ${isHovered ? 'bg-card/70' : 'bg-card/80'}`}
+            className={`relative aspect-[16/10] rounded-2xl overflow-hidden rainbow-border transition-all duration-500 ${isHovered ? 'glass-card' : 'bg-card/55'}`}
             style={{ transformStyle: 'preserve-3d' }}
           >
-            <div className={`absolute inset-0 bg-gradient-to-br from-primary/20 via-accent/15 to-primary/10 transition-opacity duration-700 ${isHovered ? 'opacity-100' : 'opacity-60'}`} />
+            <div className={`absolute inset-0 bg-gradient-to-br from-primary/10 via-accent/10 to-primary/5 transition-opacity duration-700 ${isHovered ? 'opacity-100' : 'opacity-60'}`} />
             
             <div className="absolute inset-0 flex items-center justify-center">
               <span className={`text-[6rem] sm:text-[8rem] md:text-[10rem] font-bold transition-all duration-700 ${isHovered ? 'gradient-text scale-110' : 'text-foreground/[0.03] scale-100'}`}>
@@ -198,70 +194,126 @@ function WorkCard({
             </div>
 
             <div className="absolute top-4 left-4 z-10">
-              <span className="px-3 py-1.5 text-xs bg-foreground text-background rounded-full">
+              <ScatterText
+                as="span"
+                className="px-3 py-1.5 text-xs bg-foreground text-background rounded-full"
+                scrollStart={50}
+                scrollEnd={350}
+                distance={160}
+              >
                 {work.category}
-              </span>
+              </ScatterText>
             </div>
 
             <div className="absolute top-4 right-4 z-10">
-              <span className="px-3 py-1.5 text-xs font-mono bg-background/80 backdrop-blur-sm rounded-full border border-border/50">
+              <ScatterText
+                as="span"
+                className="px-3 py-1.5 text-xs font-mono bg-background/80 backdrop-blur-sm rounded-full rainbow-border"
+                scrollStart={50}
+                scrollEnd={350}
+                distance={160}
+              >
                 {work.year}
-              </span>
+              </ScatterText>
             </div>
 
-            <div className={`absolute inset-0 bg-foreground/90 rounded-2xl flex items-center justify-center transition-opacity duration-500 ${isHovered ? 'opacity-100' : 'opacity-0'}`}>
-              <span className="text-background flex items-center gap-3 text-xl sm:text-2xl font-bold uppercase tracking-[0.15em] font-display">
-                View Project
+            <div className={`absolute inset-0 rounded-2xl flex items-center justify-center transition-opacity duration-500 ${isHovered ? 'opacity-100' : 'opacity-0'}`} style={{ background: 'linear-gradient(135deg, rgba(255,255,255,0.86), rgba(255,255,255,0.62))' }}>
+              <span className="text-foreground flex items-center gap-3 text-xl sm:text-2xl font-bold uppercase tracking-[0.15em] font-display">
+                <ScatterText
+                  as="span"
+                  className="inline-block"
+                  scrollStart={50}
+                  scrollEnd={350}
+                  distance={180}
+                >
+                  View Project
+                </ScatterText>
                 <ArrowUpRight className="w-6 h-6" />
               </span>
             </div>
 
             <div className="lg:hidden absolute bottom-4 left-4 z-10">
-              <span className="text-4xl font-bold gradient-text">
+              <ScatterText
+                as="span"
+                className="inline-flex whitespace-nowrap text-4xl font-bold tabular-nums"
+                scrollStart={50}
+                scrollEnd={350}
+                distance={180}
+                gradient
+              >
                 {formattedIndex}
-              </span>
+              </ScatterText>
             </div>
           </div>
         </div>
 
         <div className="lg:col-span-6">
-          <h3 className={`text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight mb-3 sm:mb-4 transition-all duration-500 ${isHovered ? 'gradient-text' : ''}`}>
+          <ScatterText
+            as="h3"
+            className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight mb-3 sm:mb-4"
+            scrollStart={50}
+            scrollEnd={350}
+            distance={300}
+            gradient
+          >
             {work.title}
-          </h3>
+          </ScatterText>
           
-          <p className="text-base sm:text-lg text-muted-foreground leading-relaxed mb-6 text-balance">
+          <ScatterText
+            as="p"
+            className="text-base sm:text-lg text-muted-foreground leading-relaxed mb-6 text-balance"
+            scrollStart={50}
+            scrollEnd={350}
+            distance={260}
+          >
             {work.description}
-          </p>
+          </ScatterText>
 
           <div className="flex flex-wrap gap-2 mb-6">
             {work.tags.map((tag) => (
-              <span
+              <ScatterText
+                as="span"
                 key={tag}
                 className={`text-xs px-3 py-1.5 rounded-full border transition-all duration-500 ${
                   isHovered 
                     ? 'border-primary/50 bg-primary/5 text-primary' 
                     : 'border-border bg-card text-muted-foreground'
                 }`}
+                scrollStart={50}
+                scrollEnd={350}
+                distance={160}
               >
                 {tag}
-              </span>
+              </ScatterText>
             ))}
           </div>
 
           {/* 技術スタック */}
           <div className="flex flex-wrap gap-2 mb-6">
             {work.stack?.map((tech) => (
-              <span
+              <ScatterText
+                as="span"
                 key={tech}
                 className="text-xs px-3 py-1.5 rounded-full border border-primary/30 bg-primary/5 text-primary"
+                scrollStart={50}
+                scrollEnd={350}
+                distance={160}
               >
                 {tech}
-              </span>
+              </ScatterText>
             ))}
           </div>
 
           <div className={`flex items-center gap-2 text-sm font-medium transition-all duration-500 ${isHovered ? 'text-primary translate-x-2' : 'text-muted-foreground'}`}>
-            <span className="uppercase tracking-wider">詳しく見る</span>
+            <ScatterText
+              as="span"
+              className="uppercase tracking-wider"
+              scrollStart={50}
+              scrollEnd={350}
+              distance={180}
+            >
+              詳しく見る
+            </ScatterText>
             <ArrowRight className={`w-4 h-4 transition-transform duration-300 ${isHovered ? 'translate-x-1' : ''}`} />
           </div>
         </div>
@@ -273,7 +325,6 @@ function WorkCard({
 export default function WorksPageClient() {
   const [selectedCategory, setSelectedCategory] = useState('すべて')
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
-  const [hoveredPosition, setHoveredPosition] = useState<{ x: number; y: number } | null>(null)
 
   const filteredWorks = useMemo(() => {
     if (selectedCategory === 'すべて') return works
@@ -283,7 +334,6 @@ export default function WorksPageClient() {
   // Force ScrollTrigger to refresh when the list changes
   useEffect(() => {
     setHoveredIndex(null)
-    setHoveredPosition(null)
 
     const timer = setTimeout(() => {
       ScrollTrigger.refresh()
@@ -291,15 +341,12 @@ export default function WorksPageClient() {
     return () => clearTimeout(timer)
   }, [selectedCategory])
 
-  const handleHover = useCallback((index: number | null, position?: { x: number; y: number }) => {
+  const handleHover = useCallback((index: number | null) => {
     setHoveredIndex(index)
-    setHoveredPosition(index !== null && position ? position : null)
   }, [])
 
   return (
     <>
-      <WorksWebGLScene hoveredIndex={hoveredIndex} hoveredPosition={hoveredPosition} />
-
       <section className="relative min-h-[60svh] sm:min-h-[70svh] flex items-center justify-center">
         <div className="container mx-auto px-6 md:px-12 lg:px-16 py-32 md:py-40 text-center">
           <div className="mb-6 lg:mb-8">
@@ -344,9 +391,15 @@ export default function WorksPageClient() {
       <section className="relative z-10 py-6 border-y border-border/20 glass-light">
         <div className="container mx-auto px-6 md:px-12 lg:px-16">
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8">
-            <span className="text-xs uppercase tracking-widest text-muted-foreground font-medium">
+            <ScatterText
+              as="span"
+              className="text-xs uppercase tracking-widest text-muted-foreground font-medium"
+              scrollStart={50}
+              scrollEnd={350}
+              distance={180}
+            >
               Filter
-            </span>
+            </ScatterText>
             <div className="flex flex-wrap justify-center gap-3">
               {categories.map((category) => (
                 <button
@@ -361,10 +414,18 @@ export default function WorksPageClient() {
                   className={`px-5 py-2.5 text-xs rounded-full transition-all duration-300 ${
                     selectedCategory === category
                       ? 'bg-foreground text-background'
-                      : 'bg-card border border-border/20 hover:border-foreground/20'
+                      : 'bg-card rainbow-border'
                   }`}
                 >
-                  {category}
+                  <ScatterText
+                    as="span"
+                    className="inline-block"
+                    scrollStart={50}
+                    scrollEnd={350}
+                    distance={160}
+                  >
+                    {category}
+                  </ScatterText>
                 </button>
               ))}
             </div>
@@ -374,19 +435,29 @@ export default function WorksPageClient() {
 
       <section className="relative z-10 py-12 lg:py-16 glass-light">
         <div className="container mx-auto px-6 md:px-12 lg:px-16">
-          {filteredWorks.map((work, index) => (
-            <WorkCard 
-              key={`${selectedCategory}-${work.id}`} 
-              work={work} 
-              index={index} 
-              onHover={handleHover}
-              isHovered={hoveredIndex === index}
-            />
-          ))}
+          <div className="space-y-6 lg:space-y-8">
+            {filteredWorks.map((work, index) => (
+              <WorkCard
+                key={`${selectedCategory}-${work.id}`}
+                work={work}
+                index={index}
+                onHover={handleHover}
+                isHovered={hoveredIndex === index}
+              />
+            ))}
+          </div>
 
           {filteredWorks.length === 0 && (
             <div className="py-24 sm:py-32 text-center">
-              <p className="text-lg sm:text-xl text-muted-foreground">該当する実績がありません</p>
+              <ScatterText
+                as="p"
+                className="text-lg sm:text-xl text-muted-foreground"
+                scrollStart={50}
+                scrollEnd={350}
+                distance={220}
+              >
+                該当する実績がありません
+              </ScatterText>
             </div>
           )}
         </div>
@@ -434,7 +505,7 @@ export default function WorksPageClient() {
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <ScatterBlock
-                className="group w-full sm:w-auto px-8 py-4 bg-foreground text-background rounded-full font-medium tracking-widest uppercase text-sm cursor-pointer hover:bg-foreground/90 transition-colors"
+                className="cta-primary group w-full rounded-full px-8 py-4 text-sm font-bold tracking-widest uppercase transition-all duration-300 sm:w-auto"
                 scrollEnd={350}
                 distance={400}
                 seed={20}
@@ -442,19 +513,36 @@ export default function WorksPageClient() {
               >
                 <span className="flex items-center justify-center gap-4">
                   <MessageCircle size={18} />
-                  もっと実績を見せてもらう
+                  <ScatterText
+                    as="span"
+                    className="inline-block"
+                    scrollStart={50}
+                    scrollEnd={350}
+                    distance={180}
+                  >
+                    もっと実績を見せてもらう
+                  </ScatterText>
                   <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
                 </span>
               </ScatterBlock>
               
               <ScatterBlock
-                className="flex items-center justify-center gap-3 w-full sm:w-auto px-8 py-4 bg-card text-foreground rounded-full font-medium text-sm border border-border/20 cursor-pointer hover:border-foreground/20 transition-colors"
+                className="cta-secondary flex w-full items-center justify-center gap-3 rounded-full px-8 py-4 text-sm font-bold transition-all duration-300 sm:w-auto"
                 scrollEnd={350}
                 distance={400}
                 seed={21}
+                href="tel:08091550426"
               >
                 <Phone size={18} />
-                <span>電話で相談する</span>
+                <ScatterText
+                  as="span"
+                  className="inline-block"
+                  scrollStart={50}
+                  scrollEnd={350}
+                  distance={180}
+                >
+                  電話で相談する
+                </ScatterText>
               </ScatterBlock>
             </div>
           </div>
@@ -499,12 +587,21 @@ export default function WorksPageClient() {
           </ScatterText>
           
           <ScatterBlock
-            className="inline-flex items-center gap-4 px-8 py-4 bg-foreground text-background rounded-full text-sm font-medium tracking-widest uppercase cursor-pointer hover:bg-foreground/90 transition-colors"
+            className="cta-secondary inline-flex items-center gap-4 rounded-full px-8 py-4 text-sm font-bold tracking-widest uppercase transition-all duration-300"
             scrollEnd={350}
             distance={400}
             seed={30}
+            href="tel:08091550426"
           >
-            080-9155-0426
+            <ScatterText
+              as="span"
+              className="inline-block"
+              scrollStart={50}
+              scrollEnd={350}
+              distance={180}
+            >
+              080-9155-0426
+            </ScatterText>
           </ScatterBlock>
         </div>
       </section>

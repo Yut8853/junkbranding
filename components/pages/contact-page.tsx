@@ -7,19 +7,7 @@ import { MagneticButton } from '@/components/magnetic-button'
 import { Footer } from '@/components/footer'
 import { ScatterText } from '@/components/scatter-text'
 import { sendEmail } from '@/actions/contact'
-
-// Form field types
-type FormData = {
-  name: string
-  email: string
-  company: string
-  phone: string
-  service: string
-  budget: string
-  message: string
-}
-
-type FormErrors = Partial<Record<keyof FormData, string>>
+import type { ContactFormData, ContactFormErrors } from '@/types/contact-page'
 
 // Service options
 const serviceOptions = [
@@ -41,7 +29,7 @@ const budgetOptions = [
 ]
 
 export default function ContactPageClient() {
-  const [formData, setFormData] = useState<FormData>({
+  const [formData, setFormData] = useState<ContactFormData>({
     name: '',
     email: '',
     company: '',
@@ -50,7 +38,7 @@ export default function ContactPageClient() {
     budget: '',
     message: '',
   })
-  const [errors, setErrors] = useState<FormErrors>({})
+  const [errors, setErrors] = useState<ContactFormErrors>({})
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [submitError, setSubmitError] = useState('')
@@ -63,7 +51,7 @@ export default function ContactPageClient() {
   }, [isSubmitted])
 
   const validateForm = (): boolean => {
-    const newErrors: FormErrors = {}
+    const newErrors: ContactFormErrors = {}
 
     if (!formData.name.trim()) {
       newErrors.name = 'お名前を入力してください'
@@ -111,7 +99,7 @@ export default function ContactPageClient() {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target
     setFormData(prev => ({ ...prev, [name]: value }))
-    if (errors[name as keyof FormData]) {
+    if (errors[name as keyof ContactFormData]) {
       setErrors(prev => ({ ...prev, [name]: '' }))
     }
   }
@@ -134,7 +122,7 @@ export default function ContactPageClient() {
                 </p>
                 <MagneticButton
                   href="/"
-                  className="group px-6 sm:px-8 py-3.5 sm:py-4 bg-foreground text-background rounded-full font-medium btn-gradient-hover transition-all duration-300"
+                  className="cta-primary group rounded-full px-6 py-3.5 font-bold transition-all duration-300 sm:px-8 sm:py-4"
                 >
                   <span className="flex items-center gap-3">
                     トップに戻る
@@ -430,11 +418,11 @@ export default function ContactPageClient() {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full sm:w-auto px-8 py-4 bg-foreground text-background rounded-full text-sm font-medium tracking-widest uppercase transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-4 hover:bg-foreground/90"
+                  className="cta-primary flex w-full items-center justify-center gap-4 rounded-full px-8 py-4 text-sm font-bold tracking-widest uppercase transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
                 >
                   {isSubmitting ? (
                     <>
-                      <div className="w-4 h-4 border-2 border-background border-t-transparent rounded-full animate-spin" />
+                      <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
                       送信中...
                     </>
                   ) : (

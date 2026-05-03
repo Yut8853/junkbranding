@@ -3,10 +3,10 @@
 import Image from 'next/image'
 import { ArrowRight, Phone, Heart, Lightbulb, Users, Clock } from 'lucide-react'
 import { SectionReveal } from '@/components/text-reveal'
-import { MagneticButton } from '@/components/magnetic-button'
 import { Footer } from '@/components/footer'
 import { ScatterText } from '@/components/scatter-text'
 import { ScatterBlock } from '@/components/scatter-block'
+import type { AboutProcessStep, AboutTeamMember, AboutValue } from '@/types/about-page'
 
 // Team data
 const team = [
@@ -24,7 +24,7 @@ const team = [
     image: '/images/team/tsukasa.jpg',
     description: 'アートディレクター／デザイナーとして、ビジュアルデザインを軸にWebサイトの設計から制作までを一貫して担当。ブランドの世界観や空気感を丁寧に表現し、ユーザーの感情に自然と響くデザインを追求しています。\n\nレイアウト、タイポグラフィ、配色、余白設計といった細部にまで徹底してこだわり、視認性と美しさを高い次元で両立。情報を正しく伝えるだけでなく、「見ていて心地よい」「思わず触れたくなる」体験設計を大切にしています。\n\nコンセプトに基づいたビジュアル設計を行うことで、プロジェクト全体のクオリティを底上げし、ディレクターやエンジニアと密に連携しながら完成度の高いアウトプットへと昇華させます。\n\nトレンドに流されることなく、本質的な美しさと機能性を兼ね備えたデザインを追求し続けています。',
   },
-]
+] satisfies AboutTeamMember[]
 
 // Values
 const values = [
@@ -46,7 +46,7 @@ const values = [
     titleEn: 'Be a Partner',
     description: '受け身で作るのではなく、課題から一緒に考えます。必要なら「それ違います」とも言います。',
   },
-]
+] satisfies AboutValue[]
 
 // Process data
 const process = [
@@ -60,7 +60,7 @@ const process = [
     details: [
       { title: '現状の課題整理', desc: '「なんとなくうまくいっていない」を、そのままにしません。曖昧な状態を一つずつ言語化していきます。' },
       { title: 'ターゲットの具体化', desc: '年齢や性別だけでなく、「どんな場面で迷い、何に反応するのか」まで掘り下げます。' },
-      { title: '競合の見え方確認', desc: '競合がどう見えてい���かを、作り手ではなくユーザーの視点で整理します。' },
+      { title: '競合の見え方確認', desc: '競合がどう見えているかを、作り手ではなくユーザーの視点で整理します。' },
       { title: 'ゴール設計', desc: '問い合わせなのか、購入なのか。「どこまでいけば成功か」を明確にします。' },
     ],
     note: 'ここを曖昧にしたまま進めることはありません。',
@@ -103,7 +103,7 @@ const process = [
     fullDescription: 'ここで初めてビジュアルを作ります。ただし、感覚だけで作ることはありません。「なぜこのレイアウトなのか」「なぜこの余白なのか」説明できる状態で進めます。',
     duration: '約3〜8週間',
     details: [
-      { title: 'ファーストビュー設計', desc: '最初の3��で��自分に関係ある」と思わせるための設計を徹底しま�����。' },
+      { title: 'ファーストビュー設計', desc: '最初の3秒で「自分に関係ある」と思わせるための設計を徹底します。' },
       { title: '情報の優先順位設計', desc: 'すべてを同じ強さで見せると、何も伝わりません。順番を作ります。' },
       { title: 'トーン＆マナー統一', desc: 'ブランドらしさを崩さないためのルールを細かく整えます。' },
       { title: 'レスポンシブ最適化', desc: '実際の閲覧環境を考え、スマホでの見え方を優先して調整します。' },
@@ -127,7 +127,7 @@ const process = [
   },
   {
     step: 5,
-    title: 'テスト・���開',
+    title: 'テスト・公開',
     titleEn: 'Launch',
     description: '安心して公開できる状態に仕上げます。',
     fullDescription: '公開直前が一番トラブルが起きやすい工程です。細かい部分までチェックし、問題のない状態でリリースします。',
@@ -155,7 +155,7 @@ const process = [
     ],
     note: '「公開したのに成果が出ない」を放置しません。',
   },
-]
+] satisfies AboutProcessStep[]
 
 export default function AboutPageClient() {
   return (
@@ -211,6 +211,7 @@ export default function AboutPageClient() {
                 scrollStart={50}
                 scrollEnd={350}
                 distance={400}
+                gradient
               >
                 大手にはできない、
               </ScatterText>
@@ -256,7 +257,7 @@ export default function AboutPageClient() {
             </div>
 
             <SectionReveal delay={0.2}>
-              <div className="relative aspect-square rounded-3xl overflow-hidden bg-card border border-border/20 group">
+              <div className="relative aspect-square rounded-3xl overflow-hidden glass-card rainbow-border group">
                 <Image
                   src="/images/studio.jpg"
                   alt="JunkBranding Studio - クリエイティブスタジオのワークスペース"
@@ -264,11 +265,18 @@ export default function AboutPageClient() {
                   className="object-cover transition-transform duration-700 group-hover:scale-105"
                   sizes="(max-width: 768px) 100vw, 50vw"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-background/20 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-background/75 via-background/15 to-transparent" />
                 <div className="absolute bottom-6 left-6 right-6">
-                  <p className="text-sm font-medium gradient-text-soft">
+                  <ScatterText
+                    as="p"
+                    className="text-sm font-medium"
+                    scrollStart={50}
+                    scrollEnd={350}
+                    distance={220}
+                    gradient
+                  >
                     JunkBranding Studio
-                  </p>
+                  </ScatterText>
                 </div>
               </div>
             </SectionReveal>
@@ -311,7 +319,7 @@ export default function AboutPageClient() {
             {team.map((member, index) => (
               <SectionReveal key={member.name} delay={0.2 + index * 0.1}>
                 <div className="group">
-                  <div className="relative aspect-[3/4] mb-8 lg:mb-10 rounded-3xl overflow-hidden bg-card border border-border/20">
+                  <div className="relative aspect-[3/4] mb-8 lg:mb-10 rounded-3xl overflow-hidden glass-card rainbow-border">
                     <Image
                       src={member.image}
                       alt={`${member.name} - ${member.role}`}
@@ -319,23 +327,50 @@ export default function AboutPageClient() {
                       className="object-cover transition-all duration-700 group-hover:scale-105 filter grayscale-[30%] group-hover:grayscale-0"
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/30 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-background/85 via-background/25 to-transparent" />
                     {/* Animated gradient overlay on hover */}
                     <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-br from-primary/20 via-transparent to-accent/20" />
                     {/* Name overlay with gradient animation */}
                     <div className="absolute bottom-6 left-6 right-6">
-                      <p className="text-xs text-foreground/70 mb-2 font-medium tracking-widest uppercase">
+                      <ScatterText
+                        as="p"
+                        className="text-xs text-foreground/70 mb-2 font-medium tracking-widest uppercase"
+                        scrollStart={50}
+                        scrollEnd={350}
+                        distance={220}
+                      >
                         {member.role}
-                      </p>
-                      <h3 className="text-xl sm:text-2xl font-bold gradient-text-soft">
+                      </ScatterText>
+                      <ScatterText
+                        as="h3"
+                        className="text-xl sm:text-2xl font-bold"
+                        scrollStart={50}
+                        scrollEnd={350}
+                        distance={300}
+                        gradient
+                      >
                         {member.name}
-                      </h3>
-                      <p className="text-xs text-foreground/50 mt-1 tracking-wide">{member.nameEn}</p>
+                      </ScatterText>
+                      <ScatterText
+                        as="p"
+                        className="text-xs text-foreground/50 mt-1 tracking-wide"
+                        scrollStart={50}
+                        scrollEnd={350}
+                        distance={220}
+                      >
+                        {member.nameEn}
+                      </ScatterText>
                     </div>
                   </div>
-                  <p className="text-sm md:text-base text-muted-foreground leading-[1.8] tracking-wide whitespace-pre-wrap">
+                  <ScatterText
+                    as="p"
+                    className="text-sm md:text-base text-muted-foreground leading-[1.8] tracking-wide whitespace-pre-wrap"
+                    scrollStart={50}
+                    scrollEnd={350}
+                    distance={260}
+                  >
                     {member.description}
-                  </p>
+                  </ScatterText>
                 </div>
               </SectionReveal>
             ))}
@@ -377,19 +412,38 @@ export default function AboutPageClient() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12">
             {values.map((value, index) => (
               <SectionReveal key={value.title} delay={0.2 + index * 0.1}>
-                <div className="group text-center p-8 md:p-10 lg:p-12 rounded-3xl bg-background border border-border/20 hover:border-foreground/10 transition-all duration-500">
+                <div className="group text-center p-8 md:p-10 lg:p-12 rounded-3xl glass-card rainbow-border transition-all duration-500">
                   <div className="w-14 h-14 md:w-16 md:h-16 mx-auto mb-6 lg:mb-8 rounded-full bg-foreground/5 flex items-center justify-center group-hover:bg-foreground/10 transition-colors duration-300">
                     <value.icon className="w-6 h-6 md:w-7 md:h-7 text-foreground/60" />
                   </div>
-                  <h3 className="text-lg sm:text-xl md:text-2xl font-bold mb-2 tracking-tight">
+                  <ScatterText
+                    as="h3"
+                    className="text-lg sm:text-xl md:text-2xl font-bold mb-2 tracking-tight"
+                    scrollStart={50}
+                    scrollEnd={350}
+                    distance={300}
+                    gradient
+                  >
                     {value.title}
-                  </h3>
-                  <p className="text-xs text-muted-foreground mb-4 lg:mb-6 font-medium tracking-widest uppercase">
+                  </ScatterText>
+                  <ScatterText
+                    as="p"
+                    className="text-xs text-muted-foreground mb-4 lg:mb-6 font-medium tracking-widest uppercase"
+                    scrollStart={50}
+                    scrollEnd={350}
+                    distance={220}
+                  >
                     {value.titleEn}
-                  </p>
-                  <p className="text-sm md:text-base text-muted-foreground leading-[1.8] tracking-wide">
+                  </ScatterText>
+                  <ScatterText
+                    as="p"
+                    className="text-sm md:text-base text-muted-foreground leading-[1.8] tracking-wide"
+                    scrollStart={50}
+                    scrollEnd={350}
+                    distance={260}
+                  >
                     {value.description}
-                  </p>
+                  </ScatterText>
                 </div>
               </SectionReveal>
             ))}
@@ -444,58 +498,131 @@ export default function AboutPageClient() {
                   {/* Step Header */}
                   <div className="flex flex-col md:flex-row md:items-center gap-4 md:gap-8 mb-8 lg:mb-10">
                     <div className="flex items-center gap-4 md:gap-6">
-                      <div className="w-14 h-14 md:w-16 md:h-16 rounded-full bg-background border border-foreground/20 flex items-center justify-center group-hover:bg-foreground group-hover:text-background transition-all duration-500 shrink-0">
-                        <span className="text-lg md:text-xl font-bold">{item.step}</span>
+                      <div className="relative w-14 h-14 md:w-16 md:h-16 rounded-full glass-card rainbow-border flex items-center justify-center transition-all duration-500 shrink-0">
+                        <ScatterText
+                          as="span"
+                          className="relative z-10 text-lg md:text-xl font-bold"
+                          scrollStart={50}
+                          scrollEnd={350}
+                          distance={160}
+                          gradient
+                        >
+                          {String(item.step)}
+                        </ScatterText>
                       </div>
                       <div>
-                        <h3 className="text-xl sm:text-2xl md:text-3xl font-bold mb-1 tracking-tight">
+                        <ScatterText
+                          as="h3"
+                          className="text-xl sm:text-2xl md:text-3xl font-bold mb-1 tracking-tight"
+                          scrollStart={50}
+                          scrollEnd={350}
+                          distance={300}
+                          gradient
+                        >
                           {item.title}
-                        </h3>
-                        <p className="text-xs text-muted-foreground uppercase tracking-widest font-medium">
+                        </ScatterText>
+                        <ScatterText
+                          as="p"
+                          className="text-xs text-muted-foreground uppercase tracking-widest font-medium"
+                          scrollStart={50}
+                          scrollEnd={350}
+                          distance={220}
+                        >
                           {item.titleEn}
-                        </p>
+                        </ScatterText>
                       </div>
                     </div>
                     <div className="md:ml-auto flex items-center gap-2 px-4 py-2 bg-foreground/5 rounded-full w-fit">
                       <Clock size={14} className="text-muted-foreground" />
-                      <span className="text-xs font-medium text-muted-foreground">{item.duration}</span>
+                      <ScatterText
+                        as="span"
+                        className="text-xs font-medium text-muted-foreground"
+                        scrollStart={50}
+                        scrollEnd={350}
+                        distance={180}
+                      >
+                        {item.duration}
+                      </ScatterText>
                     </div>
                   </div>
                   
                   {/* Content Card */}
-                  <div className="ml-0 md:ml-24 p-8 md:p-10 lg:p-12 rounded-3xl bg-background border border-border/20 group-hover:border-foreground/10 transition-all duration-500">
+                  <div className="ml-0 md:ml-24 p-8 md:p-10 lg:p-12 rounded-3xl glass-card rainbow-border transition-all duration-500">
                     {/* Short Description */}
-                    <p className="text-base md:text-lg text-foreground leading-[1.6] mb-4 lg:mb-6 tracking-tight">
+                    <ScatterText
+                      as="p"
+                      className="text-base md:text-lg text-foreground leading-[1.6] mb-4 lg:mb-6 tracking-tight"
+                      scrollStart={50}
+                      scrollEnd={350}
+                      distance={260}
+                    >
                       {item.description}
-                    </p>
+                    </ScatterText>
                     
                     {/* Full Description */}
-                    <p className="text-sm md:text-base text-muted-foreground leading-[1.8] tracking-wide mb-8 lg:mb-10">
+                    <ScatterText
+                      as="p"
+                      className="text-sm md:text-base text-muted-foreground leading-[1.8] tracking-wide mb-8 lg:mb-10"
+                      scrollStart={50}
+                      scrollEnd={350}
+                      distance={260}
+                    >
                       {item.fullDescription}
-                    </p>
+                    </ScatterText>
                     
                     {/* Details Grid */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6 mb-8 lg:mb-10">
                       {item.details.map((detail, i) => (
                         <div 
                           key={detail.title} 
-                          className="flex items-start gap-4 p-4 lg:p-5 rounded-2xl bg-card/30 border border-border/30"
+                          className="flex items-start gap-4 p-4 lg:p-5 rounded-2xl bg-background/45 rainbow-border"
                         >
-                          <div className="shrink-0 w-7 h-7 rounded-full bg-foreground/5 flex items-center justify-center mt-0.5">
-                            <span className="text-xs font-bold text-muted-foreground">{i + 1}</span>
+                          <div className="relative shrink-0 w-7 h-7 rounded-full bg-foreground/5 flex items-center justify-center mt-0.5">
+                            <ScatterText
+                              as="span"
+                              className="relative z-10 text-xs font-bold text-foreground/70"
+                              scrollStart={50}
+                              scrollEnd={350}
+                              distance={120}
+                            >
+                              {String(i + 1)}
+                            </ScatterText>
                           </div>
                           <div className="flex-1 min-w-0">
-                            <h4 className="text-sm md:text-base font-bold mb-1 tracking-tight">{detail.title}</h4>
-                            <p className="text-xs md:text-sm text-muted-foreground leading-[1.6]">{detail.desc}</p>
+                            <ScatterText
+                              as="h4"
+                              className="text-sm md:text-base font-bold mb-1 tracking-tight"
+                              scrollStart={50}
+                              scrollEnd={350}
+                              distance={220}
+                              gradient
+                            >
+                              {detail.title}
+                            </ScatterText>
+                            <ScatterText
+                              as="p"
+                              className="text-xs md:text-sm text-muted-foreground leading-[1.6]"
+                              scrollStart={50}
+                              scrollEnd={350}
+                              distance={220}
+                            >
+                              {detail.desc}
+                            </ScatterText>
                           </div>
                         </div>
                       ))}
                     </div>
                     
                     {/* Note */}
-                    <p className="text-xs md:text-sm text-muted-foreground bg-foreground/5 px-4 py-3 rounded-xl border border-foreground/5">
+                    <ScatterText
+                      as="p"
+                      className="text-xs md:text-sm text-muted-foreground bg-foreground/5 px-4 py-3 rounded-xl rainbow-border"
+                      scrollStart={50}
+                      scrollEnd={350}
+                      distance={220}
+                    >
                       {item.note}
-                    </p>
+                    </ScatterText>
                   </div>
                 </div>
               </SectionReveal>
@@ -515,25 +642,42 @@ export default function AboutPageClient() {
             </ScatterText>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <ScatterBlock
-                className="group w-full sm:w-auto px-8 py-4 bg-foreground text-background rounded-full font-medium tracking-widest uppercase text-sm cursor-pointer hover:bg-foreground/90 transition-colors"
+                className="cta-primary group w-full rounded-full px-8 py-4 text-sm font-bold tracking-widest uppercase transition-all duration-300 sm:w-auto"
                 scrollEnd={350}
                 distance={400}
                 seed={10}
                 href="/contact"
               >
                 <span className="flex items-center justify-center gap-4">
-                  お問い合わせ
+                  <ScatterText
+                    as="span"
+                    className="inline-block"
+                    scrollStart={50}
+                    scrollEnd={350}
+                    distance={180}
+                  >
+                    お問い合わせ
+                  </ScatterText>
                   <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
                 </span>
               </ScatterBlock>
               <ScatterBlock
-                className="flex items-center justify-center gap-3 w-full sm:w-auto px-8 py-4 bg-card text-foreground rounded-full font-medium text-sm border border-border/20 cursor-pointer hover:border-foreground/20 transition-colors"
+                className="cta-secondary flex w-full items-center justify-center gap-3 rounded-full px-8 py-4 text-sm font-bold transition-all duration-300 sm:w-auto"
                 scrollEnd={350}
                 distance={400}
                 seed={11}
+                href="tel:08091550426"
               >
                 <Phone size={18} />
-                <span>電話で相談する</span>
+                <ScatterText
+                  as="span"
+                  className="inline-block"
+                  scrollStart={50}
+                  scrollEnd={350}
+                  distance={180}
+                >
+                  電話で相談する
+                </ScatterText>
               </ScatterBlock>
             </div>
           </div>
@@ -549,6 +693,7 @@ export default function AboutPageClient() {
             scrollStart={50}
             scrollEnd={350}
             distance={400}
+            gradient
           >
             一緒に、
           </ScatterText>
@@ -574,26 +719,43 @@ export default function AboutPageClient() {
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <ScatterBlock
-              className="group w-full sm:w-auto px-8 py-4 bg-foreground text-background rounded-full font-medium tracking-widest uppercase text-sm cursor-pointer hover:bg-foreground/90 transition-colors"
+              className="cta-primary group w-full rounded-full px-8 py-4 text-sm font-bold tracking-widest uppercase transition-all duration-300 sm:w-auto"
               scrollEnd={350}
               distance={400}
               seed={20}
               href="/contact"
             >
               <span className="flex items-center justify-center gap-4">
-                お問い合わせフォーム
+                <ScatterText
+                  as="span"
+                  className="inline-block"
+                  scrollStart={50}
+                  scrollEnd={350}
+                  distance={180}
+                >
+                  お問い合わせフォーム
+                </ScatterText>
                 <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
               </span>
             </ScatterBlock>
             
             <ScatterBlock
-              className="flex items-center justify-center gap-3 w-full sm:w-auto px-8 py-4 bg-card text-foreground rounded-full font-medium text-sm border border-border/20 cursor-pointer hover:border-foreground/20 transition-colors"
+              className="cta-secondary flex w-full items-center justify-center gap-3 rounded-full px-8 py-4 text-sm font-bold transition-all duration-300 sm:w-auto"
               scrollEnd={350}
               distance={400}
               seed={21}
+              href="tel:08091550426"
             >
               <Phone size={18} />
-              <span>080-9155-0426</span>
+              <ScatterText
+                as="span"
+                className="inline-block"
+                scrollStart={50}
+                scrollEnd={350}
+                distance={180}
+              >
+                080-9155-0426
+              </ScatterText>
             </ScatterBlock>
           </div>
         </div>

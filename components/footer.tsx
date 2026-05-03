@@ -79,13 +79,10 @@ export function Footer() {
                 <Phone size={16} className="text-accent" />
                 <span>080-9155-0426</span>
               </a>
-              <a 
-                href="mailto:hello@junkbranding.com"
-                className="flex items-center gap-3 text-foreground hover:text-accent transition-colors duration-300"
-              >
+              <div className="flex items-center gap-3 text-foreground">
                 <Mail size={16} className="text-accent" />
                 <span>hello@junkbranding.com</span>
-              </a>
+              </div>
             </div>
           </RevealSection>
 

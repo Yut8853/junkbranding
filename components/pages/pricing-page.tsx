@@ -5,6 +5,7 @@ import { SectionReveal } from '@/components/text-reveal'
 import { Footer } from '@/components/footer'
 import { ScatterText } from '@/components/scatter-text'
 import { ScatterBlock } from '@/components/scatter-block'
+import type { PricingCategory, PricingFaq } from '@/types/pricing-page'
 
 // Service categories with pricing
 const serviceCategories = [
@@ -35,8 +36,8 @@ const serviceCategories = [
       { name: 'WordPress構築', price: '10万円〜', note: 'テーマカスタマイズ含む' },
       { name: 'microCMS構築', price: '8万円〜', note: 'ヘッドレスCMS' },
       { name: 'Notion連携サイト', price: '12万円〜', note: 'Notionをデータベースに' },
-      { name: 'Movable Type構築', price: '12万円〜', note: '静的生成・企業サイト向け' }, // :contentReference[oaicite:0]{index=0}
-      { name: 'Drupal構築', price: '15万円〜', note: '大規模・多言語サイト対応' }, // :contentReference[oaicite:1]{index=1}
+      { name: 'Movable Type構築', price: '12万円〜', note: '静的生成・企業サイト向け' },
+      { name: 'Drupal構築', price: '15万円〜', note: '大規模・多言語サイト対応' },
       { name: 'オリジナルCMS', price: '25万円〜', note: '要件に合わせた開発' },
     ],
     features: ['管理画面レクチャー', 'マニュアル作成', '初期コンテンツ投入サポート', '修正無制限'],
@@ -135,7 +136,7 @@ const serviceCategories = [
     ],
     features: ['定期バックアップ', 'セキュリティ対策', 'サーバー監視', '緊急時対応'],
   },
-]
+] satisfies PricingCategory[]
 
 // FAQ data
 const faqs = [
@@ -144,7 +145,7 @@ const faqs = [
     answer: 'はい、もちろんです。ご予算に応じて、機能やページ数を調整したり、段階的に制作を進めるなど、柔軟にご提案させていただきます。まずはお気軽にご相談ください。',
   },
   {
-    question: '見積りは無料です��？',
+    question: '見積りは無料ですか？',
     answer: 'はい、お見積りは無料です。ヒアリング後、ご要望に合わせた詳細なお見積りをご提示いたします。',
   },
   {
@@ -163,7 +164,7 @@ const faqs = [
     question: '掲載されていないサービスも依頼できますか？',
     answer: 'はい、掲載内容以外にもご要望があればお気軽にご相談ください。パートナー企業との連携により、幅広いニーズに対応可能です。',
   },
-]
+] satisfies PricingFaq[]
 
 export default function PricingPageClient() {
   return (
@@ -209,15 +210,21 @@ export default function PricingPageClient() {
       </section>
 
       {/* Notice Section */}
-      <section className="py-8 glass-light border-y border-border/20">
+      <section className="py-8 glass-card rainbow-border">
         <div className="container mx-auto px-6 md:px-12 lg:px-16">
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 text-center sm:text-left">
             <div className="w-10 h-10 rounded-full bg-foreground/5 flex items-center justify-center shrink-0">
               <Sparkles className="w-4 h-4 text-muted-foreground" />
             </div>
-            <p className="text-sm text-muted-foreground leading-[1.8] tracking-wide">
+            <ScatterText
+              as="p"
+              className="text-sm text-muted-foreground leading-[1.8] tracking-wide"
+              scrollStart={50}
+              scrollEnd={350}
+              distance={260}
+            >
               下記料金は参考価格です。プロジェクトの内容・規模により変動いたします。正式なお見積りは無料ヒアリング後にご提示いたしますので、お気軽にご相談ください。
-            </p>
+            </ScatterText>
           </div>
         </div>
       </section>
@@ -228,7 +235,7 @@ export default function PricingPageClient() {
           <div className="space-y-20 lg:space-y-32">
             {serviceCategories.map((category, categoryIndex) => (
               <SectionReveal key={category.id} delay={categoryIndex * 0.03}>
-                <div className="group">
+                <div className="group rounded-3xl glass-card rainbow-border p-6 md:p-8 lg:p-10">
                   {/* Category Header */}
                   <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 md:gap-8 mb-10 lg:mb-12 pb-8 border-b border-border/20">
                     <div className="flex items-start gap-5 md:gap-6">
@@ -236,22 +243,56 @@ export default function PricingPageClient() {
                         <category.icon className="w-5 h-5 md:w-6 md:h-6 text-foreground/60" />
                       </div>
                       <div>
-                        <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-1 tracking-tight">
+                        <ScatterText
+                          as="h2"
+                          className="text-xl sm:text-2xl md:text-3xl font-bold mb-1 tracking-tight"
+                          scrollStart={50}
+                          scrollEnd={350}
+                          distance={300}
+                          gradient
+                        >
                           {category.title}
-                        </h2>
-                        <p className="text-xs text-muted-foreground uppercase tracking-widest mb-3 font-medium">
+                        </ScatterText>
+                        <ScatterText
+                          as="p"
+                          className="text-xs text-muted-foreground uppercase tracking-widest mb-3 font-medium"
+                          scrollStart={50}
+                          scrollEnd={350}
+                          distance={220}
+                        >
                           {category.titleEn}
-                        </p>
-                        <p className="text-sm md:text-base text-muted-foreground leading-[1.8] tracking-wide max-w-lg">
+                        </ScatterText>
+                        <ScatterText
+                          as="p"
+                          className="text-sm md:text-base text-muted-foreground leading-[1.8] tracking-wide max-w-lg"
+                          scrollStart={50}
+                          scrollEnd={350}
+                          distance={260}
+                        >
                           {category.description}
-                        </p>
+                        </ScatterText>
                       </div>
                     </div>
                     <div className="md:text-right shrink-0">
-                      <p className="text-xs text-muted-foreground mb-1 tracking-wide">参考価格</p>
-                      <p className="text-2xl sm:text-3xl font-bold gradient-text-soft">
+                      <ScatterText
+                        as="p"
+                        className="text-xs text-muted-foreground mb-1 tracking-wide"
+                        scrollStart={50}
+                        scrollEnd={350}
+                        distance={160}
+                      >
+                        参考価格
+                      </ScatterText>
+                      <ScatterText
+                        as="p"
+                        className="text-2xl sm:text-3xl font-bold"
+                        scrollStart={50}
+                        scrollEnd={350}
+                        distance={200}
+                        gradient
+                      >
                         {category.priceRange}
-                      </p>
+                      </ScatterText>
                     </div>
                   </div>
 
@@ -260,11 +301,36 @@ export default function PricingPageClient() {
                     {category.services.map((service) => (
                       <div
                         key={service.name}
-                        className="p-6 lg:p-8 rounded-2xl bg-background border border-border/20 hover:border-foreground/10 transition-all duration-300"
+                        className="p-6 lg:p-8 rounded-2xl bg-background/45 rainbow-border transition-all duration-300"
                       >
-                        <h3 className="text-sm md:text-base font-bold mb-2 tracking-tight">{service.name}</h3>
-                        <p className="text-lg md:text-xl font-bold text-foreground mb-2">{service.price}</p>
-                        <p className="text-xs text-muted-foreground tracking-wide">{service.note}</p>
+                        <ScatterText
+                          as="h3"
+                          className="text-sm md:text-base font-bold mb-2 tracking-tight"
+                          scrollStart={50}
+                          scrollEnd={350}
+                          distance={220}
+                          gradient
+                        >
+                          {service.name}
+                        </ScatterText>
+                        <ScatterText
+                          as="p"
+                          className="text-lg md:text-xl font-bold text-foreground mb-2"
+                          scrollStart={50}
+                          scrollEnd={350}
+                          distance={200}
+                        >
+                          {service.price}
+                        </ScatterText>
+                        <ScatterText
+                          as="p"
+                          className="text-xs text-muted-foreground tracking-wide"
+                          scrollStart={50}
+                          scrollEnd={350}
+                          distance={180}
+                        >
+                          {service.note}
+                        </ScatterText>
                       </div>
                     ))}
                   </div>
@@ -274,10 +340,18 @@ export default function PricingPageClient() {
                     {category.features.map((feature) => (
                       <span
                         key={feature}
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs bg-card rounded-full border border-border/20"
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs bg-background/45 rounded-full rainbow-border"
                       >
                         <Check size={10} className="text-muted-foreground" />
-                        {feature}
+                        <ScatterText
+                          as="span"
+                          className="inline-block"
+                          scrollStart={50}
+                          scrollEnd={350}
+                          distance={140}
+                        >
+                          {feature}
+                        </ScatterText>
                       </span>
                     ))}
                   </div>
@@ -322,16 +396,31 @@ export default function PricingPageClient() {
           <div className="max-w-3xl mx-auto space-y-4 lg:space-y-6">
             {faqs.map((faq, index) => (
               <SectionReveal key={faq.question} delay={index * 0.03}>
-                <div className="p-6 md:p-8 lg:p-10 rounded-3xl bg-background border border-border/20 hover:border-foreground/10 transition-all duration-300">
+                <div className="p-6 md:p-8 lg:p-10 rounded-3xl glass-card rainbow-border transition-all duration-300">
                   <div className="flex items-start gap-4 mb-4">
                     <div className="w-8 h-8 rounded-full bg-foreground/5 flex items-center justify-center shrink-0">
                       <HelpCircle size={14} className="text-muted-foreground" />
                     </div>
-                    <h3 className="text-sm md:text-base font-bold leading-[1.6] tracking-tight">{faq.question}</h3>
+                    <ScatterText
+                      as="h3"
+                      className="text-sm md:text-base font-bold leading-[1.6] tracking-tight"
+                      scrollStart={50}
+                      scrollEnd={350}
+                      distance={240}
+                      gradient
+                    >
+                      {faq.question}
+                    </ScatterText>
                   </div>
-                  <p className="text-sm text-muted-foreground leading-[1.8] tracking-wide pl-12">
+                  <ScatterText
+                    as="p"
+                    className="text-sm text-muted-foreground leading-[1.8] tracking-wide pl-12"
+                    scrollStart={50}
+                    scrollEnd={350}
+                    distance={260}
+                  >
                     {faq.answer}
-                  </p>
+                  </ScatterText>
                 </div>
               </SectionReveal>
             ))}
@@ -348,6 +437,7 @@ export default function PricingPageClient() {
             scrollStart={50}
             scrollEnd={350}
             distance={400}
+            gradient
           >
             まずは、
           </ScatterText>
@@ -373,7 +463,7 @@ export default function PricingPageClient() {
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <ScatterBlock
-              className="group w-full sm:w-auto px-8 py-4 bg-foreground text-background rounded-full font-medium tracking-widths uppercase text-sm cursor-pointer hover:bg-foreground/90 transition-colors"
+              className="cta-primary group w-full rounded-full px-8 py-4 text-sm font-bold tracking-widest uppercase transition-all duration-300 sm:w-auto"
               scrollEnd={350}
               distance={400}
               seed={40}
@@ -381,19 +471,36 @@ export default function PricingPageClient() {
             >
               <span className="flex items-center justify-center gap-4">
                 <MessageCircle size={18} />
-                無料で相談する
+                <ScatterText
+                  as="span"
+                  className="inline-block"
+                  scrollStart={50}
+                  scrollEnd={350}
+                  distance={180}
+                >
+                  無料で相談する
+                </ScatterText>
                 <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
               </span>
             </ScatterBlock>
             
             <ScatterBlock
-              className="flex items-center justify-center gap-3 w-full sm:w-auto px-8 py-4 bg-card text-foreground rounded-full font-medium text-sm border border-border/20 cursor-pointer hover:border-foreground/20 transition-colors"
+              className="cta-secondary flex w-full items-center justify-center gap-3 rounded-full px-8 py-4 text-sm font-bold transition-all duration-300 sm:w-auto"
               scrollEnd={350}
               distance={400}
               seed={41}
+              href="tel:08091550426"
             >
               <Phone size={18} />
-              <span>080-9155-0426</span>
+              <ScatterText
+                as="span"
+                className="inline-block"
+                scrollStart={50}
+                scrollEnd={350}
+                distance={180}
+              >
+                080-9155-0426
+              </ScatterText>
             </ScatterBlock>
           </div>
         </div>

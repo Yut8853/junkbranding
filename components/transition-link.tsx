@@ -13,9 +13,21 @@ interface TransitionLinkProps {
 }
 
 export function TransitionLink({ href, children, className, onClick, ...props }: TransitionLinkProps) {
-  const { navigateWithTransition, isTransitioning } = useTransition()
+  const { navigateWithTransition, isTransitioning, prefetchRoute } = useTransition()
 
   const handleClick = (e: MouseEvent<HTMLAnchorElement>) => {
+    if (
+      e.defaultPrevented ||
+      e.metaKey ||
+      e.ctrlKey ||
+      e.shiftKey ||
+      e.altKey ||
+      e.button !== 0 ||
+      !href.startsWith('/')
+    ) {
+      return
+    }
+
     e.preventDefault()
     
     if (isTransitioning) return
@@ -32,6 +44,8 @@ export function TransitionLink({ href, children, className, onClick, ...props }:
       href={href} 
       className={className} 
       onClick={handleClick}
+      onMouseEnter={() => prefetchRoute(href)}
+      onFocus={() => prefetchRoute(href)}
       {...props}
     >
       {children}

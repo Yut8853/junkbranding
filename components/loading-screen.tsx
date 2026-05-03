@@ -4,11 +4,12 @@ import { useEffect, useState, useRef } from 'react'
 
 interface LoadingScreenProps {
   progress: number
+  canSelectAudio: boolean
   audioChoice: 'sound-on' | 'sound-off' | null
   onSelectAudio: (withSound: boolean) => void
 }
 
-export function LoadingScreen({ progress, audioChoice, onSelectAudio }: LoadingScreenProps) {
+export function LoadingScreen({ progress, canSelectAudio, audioChoice, onSelectAudio }: LoadingScreenProps) {
   const [displayProgress, setDisplayProgress] = useState(0)
   const [phase, setPhase] = useState<'loading' | 'complete' | 'exit'>('loading')
   const animationRef = useRef<number>(0)
@@ -105,8 +106,8 @@ export function LoadingScreen({ progress, audioChoice, onSelectAudio }: LoadingS
           <div className="flex flex-col gap-3 sm:flex-row">
             <button
               type="button"
-              onClick={() => onSelectAudio(true)}
-              disabled={audioChoice !== null}
+              onClick={() => canSelectAudio && onSelectAudio(true)}
+              disabled={!canSelectAudio || audioChoice !== null}
               className="group relative overflow-hidden rounded-full px-8 py-4 text-sm font-bold uppercase tracking-[0.25em] text-white shadow-[0_18px_50px_rgba(120,60,255,0.32)] transition-transform duration-300 hover:scale-105 disabled:cursor-default disabled:opacity-80 disabled:hover:scale-100"
               style={{
                 background: 'linear-gradient(90deg, hsl(350, 65%, 72%), hsl(25, 70%, 72%), hsl(50, 65%, 70%), hsl(95, 45%, 65%), hsl(175, 50%, 65%), hsl(200, 60%, 72%), hsl(240, 55%, 75%), hsl(280, 50%, 72%), hsl(320, 60%, 72%))',
@@ -115,17 +116,17 @@ export function LoadingScreen({ progress, audioChoice, onSelectAudio }: LoadingS
               }}
             >
               <span className="relative z-10">
-                {audioChoice === 'sound-on' ? 'Music On' : '音楽ありで開始'}
+                {audioChoice === 'sound-on' ? 'Music On' : canSelectAudio ? 'Start With Music' : 'Loading Assets'}
               </span>
               <span className="absolute inset-0 bg-white/0 transition-colors group-hover:bg-white/15" />
             </button>
             <button
               type="button"
-              onClick={() => onSelectAudio(false)}
-              disabled={audioChoice !== null}
+              onClick={() => canSelectAudio && onSelectAudio(false)}
+              disabled={!canSelectAudio || audioChoice !== null}
               className="rounded-full border border-white/30 bg-white/10 px-8 py-4 text-sm font-bold uppercase tracking-[0.25em] text-white shadow-[0_18px_45px_rgba(255,255,255,0.08)] backdrop-blur-xl transition-transform duration-300 hover:scale-105 hover:bg-white/20 disabled:cursor-default disabled:opacity-70 disabled:hover:scale-100"
             >
-              {audioChoice === 'sound-off' ? 'Silent Start' : '音なしで開始'}
+              {audioChoice === 'sound-off' ? 'Silent Start' : canSelectAudio ? 'Start Silent' : 'Please Wait'}
             </button>
           </div>
         </div>
@@ -135,12 +136,13 @@ export function LoadingScreen({ progress, audioChoice, onSelectAudio }: LoadingS
           <p 
             className="text-sm uppercase tracking-[0.3em] text-white/55 animate-pulse"
           >
-            {displayProgress < 30 && '読み込み中 ...'}
-            {displayProgress >= 30 && displayProgress < 60 && 'ようこそ ...'}
-            {displayProgress >= 60 && displayProgress < 90 && 'もう少しだけ ...'}
-            {displayProgress >= 90 && displayProgress < 100 && 'お待たせしました'}
-            {displayProgress >= 100 && !audioChoice && '音楽を選んで開始'}
-            {displayProgress >= 100 && audioChoice && phase !== 'exit' && 'スタートします'}
+            {displayProgress < 30 && 'Loading assets ...'}
+            {displayProgress >= 30 && displayProgress < 60 && 'Preparing experience ...'}
+            {displayProgress >= 60 && displayProgress < 90 && 'Warming up pages ...'}
+            {displayProgress >= 90 && displayProgress < 100 && 'Almost ready'}
+            {displayProgress >= 100 && !canSelectAudio && 'Finalizing ...'}
+            {displayProgress >= 100 && canSelectAudio && !audioChoice && 'Choose your sound'}
+            {displayProgress >= 100 && audioChoice && phase !== 'exit' && 'Starting'}
           </p>
         </div>
       </div>

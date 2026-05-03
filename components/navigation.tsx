@@ -4,6 +4,7 @@ import { usePathname } from 'next/navigation'
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { Phone, Mail, ArrowUpRight } from 'lucide-react'
 import { TransitionLink } from '@/components/transition-link'
+import { useTransition } from '@/contexts/transition-context'
 import { clamp01, createScatterValue, seededRandom } from '@/lib/scatter'
 
 const navItems = [
@@ -30,6 +31,7 @@ export function Navigation() {
   const [isAnimating, setIsAnimating] = useState(false)
   const [hoveredItem, setHoveredItem] = useState<string | null>(null)
   const [assembleProgress, setAssembleProgress] = useState(0)
+  const { prefetchRoute } = useTransition()
   
   const menuRef = useRef<HTMLDivElement>(null)
   const itemsRef = useRef<(HTMLLIElement | null)[]>([])
@@ -81,10 +83,17 @@ export function Navigation() {
     }
 
     let startTime: number | null = null
+    let lastFrameTime = 0
     const duration = 1200 // 1.2 seconds for full assembly
 
     const animate = (timestamp: number) => {
       if (!startTime) startTime = timestamp
+      if (timestamp - lastFrameTime < 33 && timestamp - startTime < duration) {
+        requestAnimationFrame(animate)
+        return
+      }
+      lastFrameTime = timestamp
+
       const elapsed = timestamp - startTime
       const progress = Math.min(elapsed / duration, 1)
       
@@ -108,6 +117,8 @@ export function Navigation() {
     if (isAnimating) return
     setIsAnimating(true)
     setIsOpen(true)
+    navItems.forEach((item) => prefetchRoute(item.href))
+    prefetchRoute('/privacy')
     // Disable scroll on both html and body
     document.documentElement.style.overflow = 'hidden'
     document.body.style.overflow = 'hidden'
@@ -115,7 +126,7 @@ export function Navigation() {
     document.documentElement.style.width = '100%'
     document.documentElement.style.top = `-${window.scrollY}px`
     setTimeout(() => setIsAnimating(false), 1500)
-  }, [isAnimating])
+  }, [isAnimating, prefetchRoute])
 
   const closeMenu = useCallback(() => {
     if (isAnimating) return
@@ -123,10 +134,17 @@ export function Navigation() {
     
     // Reverse animation - scatter out
     let startTime: number | null = null
+    let lastFrameTime = 0
     const duration = 600
 
     const animate = (timestamp: number) => {
       if (!startTime) startTime = timestamp
+      if (timestamp - lastFrameTime < 33 && timestamp - startTime < duration) {
+        requestAnimationFrame(animate)
+        return
+      }
+      lastFrameTime = timestamp
+
       const elapsed = timestamp - startTime
       const progress = Math.min(elapsed / duration, 1)
       const eased = Math.pow(progress, 2)
@@ -161,7 +179,7 @@ export function Navigation() {
     }
   }
 
-  const shouldRenderMenu = hasMounted && (isOpen || isAnimating || assembleProgress > 0)
+  const shouldRenderMenu = hasMounted
 
   // Close on route change
   useEffect(() => {
@@ -471,13 +489,10 @@ export function Navigation() {
                 <Phone size={14} className="group-hover:text-[hsl(350,65%,72%)] transition-colors" />
                 <span className="hidden sm:inline">080-9155-0426</span>
               </a>
-              <a 
-                href="mailto:hello@junkbranding.com" 
-                className="flex items-center gap-2 text-white/60 hover:text-white transition-colors text-sm group"
-              >
-                <Mail size={14} className="group-hover:text-[hsl(200,60%,72%)] transition-colors" />
+              <div className="flex items-center gap-2 text-white/60 text-sm">
+                <Mail size={14} className="text-[hsl(200,60%,72%)]" />
                 <span className="hidden sm:inline">hello@junkbranding.com</span>
-              </a>
+              </div>
             </div>
             <div className="text-xs text-white/40">
               &copy; 2024 JunkBranding

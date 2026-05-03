@@ -1,7 +1,8 @@
 'use client'
 
-import { useRef, useState, ReactNode } from 'react'
+import { useRef, useState, type ReactNode, type MouseEvent } from 'react'
 import Link from 'next/link'
+import { useTransition } from '@/contexts/transition-context'
 
 interface MagneticButtonProps {
   children: ReactNode
@@ -26,6 +27,7 @@ export function MagneticButton({
 }: MagneticButtonProps) {
   const buttonRef = useRef<HTMLButtonElement | HTMLAnchorElement>(null)
   const [position, setPosition] = useState({ x: 0, y: 0 })
+  const { navigateWithTransition, isTransitioning, prefetchRoute } = useTransition()
 
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!buttonRef.current) return
@@ -44,6 +46,26 @@ export function MagneticButton({
     setPosition({ x: 0, y: 0 })
   }
 
+  const handleLinkClick = (e: MouseEvent<HTMLAnchorElement>) => {
+    onClick?.()
+
+    if (
+      e.defaultPrevented ||
+      e.metaKey ||
+      e.ctrlKey ||
+      e.shiftKey ||
+      e.altKey ||
+      e.button !== 0 ||
+      !href?.startsWith('/') ||
+      isTransitioning
+    ) {
+      return
+    }
+
+    e.preventDefault()
+    navigateWithTransition(href)
+  }
+
   const style = {
     transform: `translate3d(${position.x}px, ${position.y}px, 0)`,
   }
@@ -59,6 +81,9 @@ export function MagneticButton({
         style={style}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
+        onMouseEnter={() => href.startsWith('/') && prefetchRoute(href)}
+        onFocus={() => href.startsWith('/') && prefetchRoute(href)}
+        onClick={handleLinkClick}
         data-cursor={dataCursor}
       >
         {children}

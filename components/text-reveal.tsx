@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, useEffect, ReactNode, createElement } from 'react'
+import { useRef, useEffect, useState, ReactNode, createElement } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
@@ -124,51 +124,48 @@ export function SectionReveal({
 }: SectionRevealProps) {
   const ref = useRef<HTMLDivElement>(null)
   const hasAnimated = useRef(false)
+  const [isVisible, setIsVisible] = useState(false)
 
   useEffect(() => {
-    if (!ref.current) return
+    const element = ref.current
+    if (!element) return
 
-    gsap.set(ref.current, {
-      opacity: 0,
-      y: y,
-      filter: 'blur(6px)',
-    })
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          if (once && hasAnimated.current) return
+          hasAnimated.current = true
+          setIsVisible(true)
 
-    const trigger = ScrollTrigger.create({
-      trigger: ref.current,
-      start: 'top bottom-=50',
-      onEnter: () => {
-        if (once && hasAnimated.current) return
-        hasAnimated.current = true
-        
-        gsap.to(ref.current, {
-          opacity: 1,
-          y: 0,
-          filter: 'blur(0px)',
-          duration: duration,
-          delay: delay,
-          ease: 'power3.out',
-        })
-      },
-      onLeaveBack: () => {
+          if (once) {
+            observer.disconnect()
+          }
+          return
+        }
+
         if (!once) {
-          gsap.set(ref.current, {
-            opacity: 0,
-            y: y,
-            filter: 'blur(6px)',
-          })
           hasAnimated.current = false
+          setIsVisible(false)
         }
       },
-    })
+      { rootMargin: '0px 0px -50px 0px' }
+    )
 
-    return () => {
-      trigger.kill()
-    }
-  }, [delay, duration, y, once])
+    observer.observe(element)
+
+    return () => observer.disconnect()
+  }, [once])
 
   return (
-    <div ref={ref} className={className} style={{ willChange: 'transform, opacity, filter' }}>
+    <div
+      ref={ref}
+      className={className}
+      style={{
+        opacity: isVisible ? 1 : 0,
+        transform: isVisible ? 'translate3d(0,0,0)' : `translate3d(0,${y}px,0)`,
+        transition: `opacity ${duration}s cubic-bezier(0.16, 1, 0.3, 1) ${delay}s, transform ${duration}s cubic-bezier(0.16, 1, 0.3, 1) ${delay}s`,
+      }}
+    >
       {children}
     </div>
   )

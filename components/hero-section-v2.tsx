@@ -1,7 +1,8 @@
 'use client'
 
-import { useEffect, useRef, useState, useCallback, useMemo } from 'react'
+import { useEffect, useRef, useState, useMemo } from 'react'
 import { createScatterValue } from '@/lib/scatter'
+import { ScatterText } from '@/components/scatter-text'
 
 export function HeroSectionV2() {
   const containerRef = useRef<HTMLElement>(null)
@@ -11,10 +12,11 @@ export function HeroSectionV2() {
   const sideTextRef = useRef<HTMLDivElement>(null)
   const cornerRefs = useRef<(HTMLDivElement | null)[]>([])
   
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
   const [isLoaded, setIsLoaded] = useState(false)
   const rafRef = useRef<number | null>(null)
   const targetMousePos = useRef({ x: 0, y: 0 })
+  const currentMousePos = useRef({ x: 0, y: 0 })
+  const isMouseAnimatingRef = useRef(false)
 
   // Text content
   const line1 = 'JUNK'
@@ -36,31 +38,49 @@ export function HeroSectionV2() {
     })
   }, [totalChars])
 
-  // Smooth mouse tracking
-  const updateMousePos = useCallback(() => {
-    setMousePos(prev => ({
-      x: prev.x + (targetMousePos.current.x - prev.x) * 0.06,
-      y: prev.y + (targetMousePos.current.y - prev.y) * 0.06,
-    }))
-    rafRef.current = requestAnimationFrame(updateMousePos)
-  }, [])
-
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       targetMousePos.current = {
         x: (e.clientX / window.innerWidth - 0.5) * 2,
         y: (e.clientY / window.innerHeight - 0.5) * 2,
       }
+
+      if (!isMouseAnimatingRef.current) {
+        isMouseAnimatingRef.current = true
+        rafRef.current = requestAnimationFrame(updateMousePosition)
+      }
     }
 
-    window.addEventListener('mousemove', handleMouseMove)
-    rafRef.current = requestAnimationFrame(updateMousePos)
+    let lastFrameTime = 0
+    const updateMousePosition = (currentTime: number) => {
+      if (currentTime - lastFrameTime >= 33) {
+        lastFrameTime = currentTime
+        currentMousePos.current.x += (targetMousePos.current.x - currentMousePos.current.x) * 0.08
+        currentMousePos.current.y += (targetMousePos.current.y - currentMousePos.current.y) * 0.08
+
+        if (titleWrapperRef.current) {
+          titleWrapperRef.current.style.transform = `translate3d(${currentMousePos.current.x * -15}px, ${currentMousePos.current.y * -15}px, 0)`
+        }
+      }
+
+      const dx = targetMousePos.current.x - currentMousePos.current.x
+      const dy = targetMousePos.current.y - currentMousePos.current.y
+      if (dx * dx + dy * dy < 0.0001) {
+        isMouseAnimatingRef.current = false
+        rafRef.current = null
+        return
+      }
+
+      rafRef.current = requestAnimationFrame(updateMousePosition)
+    }
+
+    window.addEventListener('mousemove', handleMouseMove, { passive: true })
 
     return () => {
       window.removeEventListener('mousemove', handleMouseMove)
       if (rafRef.current) cancelAnimationFrame(rafRef.current)
     }
-  }, [updateMousePos])
+  }, [])
 
   // Initial load animation
   useEffect(() => {
@@ -79,10 +99,14 @@ export function HeroSectionV2() {
       sideTextRef.current,
       ...cornerRefs.current.filter(Boolean),
     ].filter(Boolean)
+    let rafId: number | null = null
+    let lastScrollProgress = -1
 
     const handleScroll = () => {
       // 他のセクションと同じスピードで飛散（350pxで完了）
       const scrollProgress = Math.min(window.scrollY / 350, 1)
+      if (Math.abs(scrollProgress - lastScrollProgress) < 0.01) return
+      lastScrollProgress = scrollProgress
       
       // Apply explosion to each character
       validChars.forEach((char, index) => {
@@ -97,10 +121,21 @@ export function HeroSectionV2() {
       })
     }
 
-    window.addEventListener('scroll', handleScroll, { passive: true })
+    const handleScrollRaf = () => {
+      if (rafId) return
+      rafId = requestAnimationFrame(() => {
+        rafId = null
+        handleScroll()
+      })
+    }
+
+    window.addEventListener('scroll', handleScrollRaf, { passive: true })
     handleScroll() // Initial call
 
-    return () => window.removeEventListener('scroll', handleScroll)
+    return () => {
+      window.removeEventListener('scroll', handleScrollRaf)
+      if (rafId) cancelAnimationFrame(rafId)
+    }
   }, [isLoaded, explosionValues])
 
   // Render character with soft gradient and animation
@@ -130,9 +165,6 @@ export function HeroSectionV2() {
         <div 
           ref={titleWrapperRef}
           className="absolute inset-0 flex flex-col justify-center items-center z-10"
-          style={{
-            transform: `translate3d(${mousePos.x * -15}px, ${mousePos.y * -15}px, 0)`,
-          }}
         >
           {/* Line 1 - JUNK */}
           <div className="overflow-visible">
@@ -168,8 +200,24 @@ export function HeroSectionV2() {
         >
           {/* Left - Location */}
           <div className="flex flex-col gap-1">
-            <span className="text-[10px] md:text-xs tracking-[0.3em] text-foreground/40 uppercase">Based in</span>
-            <span className="text-sm md:text-base text-foreground/80">Ibaraki, Japan</span>
+            <ScatterText
+              as="span"
+              className="text-[10px] md:text-xs tracking-[0.3em] text-foreground/40 uppercase"
+              scrollStart={50}
+              scrollEnd={350}
+              distance={180}
+            >
+              Based in
+            </ScatterText>
+            <ScatterText
+              as="span"
+              className="text-sm md:text-base text-foreground/80"
+              scrollStart={50}
+              scrollEnd={350}
+              distance={220}
+            >
+              Ibaraki, Japan
+            </ScatterText>
           </div>
 
           </div>
@@ -186,9 +234,15 @@ export function HeroSectionV2() {
             transition: 'all 1s cubic-bezier(0.77, 0, 0.175, 1) 1.2s',
           }}
         >
-          <span className="text-[10px] tracking-[0.4em] text-foreground/30 uppercase">
+          <ScatterText
+            as="span"
+            className="text-[10px] tracking-[0.4em] text-foreground/30 uppercase"
+            scrollStart={50}
+            scrollEnd={350}
+            distance={220}
+          >
             Creative Studio / Est. 2020
-          </span>
+          </ScatterText>
         </div>
 
         {/* Corner accents */}

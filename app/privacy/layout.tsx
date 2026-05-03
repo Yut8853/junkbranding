@@ -1,10 +1,9 @@
 import { PrivacyBackground } from '@/components/privacy-background';
+import type { LayoutProps } from '@/types/layout';
 
 export default function PrivacyLayout({
   children,
-}: {
-  children: React.ReactNode;
-}) {
+}: LayoutProps) {
   return (
     <>
       <PrivacyBackground />

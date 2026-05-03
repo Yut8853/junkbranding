@@ -19,24 +19,47 @@ interface Particle {
   opacity: number
 }
 
+const getIsLowPowerDevice = () => {
+  const nav = navigator as Navigator & { deviceMemory?: number }
+  return (
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
+    (navigator.hardwareConcurrency || 8) <= 4 ||
+    (nav.deviceMemory ?? 8) <= 4
+  )
+}
+
 export function FloatingParticles() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const particlesRef = useRef<Particle[]>([])
   const [isMounted, setIsMounted] = useState(false)
+  const [isTransitionLayerActive, setIsTransitionLayerActive] = useState(false)
   const animationRef = useRef<number>(0)
   const timeRef = useRef(0)
   const lastFrameTime = useRef(0)
   const mouseRef = useRef({ x: 0, y: 0 })
   const targetMouseRef = useRef({ x: 0, y: 0 })
+  const isTransitioningRef = useRef(false)
+  const transitionIntensityRef = useRef(0)
   const { isTransitioning } = useTransition()
-
-  useEffect(() => {
-    console.log('[v0] FloatingParticles isTransitioning changed:', isTransitioning)
-  }, [isTransitioning])
 
   useEffect(() => {
     setIsMounted(true)
   }, [])
+
+  useEffect(() => {
+    isTransitioningRef.current = isTransitioning
+
+    if (isTransitioning) {
+      setIsTransitionLayerActive(true)
+      return
+    }
+
+    const timeout = window.setTimeout(() => {
+      setIsTransitionLayerActive(false)
+    }, 520)
+
+    return () => window.clearTimeout(timeout)
+  }, [isTransitioning])
 
   useEffect(() => {
     if (!isMounted) return
@@ -47,10 +70,14 @@ export function FloatingParticles() {
     const ctx = canvas.getContext('2d', { alpha: true })
     if (!ctx) return
 
-    // Use lower DPR for performance (max 1.5)
-    const dpr = Math.min(window.devicePixelRatio || 1, 1.5)
+    const isLowPowerDevice = getIsLowPowerDevice()
+    const dpr = 1
+    const attractionRadius = 400
+    const attractionRadiusSq = attractionRadius * attractionRadius
+    const attractionStrength = 0.25
     let width = window.innerWidth
     let height = window.innerHeight
+    let isPageVisible = document.visibilityState === 'visible'
 
     const resize = () => {
       width = window.innerWidth
@@ -65,10 +92,11 @@ export function FloatingParticles() {
       initParticles()
     }
 
-    // Reduce particle count significantly
     const initParticles = () => {
       particlesRef.current = []
-      const count = Math.min(40, Math.floor((width * height) / 25000))
+      const maxParticles = isLowPowerDevice ? 18 : 32
+      const particleDensity = isLowPowerDevice ? 52000 : 32000
+      const count = Math.min(maxParticles, Math.floor((width * height) / particleDensity))
       
       for (let i = 0; i < count; i++) {
         const hue = Math.random() * 360
@@ -98,14 +126,26 @@ export function FloatingParticles() {
       targetMouseRef.current = { x: e.clientX, y: e.clientY }
     }
 
+    const handleVisibilityChange = () => {
+      isPageVisible = document.visibilityState === 'visible'
+      if (isPageVisible) {
+        lastFrameTime.current = performance.now()
+      }
+    }
+
     resize()
     window.addEventListener('resize', resize, { passive: true })
     window.addEventListener('mousemove', handleMouseMove, { passive: true })
+    document.addEventListener('visibilitychange', handleVisibilityChange)
 
-    // Animation loop with frame rate limiting (30fps)
     const animate = (currentTime: number) => {
-      // Limit to ~30fps for performance
-      if (currentTime - lastFrameTime.current < 33) {
+      if (!isPageVisible) {
+        animationRef.current = requestAnimationFrame(animate)
+        return
+      }
+
+      const frameInterval = isTransitioningRef.current ? 33 : isLowPowerDevice ? 80 : 50
+      if (currentTime - lastFrameTime.current < frameInterval) {
         animationRef.current = requestAnimationFrame(animate)
         return
       }
@@ -113,6 +153,10 @@ export function FloatingParticles() {
       
       timeRef.current += 1
       const time = timeRef.current
+      const transitionTarget = isTransitioningRef.current ? 1 : 0
+      const intensityEase = transitionTarget ? 0.16 : 0.045
+      transitionIntensityRef.current += (transitionTarget - transitionIntensityRef.current) * intensityEase
+      const transitionIntensity = transitionIntensityRef.current
 
       // Smooth mouse position interpolation (faster response)
       mouseRef.current.x += (targetMouseRef.current.x - mouseRef.current.x) * 0.25
@@ -129,14 +173,14 @@ export function FloatingParticles() {
         // Calculate distance from mouse
         const dx = mouseRef.current.x - p.x
         const dy = mouseRef.current.y - p.y
-        const distance = Math.sqrt(dx * dx + dy * dy)
+        const distanceSq = dx * dx + dy * dy
         
         // Mouse attraction effect - particles are drawn toward cursor
-        const attractionRadius = 400
-        const attractionStrength = 0.25
-        
-        if (distance < attractionRadius && distance > 0) {
+        let proximity = 0
+        if (distanceSq < attractionRadiusSq && distanceSq > 0) {
+          const distance = Math.sqrt(distanceSq)
           const force = (1 - distance / attractionRadius) * attractionStrength
+          proximity = 1 - distance / attractionRadius
           p.vx += (dx / distance) * force * 4
           p.vy += (dy / distance) * force * 4
         }
@@ -162,21 +206,29 @@ export function FloatingParticles() {
         }
 
         // Color shift based on proximity to mouse
-        const colorShift = distance < attractionRadius ? (1 - distance / attractionRadius) * 30 : 0
+        const colorShift = proximity * 30
         p.hue = (p.hue + 0.015 + colorShift * 0.1) % 360
 
-        // Simplified gradient with fewer stops
-        const glowSize = p.size * 50
+        const glowSize = p.size * (58 - 18 * transitionIntensity)
         const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, glowSize)
-        const alpha = p.opacity * 0.6
-        gradient.addColorStop(0, `hsla(${p.hue}, 75%, 80%, ${alpha})`)
-        gradient.addColorStop(0.5, `hsla(${p.hue}, 65%, 70%, ${alpha * 0.3})`)
+        const alpha = p.opacity * (0.6 + 0.35 * transitionIntensity)
+        const coreLightness = 80 - 18 * transitionIntensity
+        const midLightness = 70 - 12 * transitionIntensity
+        gradient.addColorStop(0, `hsla(${p.hue}, 88%, ${coreLightness}%, ${alpha})`)
+        gradient.addColorStop(0.45, `hsla(${p.hue}, 78%, ${midLightness}%, ${alpha * (0.3 + 0.15 * transitionIntensity)})`)
         gradient.addColorStop(1, `hsla(${p.hue}, 60%, 65%, 0)`)
 
         ctx.beginPath()
         ctx.fillStyle = gradient
         ctx.arc(p.x, p.y, glowSize, 0, Math.PI * 2)
         ctx.fill()
+
+        if (transitionIntensity > 0.02) {
+          ctx.beginPath()
+          ctx.fillStyle = `hsla(${p.hue}, 95%, 50%, ${Math.min(0.9, p.opacity) * transitionIntensity})`
+          ctx.arc(p.x, p.y, Math.max(2.4, p.size * 1.5), 0, Math.PI * 2)
+          ctx.fill()
+        }
       })
 
       animationRef.current = requestAnimationFrame(animate)
@@ -186,6 +238,7 @@ export function FloatingParticles() {
     return () => {
       window.removeEventListener('resize', resize)
       window.removeEventListener('mousemove', handleMouseMove)
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
       cancelAnimationFrame(animationRef.current)
     }
   }, [isMounted])
@@ -197,10 +250,12 @@ export function FloatingParticles() {
       ref={canvasRef}
       className="fixed inset-0 pointer-events-none"
       style={{
-        zIndex: isTransitioning ? 99999 : 0,
-        filter: isTransitioning ? 'blur(0px)' : 'blur(4px)',
-        opacity: isTransitioning ? 1 : 0.7,
-        transition: 'filter 0.3s ease, opacity 0.3s ease',
+        zIndex: isTransitionLayerActive ? 99999 : 2,
+        opacity: isTransitioning ? 1 : 0.72,
+        filter: isTransitioning ? 'saturate(1.45) contrast(1.25)' : 'saturate(1) contrast(1)',
+        transition: isTransitioning
+          ? 'opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1), filter 0.45s cubic-bezier(0.16, 1, 0.3, 1)'
+          : 'opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1), filter 0.55s cubic-bezier(0.16, 1, 0.3, 1)',
       }}
       aria-hidden="true"
     />

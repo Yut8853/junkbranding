@@ -190,8 +190,12 @@ export function ServicesSectionV2() {
 
               {/* Number */}
               <div className="flex items-start justify-between mb-6">
-                <span 
+                <ScatterText
+                  as="span"
                   className="font-mono text-5xl md:text-6xl lg:text-7xl font-bold tabular-nums leading-none"
+                  scrollStart={50}
+                  scrollEnd={350}
+                  distance={180}
                   style={{
                     color: activeIndex === index ? service.color : 'var(--foreground)',
                     opacity: activeIndex === index ? 1 : 0.15,
@@ -199,7 +203,7 @@ export function ServicesSectionV2() {
                   }}
                 >
                   {countedNumbers[index]}
-                </span>
+                </ScatterText>
                 
                 {/* Color indicator */}
                 <div 
@@ -216,31 +220,45 @@ export function ServicesSectionV2() {
               {/* Content */}
               <div className="space-y-4">
                 {/* English title */}
-                <h3 
+                <ScatterText
+                  as="h3"
                   className="font-display text-3xl md:text-4xl lg:text-5xl tracking-wide leading-none"
+                  scrollStart={50}
+                  scrollEnd={350}
+                  distance={300}
                   style={{
                     color: activeIndex === index ? service.color : 'var(--foreground)',
                     transition: 'color 0.5s cubic-bezier(0.16, 1, 0.3, 1)',
                   }}
                 >
                   {service.title}
-                </h3>
+                </ScatterText>
                 
                 {/* Japanese title */}
-                <p 
+                <ScatterText
+                  as="p"
                   className="text-base md:text-lg font-medium"
+                  scrollStart={50}
+                  scrollEnd={350}
+                  distance={240}
                   style={{
                     color: activeIndex === index ? service.color : 'var(--primary)',
                     transition: 'color 0.3s ease',
                   }}
                 >
                   {service.titleJa}
-                </p>
+                </ScatterText>
 
                 {/* Description */}
-                <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
+                <ScatterText
+                  as="p"
+                  className="text-sm md:text-base text-muted-foreground leading-relaxed"
+                  scrollStart={50}
+                  scrollEnd={350}
+                  distance={260}
+                >
                   {service.description}
-                </p>
+                </ScatterText>
 
                 {/* Features */}
                 <div className="pt-4 border-t border-foreground/5">
@@ -257,7 +275,15 @@ export function ServicesSectionV2() {
                           transitionDelay: `${i * 0.05}s`,
                         }}
                       >
-                        {feature}
+                        <ScatterText
+                          as="span"
+                          className="inline-block"
+                          scrollStart={50}
+                          scrollEnd={350}
+                          distance={160}
+                        >
+                          {feature}
+                        </ScatterText>
                       </span>
                     ))}
                   </div>

@@ -2,10 +2,11 @@
 
 import { useEffect, useRef, useMemo, useState } from 'react'
 import { clamp01, createScatterValue } from '@/lib/scatter'
+import { subscribeToScrollUpdates } from '@/lib/scroll-manager'
 
 interface ScatterTextProps {
   children: string
-  as?: 'h1' | 'h2' | 'h3' | 'p' | 'span' | 'div'
+  as?: 'h1' | 'h2' | 'h3' | 'h4' | 'p' | 'span' | 'div'
   className?: string
   scrollStart?: number
   scrollEnd?: number
@@ -26,11 +27,12 @@ export function ScatterText({
 }: ScatterTextProps) {
   const containerRef = useRef<HTMLElement>(null)
   const charsRef = useRef<(HTMLSpanElement | null)[]>([])
+  const isVisibleRef = useRef(false)
+  const progressRef = useRef(0)
   const [isVisible, setIsVisible] = useState(false)
-  const [scatterProgress, setScatterProgress] = useState(0)
-  
+
   const chars = useMemo(() => children.split(''), [children])
-  
+
   // Pre-generate scatter values
   const scatterValues = useMemo(() => {
     return chars.map((_, i) => {
@@ -44,70 +46,71 @@ export function ScatterText({
     })
   }, [chars, distance])
 
+  function applyScatter(progress: number) {
+    charsRef.current.forEach((char, index) => {
+      if (!char) return
+
+      const values = scatterValues[index]
+      if (!values) return
+
+      if (progress > 0) {
+        char.style.transform = `translate3d(${values.x * progress}px, ${values.y * progress}px, 0) rotate(${values.rotation * progress}deg) scale(${1 - 0.5 * progress})`
+        char.style.opacity = String(1 - progress)
+        char.style.transition = 'none'
+        return
+      }
+
+      char.style.transform = ''
+      char.style.opacity = ''
+      char.style.transition = ''
+    })
+  }
+
   // Combined scroll handler for fade-in and scatter
   useEffect(() => {
     if (!containerRef.current) return
 
     const container = containerRef.current
     let hasScrolledPast = false
-    let initialRect: DOMRect | null = null
 
-    const handleScroll = () => {
-      const rect = container.getBoundingClientRect()
-      const viewportHeight = window.innerHeight
-      
-      // Store initial position on first call
-      if (!initialRect) {
-        initialRect = rect
-      }
-      
+    return subscribeToScrollUpdates(container, ({ rect, viewportHeight, scrollY }) => {
       // Fade-in: trigger when bottom of element is 50px above viewport bottom
       const fadeInTrigger = viewportHeight - scrollStart
-      if (rect.top < fadeInTrigger && !isVisible) {
+      if (rect.top < fadeInTrigger && !isVisibleRef.current) {
+        isVisibleRef.current = true
         setIsVisible(true)
       }
-      
+
       // Only start scattering after user has scrolled at least 100px
-      const scrollY = window.scrollY
       if (scrollY < 100) {
-        setScatterProgress(0)
+        if (progressRef.current !== 0) {
+          progressRef.current = 0
+          applyScatter(0)
+        }
         return
       }
-      
+
       // Scatter: trigger when element is above 30% of viewport (scrolled up past trigger)
       const scatterTriggerPoint = viewportHeight * 0.30
       const elementCenter = rect.top + rect.height / 2
-      
+
       if (elementCenter < scatterTriggerPoint) {
         hasScrolledPast = true
         const distancePastTrigger = scatterTriggerPoint - elementCenter
         const progress = clamp01(distancePastTrigger / scrollEnd)
-        setScatterProgress(progress)
+        if (Math.abs(progress - progressRef.current) > 0.01 || progress === 0 || progress === 1) {
+          progressRef.current = progress
+          applyScatter(progress)
+        }
       } else if (hasScrolledPast) {
         // Only reset if we've scrolled past before (prevent initial state scatter)
-        setScatterProgress(0)
-      }
-    }
-
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    // Delay initial check to prevent flash
-    requestAnimationFrame(() => handleScroll())
-
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [isVisible, scrollEnd, scrollStart])
-
-  // Apply scatter transforms directly to DOM
-  useEffect(() => {
-    const validChars = charsRef.current.filter(Boolean) as HTMLSpanElement[]
-    
-    validChars.forEach((char, index) => {
-      const values = scatterValues[index]
-      if (scatterProgress > 0) {
-        char.style.transform = `translate(${values.x * scatterProgress}px, ${values.y * scatterProgress}px) rotate(${values.rotation * scatterProgress}deg) scale(${1 - 0.5 * scatterProgress})`
-        char.style.opacity = String(1 - scatterProgress)
+        if (progressRef.current !== 0) {
+          progressRef.current = 0
+          applyScatter(0)
+        }
       }
     })
-  }, [scatterProgress, scatterValues])
+  }, [scrollEnd, scrollStart])
 
   return (
     <Component
@@ -116,21 +119,19 @@ export function ScatterText({
       style={style}
     >
       {chars.map((char, index) => {
-        const delay = index * 0.025
-        
-        // Only apply fade-in styles when not scattering
-        const fadeInStyle = scatterProgress === 0 ? {
+        const delay = Math.min(index * 0.012, 0.45)
+
+        const fadeInStyle = {
           opacity: isVisible ? 1 : 0,
-          transform: isVisible ? 'translateY(0)' : 'translateY(40px)',
-          filter: isVisible ? 'blur(0px)' : 'blur(6px)',
-          transition: `opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1) ${delay}s, transform 0.7s cubic-bezier(0.16, 1, 0.3, 1) ${delay}s, filter 0.7s cubic-bezier(0.16, 1, 0.3, 1) ${delay}s`,
-        } : {}
-        
+          transform: isVisible ? 'translate3d(0,0,0)' : 'translate3d(0,28px,0)',
+          transition: `opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1) ${delay}s, transform 0.55s cubic-bezier(0.16, 1, 0.3, 1) ${delay}s`,
+        }
+
         return (
           <span
             key={index}
             ref={(el) => { charsRef.current[index] = el }}
-            className={`inline-block will-change-transform ${gradient ? 'gradient-text-soft' : ''}`}
+            className={`inline-block ${gradient ? 'gradient-text-soft' : ''}`}
             style={fadeInStyle}
           >
             {char === ' ' ? '\u00A0' : char}

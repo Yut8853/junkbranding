@@ -3,24 +3,11 @@
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { ArrowLeft, Home } from 'lucide-react'
-
-interface Particle {
-  x: number
-  y: number
-  targetX: number
-  targetY: number
-  originX: number
-  originY: number
-  vx: number
-  vy: number
-  size: number
-  hue: number
-  isText: boolean
-}
+import type { NotFoundParticle } from '@/types/not-found'
 
 export default function NotFound() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const particlesRef = useRef<Particle[]>([])
+  const particlesRef = useRef<NotFoundParticle[]>([])
   const mouseRef = useRef({ x: -1000, y: -1000, isPressed: false })
   const animationRef = useRef<number>(0)
   const [isExploded, setIsExploded] = useState(false)

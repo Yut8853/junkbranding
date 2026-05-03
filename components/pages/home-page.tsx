@@ -1,15 +1,46 @@
 'use client'
 
+import { useEffect, useRef, useState } from 'react'
+import dynamic from 'next/dynamic'
 import { SectionReveal } from '@/components/text-reveal'
 import { Footer } from '@/components/footer'
 import { ScatterText } from '@/components/scatter-text'
 import { ScatterBlock } from '@/components/scatter-block'
 import { HeroSectionV2 } from '@/components/hero-section-v2'
-import { ServicesSectionV2 } from '@/components/services-section-v2'
-import { CTASectionV2 } from '@/components/cta-section-v2'
 import { MarqueeSectionV2 } from '@/components/marquee-section-v2'
 
+const ServicesSectionV2 = dynamic(
+  () => import('@/components/services-section-v2').then((mod) => mod.ServicesSectionV2),
+  { ssr: false }
+)
+
+const CTASectionV2 = dynamic(
+  () => import('@/components/cta-section-v2').then((mod) => mod.CTASectionV2),
+  { ssr: false }
+)
+
 export default function HomePageClient() {
+  const videoWrapperRef = useRef<HTMLDivElement>(null)
+  const [shouldLoadVideo, setShouldLoadVideo] = useState(false)
+
+  useEffect(() => {
+    const wrapper = videoWrapperRef.current
+    if (!wrapper || shouldLoadVideo) return
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return
+        setShouldLoadVideo(true)
+        observer.disconnect()
+      },
+      { rootMargin: '500px 0px' }
+    )
+
+    observer.observe(wrapper)
+
+    return () => observer.disconnect()
+  }, [shouldLoadVideo])
+
   return (
     <>
       {/* Hero Section v2 - 3D Perspective + Scroll Pin */}
@@ -60,7 +91,7 @@ export default function HomePageClient() {
                 私たちは大きな組織ではありません。だからこそ、一つひとつのプロジェクトに全力で向き合い、クライアントと同じ目線で、一緒に考え、一緒に創ります。
               </ScatterText>
               <ScatterBlock
-                className="inline-flex items-center gap-4 px-8 py-4 bg-foreground text-background rounded-full text-sm font-medium tracking-widest uppercase cursor-pointer hover:bg-foreground/90 transition-colors"
+                className="cta-primary inline-flex items-center gap-4 rounded-full px-8 py-4 text-sm font-bold tracking-widest uppercase transition-all duration-300"
                 scrollEnd={350}
                 distance={400}
                 seed={1}
@@ -71,19 +102,25 @@ export default function HomePageClient() {
             </div>
 
             <SectionReveal delay={0.3} duration={1.2}>
-              <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-card border border-border">
-                <video
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                  className="absolute inset-0 w-full h-full object-cover"
-                >
-                  <source
-                    src="https://videos.pexels.com/video-files/3209211/3209211-uhd_2560_1440_25fps.mp4"
-                    type="video/mp4"
-                  />
-                </video>
+              <div
+                ref={videoWrapperRef}
+                className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-card border border-border"
+              >
+                {shouldLoadVideo && (
+                  <video
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    preload="metadata"
+                    className="absolute inset-0 w-full h-full object-cover"
+                  >
+                    <source
+                      src="https://videos.pexels.com/video-files/3209211/3209211-uhd_2560_1440_25fps.mp4"
+                      type="video/mp4"
+                    />
+                  </video>
+                )}
                 <div className="absolute inset-0 bg-gradient-to-br from-foreground/10 via-transparent to-foreground/5" />
                 <div className="absolute bottom-6 sm:bottom-8 right-6 sm:right-8 w-20 sm:w-24 h-[1px] bg-primary" />
               </div>
@@ -146,7 +183,7 @@ export default function HomePageClient() {
               実績ページで詳しくご覧いただけます
             </ScatterText>
             <ScatterBlock
-              className="inline-flex items-center gap-4 px-8 py-4 bg-foreground text-background rounded-full text-sm font-medium tracking-widest uppercase cursor-pointer hover:bg-foreground/90 transition-colors"
+              className="cta-primary inline-flex items-center gap-4 rounded-full px-8 py-4 text-sm font-bold tracking-widest uppercase transition-all duration-300"
               scrollEnd={350}
               distance={400}
               seed={2}

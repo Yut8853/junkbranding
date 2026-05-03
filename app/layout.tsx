@@ -8,11 +8,13 @@ import { Navigation } from '@/components/navigation';
 import { CustomCursor } from '@/components/custom-cursor';
 import { SmoothScroll } from '@/components/smooth-scroll';
 import { FloatingParticles } from '@/components/floating-particles';
+import { BottomHeatHaze } from '@/components/bottom-heat-haze';
 import { CookieConsent } from '@/components/cookie-consent';
 import { LoadingProvider } from '@/components/loading-provider';
 import { SoundToggle } from '@/components/sound-toggle';
 import { AudioProvider } from '@/contexts/audio-context';
 import { TransitionProvider } from '@/contexts/transition-context';
+import type { LayoutProps } from '@/types/layout';
 import {
   generateFaqSchema,
   generateJsonLdGraph,
@@ -159,14 +161,11 @@ const jsonLd = generateJsonLdGraph([
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<LayoutProps>) {
   return (
     <html
       lang="ja"
       className={`${inter.variable} ${bebasNeue.variable}`}
-      data-scroll-behavior="smooth"
     >
       <head>
         <script
@@ -187,6 +186,7 @@ export default function RootLayout({
                   <main className="noise-overlay relative">{children}</main>
                 </PageTransition>
               </SmoothScroll>
+              <BottomHeatHaze />
               <SoundToggle />
               <CookieConsent />
             </LoadingProvider>
