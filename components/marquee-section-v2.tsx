@@ -1,6 +1,8 @@
 'use client'
 
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { clamp01 } from '@/lib/scatter'
+import { ScatterText } from '@/components/scatter-text'
 import { useIsMobile } from '@/hooks/use-mobile'
 
 const marqueeTexts = ['Branding', 'Web Design', 'Graphic Design', 'Print Media', 'Logo Design', 'Art Direction']
@@ -20,7 +22,45 @@ export function MarqueeSectionV2() {
   const sectionRef = useRef<HTMLElement>(null)
   const [isHovering, setIsHovering] = useState(false)
   const [hoveredItem, setHoveredItem] = useState<string | null>(null)
+  const [scatterProgress, setScatterProgress] = useState(0)
   const isMobile = useIsMobile()
+
+  useEffect(() => {
+    const section = sectionRef.current
+    if (!section || isMobile) return
+
+    let rafId: number | null = null
+    let lastProgress = -1
+
+    const updateProgress = () => {
+      const rect = section.getBoundingClientRect()
+      const viewportCenter = window.innerHeight / 2
+      const elementCenter = rect.top + rect.height / 2
+      const nextProgress = clamp01((viewportCenter - elementCenter) / 300)
+
+      if (Math.abs(nextProgress - lastProgress) > 0.01 || nextProgress === 0 || nextProgress === 1) {
+        lastProgress = nextProgress
+        setScatterProgress(nextProgress)
+      }
+    }
+
+    const scheduleUpdate = () => {
+      if (rafId !== null) return
+
+      rafId = requestAnimationFrame(() => {
+        rafId = null
+        updateProgress()
+      })
+    }
+
+    window.addEventListener('scroll', scheduleUpdate, { passive: true })
+    updateProgress()
+
+    return () => {
+      window.removeEventListener('scroll', scheduleUpdate)
+      if (rafId) cancelAnimationFrame(rafId)
+    }
+  }, [isMobile])
 
   const renderText = (text: string, key: number, hoveredItem: string | null, onHover: (item: string | null) => void) => {
     return (
@@ -30,9 +70,11 @@ export function MarqueeSectionV2() {
         onMouseEnter={() => !isMobile && onHover(text)}
         onMouseLeave={() => !isMobile && onHover(null)}
       >
-        {/* Text with individual characters */}
-        <span 
+        <ScatterText
+          as="span"
           className="font-display text-4xl md:text-6xl lg:text-7xl xl:text-8xl tracking-wide"
+          distance={520}
+          scatterProgress={scatterProgress}
           style={{
             WebkitTextStroke: hoveredItem === text ? '0px' : '1.5px var(--foreground)',
             WebkitTextFillColor: hoveredItem === text ? 'var(--foreground)' : 'transparent',
@@ -41,7 +83,7 @@ export function MarqueeSectionV2() {
           }}
         >
           {text}
-        </span>
+        </ScatterText>
       </div>
     )
   }

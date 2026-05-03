@@ -12,6 +12,7 @@ export function HeroSectionV2() {
   const cornerRefs = useRef<(HTMLDivElement | null)[]>([])
   
   const [isLoaded, setIsLoaded] = useState(false)
+  const [heroScatterProgress, setHeroScatterProgress] = useState(0)
   const rafRef = useRef<number | null>(null)
   const isMobile = useIsMobile()
   const targetMousePos = useRef({ x: 0, y: 0 })
@@ -92,12 +93,11 @@ export function HeroSectionV2() {
       const scrollProgress = Math.min(window.scrollY / 350, 1)
       if (Math.abs(scrollProgress - lastScrollProgress) < 0.01) return
       lastScrollProgress = scrollProgress
+      setHeroScatterProgress(scrollProgress)
 
       if (titleWrapperRef.current) {
-        titleWrapperRef.current.style.opacity = String(1 - scrollProgress)
-        titleWrapperRef.current.style.filter = scrollProgress > 0
-          ? `blur(${Math.min(12, scrollProgress * 12)}px)`
-          : ''
+        titleWrapperRef.current.style.opacity = '1'
+        titleWrapperRef.current.style.filter = ''
       }
 
       // Fade out other elements
@@ -138,23 +138,41 @@ export function HeroSectionV2() {
         >
           {/* Line 1 - JUNK */}
           <div className="overflow-visible">
-            <h1 className="font-display text-[18vw] md:text-[16vw] leading-[0.85] tracking-[-0.02em] whitespace-nowrap">
-              <span className="gradient-text-soft">{line1}</span>
-            </h1>
+            <ScatterText
+              as="h1"
+              className="font-display text-[18vw] md:text-[16vw] leading-[0.85] tracking-[-0.02em] whitespace-nowrap"
+              distance={900}
+              gradient
+              scatterProgress={heroScatterProgress}
+            >
+              {line1}
+            </ScatterText>
           </div>
 
           {/* Line 2 - BRANDING */}
           <div className="overflow-visible -mt-[2vw]">
-            <h1 className="font-display text-[18vw] md:text-[16vw] leading-[0.85] tracking-[-0.02em] whitespace-nowrap">
-              <span className="gradient-text-soft">{line2}</span>
-            </h1>
+            <ScatterText
+              as="h1"
+              className="font-display text-[18vw] md:text-[16vw] leading-[0.85] tracking-[-0.02em] whitespace-nowrap"
+              distance={900}
+              gradient
+              scatterProgress={heroScatterProgress}
+            >
+              {line2}
+            </ScatterText>
           </div>
 
           {/* Line 3 - Japanese tagline */}
           <div className="overflow-visible mt-[3vw]">
-            <p className="text-[4vw] md:text-[2.5vw] tracking-[0.2em] font-light whitespace-nowrap">
-              <span className="gradient-text-soft">{line3}</span>
-            </p>
+            <ScatterText
+              as="p"
+              className="text-[4vw] md:text-[2.5vw] tracking-[0.2em] font-light whitespace-nowrap"
+              distance={650}
+              gradient
+              scatterProgress={heroScatterProgress}
+            >
+              {line3}
+            </ScatterText>
           </div>
         </div>
 

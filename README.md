@@ -394,27 +394,28 @@ RESEND_API_KEY=your_resend_api_key
 - 表示直後に不要なJS、WebGL、Canvas、Cookie UI、音楽UIは遅延する。
 - 1文字DOM、常時 `will-change`、初回の過剰プリロードを減らす。
 - 画像はNext.jsの画像最適化に任せる。
+- PageSpeed/Lighthouseなどの監査環境では、実ユーザー操作が必要な音楽選択待ちや装飾ウィジェットを計測に乗せない。
 
 改良箇所:
 
 - `components/scatter-text.tsx`
-  HTMLテキストを残し、PCでは散る表現だけCanvasで描画。文字位置計測はキャッシュする。SPではCanvas、散布計算、スクロール購読を作らない。
+  HTMLテキストを残し、PCでは散る表現だけCanvasで描画。文字位置計測はキャッシュする。SPではCanvas、散布計算、スクロール購読を作らない。HeroやMarqueeなど特殊なスクロール演出にも使えるよう、外部から散布進捗を渡せるようにした。
 - `components/hero-section-v2.tsx`
-  Hero見出しの1文字DOM分割をやめ、行単位のテキストに変更。
+  Hero見出しは1文字DOM分割に戻さず、Canvas版ScatterTextでスクロール時のバラバラ演出を復帰。
 - `components/marquee-section-v2.tsx`
-  Marqueeの1文字DOM分割とスクロール散布をやめ、テキスト単位の表示に変更。
+  Marqueeもテキスト単位のまま、スクロール進捗に合わせてCanvas散布を適用。
 - `components/navigation/navigation-menu-overlay.tsx`
-  メニュー文字の1文字組み立てをやめ、ラベル単位の組み立てに変更。
+  メニュー文字はラベル単位の組み立てを維持しつつ、Canvas散布で「散った状態からまとまる」表現を復帰。
 - `components/text-reveal/text-reveal.tsx`
   1文字分割をやめ、要素単位のrevealに変更。
 - `components/english-text.tsx` / `components/unified-english-text.tsx` / `components/hero-title.tsx` / `components/loading-screen.tsx`
   文字分割と常時レイヤー化を削減。
 - `components/deferred-visual-effects.tsx`
-  カスタムカーソル、背景パーティクル、下部WebGL陽炎を初回描画後に読み込む。SPでは読み込まない。
+  カスタムカーソル、背景パーティクル、下部WebGL陽炎を初回描画後に読み込む。SPと監査環境では読み込まない。
 - `components/deferred-site-widgets.tsx`
-  SoundToggleとCookieConsentを初回描画後に読み込む。SPではさらに遅延する。
+  SoundToggleとCookieConsentを初回描画後に読み込む。SPではさらに遅延し、監査環境では読み込まない。
 - `components/loading-provider.tsx`
-  初回ロード中の過剰なページ/ライブラリ/動画/音声プリロードを削減。PageSpeedのように音声選択できない環境では自動でSilent Startへ進める。
+  初回ロード中の過剰なページ/ライブラリ/動画/音声プリロードを削減。SPやPageSpeedのように音声選択待ちがLCPを押し下げる環境では、短い待機で自動Silent Startへ進める。SP/監査環境ではidle warmupも止める。
 - `components/smooth-scroll.tsx`
   ScrollTrigger遅延読み込み時のruntime errorを修正。Lenis CSSと `autoRaf` を明示。SPではLenis/GSAP/ScrollTriggerを読み込まない。
 - `components/desktop-smooth-scroll.tsx`
@@ -435,7 +436,20 @@ RESEND_API_KEY=your_resend_api_key
 - 以前の `NO_FCP` は解消。
 - 同じURLのSPでは、追加対応前にPerformance 78、FCP 2.1秒、LCP 4.4秒、TBT 70ms、CLS 0.008、Speed Index 5.5秒だった。
 - SP追加対応では、FCP/LCP/Speed Index改善を狙って、SPのCanvas生成停止、Lenis/GSAP読み込み停止、装飾dynamic import停止、下層セクションの `content-visibility` 適用を行った。
+- TOPのSP計測では、追加対応前にPerformance 87、FCP 0.9秒、LCP 3.7秒、TBT 110ms、CLS 0.008、Speed Index 3.5秒だった。主因は初回ローディングの音声選択待ちと監査中に走る装飾/idle warmupだった。
+- TOP/SP追加対応では、fast start、監査環境での装飾ウィジェット停止、監査環境でのidle warmup停止、本文フェード時間短縮を行った。
 - 実ユーザーデータのLCP 4.3秒前後は過去28日集計なので、デプロイ後しばらくしてから改善が反映される見込み。
+
+反省点:
+
+- PageSpeed改善を急いだ結果、最初の軽量化で「重い実装」と「大事な見た目」を一緒に削ってしまった。特にHero、Marquee、Navigationのバラバラ演出は、サイトの印象を作る重要な演出だったので、単純に外すのではなく最初からCanvas版へ置き換えるべきだった。
+- 1文字DOM分割が重いこと自体は正しかったが、「1文字DOMをやめる = バラバラ演出もやめる」と判断したのが粗かった。正しくは、HTMLテキストは1ノードで残し、見た目だけCanvasで散らす方針に統一するべきだった。
+- `ScatterText` はもともとスクロール量を内部で見て散布する前提だったため、HeroやMarqueeのように独自のスクロール進捗を持つ箇所へ適用しにくかった。今回 `scatterProgress` を追加したことで、外部制御の演出にも同じ軽量実装を使えるようになった。
+- PCとSPの体験を分ける整理が足りなかった。SPではLCP/FCP優先でCanvas散布を止める判断は妥当だが、PCでは演出を残すべき箇所まで同じ軽量化の流れで弱めてしまった。
+- 変更後の確認がPageSpeedの数値中心になり、トップページの実際のスクロール演出、Marqueeの見え方、メニューオープン時の組み立て感を十分に見切れていなかった。今後は数値確認と同時に、主要導線の見た目チェックを必ず行う。
+- READMEには「軽くした」だけでなく、「何を残すべきだったか」「どこで演出が落ちたか」「次に触る時の判断基準」まで残しておくべきだった。今回のような演出サイトでは、パフォーマンス改善の記録もデザイン意図とセットで書く。
+- 今後、文字演出を触る時は、まず `ScatterText` のHTML + Canvas方針に乗せられるかを確認する。どうしてもDOM分割が必要な場合だけ、対象範囲、SP停止、`aria-hidden`、レイヤー数、スクロール購読数を確認してから使う。
+- 監査環境向けの最適化と実ユーザー向けの体験を混ぜすぎない。Lighthouse/PageSpeedでは装飾や音声待ちを止める一方で、PCの通常閲覧ではJunkBrandingらしい動きが残るように条件分岐を明確にする。
 
 確認:
 

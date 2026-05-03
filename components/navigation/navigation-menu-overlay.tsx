@@ -3,6 +3,7 @@
 import { useMemo, useRef } from 'react'
 import { ArrowUpRight, Mail, Phone } from 'lucide-react'
 import { TransitionLink } from '@/components/transition-link'
+import { ScatterText } from '@/components/scatter-text'
 import { clamp01, createScatterValue, seededRandom } from '@/lib/scatter'
 import { navItems, rainbowColors } from './nav-config'
 import type { NavigationMenuOverlayProps } from '@/types/component-props'
@@ -182,10 +183,13 @@ export function NavigationMenuOverlay({
                       {item.num}
                     </span>
 
-                    {/* Label assembles as a single layer to keep the menu lightweight. */}
-                    <span
+                    {/* Label assembles with Canvas scatter to avoid one DOM node per character. */}
+                    <ScatterText
+                      as="span"
                       className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-display uppercase tracking-tight"
-                      aria-hidden="true"
+                      distance={520}
+                      scatterProgress={isMobile ? 0 : 1 - assembleProgress}
+                      ariaHidden
                       style={{
                         transform: isMobile
                           ? 'none'
@@ -199,7 +203,7 @@ export function NavigationMenuOverlay({
                       }}
                     >
                       {item.label}
-                    </span>
+                    </ScatterText>
                   </div>
 
                   {/* Right: Japanese label + Arrow */}

@@ -43,6 +43,8 @@ export function ScatterText({
   distance = 600,
   style,
   gradient = false,
+  scatterProgress,
+  ariaHidden,
 }: ScatterTextProps) {
   const containerRef = useRef<HTMLElement>(null)
   const textRef = useRef<HTMLSpanElement>(null)
@@ -56,6 +58,7 @@ export function ScatterText({
   const [isScattering, setIsScattering] = useState(false)
   const isMobile = useIsMobile()
   const shouldPrepareScatter = hasMounted && !isMobile
+  const hasControlledProgress = typeof scatterProgress === 'number'
 
   const chars = useMemo(() => children.split(''), [children])
 
@@ -257,6 +260,13 @@ export function ScatterText({
 
     if (!shouldPrepareScatter) return
 
+    if (hasControlledProgress) {
+      isVisibleRef.current = true
+      setIsVisible(true)
+      applyScatter(clamp01(scatterProgress ?? 0))
+      return
+    }
+
     const container = containerRef.current
     let hasScrolledPast = false
 
@@ -297,7 +307,7 @@ export function ScatterText({
         }
       }
     })
-  }, [applyScatter, isMobile, scrollEnd, scrollStart, shouldPrepareScatter])
+  }, [applyScatter, hasControlledProgress, isMobile, scatterProgress, scrollEnd, scrollStart, shouldPrepareScatter])
 
   useEffect(() => {
     const clearMeasurements = () => {
@@ -322,6 +332,7 @@ export function ScatterText({
     <Component
       ref={containerRef as React.RefObject<HTMLDivElement>}
       className={className}
+      aria-hidden={ariaHidden}
       style={{
         ...style,
         position: style?.position ?? 'relative',

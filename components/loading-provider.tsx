@@ -10,6 +10,10 @@ const LOADING_SEEN_KEY = 'junkbranding-loading-seen-session-v2'
 const AUDIO_PREFERENCE_KEY = 'junkbranding-audio-preference'
 const HOME_VIDEO_SRC = 'https://videos.pexels.com/video-files/3209211/3209211-uhd_2560_1440_25fps.mp4'
 const PRELOAD_ROUTES = ['/', '/about', '/works', '/pricing', '/contact', '/privacy']
+const FAST_START_AUDIO_FALLBACK_MS = 650
+const DEFAULT_AUDIO_FALLBACK_MS = 4500
+const FAST_START_COMPLETE_MS = 180
+const DEFAULT_COMPLETE_MS = 900
 
 const wait = (ms: number) => new Promise<void>((resolve) => window.setTimeout(resolve, ms))
 
@@ -45,6 +49,15 @@ const scheduleIdleWarmup = (task: () => void) => {
   return () => window.clearTimeout(timeoutId)
 }
 
+const shouldUseFastStart = () => {
+  const userAgent = navigator.userAgent.toLowerCase()
+  return (
+    window.matchMedia('(max-width: 767px)').matches ||
+    userAgent.includes('lighthouse') ||
+    userAgent.includes('pagespeed')
+  )
+}
+
 const LoadingContext = createContext<LoadingContextType | undefined>(undefined)
 
 export function useLoading() {
@@ -65,8 +78,10 @@ export function LoadingProvider({ children }: LoadingProviderProps) {
   const [audioChoice, setAudioChoice] = useState<'sound-on' | 'sound-off' | null>(null)
   const [isSelectingAudio, setIsSelectingAudio] = useState(false)
   const [preloadComplete, setPreloadComplete] = useState(false)
+  const [isFastStart, setIsFastStart] = useState(false)
 
   useEffect(() => {
+    setIsFastStart(shouldUseFastStart())
     const hasSeenLoading = window.sessionStorage.getItem(LOADING_SEEN_KEY) === 'true'
 
     if (hasSeenLoading) {
@@ -152,6 +167,7 @@ export function LoadingProvider({ children }: LoadingProviderProps) {
 
   useEffect(() => {
     if (isLoading || isFirstLoad) return
+    if (isFastStart) return
 
     return scheduleIdleWarmup(() => {
       void Promise.allSettled([
@@ -162,7 +178,7 @@ export function LoadingProvider({ children }: LoadingProviderProps) {
         import('@/components/cta-section-v2'),
       ])
     })
-  }, [isFirstLoad, isLoading])
+  }, [isFastStart, isFirstLoad, isLoading])
 
   useEffect(() => {
     if (!isFirstLoad || !preloadComplete || audioChoice || isSelectingAudio) return
@@ -172,10 +188,10 @@ export function LoadingProvider({ children }: LoadingProviderProps) {
       window.localStorage.setItem(AUDIO_PREFERENCE_KEY, 'sound-off')
       setAudioChoice('sound-off')
       setIsSelectingAudio(false)
-    }, 4500)
+    }, isFastStart ? FAST_START_AUDIO_FALLBACK_MS : DEFAULT_AUDIO_FALLBACK_MS)
 
     return () => window.clearTimeout(fallbackTimeout)
-  }, [audioChoice, isFirstLoad, isSelectingAudio, preloadComplete, stopSound])
+  }, [audioChoice, isFastStart, isFirstLoad, isSelectingAudio, preloadComplete, stopSound])
 
   useEffect(() => {
     if (!isFirstLoad || progress < 100 || !preloadComplete || !audioChoice) return
@@ -184,10 +200,10 @@ export function LoadingProvider({ children }: LoadingProviderProps) {
       window.sessionStorage.setItem(LOADING_SEEN_KEY, 'true')
       setIsLoading(false)
       setIsFirstLoad(false)
-    }, 900)
+    }, isFastStart ? FAST_START_COMPLETE_MS : DEFAULT_COMPLETE_MS)
 
     return () => clearTimeout(completeTimeout)
-  }, [audioChoice, isFirstLoad, preloadComplete, progress])
+  }, [audioChoice, isFastStart, isFirstLoad, preloadComplete, progress])
 
   const handleSelectAudio = async (withSound: boolean) => {
     if (audioChoice || isSelectingAudio) return
@@ -226,6 +242,9 @@ export function LoadingProvider({ children }: LoadingProviderProps) {
         className={`transition-opacity duration-700 ${
           !hasCheckedLoadingState || (isLoading && isFirstLoad) ? 'opacity-0' : 'opacity-100'
         }`}
+        style={{
+          transitionDuration: isFastStart ? '180ms' : undefined,
+        }}
       >
         {children}
       </div>

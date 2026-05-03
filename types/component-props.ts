@@ -53,6 +53,8 @@ export type ScatterTextProps = {
   distance?: number
   style?: CSSProperties
   gradient?: boolean
+  scatterProgress?: number
+  ariaHidden?: boolean
 }
 
 export type ScatterBlockProps = {
