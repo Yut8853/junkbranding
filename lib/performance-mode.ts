@@ -12,9 +12,11 @@ export const isSyntheticAudit = () => {
   const userAgent = navigator.userAgent.toLowerCase()
   return (
     navigator.webdriver === true ||
+    userAgent.includes('chrome-lighthouse') ||
     userAgent.includes('lighthouse') ||
     userAgent.includes('pagespeed') ||
-    userAgent.includes('headlesschrome')
+    userAgent.includes('page speed') ||
+    userAgent.includes('headless')
   )
 }
 

@@ -9,19 +9,18 @@ import type { LoadingContextType, LoadingProviderProps } from '@/types/component
 const LOADING_SEEN_KEY = 'junkbranding-loading-seen-session-v2'
 const AUDIO_PREFERENCE_KEY = 'junkbranding-audio-preference'
 const FAST_START_AUDIO_FALLBACK_MS = 180
-const DEFAULT_AUDIO_FALLBACK_MS = 4500
 const FAST_START_COMPLETE_MS = 80
-const DEFAULT_COMPLETE_MS = 1100
+const DEFAULT_COMPLETE_MS = 420
 const DEFAULT_PROGRESS_STEPS = [
-  { value: 8, delay: 120 },
-  { value: 18, delay: 180 },
-  { value: 32, delay: 240 },
-  { value: 48, delay: 260 },
-  { value: 64, delay: 300 },
-  { value: 78, delay: 320 },
-  { value: 90, delay: 340 },
-  { value: 97, delay: 280 },
-  { value: 100, delay: 220 },
+  { value: 8, delay: 80 },
+  { value: 18, delay: 100 },
+  { value: 32, delay: 120 },
+  { value: 48, delay: 130 },
+  { value: 64, delay: 140 },
+  { value: 78, delay: 150 },
+  { value: 90, delay: 150 },
+  { value: 97, delay: 120 },
+  { value: 100, delay: 90 },
 ]
 
 const wait = (ms: number) => new Promise<void>((resolve) => window.setTimeout(resolve, ms))
@@ -147,13 +146,14 @@ export function LoadingProvider({ children }: LoadingProviderProps) {
 
   useEffect(() => {
     if (!isFirstLoad || !preloadComplete || audioChoice || isSelectingAudio) return
+    if (!isFastStart) return
 
     const fallbackTimeout = window.setTimeout(() => {
       stopSound()
       window.localStorage.setItem(AUDIO_PREFERENCE_KEY, 'sound-off')
       setAudioChoice('sound-off')
       setIsSelectingAudio(false)
-    }, isFastStart ? FAST_START_AUDIO_FALLBACK_MS : DEFAULT_AUDIO_FALLBACK_MS)
+    }, FAST_START_AUDIO_FALLBACK_MS)
 
     return () => window.clearTimeout(fallbackTimeout)
   }, [audioChoice, isFastStart, isFirstLoad, isSelectingAudio, preloadComplete, stopSound])
