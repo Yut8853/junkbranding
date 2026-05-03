@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import { Inter, Bebas_Neue } from 'next/font/google';
+import Script from 'next/script';
 import { Analytics } from '@vercel/analytics/next';
 import './globals.css';
 
@@ -167,6 +168,8 @@ const jsonLd = generateJsonLdGraph([
   generateFaqSchema(),
 ]);
 
+const GTM_ID = 'GTM-KWQHTTTJ';
+
 export default function RootLayout({
   children,
 }: Readonly<LayoutProps>) {
@@ -176,12 +179,30 @@ export default function RootLayout({
       className={`${inter.variable} ${bebasNeue.variable}`}
     >
       <head>
+        <Script id="google-tag-manager" strategy="beforeInteractive">
+          {`
+            (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+            'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+            })(window,document,'script','dataLayer','${GTM_ID}');
+          `}
+        </Script>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
       <body className="font-sans antialiased bg-transparent text-foreground overflow-x-hidden">
+        <noscript>
+          <iframe
+            src={`https://www.googletagmanager.com/ns.html?id=${GTM_ID}`}
+            height="0"
+            width="0"
+            title="Google Tag Manager"
+            style={{ display: 'none', visibility: 'hidden' }}
+          />
+        </noscript>
         <a href="#main-content" className="skip-link">
           メインコンテンツへ移動
         </a>
