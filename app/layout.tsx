@@ -8,9 +8,8 @@ import { PageTransition } from '@/components/page-transition';
 import { Navigation } from '@/components/navigation';
 import { SmoothScroll } from '@/components/smooth-scroll';
 import { DeferredVisualEffects } from '@/components/deferred-visual-effects';
-import { CookieConsent } from '@/components/cookie-consent';
+import { DeferredSiteWidgets } from '@/components/deferred-site-widgets';
 import { LoadingProvider } from '@/components/loading-provider';
-import { SoundToggle } from '@/components/sound-toggle';
 import { AudioProvider } from '@/contexts/audio-context';
 import { TransitionProvider } from '@/contexts/transition-context';
 import type { LayoutProps } from '@/types/layout';
@@ -217,8 +216,7 @@ export default function RootLayout({
                   </main>
                 </PageTransition>
               </SmoothScroll>
-              <SoundToggle />
-              <CookieConsent />
+              <DeferredSiteWidgets />
             </LoadingProvider>
           </AudioProvider>
         </TransitionProvider>

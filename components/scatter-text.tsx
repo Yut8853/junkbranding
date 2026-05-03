@@ -21,6 +21,19 @@ type CanvasContextWithLetterSpacing = CanvasRenderingContext2D & {
   letterSpacing?: string
 }
 
+type GlyphMeasurement = {
+  char: string
+  x: number
+  y: number
+  width: number
+  height: number
+}
+
+type MeasurementCache = {
+  key: string
+  glyphs: GlyphMeasurement[]
+}
+
 export function ScatterText({
   children,
   as: Component = 'div',
@@ -34,6 +47,7 @@ export function ScatterText({
   const containerRef = useRef<HTMLElement>(null)
   const textRef = useRef<HTMLSpanElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const measurementCacheRef = useRef<MeasurementCache | null>(null)
   const isScatteringRef = useRef(false)
   const isVisibleRef = useRef(false)
   const progressRef = useRef(0)
@@ -67,6 +81,52 @@ export function ScatterText({
     const ctx = canvas?.getContext('2d')
     if (!canvas || !ctx) return
     ctx.clearRect(0, 0, canvas.width, canvas.height)
+  }, [])
+
+  const measureGlyphs = useCallback((
+    textElement: HTMLSpanElement,
+    textNode: ChildNode,
+    containerRect: DOMRect,
+    font: string
+  ) => {
+    const sourceText = textNode.textContent ?? ''
+    const cacheKey = [
+      sourceText,
+      Math.round(containerRect.width),
+      Math.round(containerRect.height),
+      font,
+    ].join('|')
+
+    if (measurementCacheRef.current?.key === cacheKey) {
+      return measurementCacheRef.current.glyphs
+    }
+
+    const range = document.createRange()
+    const glyphs: GlyphMeasurement[] = []
+
+    for (let index = 0; index < sourceText.length; index += 1) {
+      const char = sourceText[index]
+      if (!char || char === ' ') continue
+
+      range.setStart(textNode, index)
+      range.setEnd(textNode, index + 1)
+      const rect = range.getBoundingClientRect()
+      if (rect.width === 0 && rect.height === 0) continue
+
+      glyphs[index] = {
+        char,
+        x: rect.left - containerRect.left,
+        y: rect.top - containerRect.top,
+        width: rect.width,
+        height: rect.height,
+      }
+    }
+
+    range.detach()
+    measurementCacheRef.current = { key: cacheKey, glyphs }
+    textElement.dataset.scatterMeasured = 'true'
+
+    return glyphs
   }, [])
 
   const drawScatterCanvas = useCallback((progress: number) => {
@@ -130,25 +190,17 @@ export function ScatterText({
     ctx.strokeStyle = strokeColor
     ctx.lineWidth = strokeWidth
 
-    const range = document.createRange()
-    const sourceText = textNode.textContent ?? ''
+    const glyphs = measureGlyphs(textElement, textNode, containerRect, font)
 
-    for (let index = 0; index < sourceText.length; index += 1) {
-      const char = sourceText[index]
-      if (!char || char === ' ') continue
+    for (let index = 0; index < glyphs.length; index += 1) {
+      const glyph = glyphs[index]
+      if (!glyph) continue
 
       const values = scatterValues[index]
       if (!values) continue
 
-      range.setStart(textNode, index)
-      range.setEnd(textNode, index + 1)
-      const rect = range.getBoundingClientRect()
-      if (rect.width === 0 && rect.height === 0) continue
-
-      const x = rect.left - containerRect.left
-      const y = rect.top - containerRect.top
-      const centerX = x + rect.width / 2
-      const centerY = y + rect.height / 2
+      const centerX = glyph.x + glyph.width / 2
+      const centerY = glyph.y + glyph.height / 2
       const scale = 1 - 0.5 * progress
       const rotation = (values.rotation * progress * Math.PI) / 180
 
@@ -161,19 +213,18 @@ export function ScatterText({
       ctx.scale(scale, scale)
 
       if (strokeWidth > 0) {
-        ctx.strokeText(char, -rect.width / 2, -rect.height / 2)
+        ctx.strokeText(glyph.char, -glyph.width / 2, -glyph.height / 2)
       }
 
       if (!usesGradient || strokeWidth === 0) {
-        ctx.fillText(char, -rect.width / 2, -rect.height / 2)
+        ctx.fillText(glyph.char, -glyph.width / 2, -glyph.height / 2)
       }
 
       ctx.restore()
     }
 
-    range.detach()
     ctx.globalAlpha = 1
-  }, [gradient, scatterValues])
+  }, [gradient, measureGlyphs, scatterValues])
 
   const applyScatter = useCallback((progress: number) => {
     if (progress > 0) {
@@ -238,6 +289,15 @@ export function ScatterText({
       }
     })
   }, [applyScatter, isMobile, scrollEnd, scrollStart])
+
+  useEffect(() => {
+    const clearMeasurements = () => {
+      measurementCacheRef.current = null
+    }
+
+    window.addEventListener('resize', clearMeasurements, { passive: true })
+    return () => window.removeEventListener('resize', clearMeasurements)
+  }, [children])
 
   const delay = Math.min(children.length * 0.008, 0.35)
   const textStyle = {
