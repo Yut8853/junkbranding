@@ -250,8 +250,11 @@ export function ScatterText({
   }, [gradient, measureGlyphs, scatterValues])
 
   const applyScatter = useCallback((progress: number) => {
+    progressRef.current = progress
+
     if (progress > 0 && deferUntilActive && !hasActivatedCanvas) {
       setHasActivatedCanvas(true)
+      setScatterState(true)
       return
     }
 
@@ -342,7 +345,7 @@ export function ScatterText({
   const textStyle = {
     opacity: isScattering ? 0 : shouldShowText ? 1 : 0,
     transform: shouldShowText ? 'translate3d(0,0,0)' : 'translate3d(0,28px,0)',
-    transition: !hasMounted || isMobile
+    transition: !hasMounted || isMobile || isScattering
       ? 'none'
       : `opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1) ${delay}s, transform 0.55s cubic-bezier(0.16, 1, 0.3, 1) ${delay}s`,
   }
