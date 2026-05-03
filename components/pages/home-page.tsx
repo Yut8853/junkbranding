@@ -183,7 +183,7 @@ export default function HomePageClient() {
             scrollEnd={350}
             distance={400}
           >
-            対応エ��ア
+            対応エリア
           </ScatterText>
           <ScatterText
             as="p"
