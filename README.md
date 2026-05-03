@@ -140,31 +140,6 @@ RESEND_API_KEY=your_resend_api_key
 - 既存の見た目を守るため、className、`ScatterText` の `scrollStart` / `scrollEnd` / `distance`、`ScatterBlock` の `seed` は不用意に変えない。
 - すでに共通コンポーネント化されている大きな演出、たとえば `HeroSectionV2`、`ServicesSectionV2`、`CTASectionV2` はページ配下へ無理に移さない。
 
-最近の分割例:
-
-- `content/about-page.ts`
-- `components/pages/about/about-sections.tsx`
-- `content/works-page.ts`
-- `components/pages/works/work-card.tsx`
-- `content/home-page.ts`
-- `components/pages/home/home-sections.tsx`
-- `components/pages/home/use-lazy-video.ts`
-- `content/pricing-page.ts`
-- `components/pages/pricing/pricing-sections.tsx`
-- `content/contact-page.ts`
-- `components/pages/contact/contact-sections.tsx`
-- `components/pages/contact/use-contact-form.ts`
-- `components/navigation/nav-config.ts`
-- `components/navigation/use-menu-assemble-animation.ts`
-- `components/navigation/navigation-menu-overlay.tsx`
-- `components/text-reveal/*`
-- `types/component-props.ts`
-- `types/effects.ts`
-- `types/english-text.ts`
-- `hooks/use-in-view.ts`
-- `hooks/use-element-in-view.ts`
-- `hooks/use-scroll-progress.ts`
-
 ### スタイル
 
 - グローバルスタイルは `app/globals.css`。
@@ -208,133 +183,169 @@ RESEND_API_KEY=your_resend_api_key
 
 ## 構成
 
-```txt
-app/
-  layout.tsx                    # 全ページ共通レイアウト。metadata、JSON-LD、Provider、Navigation、SoundToggle、CookieConsent、Skip Link
-  page.tsx                      # TOPのServer Component。TOP用metadata/JSON-LDを出してclient本体を呼ぶ
-  about/page.tsx                # ABOUTのServer Component。AboutPage schemaとパンくずJSON-LD
-  works/page.tsx                # WORKSのServer Component。実績ページmetadataとJSON-LD
-  pricing/page.tsx              # PRICINGのServer Component。料金ページmetadataとJSON-LD
-  contact/page.tsx              # CONTACTのServer Component。問い合わせページmetadataとJSON-LD
-  privacy/page.tsx              # PRIVACYのServer Component。プライバシーポリシーmetadataとJSON-LD
-  privacy/layout.tsx            # PRIVACY配下用レイアウト
-  not-found.tsx                 # 404ページ。導線と演出
-  opengraph-image.tsx           # OGP画像をImageResponseで生成
-  manifest.ts                   # PWA/ブラウザ向けmanifest
-  sitemap.ts                    # sitemap.xml生成
-  robots.ts                     # robots.txt生成
-  llms.txt/route.ts             # AI/LLMクローラー向け説明テキスト
-  search-console-sitemap.xml/route.ts # Search Console向け追加sitemap
-  globals.css                   # テーマ変数、CTA、グラス表現、陽炎、SP最適化、focus/skip-link
+まず見る場所:
 
-actions/
-  contact.ts                    # 問い合わせServer Action。Zod検証、honeypot、rate limit、Resend送信、自動返信
+- `app/`
+  ルーティング、metadata、JSON-LD、全体レイアウト。
+- `components/pages/`
+  ページごとのclient入口とページ固有セクション。
+- `content/`
+  ページに表示する文言、一覧、料金、FAQ、選択肢。
+- `types/`
+  ページ固有型、共通props型、演出用の状態型。
+- `contexts/`
+  音楽とページ遷移のグローバル状態。
+- `hooks/`
+  SP判定、可視判定、スクロール進捗、toastなどの共通hook。
+- `lib/`
+  SEO、JSON-LD、Zod schema、散り演出、scroll集約などの補助処理。
 
-components/
-  pages/home-page.tsx           # TOPのclient入口。各TOPセクションを並べる
-  pages/home/home-sections.tsx  # TOPのHero/Marquee/About preview/Works preview/Area/CTA
-  pages/home/use-lazy-video.ts  # TOP About preview動画を遅延読み込みするhook
-  pages/about-page.tsx          # ABOUTのclient入口。contentとsectionを接続
-  pages/about/about-sections.tsx # ABOUTのHero、Intro、Team、Values、Process、CTA
-  pages/works-page.tsx          # WORKSのclient入口。作品データとWorkCardを接続
-  pages/works/work-card.tsx     # WORKSの1件分カード。hover/tiltとSP軽量表示
-  pages/pricing-page.tsx        # PRICINGのclient入口。料金/FAQ/CTAを並べる
-  pages/pricing/pricing-sections.tsx # PRICINGのHero、注意書き、料金カテゴリ、FAQ、CTA
-  pages/contact-page.tsx        # CONTACTのclient入口。送信完了/フォーム画面を切り替える
-  pages/contact/contact-sections.tsx # CONTACTのHero、問い合わせ先、フォーム、送信完了画面
-  pages/contact/use-contact-form.ts # CONTACTフォームの状態、検証、送信処理
-  pages/privacy-page.tsx        # PRIVACY本文。装飾背景とポリシー内容
-  navigation.tsx                # 右上メニューbuttonとoverlay制御。route change/Escape対応
-  navigation/nav-config.ts      # ナビ項目、ラベル、色設定
-  navigation/use-menu-assemble-animation.ts # メニュー開閉時のassemble進捗hook
-  navigation/navigation-menu-overlay.tsx # フルスクリーンメニュー本体。ARIA dialogとリンク一覧
-  text-reveal.tsx               # 後方互換用barrel。text-reveal配下を再export
-  text-reveal/index.ts          # TextReveal/SectionReveal/WordReveal/LineRevealのexport集約
-  text-reveal/register-scroll-trigger.ts # GSAP ScrollTrigger登録を集約
-  text-reveal/text-reveal.tsx   # 文字単位reveal。PCはGSAP、SPは静的
-  text-reveal/section-reveal.tsx # セクション単位reveal
-  text-reveal/word-reveal.tsx   # 単語単位reveal
-  text-reveal/line-reveal.tsx   # 行単位reveal
-  scatter-text.tsx              # 文字をスクロールで散らす演出
-  scatter-block.tsx             # ブロックをスクロールで散らす演出。CTAにも使う
-  reveal-section.tsx            # 汎用RevealSectionとParallaxSection
-  hero-section-v2.tsx           # TOP Hero。マウス/スクロール演出、動画背景、巨大タイポグラフィ
-  hero-title.tsx                # Heroタイトル表現の補助/旧コンポーネント
-  marquee-section-v2.tsx        # TOPの横流れテキスト
-  services-section-v2.tsx       # TOPサービスセクション。カウントアップ、hover、GSAP制御
-  cta-section-v2.tsx            # TOP最終CTA。巨大円形ボタン、パーティクル、磁力表現
-  works-webgl-scene.tsx         # WORKS系のWebGL背景/シーン表現
-  privacy-background.tsx        # PRIVACY用背景canvas/オーブ演出
-  english-text.tsx              # 英字タイポグラフィ演出の個別コンポーネント群
-  unified-english-text.tsx      # 英字テキスト表現を統一したコンポーネント群
-  horizontal-scroll-text.tsx    # 横スクロール/Marquee用テキスト
-  magnetic-button.tsx           # 磁力風hoverのリンク/ボタン
-  circle-button.tsx             # 円形CTAリンク
-  transition-link.tsx           # 内部リンクをページ遷移演出付きで移動するLink wrapper
-  page-transition.tsx           # ページ遷移時の白フェード/ぼかし
-  smooth-scroll.tsx             # LenisとScrollTrigger同期。SPではLenisを使わない
-  loading-provider.tsx          # 初回ロード、session判定、プリロード、音楽選択ロック
-  loading-screen.tsx            # 初回ローディング画面。音楽選択、進捗バー、ARIA対応
-  floating-particles.tsx        # PC用背景パーティクル
-  custom-cursor.tsx             # PC用カスタムカーソルと花火/トレイル
-  bottom-heat-haze.tsx          # PC下部のWebGL虹色陽炎。CSS fallbackあり
-  sound-toggle.tsx              # 右下の音楽ON/OFF。最上位z-index、aria-pressed
-  cookie-consent.tsx            # Cookie同意UI。localStorage保存、switch ARIA
-  footer.tsx                    # 全ページ共通Footer
+### ページまわり
 
-content/
-  home-page.ts                  # TOPのAbout/Works/Area文言とpreview動画URL
-  about-page.ts                 # ABOUTのteam、values、processデータ
-  works-page.ts                 # WORKSの作品一覧とカテゴリ
-  pricing-page.ts               # PRICINGの料金カテゴリ、サービス項目、FAQ
-  contact-page.ts               # CONTACTフォームのサービス選択肢、予算選択肢
+- `app/layout.tsx`
+  全ページ共通。metadata、構造化データ、Provider、Navigation、SoundToggle、CookieConsent、skip linkを置く。
+- `app/*/page.tsx`
+  各ページのServer Component。ページ別metadataとJSON-LDを出して、`components/pages/*-page.tsx` を呼ぶ。
+- `app/globals.css`
+  全体の見た目。CTA、グラス表現、グラデーション、陽炎、SP最適化、focus/skip linkなど。
+- `app/not-found.tsx`
+  404ページ。
+- `app/sitemap.ts` / `app/robots.ts` / `app/llms.txt/route.ts`
+  検索エンジンとAIクローラー向け。
 
-contexts/
-  audio-context.tsx             # 背景音楽の再生/停止、音量フェード、localStorage preference
-  transition-context.tsx        # ページ遷移中状態、router.push、prefetchをまとめる
+### ページ別コンポーネント
 
-hooks/
-  use-mobile.ts                 # window幅からSP判定するhook
-  use-in-view.ts                # refを受け取るIntersectionObserver共通hook
-  use-element-in-view.ts        # ref生成込みの可視判定hook
-  use-scroll-progress.ts        # LenisのprogressをReact stateとして返すhook
-  use-toast.ts                  # toastの追加/更新/削除状態管理
+- `components/pages/home-page.tsx`
+  TOPの入口。各TOPセクションを並べる。
+- `components/pages/home/home-sections.tsx`
+  TOPのHero、Marquee、About preview、Works preview、Area、CTA。
+- `components/pages/home/use-lazy-video.ts`
+  TOPのpreview動画を遅延読み込みするhook。
+- `components/pages/about-page.tsx`
+  ABOUTの入口。
+- `components/pages/about/about-sections.tsx`
+  ABOUTのHero、Intro、Team、Values、Process、CTA。
+- `components/pages/works-page.tsx`
+  WORKSの入口。
+- `components/pages/works/work-card.tsx`
+  実績カード。PCのhover表現とSP軽量表示。
+- `components/pages/pricing-page.tsx`
+  PRICINGの入口。
+- `components/pages/pricing/pricing-sections.tsx`
+  料金ページのHero、注意書き、料金カテゴリ、FAQ、CTA。
+- `components/pages/contact-page.tsx`
+  CONTACTの入口。送信完了画面とフォーム画面を切り替える。
+- `components/pages/contact/contact-sections.tsx`
+  CONTACTのHero、問い合わせ先、フォーム、送信完了画面。
+- `components/pages/contact/use-contact-form.ts`
+  フォーム状態、入力検証、送信処理。
+- `components/pages/privacy-page.tsx`
+  PRIVACY本文。
 
-lib/
-  seo.ts                        # ページ別metadata helper。canonical/OGP/robots/AI meta共通化
-  structured-data.ts            # JSON-LD生成。Organization、LocalBusiness、WebPage、FAQ、Breadcrumbなど
-  schema.ts                     # contact formのZod schema
-  scatter.ts                    # seed付きrandom、clamp、散り演出の値生成
-  scroll-manager.ts             # scroll listenerを集約し、Scatter系へrAFで通知
-  utils.ts                      # cn()などの小さな共通utility
+### 共通UIと演出
 
-types/
-  home-page.ts                  # TOPのcontent/section props型
-  about-page.ts                 # ABOUTのteam/value/process/section props型
-  works-page.ts                 # WORKSの作品、カテゴリ、WorkCard props型
-  pricing-page.ts               # PRICINGの料金カテゴリ、サービス、FAQ、section props型
-  contact-page.ts               # CONTACTのフォーム値、エラー、フォームprops型
-  layout.ts                     # RootLayoutのchildren props型
-  not-found.ts                  # 404ページの候補リンクなどの型
-  component-props.ts            # 共通UI/演出コンポーネントのprops型
-  effects.ts                    # FloatingParticle、CursorParticle、CtaParticleなど演出状態型
-  english-text.ts               # 英字テキスト演出コンポーネントのprops型
-  hooks.ts                      # useInViewなどhook補助型
-  toast.ts                      # toast hookのstate/action/toast型
+- `components/navigation.tsx`
+  右上メニューの開閉制御。
+- `components/navigation/*`
+  ナビ設定、メニュー開閉hook、フルスクリーンoverlay。
+- `components/text-reveal/*`
+  テキスト/セクション/単語/行のreveal演出。
+- `components/scatter-text.tsx`
+  文字をスクロールで散らす演出。
+- `components/scatter-block.tsx`
+  ブロックをスクロールで散らす演出。CTAにも使う。
+- `components/hero-section-v2.tsx`
+  TOP Hero本体。
+- `components/marquee-section-v2.tsx`
+  TOPの横流れテキスト。
+- `components/services-section-v2.tsx`
+  TOPサービスセクション。
+- `components/cta-section-v2.tsx`
+  TOP最終CTA。
+- `components/page-transition.tsx`
+  ページ遷移時のフェード。
+- `components/smooth-scroll.tsx`
+  LenisとScrollTriggerの同期。SPでは無効。
+- `components/loading-provider.tsx`
+  初回ロード、session判定、プリロード、音楽選択ロック。
+- `components/loading-screen.tsx`
+  初回ローディング画面。
+- `components/floating-particles.tsx`
+  PC用背景パーティクル。
+- `components/custom-cursor.tsx`
+  PC用カスタムカーソル。
+- `components/bottom-heat-haze.tsx`
+  PC下部の虹色陽炎。
+- `components/sound-toggle.tsx`
+  右下の音楽ON/OFF。
+- `components/cookie-consent.tsx`
+  Cookie同意UI。
+- `components/footer.tsx`
+  全ページ共通Footer。
 
-public/
-  audio/128_BPM124.mp3          # 背景音楽
-  images/                       # 画像
+### データ、型、補助処理
 
-styles/
-  globals.css                   # 旧/補助のglobal CSS。基本はapp/globals.cssを見る
+- `content/home-page.ts`
+  TOPの文言とpreview動画URL。
+- `content/about-page.ts`
+  ABOUTのteam、values、process。
+- `content/works-page.ts`
+  WORKSの作品一覧とカテゴリ。
+- `content/pricing-page.ts`
+  PRICINGの料金カテゴリ、サービス項目、FAQ。
+- `content/contact-page.ts`
+  CONTACTフォームの選択肢。
+- `types/<page>.ts`
+  ページ固有のデータ型とsection props。
+- `types/component-props.ts`
+  共通UI/演出コンポーネントのprops。
+- `types/effects.ts`
+  パーティクルやカーソルなど演出状態の型。
+- `types/english-text.ts`
+  英字タイポグラフィ系props。
+- `types/hooks.ts` / `types/toast.ts`
+  hook用の補助型。
+- `contexts/audio-context.tsx`
+  背景音楽の再生/停止、音量、保存設定。
+- `contexts/transition-context.tsx`
+  ページ遷移状態、`router.push`、prefetch。
+- `hooks/use-mobile.ts`
+  SP判定。
+- `hooks/use-in-view.ts`
+  IntersectionObserver共通hook。
+- `hooks/use-element-in-view.ts`
+  ref付きの可視判定hook。
+- `hooks/use-scroll-progress.ts`
+  Lenisのscroll progress。
+- `hooks/use-toast.ts`
+  toast状態管理。
+- `lib/seo.ts`
+  ページ別metadata helper。
+- `lib/structured-data.ts`
+  JSON-LD生成。
+- `lib/schema.ts`
+  問い合わせフォームのZod schema。
+- `lib/scatter.ts`
+  散り演出の値生成。
+- `lib/scroll-manager.ts`
+  scroll listenerを集約してrAFで通知。
+- `actions/contact.ts`
+  問い合わせ送信のServer Action。
 
-package.json                    # scriptsとdependencies
-pnpm-lock.yaml                  # pnpm lockfile
-tsconfig.json                   # TypeScript設定。strict、pathsなど
-components.json                 # shadcn/ui系の設定
-README.md                      # この開発メモ
-```
+### その他
+
+- `public/audio/128_BPM124.mp3`
+  背景音楽。
+- `public/images/`
+  画像置き場。
+- `package.json`
+  scriptsとdependencies。
+- `pnpm-lock.yaml`
+  pnpm lockfile。
+- `tsconfig.json`
+  TypeScript設定。
+- `components.json`
+  shadcn/ui系の設定。
 
 ## 実装メモ
 
