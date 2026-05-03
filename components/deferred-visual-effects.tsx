@@ -2,12 +2,9 @@
 
 import dynamic from 'next/dynamic'
 import { useEffect, useState } from 'react'
+import { CustomCursor } from '@/components/custom-cursor'
 import { isSmallScreen, isSyntheticAudit, scheduleIdleTask } from '@/lib/performance-mode'
 
-const CustomCursor = dynamic(
-  () => import('@/components/custom-cursor').then((mod) => mod.CustomCursor),
-  { ssr: false }
-)
 const FloatingParticles = dynamic(
   () => import('@/components/floating-particles').then((mod) => mod.FloatingParticles),
   { ssr: false }

@@ -205,9 +205,8 @@ export default function RootLayout({
         </a>
         <TransitionProvider>
           <AudioProvider>
+            <DeferredVisualEffects />
             <LoadingProvider>
-              <DeferredVisualEffects />
-
               <SmoothScroll>
                 <Navigation />
                 <PageTransition>

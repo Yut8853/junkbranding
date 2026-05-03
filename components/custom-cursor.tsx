@@ -33,6 +33,7 @@ export function CustomCursor() {
   const lastInteractionRef = useRef(0)
   const reduceEffectsRef = useRef(false)
   const wakeAnimationRef = useRef<(() => void) | null>(null)
+  const hasPointerRef = useRef(false)
 
   const spawnFireworkParticles = useCallback((x: number, y: number, count: number = 20) => {
     if (reduceEffectsRef.current) return
@@ -91,10 +92,15 @@ export function CustomCursor() {
     
     if (window.matchMedia('(pointer: fine)').matches) {
       setIsVisible(true)
-      document.body.classList.add('cursor-ready')
     }
 
     const handleMouseMove = (e: MouseEvent) => {
+      if (!hasPointerRef.current) {
+        hasPointerRef.current = true
+        positionRef.current = { x: e.clientX, y: e.clientY }
+        document.body.classList.add('cursor-ready')
+      }
+
       targetRef.current = { x: e.clientX, y: e.clientY }
       lastInteractionRef.current = performance.now()
       wakeAnimationRef.current?.()
