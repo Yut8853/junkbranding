@@ -1,18 +1,8 @@
 'use client'
 
 import { useEffect, useState, useRef, useCallback } from 'react'
-
-interface Particle {
-  id: number
-  x: number
-  y: number
-  vx: number
-  vy: number
-  life: number
-  maxLife: number
-  hue: number
-  size: number
-}
+import { useIsMobile } from '@/hooks/use-mobile'
+import type { CursorParticle } from '@/types/effects'
 
 const CURSOR_FRAME_INTERVAL_MS = 16
 const TRAIL_INTERVAL_MS = 80
@@ -30,9 +20,10 @@ export function CustomCursor() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [isVisible, setIsVisible] = useState(false)
   const [isMounted, setIsMounted] = useState(false)
+  const isMobile = useIsMobile()
   const positionRef = useRef({ x: 0, y: 0 })
   const targetRef = useRef({ x: 0, y: 0 })
-  const particlesRef = useRef<Particle[]>([])
+  const particlesRef = useRef<CursorParticle[]>([])
   const particleIdRef = useRef(0)
   const hueRef = useRef(0)
   const lastSpawnRef = useRef(0)
@@ -46,7 +37,7 @@ export function CustomCursor() {
   const spawnFireworkParticles = useCallback((x: number, y: number, count: number = 20) => {
     if (reduceEffectsRef.current) return
 
-    const newParticles: Particle[] = []
+    const newParticles: CursorParticle[] = []
     for (let i = 0; i < count; i++) {
       const angle = (Math.PI * 2 * i) / count + Math.random() * 0.5
       const speed = 3 + Math.random() * 5
@@ -68,7 +59,7 @@ export function CustomCursor() {
   const spawnTrailParticle = useCallback((x: number, y: number) => {
     if (reduceEffectsRef.current && particlesRef.current.length > 12) return
 
-    const particle: Particle = {
+    const particle: CursorParticle = {
       id: particleIdRef.current++,
       x: x + (Math.random() - 0.5) * 10,
       y: y + (Math.random() - 0.5) * 10,
@@ -87,6 +78,12 @@ export function CustomCursor() {
   }, [])
 
   useEffect(() => {
+    if (isMobile) {
+      setIsVisible(false)
+      document.body.classList.remove('cursor-ready')
+      return
+    }
+
     setIsMounted(true)
     
     if (typeof window === 'undefined') return
@@ -148,10 +145,10 @@ export function CustomCursor() {
       document.removeEventListener('mouseup', handleMouseUp)
       document.body.classList.remove('cursor-ready')
     }
-  }, [spawnFireworkParticles])
+  }, [isMobile, spawnFireworkParticles])
 
   useEffect(() => {
-    if (!isMounted || !isVisible) return
+    if (!isMounted || !isVisible || isMobile) return
 
     const canvas = canvasRef.current
     if (!canvas) return
@@ -313,9 +310,9 @@ export function CustomCursor() {
       isAnimatingRef.current = false
       cancelAnimationFrame(animationFrame)
     }
-  }, [isMounted, isVisible, spawnTrailParticle])
+  }, [isMounted, isVisible, isMobile, spawnTrailParticle])
 
-  if (!isMounted) return null
+  if (!isMounted || isMobile) return null
 
   return (
     <canvas

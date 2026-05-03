@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const VERTEX_SHADER_SOURCE = `
   attribute vec2 a_position;
@@ -128,8 +129,13 @@ function createProgram(gl: WebGLRenderingContext): WebGLProgram | null {
 export function BottomHeatHaze() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [useFallback, setUseFallback] = useState(false);
+  const isMobile = useIsMobile();
 
   useEffect(() => {
+    if (isMobile) {
+      return;
+    }
+
     const canvas = canvasRef.current;
 
     if (!canvas) {
@@ -224,7 +230,11 @@ export function BottomHeatHaze() {
       gl.deleteBuffer(positionBuffer);
       gl.deleteProgram(program);
     };
-  }, []);
+  }, [isMobile]);
+
+  if (isMobile) {
+    return null;
+  }
 
   return (
     <div

@@ -5,19 +5,10 @@ import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { ScatterText } from './scatter-text'
 import { useTransition } from '@/contexts/transition-context'
+import { useIsMobile } from '@/hooks/use-mobile'
+import type { CtaParticle } from '@/types/effects'
 
 gsap.registerPlugin(ScrollTrigger)
-
-interface Particle {
-  id: number
-  x: number
-  y: number
-  size: number
-  speedX: number
-  speedY: number
-  opacity: number
-  hue: number
-}
 
 export function CTASectionV2() {
   const sectionRef = useRef<HTMLElement>(null)
@@ -27,13 +18,14 @@ export function CTASectionV2() {
   
   const [isHovering, setIsHovering] = useState(false)
   const [ripples, setRipples] = useState<Array<{ id: number; x: number; y: number }>>([])
-  const particlesRef = useRef<Particle[]>([])
+  const particlesRef = useRef<CtaParticle[]>([])
   const animationFrameRef = useRef<number | null>(null)
   const isHoveringRef = useRef(false)
   const isInViewRef = useRef(false)
   const buttonOffsetRef = useRef({ x: 0, y: 0 })
   const magneticFrameRef = useRef<number | null>(null)
   const { navigateWithTransition } = useTransition()
+  const isMobile = useIsMobile()
   
   useEffect(() => {
     return () => {
@@ -45,8 +37,10 @@ export function CTASectionV2() {
 
   // Initialize particles
   useEffect(() => {
-    const particles: Particle[] = []
-    const particleCount = window.matchMedia('(max-width: 768px)').matches ? 20 : 32
+    if (isMobile) return
+
+    const particles: CtaParticle[] = []
+    const particleCount = 32
 
     for (let i = 0; i < particleCount; i++) {
       particles.push({
@@ -61,10 +55,12 @@ export function CTASectionV2() {
       })
     }
     particlesRef.current = particles
-  }, [])
+  }, [isMobile])
 
   // Animate particles
   useEffect(() => {
+    if (isMobile) return
+
     const canvas = canvasRef.current
     if (!canvas) return
 
@@ -191,10 +187,11 @@ export function CTASectionV2() {
       observer.disconnect()
       if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current)
     }
-  }, [])
+  }, [isMobile])
 
   // Magnetic button effect
   const handleMouseMove = useCallback((e: React.MouseEvent) => {
+    if (isMobile) return
     if (!buttonRef.current) return
     
     const rect = buttonRef.current.getBoundingClientRect()
@@ -223,7 +220,7 @@ export function CTASectionV2() {
       const { x, y } = buttonOffsetRef.current
       buttonRef.current.style.transform = `translate3d(${x}px, ${y}px, 0)`
     })
-  }, [])
+  }, [isMobile])
 
   const addRipple = (e: React.MouseEvent<HTMLElement>) => {
     const rect = buttonRef.current?.getBoundingClientRect()
@@ -249,7 +246,7 @@ export function CTASectionV2() {
 
   // GSAP scroll animation
   useEffect(() => {
-    if (!sectionRef.current) return
+    if (!sectionRef.current || isMobile) return
 
     const ctx = gsap.context(() => {
       gsap.from(textRef.current, {
@@ -265,7 +262,7 @@ export function CTASectionV2() {
     }, sectionRef)
 
     return () => ctx.revert()
-  }, [])
+  }, [isMobile])
 
   
 
@@ -282,9 +279,9 @@ export function CTASectionV2() {
       }}
     >
       {/* Particle canvas background */}
-      <canvas 
+        <canvas
         ref={canvasRef}
-        className="absolute inset-0 pointer-events-none"
+        className="absolute inset-0 hidden pointer-events-none md:block"
         style={{ opacity: 0.6 }}
       />
 
@@ -363,11 +360,11 @@ export function CTASectionV2() {
               className="absolute inset-0 rounded-full"
               style={{
                 background: 'conic-gradient(from 0deg, oklch(0.7 0.22 330 / 0.4), oklch(0.7 0.2 25 / 0.4), oklch(0.75 0.18 80 / 0.4), oklch(0.65 0.2 220 / 0.4), oklch(0.6 0.22 280 / 0.4), oklch(0.7 0.22 330 / 0.4))',
-                filter: isHovering ? 'blur(30px)' : 'blur(20px)',
-                transform: isHovering ? 'scale(1.15)' : 'scale(1)',
-                opacity: isHovering ? 1 : 0.6,
-                transition: 'all 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
-                animation: 'spin 10s linear infinite',
+                filter: isMobile ? 'blur(10px)' : isHovering ? 'blur(30px)' : 'blur(20px)',
+                transform: isMobile ? 'scale(1)' : isHovering ? 'scale(1.15)' : 'scale(1)',
+                opacity: isMobile ? 0.35 : isHovering ? 1 : 0.6,
+                transition: isMobile ? 'none' : 'all 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
+                animation: isMobile ? 'none' : 'spin 10s linear infinite',
               }}
             />
 

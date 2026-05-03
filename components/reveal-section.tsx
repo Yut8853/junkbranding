@@ -1,16 +1,8 @@
 'use client'
 
-import { useRef, useEffect, useState, ReactNode, useCallback } from 'react'
-
-// --- RevealSection (シンプルなフェードアニメーション) ---
-interface RevealSectionProps {
-  children: ReactNode
-  className?: string
-  delay?: number
-  threshold?: number
-  once?: boolean
-  duration?: number
-}
+import { useRef, useEffect, useState, useCallback } from 'react'
+import { useIsMobile } from '@/hooks/use-mobile'
+import type { ParallaxSectionProps, RevealSectionProps } from '@/types/component-props'
 
 export function RevealSection({
   children,
@@ -23,9 +15,16 @@ export function RevealSection({
   const sectionRef = useRef<HTMLDivElement>(null)
   const [isVisible, setIsVisible] = useState(false)
   const [hasAnimated, setHasAnimated] = useState(false)
+  const isMobile = useIsMobile()
 
   useEffect(() => {
     if (typeof window === 'undefined' || !sectionRef.current) return
+
+    if (isMobile) {
+      setIsVisible(true)
+      setHasAnimated(true)
+      return
+    }
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -46,33 +45,26 @@ export function RevealSection({
 
     observer.observe(sectionRef.current)
     return () => observer.disconnect()
-  }, [threshold, once, hasAnimated])
+  }, [threshold, once, hasAnimated, isMobile])
 
   return (
     <div
       ref={sectionRef}
       className={className}
       style={{
-        opacity: isVisible ? 1 : 0,
-        transform: isVisible ? 'translate3d(0, 0, 0)' : 'translate3d(0, 60px, 0)',
-        filter: isVisible ? 'blur(0px)' : 'blur(8px)',
+        opacity: isMobile || isVisible ? 1 : 0,
+        transform: isMobile || isVisible ? 'translate3d(0, 0, 0)' : 'translate3d(0, 60px, 0)',
+        filter: isMobile || isVisible ? 'none' : 'blur(8px)',
         transitionProperty: 'opacity, transform, filter',
-        transitionDuration: `${duration}s`,
+        transitionDuration: isMobile ? '0s' : `${duration}s`,
         transitionTimingFunction: 'cubic-bezier(0.22, 1, 0.36, 1)',
-        transitionDelay: isVisible ? `${delay}s` : '0s',
-        willChange: 'transform, opacity, filter',
+        transitionDelay: isMobile ? '0s' : isVisible ? `${delay}s` : '0s',
+        willChange: isMobile ? 'auto' : 'transform, opacity, filter',
       }}
     >
       {children}
     </div>
   )
-}
-
-// --- ParallaxSection ---
-interface ParallaxSectionProps {
-  children: ReactNode
-  className?: string
-  speed?: number
 }
 
 export function ParallaxSection({
@@ -83,9 +75,10 @@ export function ParallaxSection({
   const sectionRef = useRef<HTMLDivElement>(null)
   const [offset, setOffset] = useState(0)
   const rafRef = useRef<number>(0)
+  const isMobile = useIsMobile()
 
   useEffect(() => {
-    if (typeof window === 'undefined') return
+    if (typeof window === 'undefined' || isMobile) return
 
     const handleScroll = () => {
       if (!sectionRef.current) return
@@ -109,16 +102,16 @@ export function ParallaxSection({
       window.removeEventListener('scroll', scrollHandler)
       if (rafRef.current) cancelAnimationFrame(rafRef.current)
     }
-  }, [speed])
+  }, [speed, isMobile])
 
   return (
     <div
       ref={sectionRef}
       className={className}
       style={{
-        transform: `translate3d(0, ${offset}px, 0)`,
-        willChange: 'transform',
-        transition: 'transform 0.1s linear',
+        transform: isMobile ? 'none' : `translate3d(0, ${offset}px, 0)`,
+        willChange: isMobile ? 'auto' : 'transform',
+        transition: isMobile ? 'none' : 'transform 0.1s linear',
       }}
     >
       {children}

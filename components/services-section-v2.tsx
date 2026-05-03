@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, useCallback } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { ScatterText } from './scatter-text'
+import { useIsMobile } from '@/hooks/use-mobile'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -48,6 +49,7 @@ export function ServicesSectionV2() {
   const itemsRef = useRef<(HTMLDivElement | null)[]>([])
   const [activeIndex, setActiveIndex] = useState<number | null>(null)
   const [countedNumbers, setCountedNumbers] = useState<string[]>(['00', '00', '00', '00'])
+  const isMobile = useIsMobile()
 
   // Counter animation
   const animateCounter = useCallback((index: number) => {
@@ -78,6 +80,11 @@ export function ServicesSectionV2() {
 
   // GSAP animations
   useEffect(() => {
+    if (isMobile) {
+      setCountedNumbers(services.map((service) => service.num))
+      return
+    }
+
     if (!sectionRef.current) return
 
     const ctx = gsap.context(() => {
@@ -112,7 +119,7 @@ export function ServicesSectionV2() {
     }, sectionRef)
 
     return () => ctx.revert()
-  }, [animateCounter])
+  }, [animateCounter, isMobile])
 
   return (
     <section 
@@ -123,10 +130,10 @@ export function ServicesSectionV2() {
       <div 
         className="absolute inset-0 pointer-events-none opacity-20"
         style={{
-          background: activeIndex !== null 
+          background: !isMobile && activeIndex !== null
             ? `radial-gradient(ellipse 80% 50% at 50% 50%, ${services[activeIndex].color}, transparent 70%)`
             : 'transparent',
-          transition: 'background 0.8s cubic-bezier(0.16, 1, 0.3, 1)',
+          transition: isMobile ? 'none' : 'background 0.8s cubic-bezier(0.16, 1, 0.3, 1)',
         }}
       />
 
@@ -167,12 +174,12 @@ export function ServicesSectionV2() {
               key={service.num}
               ref={el => { itemsRef.current[index] = el }}
               className="group relative p-8 md:p-10 lg:p-12 rounded-3xl border border-foreground/10 bg-background/50 backdrop-blur-sm"
-              onMouseEnter={() => setActiveIndex(index)}
-              onMouseLeave={() => setActiveIndex(null)}
+              onMouseEnter={() => !isMobile && setActiveIndex(index)}
+              onMouseLeave={() => !isMobile && setActiveIndex(null)}
               style={{
-                transition: 'all 0.5s cubic-bezier(0.16, 1, 0.3, 1)',
-                transform: activeIndex === index ? 'translateY(-4px)' : 'translateY(0)',
-                boxShadow: activeIndex === index 
+                transition: isMobile ? 'none' : 'all 0.5s cubic-bezier(0.16, 1, 0.3, 1)',
+                transform: !isMobile && activeIndex === index ? 'translateY(-4px)' : 'translateY(0)',
+                boxShadow: !isMobile && activeIndex === index
                   ? `0 20px 40px -20px ${service.color}40`
                   : 'none',
               }}
@@ -181,10 +188,10 @@ export function ServicesSectionV2() {
               <div 
                 className="absolute inset-0 rounded-2xl -z-10"
                 style={{
-                  background: activeIndex === index 
+                  background: !isMobile && activeIndex === index
                     ? `linear-gradient(135deg, ${service.color}08, ${service.color}03)`
                     : 'transparent',
-                  transition: 'background 0.5s ease',
+                  transition: isMobile ? 'none' : 'background 0.5s ease',
                 }}
               />
 
@@ -197,9 +204,9 @@ export function ServicesSectionV2() {
                   scrollEnd={350}
                   distance={180}
                   style={{
-                    color: activeIndex === index ? service.color : 'var(--foreground)',
-                    opacity: activeIndex === index ? 1 : 0.15,
-                    transition: 'all 0.5s ease',
+                    color: !isMobile && activeIndex === index ? service.color : 'var(--foreground)',
+                    opacity: !isMobile && activeIndex === index ? 1 : 0.15,
+                    transition: isMobile ? 'none' : 'all 0.5s ease',
                   }}
                 >
                   {countedNumbers[index]}
@@ -210,9 +217,9 @@ export function ServicesSectionV2() {
                   className="w-3 h-3 rounded-full mt-2"
                   style={{
                     background: service.color,
-                    opacity: activeIndex === index ? 1 : 0.4,
-                    transform: activeIndex === index ? 'scale(1.5)' : 'scale(1)',
-                    transition: 'all 0.5s ease',
+                    opacity: !isMobile && activeIndex === index ? 1 : 0.4,
+                    transform: !isMobile && activeIndex === index ? 'scale(1.5)' : 'scale(1)',
+                    transition: isMobile ? 'none' : 'all 0.5s ease',
                   }}
                 />
               </div>
@@ -227,8 +234,8 @@ export function ServicesSectionV2() {
                   scrollEnd={350}
                   distance={300}
                   style={{
-                    color: activeIndex === index ? service.color : 'var(--foreground)',
-                    transition: 'color 0.5s cubic-bezier(0.16, 1, 0.3, 1)',
+                    color: !isMobile && activeIndex === index ? service.color : 'var(--foreground)',
+                    transition: isMobile ? 'none' : 'color 0.5s cubic-bezier(0.16, 1, 0.3, 1)',
                   }}
                 >
                   {service.title}
@@ -242,8 +249,8 @@ export function ServicesSectionV2() {
                   scrollEnd={350}
                   distance={240}
                   style={{
-                    color: activeIndex === index ? service.color : 'var(--primary)',
-                    transition: 'color 0.3s ease',
+                    color: !isMobile && activeIndex === index ? service.color : 'var(--primary)',
+                    transition: isMobile ? 'none' : 'color 0.3s ease',
                   }}
                 >
                   {service.titleJa}
@@ -268,11 +275,11 @@ export function ServicesSectionV2() {
                         key={i}
                         className="text-xs md:text-sm px-3 py-1.5 rounded-full border"
                         style={{
-                          borderColor: activeIndex === index ? `${service.color}40` : 'var(--border)',
-                          background: activeIndex === index ? `${service.color}10` : 'transparent',
-                          color: activeIndex === index ? service.color : 'var(--muted-foreground)',
-                          transition: 'all 0.3s ease',
-                          transitionDelay: `${i * 0.05}s`,
+                          borderColor: !isMobile && activeIndex === index ? `${service.color}40` : 'var(--border)',
+                          background: !isMobile && activeIndex === index ? `${service.color}10` : 'transparent',
+                          color: !isMobile && activeIndex === index ? service.color : 'var(--muted-foreground)',
+                          transition: isMobile ? 'none' : 'all 0.3s ease',
+                          transitionDelay: isMobile ? '0s' : `${i * 0.05}s`,
                         }}
                       >
                         <ScatterText
@@ -294,8 +301,8 @@ export function ServicesSectionV2() {
               <div 
                 className="absolute top-0 right-0 w-16 h-16 overflow-hidden rounded-tr-2xl"
                 style={{
-                  opacity: activeIndex === index ? 1 : 0,
-                  transition: 'opacity 0.5s ease',
+                  opacity: !isMobile && activeIndex === index ? 1 : 0,
+                  transition: isMobile ? 'none' : 'opacity 0.5s ease',
                 }}
               >
                 <div 

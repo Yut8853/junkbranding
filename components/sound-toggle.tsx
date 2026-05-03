@@ -17,9 +17,12 @@ export function SoundToggle() {
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
       className="fixed bottom-8 right-8 z-[999] group"
-      aria-label={isPlaying ? 'Mute sound' : 'Play sound'}
+      aria-label={isPlaying ? '音楽をミュートする' : '音楽を再生する'}
+      aria-pressed={isPlaying}
+      title={isPlaying ? 'SOUND ON' : 'SOUND OFF'}
     >
-      <div 
+      <div
+        aria-hidden="true"
         className="relative w-12 h-12 rounded-full flex items-center justify-center transition-all duration-500"
         style={{
           backgroundColor: isHovering ? 'transparent' : 'rgba(0,0,0,0.3)',
@@ -75,7 +78,8 @@ export function SoundToggle() {
       </div>
 
       {/* Label */}
-      <span 
+      <span
+        aria-hidden="true"
         className="absolute right-full mr-3 top-1/2 -translate-y-1/2 text-xs tracking-wider text-foreground/50 whitespace-nowrap transition-all duration-300"
         style={{
           opacity: isHovering ? 1 : 0,

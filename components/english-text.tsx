@@ -1,49 +1,17 @@
 'use client'
 
 import { useRef, useEffect, useState } from 'react'
+import { useInView } from '@/hooks/use-in-view'
 import { cn } from '@/lib/utils'
-
-// Custom useInView hook using IntersectionObserver
-function useInView(ref: React.RefObject<Element | null>, options?: { once?: boolean; margin?: string }) {
-  const [isInView, setIsInView] = useState(false)
-  
-  useEffect(() => {
-    const element = ref.current
-    if (!element) return
-    
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsInView(true)
-          if (options?.once) {
-            observer.unobserve(element)
-          }
-        } else if (!options?.once) {
-          setIsInView(false)
-        }
-      },
-      {
-        rootMargin: options?.margin || '0px',
-        threshold: 0.1,
-      }
-    )
-    
-    observer.observe(element)
-    return () => observer.disconnect()
-  }, [ref, options?.once, options?.margin])
-  
-  return isInView
-}
+import type {
+  EnglishHeadingProps,
+  EnglishLabelProps,
+  EnglishMarqueeTextProps,
+  EnglishTextProps,
+  EnglishWordsProps,
+} from '@/types/english-text'
 
 // ビッグタイポグラフィラベル - スクロールで左端に向かって縮小
-interface EnglishLabelProps {
-  children: string
-  className?: string
-  textClassName?: string
-  delay?: number
-  align?: 'left' | 'center'
-}
-
 export function EnglishLabel({ children, className, textClassName, delay = 0, align = 'left' }: EnglishLabelProps) {
   const ref = useRef<HTMLDivElement>(null)
   const isInView = useInView(ref, { once: true, margin: '-5% 0px' })
@@ -158,14 +126,6 @@ export function EnglishLabel({ children, className, textClassName, delay = 0, al
 }
 
 // 大きなサービス見出し用 - スクロールで左端に縮小
-interface EnglishHeadingProps {
-  children: string
-  className?: string
-  delay?: number
-  outline?: boolean
-  align?: 'left' | 'center'
-}
-
 export function EnglishHeading({ children, className, delay = 0, outline = true, align = 'left' }: EnglishHeadingProps) {
   const ref = useRef<HTMLDivElement>(null)
   const isInView = useInView(ref, { once: true, margin: '-5% 0px' })
@@ -270,11 +230,6 @@ export function EnglishHeading({ children, className, delay = 0, outline = true,
 }
 
 // マーキー用テキスト - 巨大アウトライン
-interface EnglishMarqueeTextProps {
-  children: string
-  className?: string
-}
-
 export function EnglishMarqueeText({ children, className }: EnglishMarqueeTextProps) {
   return (
     <span
@@ -290,15 +245,6 @@ export function EnglishMarqueeText({ children, className }: EnglishMarqueeTextPr
 }
 
 // ワード単位のダイナミックリビール（大きな見出し用）- スクロール縮小対応
-interface EnglishWordsProps {
-  children: string
-  as?: 'h1' | 'h2' | 'h3' | 'h4' | 'p' | 'span' | 'div'
-  variant?: 'display' | 'massive'
-  className?: string
-  delay?: number
-  align?: 'left' | 'center'
-}
-
 export function EnglishWords({
   children,
   as: Component = 'div',
@@ -406,16 +352,6 @@ export function EnglishWords({
 }
 
 // 文字単位のリビール（高度なアニメーション）
-interface EnglishTextProps {
-  children: string
-  as?: 'h1' | 'h2' | 'h3' | 'h4' | 'p' | 'span'
-  variant?: 'label' | 'heading' | 'display'
-  className?: string
-  delay?: number
-  stagger?: number
-  align?: 'left' | 'center'
-}
-
 export function EnglishText({
   children,
   as: Component = 'span',

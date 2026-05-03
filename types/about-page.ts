@@ -30,3 +30,15 @@ export type AboutProcessStep = {
   details: AboutProcessDetail[]
   note: string
 }
+
+export type AboutTeamSectionProps = {
+  team: AboutTeamMember[]
+}
+
+export type AboutValuesSectionProps = {
+  values: AboutValue[]
+}
+
+export type AboutProcessSectionProps = {
+  process: AboutProcessStep[]
+}

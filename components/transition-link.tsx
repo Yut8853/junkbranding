@@ -1,16 +1,9 @@
 'use client'
 
 import { useTransition } from '@/contexts/transition-context'
-import { ReactNode, MouseEvent } from 'react'
+import { MouseEvent } from 'react'
 import Link from 'next/link'
-
-interface TransitionLinkProps {
-  href: string
-  children: ReactNode
-  className?: string
-  onClick?: () => void
-  [key: string]: unknown
-}
+import type { TransitionLinkProps } from '@/types/component-props'
 
 export function TransitionLink({ href, children, className, onClick, ...props }: TransitionLinkProps) {
   const { navigateWithTransition, isTransitioning, prefetchRoute } = useTransition()

@@ -47,9 +47,12 @@ export function createPageMetadata({
   const mergedKeywords = [...defaultKeywords, ...keywords]
 
   return {
+    metadataBase: new URL(SITE_URL),
     title,
     description,
     applicationName: SITE_NAME,
+    referrer: 'origin-when-cross-origin',
+    generator: 'Next.js',
     keywords: Array.from(new Set(mergedKeywords)),
     authors: [{ name: SITE_NAME, url: SITE_URL }],
     creator: SITE_NAME,
@@ -83,6 +86,11 @@ export function createPageMetadata({
       description,
       images: [DEFAULT_OG_IMAGE],
     },
+    appleWebApp: {
+      capable: true,
+      title: SITE_NAME,
+      statusBarStyle: 'black-translucent',
+    },
     robots: {
       index,
       follow: index,
@@ -99,6 +107,7 @@ export function createPageMetadata({
       'ai-summary': description || DEFAULT_DESCRIPTION,
       'service-area': '茨城県, 東京都, 神奈川県, 全国オンライン対応',
       'primary-services': 'ブランディング, Web制作, Webデザイン, ロゴ制作, SEO対策, マーケティング支援',
+      'accessibility-summary': 'キーボード操作、スクリーンリーダー、WAI-ARIA属性、SPでのモーション削減に配慮しています。',
     },
   }
 }

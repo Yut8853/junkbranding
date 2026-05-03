@@ -1,39 +1,14 @@
 'use client'
 
 import { useRef, useEffect, useState, useCallback } from 'react'
+import { useInView } from '@/hooks/use-in-view'
 import { cn } from '@/lib/utils'
-
-// Custom useInView hook
-function useInView(ref: React.RefObject<Element | null>, options?: { once?: boolean; margin?: string }) {
-  const [isInView, setIsInView] = useState(false)
-  
-  useEffect(() => {
-    const element = ref.current
-    if (!element) return
-    
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsInView(true)
-          if (options?.once) {
-            observer.unobserve(element)
-          }
-        } else if (!options?.once) {
-          setIsInView(false)
-        }
-      },
-      {
-        rootMargin: options?.margin || '0px',
-        threshold: 0.1,
-      }
-    )
-    
-    observer.observe(element)
-    return () => observer.disconnect()
-  }, [ref, options?.once, options?.margin])
-  
-  return isInView
-}
+import type {
+  MarqueeTextProps,
+  SectionTitleProps,
+  ServiceTitleProps,
+  UnifiedEnglishTextProps,
+} from '@/types/english-text'
 
 /**
  * 統一された英語テキストアニメーション
@@ -41,20 +16,6 @@ function useInView(ref: React.RefObject<Element | null>, options?: { once?: bool
  * - スタイル: ストローク→塗りへの変化（オプション）
  * - 色変化: ホバーやスクロールで色が変化
  */
-
-interface UnifiedEnglishTextProps {
-  children: string
-  as?: 'h1' | 'h2' | 'h3' | 'h4' | 'p' | 'span' | 'div'
-  size?: 'sm' | 'md' | 'lg' | 'xl' | 'hero'
-  className?: string
-  delay?: number
-  stagger?: number
-  strokeToFill?: boolean
-  isActive?: boolean
-  activeColor?: string
-  align?: 'left' | 'center' | 'right'
-  isLink?: boolean
-}
 
 export function UnifiedEnglishText({
   children,
@@ -154,13 +115,6 @@ export function UnifiedEnglishText({
 /**
  * セクションタイトル用（大きなストロークテキスト）
  */
-interface SectionTitleProps {
-  children: string
-  subtitle?: string
-  className?: string
-  delay?: number
-}
-
 export function SectionTitle({ children, subtitle, className, delay = 0 }: SectionTitleProps) {
   return (
     <div className={cn('mb-8 md:mb-12', className)}>
@@ -186,12 +140,6 @@ export function SectionTitle({ children, subtitle, className, delay = 0 }: Secti
 /**
  * マーキー用テキスト（ホバーで塗りに変化）
  */
-interface MarqueeTextProps {
-  children: string
-  isHovered?: boolean
-  className?: string
-}
-
 export function MarqueeText({ children, isHovered = false, className }: MarqueeTextProps) {
   const letters = children.split('')
 
@@ -229,13 +177,6 @@ export function MarqueeText({ children, isHovered = false, className }: MarqueeT
 /**
  * サービスカード用タイトル（アクティブ時に塗り + 色変化）
  */
-interface ServiceTitleProps {
-  children: string
-  isActive?: boolean
-  activeColor?: string
-  className?: string
-}
-
 export function ServiceTitle({ children, isActive = false, activeColor, className }: ServiceTitleProps) {
   const letters = children.split('')
 

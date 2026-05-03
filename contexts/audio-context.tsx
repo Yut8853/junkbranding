@@ -4,7 +4,7 @@ import { createContext, useContext, useState, useRef, useEffect, useCallback, ty
 
 const BACKGROUND_AUDIO_SRC = '/audio/128_BPM124.mp3'
 const AUDIO_PREFERENCE_KEY = 'junkbranding-audio-preference'
-const MAX_VOLUME = 0.8
+const MAX_VOLUME = 0.4
 const FADE_DURATION_MS = 1200
 const clampVolume = (volume: number) => Math.min(1, Math.max(0, volume))
 

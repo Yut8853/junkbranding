@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, useMemo } from 'react'
 import { createScatterValue } from '@/lib/scatter'
 import { ScatterText } from '@/components/scatter-text'
+import { useIsMobile } from '@/hooks/use-mobile'
 
 export function HeroSectionV2() {
   const containerRef = useRef<HTMLElement>(null)
@@ -14,6 +15,7 @@ export function HeroSectionV2() {
   
   const [isLoaded, setIsLoaded] = useState(false)
   const rafRef = useRef<number | null>(null)
+  const isMobile = useIsMobile()
   const targetMousePos = useRef({ x: 0, y: 0 })
   const currentMousePos = useRef({ x: 0, y: 0 })
   const isMouseAnimatingRef = useRef(false)
@@ -39,6 +41,8 @@ export function HeroSectionV2() {
   }, [totalChars])
 
   useEffect(() => {
+    if (isMobile) return
+
     const handleMouseMove = (e: MouseEvent) => {
       targetMousePos.current = {
         x: (e.clientX / window.innerWidth - 0.5) * 2,
@@ -80,7 +84,7 @@ export function HeroSectionV2() {
       window.removeEventListener('mousemove', handleMouseMove)
       if (rafRef.current) cancelAnimationFrame(rafRef.current)
     }
-  }, [])
+  }, [isMobile])
 
   // Initial load animation
   useEffect(() => {
@@ -90,7 +94,7 @@ export function HeroSectionV2() {
 
   // Direct scroll-based explosion (no GSAP scrub delay)
   useEffect(() => {
-    if (!containerRef.current || !isLoaded) return
+    if (!containerRef.current || !isLoaded || isMobile) return
 
     const container = containerRef.current
     const validChars = charsRef.current.filter(Boolean) as HTMLSpanElement[]
@@ -136,7 +140,7 @@ export function HeroSectionV2() {
       window.removeEventListener('scroll', handleScrollRaf)
       if (rafId) cancelAnimationFrame(rafId)
     }
-  }, [isLoaded, explosionValues])
+  }, [isLoaded, explosionValues, isMobile])
 
   // Render character with soft gradient and animation
   const renderChar = (char: string, index: number) => {
@@ -144,7 +148,7 @@ export function HeroSectionV2() {
       <span
         key={index}
         ref={(el) => { charsRef.current[index] = el }}
-        className="inline-block will-change-transform gradient-text-soft"
+        className="inline-block gradient-text-soft md:will-change-transform"
       >
         {char === ' ' ? '\u00A0' : char}
       </span>
@@ -195,7 +199,7 @@ export function HeroSectionV2() {
           style={{
             opacity: isLoaded ? 1 : 0,
             transform: isLoaded ? 'translateY(0)' : 'translateY(30px)',
-            transition: 'all 1s cubic-bezier(0.77, 0, 0.175, 1) 1s',
+            transition: isMobile ? 'none' : 'all 1s cubic-bezier(0.77, 0, 0.175, 1) 1s',
           }}
         >
           {/* Left - Location */}
@@ -231,7 +235,7 @@ export function HeroSectionV2() {
             textOrientation: 'mixed',
             opacity: isLoaded ? 1 : 0,
             transform: isLoaded ? 'translateY(-50%)' : 'translateY(-50%) translateX(-20px)',
-            transition: 'all 1s cubic-bezier(0.77, 0, 0.175, 1) 1.2s',
+            transition: isMobile ? 'none' : 'all 1s cubic-bezier(0.77, 0, 0.175, 1) 1.2s',
           }}
         >
           <ScatterText
@@ -251,7 +255,7 @@ export function HeroSectionV2() {
           className="absolute top-8 right-8 w-16 h-16 z-30"
           style={{
             opacity: isLoaded ? 1 : 0,
-            transition: 'opacity 1s ease-out 1.4s',
+            transition: isMobile ? 'none' : 'opacity 1s ease-out 1.4s',
           }}
         >
           <div className="absolute top-0 right-0 w-full h-[1px] bg-gradient-to-l from-primary/40 to-transparent" />
@@ -263,7 +267,7 @@ export function HeroSectionV2() {
           className="absolute bottom-8 left-8 w-16 h-16 z-30"
           style={{
             opacity: isLoaded ? 1 : 0,
-            transition: 'opacity 1s ease-out 1.4s',
+            transition: isMobile ? 'none' : 'opacity 1s ease-out 1.4s',
           }}
         >
           <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-primary/40 to-transparent" />

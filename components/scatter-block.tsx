@@ -1,20 +1,12 @@
 'use client'
 
-import { useEffect, useRef, useState, useMemo, type MouseEvent, type ReactNode } from 'react'
+import { useEffect, useRef, useState, useMemo, type MouseEvent } from 'react'
 import Link from 'next/link'
 import { useTransition } from '@/contexts/transition-context'
 import { clamp01, createScatterValue } from '@/lib/scatter'
 import { subscribeToScrollUpdates } from '@/lib/scroll-manager'
-
-interface ScatterBlockProps {
-  children: ReactNode
-  className?: string
-  scrollEnd?: number
-  distance?: number
-  seed?: number
-  href?: string
-  onClick?: () => void
-}
+import { useIsMobile } from '@/hooks/use-mobile'
+import type { ScatterBlockProps } from '@/types/component-props'
 
 export function ScatterBlock({
   children,
@@ -30,6 +22,7 @@ export function ScatterBlock({
   const progressRef = useRef(0)
   const isVisibleRef = useRef(false)
   const [isVisible, setIsVisible] = useState(false)
+  const isMobile = useIsMobile()
 
   // Pre-generate scatter value with seeded randomness
   const scatterValue = useMemo(() => {
@@ -65,6 +58,13 @@ export function ScatterBlock({
     const element = ref.current
     if (!element) return
 
+    if (isMobile) {
+      isVisibleRef.current = true
+      setIsVisible(true)
+      applyScatter(0)
+      return
+    }
+
     return subscribeToScrollUpdates(element, ({ rect, viewportHeight }) => {
       // Fade-in: trigger when element is 50px above viewport bottom
       const fadeInTrigger = viewportHeight - 50
@@ -91,14 +91,14 @@ export function ScatterBlock({
         }
       }
     })
-  }, [scrollEnd, scatterValue])
+  }, [isMobile, scrollEnd, scatterValue])
 
   // Calculate styles
   const getStyles = () => {
     return {
-      transform: isVisible ? 'translate3d(0,0,0) scale(1)' : 'translate3d(0,24px,0) scale(0.98)',
-      opacity: isVisible ? 1 : 0,
-      transition: 'transform 0.55s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1)',
+      transform: isMobile || isVisible ? 'translate3d(0,0,0) scale(1)' : 'translate3d(0,24px,0) scale(0.98)',
+      opacity: isMobile || isVisible ? 1 : 0,
+      transition: isMobile ? 'none' : 'transform 0.55s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1)',
     }
   }
 

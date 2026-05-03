@@ -2,22 +2,8 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { useTransition } from '@/contexts/transition-context'
-
-interface Particle {
-  x: number
-  y: number
-  baseX: number
-  baseY: number
-  vx: number
-  vy: number
-  size: number
-  hue: number
-  speed: number
-  amplitude: number
-  frequency: number
-  phase: number
-  opacity: number
-}
+import { useIsMobile } from '@/hooks/use-mobile'
+import type { FloatingParticle } from '@/types/effects'
 
 const getIsLowPowerDevice = () => {
   const nav = navigator as Navigator & { deviceMemory?: number }
@@ -30,9 +16,10 @@ const getIsLowPowerDevice = () => {
 
 export function FloatingParticles() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const particlesRef = useRef<Particle[]>([])
+  const particlesRef = useRef<FloatingParticle[]>([])
   const [isMounted, setIsMounted] = useState(false)
   const [isTransitionLayerActive, setIsTransitionLayerActive] = useState(false)
+  const isMobile = useIsMobile()
   const animationRef = useRef<number>(0)
   const timeRef = useRef(0)
   const lastFrameTime = useRef(0)
@@ -62,7 +49,7 @@ export function FloatingParticles() {
   }, [isTransitioning])
 
   useEffect(() => {
-    if (!isMounted) return
+    if (!isMounted || isMobile) return
 
     const canvas = canvasRef.current
     if (!canvas) return
@@ -241,9 +228,9 @@ export function FloatingParticles() {
       document.removeEventListener('visibilitychange', handleVisibilityChange)
       cancelAnimationFrame(animationRef.current)
     }
-  }, [isMounted])
+  }, [isMounted, isMobile])
 
-  if (!isMounted) return null
+  if (!isMounted || isMobile) return null
 
   return (
     <canvas

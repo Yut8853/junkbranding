@@ -2,6 +2,7 @@
 
 import { useRef, useState, useEffect, useMemo } from 'react'
 import { clamp01, createScatterValue } from '@/lib/scatter'
+import { useIsMobile } from '@/hooks/use-mobile'
 
 const marqueeTexts = ['Branding', 'Web Design', 'Graphic Design', 'Print Media', 'Logo Design', 'Art Direction']
 const marqueeRepeatCount = 4
@@ -12,8 +13,8 @@ const createMarqueeRow = (reverse = false) => {
 }
 
 const marqueeRows = [
-  { texts: createMarqueeRow(), animation: 'marquee-left 40s linear infinite' },
-  { texts: createMarqueeRow(true), animation: 'marquee-right 35s linear infinite' },
+  { texts: createMarqueeRow(), animationName: 'marquee-left', animationDuration: '40s' },
+  { texts: createMarqueeRow(true), animationName: 'marquee-right', animationDuration: '35s' },
 ]
 
 export function MarqueeSectionV2() {
@@ -21,6 +22,7 @@ export function MarqueeSectionV2() {
   const charsRef = useRef<(HTMLSpanElement | null)[]>([])
   const [isHovering, setIsHovering] = useState(false)
   const [hoveredItem, setHoveredItem] = useState<string | null>(null)
+  const isMobile = useIsMobile()
 
   // Collect all characters from both rows
   const allTexts = useMemo(() => {
@@ -46,7 +48,7 @@ export function MarqueeSectionV2() {
   // Scroll-based scatter animation
   useEffect(() => {
     const section = sectionRef.current
-    if (!section) return
+    if (!section || isMobile) return
 
     const validChars = charsRef.current.filter(Boolean) as HTMLSpanElement[]
     let rafId: number | null = null
@@ -88,7 +90,7 @@ export function MarqueeSectionV2() {
       window.removeEventListener('scroll', handleScrollRaf)
       if (rafId) cancelAnimationFrame(rafId)
     }
-  }, [scatterValues])
+  }, [scatterValues, isMobile])
 
   let charIndex = 0
 
@@ -101,8 +103,8 @@ export function MarqueeSectionV2() {
       <div
         key={key}
         className="group mx-6 md:mx-10 cursor-pointer flex items-center"
-        onMouseEnter={() => onHover(text)}
-        onMouseLeave={() => onHover(null)}
+        onMouseEnter={() => !isMobile && onHover(text)}
+        onMouseLeave={() => !isMobile && onHover(null)}
       >
         {/* Text with individual characters */}
         <span 
@@ -110,15 +112,15 @@ export function MarqueeSectionV2() {
           style={{
             WebkitTextStroke: hoveredItem === text ? '0px' : '1.5px var(--foreground)',
             WebkitTextFillColor: hoveredItem === text ? 'var(--foreground)' : 'transparent',
-            transform: hoveredItem === text ? 'scale(1.1) translateY(-4px)' : 'scale(1)',
-            transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+            transform: !isMobile && hoveredItem === text ? 'scale(1.1) translateY(-4px)' : 'scale(1)',
+            transition: isMobile ? 'none' : 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
           }}
         >
           {chars.map((char, i) => (
             <span
               key={i}
               ref={(el) => { charsRef.current[startIndex + i] = el }}
-              className="inline-block will-change-transform"
+              className="inline-block md:will-change-transform"
             >
               {char === ' ' ? '\u00A0' : char}
             </span>
@@ -135,8 +137,9 @@ export function MarqueeSectionV2() {
     <section 
       ref={sectionRef}
       className="py-12 md:py-20 lg:py-28 border-y border-border/30 overflow-visible relative"
-      onMouseEnter={() => setIsHovering(true)}
+      onMouseEnter={() => !isMobile && setIsHovering(true)}
       onMouseLeave={() => {
+        if (isMobile) return
         setIsHovering(false)
         setHoveredItem(null)
       }}
@@ -145,20 +148,23 @@ export function MarqueeSectionV2() {
       <div 
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: hoveredItem 
+          background: !isMobile && hoveredItem
             ? 'radial-gradient(ellipse 40% 60% at 50% 50%, oklch(0.75 0.12 300 / 0.15), transparent 70%)'
             : 'transparent',
-          transition: 'background 0.5s ease',
+          transition: isMobile ? 'none' : 'background 0.5s ease',
         }}
       />
 
       {marqueeRows.map((row, rowIndex) => (
-        <div key={row.animation} className={rowIndex === 0 ? 'mb-4 md:mb-8 overflow-visible' : 'overflow-visible'}>
+        <div key={row.animationName} className={rowIndex === 0 ? 'mb-4 md:mb-8 overflow-visible' : 'overflow-visible'}>
           <div className="flex whitespace-nowrap overflow-visible">
             <div
               className="flex"
               style={{
-                animation: row.animation,
+                animationName: isMobile ? 'none' : row.animationName,
+                animationDuration: row.animationDuration,
+                animationTimingFunction: 'linear',
+                animationIterationCount: 'infinite',
                 animationPlayState: isHovering ? 'paused' : 'running',
               }}
             >

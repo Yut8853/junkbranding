@@ -1,19 +1,9 @@
 'use client'
 
-import { useRef, useState, type ReactNode, type MouseEvent } from 'react'
+import { useRef, useState, type MouseEvent } from 'react'
 import Link from 'next/link'
 import { useTransition } from '@/contexts/transition-context'
-
-interface MagneticButtonProps {
-  children: ReactNode
-  href?: string
-  className?: string
-  strength?: number
-  onClick?: () => void
-  'data-cursor'?: string
-  type?: 'button' | 'submit' | 'reset'
-  disabled?: boolean
-}
+import type { MagneticButtonProps } from '@/types/component-props'
 
 export function MagneticButton({
   children,

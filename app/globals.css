@@ -1007,6 +1007,25 @@
   outline-offset: 2px;
 }
 
+.skip-link {
+  position: fixed;
+  left: 1rem;
+  top: 1rem;
+  z-index: 100000;
+  border-radius: 999px;
+  background: var(--foreground);
+  color: var(--background);
+  font-size: 0.875rem;
+  font-weight: 700;
+  padding: 0.75rem 1rem;
+  transform: translateY(-150%);
+  transition: transform 0.2s ease;
+}
+
+.skip-link:focus-visible {
+  transform: translateY(0);
+}
+
 /* Hide default cursor on non-touch devices */
 @media (pointer: fine) {
   body.cursor-ready * {
@@ -1169,5 +1188,88 @@
   .rainbow-border::before {
     animation: none;
     background-position: 0% 50%;
+  }
+}
+
+/* SP optimization: keep content readable and remove decorative motion. */
+@media (max-width: 767px) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .noise-overlay::before,
+  .bottom-heat-haze {
+    display: none !important;
+  }
+
+  .glass,
+  .glass-light,
+  .glass-card,
+  .cta-secondary {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+
+  .cta-primary,
+  .gradient-text,
+  .gradient-text-soft,
+  .gradient-text-animated,
+  .animate-gradient-flow,
+  .animate-gradient-text,
+  .animate-gradient-shift,
+  .animate-rainbow-line,
+  .animate-marquee,
+  .animate-marquee-left,
+  .animate-marquee-right,
+  .animate-float-gentle,
+  .animate-pulse-scale,
+  .hero-char,
+  .rainbow-border::before {
+    animation: none !important;
+  }
+
+  .cta-primary,
+  .gradient-text,
+  .gradient-text-soft,
+  .gradient-text-animated {
+    background-position: 50% 50% !important;
+  }
+
+  .cta-primary:hover,
+  .cta-secondary:hover,
+  .magnetic-btn:hover {
+    transform: none !important;
+  }
+
+  .split-char,
+  .hero-char,
+  [style*='will-change'] {
+    will-change: auto !important;
+  }
+
+  .py-56,
+  .py-44,
+  .py-40,
+  .py-32 {
+    padding-top: 5rem !important;
+    padding-bottom: 5rem !important;
+  }
+
+  .py-28,
+  .py-24 {
+    padding-top: 4rem !important;
+    padding-bottom: 4rem !important;
+  }
+
+  .mb-20 {
+    margin-bottom: 3.5rem !important;
+  }
+
+  .gap-16 {
+    gap: 2.5rem !important;
+  }
+
+  .h-\[110vh\] {
+    height: 100svh !important;
   }
 }

@@ -21,3 +21,11 @@ export type PricingFaq = {
   question: string
   answer: string
 }
+
+export type PricingServiceCategoriesSectionProps = {
+  serviceCategories: PricingCategory[]
+}
+
+export type PricingFaqSectionProps = {
+  faqs: PricingFaq[]
+}

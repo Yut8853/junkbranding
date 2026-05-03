@@ -1,15 +1,7 @@
 'use client'
 
 import { useRef, useEffect, useState } from 'react'
-
-interface HorizontalScrollTextProps {
-  text: string
-  className?: string
-  speed?: number
-  direction?: 'left' | 'right'
-  pauseOnHover?: boolean
-  style?: React.CSSProperties
-}
+import type { HorizontalScrollTextProps, MarqueeProps } from '@/types/component-props'
 
 export function HorizontalScrollText({
   text,
@@ -66,13 +58,6 @@ export function HorizontalScrollText({
       `}</style>
     </div>
   )
-}
-
-interface MarqueeProps {
-  children: React.ReactNode
-  className?: string
-  speed?: number
-  direction?: 'left' | 'right'
 }
 
 export function Marquee({

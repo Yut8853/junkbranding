@@ -4,13 +4,7 @@ import type { MouseEvent } from 'react'
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
 import { useTransition } from '@/contexts/transition-context'
-
-interface CircleButtonProps {
-  href: string
-  children: React.ReactNode
-  size?: 'sm' | 'md' | 'lg'
-  className?: string
-}
+import type { CircleButtonProps } from '@/types/component-props'
 
 export function CircleButton({ href, children, size = 'md', className }: CircleButtonProps) {
   const { navigateWithTransition, isTransitioning, prefetchRoute } = useTransition()

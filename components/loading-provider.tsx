@@ -1,9 +1,10 @@
 'use client'
 
-import { createContext, useContext, useState, useEffect, useLayoutEffect, type ComponentType, type ReactNode } from 'react'
+import { createContext, useContext, useState, useEffect, useLayoutEffect, type ComponentType } from 'react'
 import { useAudio } from '@/contexts/audio-context'
 import { useTransition } from '@/contexts/transition-context'
 import { LoadingScreen } from './loading-screen'
+import type { LoadingContextType, LoadingProviderProps } from '@/types/component-props'
 
 const LOADING_SEEN_KEY = 'junkbranding-loading-seen-session-v2'
 const AUDIO_PREFERENCE_KEY = 'junkbranding-audio-preference'
@@ -90,13 +91,6 @@ const preloadLoaders = async (loaders: Array<() => Promise<unknown>>) => {
   await Promise.all(loaders.map(preloadModule))
 }
 
-interface LoadingContextType {
-  isLoading: boolean
-  setIsLoading: (loading: boolean) => void
-  progress: number
-  setProgress: (progress: number) => void
-}
-
 const LoadingContext = createContext<LoadingContextType | undefined>(undefined)
 
 export function useLoading() {
@@ -105,10 +99,6 @@ export function useLoading() {
     throw new Error('useLoading must be used within LoadingProvider')
   }
   return context
-}
-
-interface LoadingProviderProps {
-  children: ReactNode
 }
 
 export function LoadingProvider({ children }: LoadingProviderProps) {

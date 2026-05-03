@@ -1,17 +1,23 @@
 'use client'
 
-import { ReactNode, useEffect, useRef, useState } from 'react'
+import { useEffect } from 'react'
 import { ReactLenis, useLenis } from 'lenis/react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { useIsMobile } from '@/hooks/use-mobile'
+import { useElementInView } from '@/hooks/use-element-in-view'
+import { useScrollProgress } from '@/hooks/use-scroll-progress'
+import type { SmoothScrollProps } from '@/types/component-props'
 
 gsap.registerPlugin(ScrollTrigger)
 
-interface SmoothScrollProps {
-  children: ReactNode
-}
-
 export function SmoothScroll({ children }: SmoothScrollProps) {
+  const isMobile = useIsMobile()
+
+  if (isMobile) {
+    return <>{children}</>
+  }
+
   return (
     <ReactLenis
       root
@@ -47,39 +53,7 @@ function LenisScrollTriggerSync() {
   return null
 }
 
-// Hook for scroll-based animations
-export function useScrollProgress() {
-  const [progress, setProgress] = useState(0)
-
-  useLenis(({ progress: lenisProgress }) => {
-    setProgress(lenisProgress)
-  })
-
-  return progress
-}
-
-// Hook for element visibility
-export function useInView(threshold = 0.1) {
-  const ref = useRef<HTMLElement>(null)
-  const [isInView, setIsInView] = useState(false)
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIsInView(entry.isIntersecting)
-      },
-      { threshold }
-    )
-
-    if (ref.current) {
-      observer.observe(ref.current)
-    }
-
-    return () => observer.disconnect()
-  }, [threshold])
-
-  return { ref, isInView }
-}
+export { useElementInView as useInView, useScrollProgress }
 
 // Export useLenis for direct access in components
 export { useLenis }

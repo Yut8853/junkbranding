@@ -39,6 +39,8 @@ const bebasNeue = Bebas_Neue({
 export const metadata: Metadata = {
   metadataBase: new URL('https://junkbranding.com'),
   applicationName: 'JunkBranding',
+  referrer: 'origin-when-cross-origin',
+  generator: 'Next.js',
   title: {
     default: 'JunkBranding | 茨城・東京・神奈川のブランディング & Web制作',
     template: '%s | JunkBranding',
@@ -109,6 +111,11 @@ export const metadata: Metadata = {
       'max-snippet': -1,
     },
   },
+  appleWebApp: {
+    capable: true,
+    title: 'JunkBranding',
+    statusBarStyle: 'black-translucent',
+  },
   icons: {
     icon: [
       {
@@ -137,6 +144,7 @@ export const metadata: Metadata = {
       'JunkBrandingは茨城・東京・神奈川を中心に、ブランディング、Web制作、ロゴ制作、マーケティング支援を行う小規模クリエイティブスタジオです。',
     'service-area': '茨城県, 東京都, 神奈川県, 全国オンライン対応',
     'primary-services': 'ブランディング, Web制作, Webデザイン, ロゴ制作, SEO対策, マーケティング支援',
+    'accessibility-summary': 'キーボード操作、スクリーンリーダー、WAI-ARIA属性、SPでのモーション削減に配慮しています。',
   },
 };
 
@@ -174,6 +182,9 @@ export default function RootLayout({
         />
       </head>
       <body className="font-sans antialiased bg-transparent text-foreground overflow-x-hidden">
+        <a href="#main-content" className="skip-link">
+          メインコンテンツへ移動
+        </a>
         <TransitionProvider>
           <AudioProvider>
             <CustomCursor />
@@ -183,7 +194,9 @@ export default function RootLayout({
               <SmoothScroll>
                 <Navigation />
                 <PageTransition>
-                  <main className="noise-overlay relative">{children}</main>
+                  <main id="main-content" className="noise-overlay relative" tabIndex={-1}>
+                    {children}
+                  </main>
                 </PageTransition>
               </SmoothScroll>
               <BottomHeatHaze />

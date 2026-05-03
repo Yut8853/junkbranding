@@ -2,10 +2,12 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 export function PrivacyBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [mounted, setMounted] = useState(false);
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     setMounted(true);
@@ -13,7 +15,7 @@ export function PrivacyBackground() {
 
   // Particle animation logic
   useEffect(() => {
-    if (!mounted) return;
+    if (!mounted || isMobile) return;
 
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -106,7 +108,7 @@ export function PrivacyBackground() {
       window.removeEventListener('resize', resize);
       cancelAnimationFrame(rafId);
     };
-  }, [mounted]);
+  }, [mounted, isMobile]);
 
   if (!mounted) return null;
 
@@ -127,11 +129,12 @@ export function PrivacyBackground() {
         }}
       />
 
-      {/* Canvas: 画面全体に固定 */}
-      <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />
+      {!isMobile && (
+        <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />
+      )}
 
       {/* 装飾用オーブ */}
-      <div className="absolute inset-0 opacity-20 overflow-hidden">
+      <div className="absolute inset-0 hidden overflow-hidden opacity-20 md:block">
         <div
           className="absolute top-1/4 left-1/4 w-[600px] h-[600px] rounded-full blur-[150px] animate-spin"
           style={{

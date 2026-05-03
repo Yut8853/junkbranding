@@ -3,17 +3,8 @@
 import { useEffect, useRef, useMemo, useState } from 'react'
 import { clamp01, createScatterValue } from '@/lib/scatter'
 import { subscribeToScrollUpdates } from '@/lib/scroll-manager'
-
-interface ScatterTextProps {
-  children: string
-  as?: 'h1' | 'h2' | 'h3' | 'h4' | 'p' | 'span' | 'div'
-  className?: string
-  scrollStart?: number
-  scrollEnd?: number
-  distance?: number
-  style?: React.CSSProperties
-  gradient?: boolean
-}
+import { useIsMobile } from '@/hooks/use-mobile'
+import type { ScatterTextProps } from '@/types/component-props'
 
 export function ScatterText({
   children,
@@ -30,6 +21,7 @@ export function ScatterText({
   const isVisibleRef = useRef(false)
   const progressRef = useRef(0)
   const [isVisible, setIsVisible] = useState(false)
+  const isMobile = useIsMobile()
 
   const chars = useMemo(() => children.split(''), [children])
 
@@ -69,6 +61,13 @@ export function ScatterText({
   // Combined scroll handler for fade-in and scatter
   useEffect(() => {
     if (!containerRef.current) return
+
+    if (isMobile) {
+      isVisibleRef.current = true
+      setIsVisible(true)
+      applyScatter(0)
+      return
+    }
 
     const container = containerRef.current
     let hasScrolledPast = false
@@ -110,7 +109,7 @@ export function ScatterText({
         }
       }
     })
-  }, [scrollEnd, scrollStart])
+  }, [isMobile, scrollEnd, scrollStart])
 
   return (
     <Component
@@ -122,9 +121,11 @@ export function ScatterText({
         const delay = Math.min(index * 0.012, 0.45)
 
         const fadeInStyle = {
-          opacity: isVisible ? 1 : 0,
-          transform: isVisible ? 'translate3d(0,0,0)' : 'translate3d(0,28px,0)',
-          transition: `opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1) ${delay}s, transform 0.55s cubic-bezier(0.16, 1, 0.3, 1) ${delay}s`,
+          opacity: isMobile || isVisible ? 1 : 0,
+          transform: isMobile || isVisible ? 'translate3d(0,0,0)' : 'translate3d(0,28px,0)',
+          transition: isMobile
+            ? 'none'
+            : `opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1) ${delay}s, transform 0.55s cubic-bezier(0.16, 1, 0.3, 1) ${delay}s`,
         }
 
         return (

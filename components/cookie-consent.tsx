@@ -3,12 +3,7 @@
 import { useState, useEffect } from 'react'
 import { X, Cookie, Settings, Check } from 'lucide-react'
 import { TransitionLink } from '@/components/transition-link'
-
-type CookiePreferences = {
-  necessary: boolean
-  analytics: boolean
-  marketing: boolean
-}
+import type { CookiePreferences } from '@/types/component-props'
 
 const COOKIE_CONSENT_KEY = 'junkbranding-cookie-consent'
 
@@ -88,17 +83,24 @@ export function CookieConsent() {
       className={`fixed bottom-4 right-4 z-[60] max-w-md transition-all duration-300 ${
         isClosing ? 'opacity-0 translate-y-4' : 'opacity-100 translate-y-0'
       }`}
+      role="dialog"
+      aria-modal="false"
+      aria-labelledby="cookie-consent-title"
+      aria-describedby="cookie-consent-description"
     >
       <div className="bg-foreground text-background rounded-2xl shadow-2xl overflow-hidden">
         {/* Header */}
         <div className="p-5 pb-0">
+          <p id="cookie-consent-description" className="sr-only">
+            Cookieの利用許可と詳細設定を選択できます。
+          </p>
           <div className="flex items-start justify-between gap-4">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-full bg-accent/20 flex items-center justify-center">
                 <Cookie className="w-5 h-5 text-accent" />
               </div>
               <div>
-                <h3 className="font-semibold text-base">Cookie設定</h3>
+                <h3 id="cookie-consent-title" className="font-semibold text-base">Cookie設定</h3>
                 <p className="text-xs text-background/60">プライバシー設定をカスタマイズ</p>
               </div>
             </div>
@@ -180,6 +182,10 @@ export function CookieConsent() {
                   </div>
                   <button
                     onClick={() => setPreferences(prev => ({ ...prev, analytics: !prev.analytics }))}
+                    type="button"
+                    role="switch"
+                    aria-checked={preferences.analytics}
+                    aria-label="分析Cookieを切り替える"
                     className={`w-10 h-6 rounded-full flex items-center transition-colors ${
                       preferences.analytics ? 'bg-accent justify-end pr-1' : 'bg-background/20 justify-start pl-1'
                     }`}
@@ -191,13 +197,17 @@ export function CookieConsent() {
                 {/* Marketing cookies */}
                 <div className="flex items-start justify-between gap-4 p-3 bg-background/5 rounded-xl">
                   <div className="flex-1">
-                    <h4 className="font-medium text-sm">マ��ケティングCookie</h4>
+                    <h4 className="font-medium text-sm">マーケティングCookie</h4>
                     <p className="text-xs text-background/60 mt-1">
                       パーソナライズされた広告を表示します
                     </p>
                   </div>
                   <button
                     onClick={() => setPreferences(prev => ({ ...prev, marketing: !prev.marketing }))}
+                    type="button"
+                    role="switch"
+                    aria-checked={preferences.marketing}
+                    aria-label="マーケティングCookieを切り替える"
                     className={`w-10 h-6 rounded-full flex items-center transition-colors ${
                       preferences.marketing ? 'bg-accent justify-end pr-1' : 'bg-background/20 justify-start pl-1'
                     }`}
