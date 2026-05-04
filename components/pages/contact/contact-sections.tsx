@@ -1,9 +1,11 @@
 'use client'
 
+import { useEffect, useRef, useState } from 'react'
 import { AlertCircle, ArrowRight, CheckCircle, Clock, Mail, MapPin, Phone, Send } from 'lucide-react'
 import { MagneticButton } from '@/components/magnetic-button'
 import { ScatterText } from '@/components/scatter-text'
 import { SectionReveal } from '@/components/text-reveal'
+import { useIsMobile } from '@/hooks/use-mobile'
 import type { ContactFormProps } from '@/types/contact-page'
 
 export function ContactSuccessSection() {
@@ -38,43 +40,107 @@ export function ContactSuccessSection() {
 }
 
 export function ContactHeroSection() {
+  const containerRef = useRef<HTMLDivElement>(null)
+  const [heroScatterProgress, setHeroScatterProgress] = useState(0)
+  const isMobile = useIsMobile()
+
+  useEffect(() => {
+    if (!containerRef.current || isMobile) return
+
+    let rafId: number | null = null
+    let lastScrollProgress = -1
+
+    const handleScroll = () => {
+      const rect = containerRef.current?.getBoundingClientRect()
+      if (!rect) return
+
+      const scrollProgress = Math.min(Math.max(-rect.top, 0) / 400, 1)
+      if (Math.abs(scrollProgress - lastScrollProgress) < 0.01) return
+      lastScrollProgress = scrollProgress
+      setHeroScatterProgress(scrollProgress)
+    }
+
+    const handleScrollRaf = () => {
+      if (rafId) return
+      rafId = requestAnimationFrame(() => {
+        rafId = null
+        handleScroll()
+      })
+    }
+
+    window.addEventListener('scroll', handleScrollRaf, { passive: true })
+    handleScroll()
+
+    return () => {
+      window.removeEventListener('scroll', handleScrollRaf)
+      if (rafId) cancelAnimationFrame(rafId)
+    }
+  }, [isMobile])
+
   return (
-    <section className="relative min-h-[50svh] sm:min-h-[60svh] flex items-center justify-center">
-      <div className="container mx-auto px-6 md:px-12 lg:px-16 py-32 md:py-40 text-center">
-        <div className="mb-6 lg:mb-8">
+    <section
+      ref={containerRef}
+      className="relative min-h-[100svh] flex items-center justify-center overflow-hidden"
+    >
+      {/* Background giant text */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none opacity-[0.03]">
+        <span className="type-display text-[50vw] whitespace-nowrap">
+          CONTACT
+        </span>
+      </div>
+
+      {/* Marquee decoration */}
+      <div className="absolute inset-0 flex flex-col justify-center pointer-events-none select-none overflow-hidden opacity-[0.04]">
+        <div className="flex whitespace-nowrap animate-marquee-slow">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <span key={`marquee-1-${i}`} className="type-display text-[8vw] mx-8 marquee-stroke">
+              CONTACT
+            </span>
+          ))}
+        </div>
+        <div className="flex whitespace-nowrap animate-marquee-slow-reverse mt-4">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <span key={`marquee-2-${i}`} className="type-display text-[8vw] mx-8 marquee-stroke">
+              GET IN TOUCH
+            </span>
+          ))}
+        </div>
+      </div>
+
+      <div className="container relative z-10 mx-auto px-6 md:px-12 lg:px-16 text-center">
+        <div className="overflow-visible">
           <ScatterText
-            as="span"
-            className="type-eyebrow text-[clamp(3rem,10vw,7rem)] text-foreground/45 block"
-            scrollStart={50}
-            scrollEnd={350}
-            distance={500}
-            style={{
-              WebkitTextStroke: '1px currentColor',
-              WebkitTextFillColor: 'transparent',
-            }}
+            as="h1"
+            className="type-display text-[12vw] md:text-[10vw] lg:text-[8vw] leading-[0.9] tracking-[-0.04em]"
+            distance={900}
+            gradient
+            scatterProgress={heroScatterProgress}
+            deferUntilActive
           >
-            Contact
+            CONTACT
           </ScatterText>
         </div>
-        <ScatterText
-          as="h1"
-          className="type-hero-title text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-6 lg:mb-8"
-          scrollStart={50}
-          scrollEnd={350}
-          distance={400}
-          gradient
-        >
-          お問い合わせ
-        </ScatterText>
-        <ScatterText
-          as="p"
-          className="type-body text-base md:text-lg text-muted-foreground max-w-lg mx-auto"
-          scrollStart={50}
-          scrollEnd={350}
-          distance={300}
-        >
-          プロジェクトのご相談、お見積りなど、お気軽にお問い合わせください。
-        </ScatterText>
+
+        <div className="overflow-visible mt-12">
+          <ScatterText
+            as="p"
+            className="type-body text-lg md:text-xl text-muted-foreground max-w-lg mx-auto"
+            distance={400}
+            scatterProgress={heroScatterProgress}
+            deferUntilActive
+          >
+            プロジェクトのご相談、お見積りなど、お気軽にお問い合わせください。
+          </ScatterText>
+        </div>
+      </div>
+
+      {/* Scroll indicator */}
+      <div 
+        className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4"
+        style={{ opacity: 1 - heroScatterProgress }}
+      >
+        <span className="type-label text-muted-foreground text-xs">Scroll to explore</span>
+        <div className="w-px h-16 bg-gradient-to-b from-foreground/40 to-transparent animate-pulse" />
       </div>
     </section>
   )

@@ -57,10 +57,28 @@ export function AboutHeroSection() {
       className="relative min-h-[100svh] flex items-center justify-center overflow-hidden"
     >
       {/* Background giant text */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none opacity-[0.015]">
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none opacity-[0.03]">
         <span className="type-display text-[50vw] whitespace-nowrap">
           ABOUT
         </span>
+      </div>
+
+      {/* Marquee decoration */}
+      <div className="absolute inset-0 flex flex-col justify-center pointer-events-none select-none overflow-hidden opacity-[0.04]">
+        <div className="flex whitespace-nowrap animate-marquee-slow">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <span key={`marquee-1-${i}`} className="type-display text-[8vw] mx-8 marquee-stroke">
+              ABOUT US
+            </span>
+          ))}
+        </div>
+        <div className="flex whitespace-nowrap animate-marquee-slow-reverse mt-4">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <span key={`marquee-2-${i}`} className="type-display text-[8vw] mx-8 marquee-stroke">
+              JUNK BRANDING
+            </span>
+          ))}
+        </div>
       </div>
 
       <div className="container relative z-10 mx-auto px-6 md:px-12 lg:px-16 text-center">
@@ -326,11 +344,6 @@ function ValueCard({
       <div
         className="group relative text-center p-10 md:p-12 lg:p-16 rounded-3xl glass-card rainbow-border transition-all duration-500 hover:scale-105"
       >
-        {/* Large number background */}
-        <span className="absolute top-6 left-6 type-display text-8xl text-foreground/[0.03] pointer-events-none">
-          {String(index + 1).padStart(2, '0')}
-        </span>
-
         <div className="relative z-10">
           <div className="w-16 h-16 md:w-20 md:h-20 mx-auto mb-8 rounded-full bg-foreground/5 flex items-center justify-center group-hover:bg-foreground/10 transition-colors duration-500">
             <value.icon className="w-7 h-7 md:w-8 md:h-8 text-foreground/60 group-hover:text-foreground transition-colors duration-500" />
@@ -352,10 +365,7 @@ function ValueCard({
 export function AboutProcessSection({ process }: AboutProcessSectionProps) {
   return (
     <section className="relative py-40 md:py-56 lg:py-72 glass-card overflow-hidden">
-      {/* Background text */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none opacity-[0.02]">
-        <span className="type-display text-[30vw] whitespace-nowrap">PROCESS</span>
-      </div>
+
 
       {/* Decorative elements - positioned relative to viewport */}
       <div className="fixed top-[20vh] left-[5vw] w-72 h-72 rounded-full bg-gradient-to-br from-primary/5 to-transparent blur-3xl pointer-events-none opacity-50" />

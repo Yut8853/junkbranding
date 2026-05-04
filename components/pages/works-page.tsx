@@ -53,18 +53,36 @@ function WorksHeroSection() {
       ref={containerRef}
       className="relative min-h-[100svh] flex items-center justify-center overflow-hidden"
     >
-      {/* Large background text */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden">
-        <span className="type-display text-[25vw] md:text-[20vw] text-foreground/[0.02] whitespace-nowrap">
+      {/* Background giant text */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none opacity-[0.03]">
+        <span className="type-display text-[50vw] whitespace-nowrap">
           WORKS
         </span>
       </div>
 
+      {/* Marquee decoration */}
+      <div className="absolute inset-0 flex flex-col justify-center pointer-events-none select-none overflow-hidden opacity-[0.04]">
+        <div className="flex whitespace-nowrap animate-marquee-slow">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <span key={`marquee-1-${i}`} className="type-display text-[8vw] mx-8 marquee-stroke">
+              WORKS
+            </span>
+          ))}
+        </div>
+        <div className="flex whitespace-nowrap animate-marquee-slow-reverse mt-4">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <span key={`marquee-2-${i}`} className="type-display text-[8vw] mx-8 marquee-stroke">
+              PORTFOLIO
+            </span>
+          ))}
+        </div>
+      </div>
+
       <div className="container relative z-10 mx-auto px-6 md:px-12 lg:px-16 text-center">
-        <div className="overflow-visible mb-6">
+        <div className="overflow-visible">
           <ScatterText
             as="h1"
-            className="type-display text-[20vw] md:text-[16vw] lg:text-[14vw] leading-[0.85] tracking-[-0.05em]"
+            className="type-display text-[12vw] md:text-[10vw] lg:text-[8vw] leading-[0.9] tracking-[-0.04em]"
             distance={900}
             gradient
             scatterProgress={heroScatterProgress}
@@ -74,10 +92,10 @@ function WorksHeroSection() {
           </ScatterText>
         </div>
         
-        <div className="overflow-visible">
+        <div className="overflow-visible mt-12">
           <ScatterText
             as="p"
-            className="type-body text-lg md:text-xl text-muted-foreground max-w-xl mx-auto"
+            className="type-body text-lg md:text-xl text-muted-foreground max-w-lg mx-auto"
             distance={400}
             scatterProgress={heroScatterProgress}
             deferUntilActive
@@ -92,8 +110,8 @@ function WorksHeroSection() {
         className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4"
         style={{ opacity: 1 - heroScatterProgress }}
       >
-        <span className="type-label text-muted-foreground text-xs">Scroll</span>
-        <div className="w-px h-12 bg-gradient-to-b from-foreground/40 to-transparent animate-pulse" />
+        <span className="type-label text-muted-foreground text-xs">Scroll to explore</span>
+        <div className="w-px h-16 bg-gradient-to-b from-foreground/40 to-transparent animate-pulse" />
       </div>
     </section>
   )
