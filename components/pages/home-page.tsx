@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { useLayoutEffect, useState } from 'react'
 import { homeAboutPreview, homeArea, homePreviewVideoSrc, homeWorksPreview } from '@/content/home-page'
 import {
   HomeAboutPreviewSection,
@@ -12,9 +12,7 @@ import { HomeDeferredSections } from '@/components/pages/home/home-deferred-sect
 import { HomeInvertedScroll } from '@/components/pages/home/home-inverted-scroll'
 
 export default function HomePageClient() {
-  const deferredTriggerRef = useRef<HTMLDivElement>(null)
   const [layoutMode, setLayoutMode] = useState<'desktop-inverted' | 'mobile-normal'>('mobile-normal')
-  const [shouldRenderDeferred, setShouldRenderDeferred] = useState(false)
   const isDesktopInverted = layoutMode === 'desktop-inverted'
 
   useLayoutEffect(() => {
@@ -22,34 +20,12 @@ export default function HomePageClient() {
     const syncMode = () => {
       const shouldInvert = mediaQuery.matches
       setLayoutMode(shouldInvert ? 'desktop-inverted' : 'mobile-normal')
-      if (shouldInvert) {
-        setShouldRenderDeferred(true)
-      }
     }
 
     syncMode()
     mediaQuery.addEventListener('change', syncMode)
     return () => mediaQuery.removeEventListener('change', syncMode)
   }, [])
-
-  useEffect(() => {
-    if (isDesktopInverted) return
-
-    const trigger = deferredTriggerRef.current
-    if (!trigger || shouldRenderDeferred) return
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (!entry?.isIntersecting) return
-        setShouldRenderDeferred(true)
-        observer.disconnect()
-      },
-      { rootMargin: '900px 0px' }
-    )
-
-    observer.observe(trigger)
-    return () => observer.disconnect()
-  }, [isDesktopInverted, shouldRenderDeferred])
 
   if (isDesktopInverted) {
     return (
@@ -91,15 +67,11 @@ export default function HomePageClient() {
           videoSrc={homePreviewVideoSrc}
         />
       </HomeAscentSection>
-      <div ref={deferredTriggerRef} aria-hidden={!shouldRenderDeferred} className="home-ascent-deferred">
-        {shouldRenderDeferred ? (
-          <HomeDeferredSections
-            worksPreview={homeWorksPreview}
-            area={homeArea}
-          />
-        ) : (
-          <div className="min-h-[60vh]" />
-        )}
+      <div className="home-ascent-deferred">
+        <HomeDeferredSections
+          worksPreview={homeWorksPreview}
+          area={homeArea}
+        />
       </div>
     </div>
   )
