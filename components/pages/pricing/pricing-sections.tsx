@@ -1,49 +1,95 @@
 'use client'
 
-import { ArrowRight, Check, HelpCircle, MessageCircle, Phone, Sparkles } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
+import { ArrowRight, Check, HelpCircle, MessageCircle, Phone, Sparkles, Plus, Minus } from 'lucide-react'
 import { SectionReveal } from '@/components/text-reveal'
 import { ScatterBlock } from '@/components/scatter-block'
 import { ScatterText } from '@/components/scatter-text'
+import { useIsMobile } from '@/hooks/use-mobile'
 import type { PricingFaqSectionProps, PricingServiceCategoriesSectionProps } from '@/types/pricing-page'
 
 export function PricingHeroSection() {
+  const containerRef = useRef<HTMLDivElement>(null)
+  const [heroScatterProgress, setHeroScatterProgress] = useState(0)
+  const isMobile = useIsMobile()
+
+  useEffect(() => {
+    if (!containerRef.current || isMobile) return
+
+    let rafId: number | null = null
+    let lastScrollProgress = -1
+
+    const handleScroll = () => {
+      const rect = containerRef.current?.getBoundingClientRect()
+      if (!rect) return
+
+      const scrollProgress = Math.min(Math.max(-rect.top, 0) / 400, 1)
+      if (Math.abs(scrollProgress - lastScrollProgress) < 0.01) return
+      lastScrollProgress = scrollProgress
+      setHeroScatterProgress(scrollProgress)
+    }
+
+    const handleScrollRaf = () => {
+      if (rafId) return
+      rafId = requestAnimationFrame(() => {
+        rafId = null
+        handleScroll()
+      })
+    }
+
+    window.addEventListener('scroll', handleScrollRaf, { passive: true })
+    handleScroll()
+
+    return () => {
+      window.removeEventListener('scroll', handleScrollRaf)
+      if (rafId) cancelAnimationFrame(rafId)
+    }
+  }, [isMobile])
+
   return (
-    <section className="relative min-h-[60svh] sm:min-h-[70svh] flex items-center justify-center">
-      <div className="container mx-auto px-6 md:px-12 lg:px-16 py-32 md:py-40 text-center">
-        <div className="mb-6 lg:mb-8">
+    <section
+      ref={containerRef}
+      className="relative min-h-[100svh] flex items-center justify-center overflow-hidden"
+    >
+      {/* Background giant text */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none opacity-[0.015]">
+        <span className="type-display text-[40vw] whitespace-nowrap">PRICING</span>
+      </div>
+
+      <div className="container relative z-10 mx-auto px-6 md:px-12 lg:px-16 text-center">
+        <div className="overflow-visible">
           <ScatterText
-            as="span"
-            className="type-eyebrow text-[clamp(3rem,10vw,7rem)] text-foreground/45 block"
-            scrollStart={50}
-            scrollEnd={350}
-            distance={500}
-            style={{
-              WebkitTextStroke: '1px currentColor',
-              WebkitTextFillColor: 'transparent',
-            }}
+            as="h1"
+            className="type-display text-[16vw] md:text-[14vw] lg:text-[12vw] leading-[0.85] tracking-[-0.04em]"
+            distance={900}
+            gradient
+            scatterProgress={heroScatterProgress}
+            deferUntilActive
           >
-            Pricing
+            PRICING
           </ScatterText>
         </div>
-        <ScatterText
-          as="h1"
-          className="type-hero-title text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-6 lg:mb-8"
-          scrollStart={50}
-          scrollEnd={350}
-          distance={400}
-          gradient
-        >
-          制作料金
-        </ScatterText>
-        <ScatterText
-          as="p"
-          className="type-body text-base md:text-lg text-muted-foreground max-w-lg mx-auto"
-          scrollStart={50}
-          scrollEnd={350}
-          distance={300}
-        >
-          あらゆるクリエイティブに、柔軟に対応します。ご予算やご要望に合わせたご提案が可能です。
-        </ScatterText>
+
+        <div className="overflow-visible mt-10">
+          <ScatterText
+            as="p"
+            className="type-body text-lg md:text-xl text-muted-foreground max-w-xl mx-auto"
+            distance={400}
+            scatterProgress={heroScatterProgress}
+            deferUntilActive
+          >
+            あらゆるクリエイティブに、柔軟に対応します。
+          </ScatterText>
+        </div>
+      </div>
+
+      {/* Scroll indicator */}
+      <div 
+        className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4"
+        style={{ opacity: 1 - heroScatterProgress }}
+      >
+        <span className="type-label text-muted-foreground text-xs">Scroll</span>
+        <div className="w-px h-12 bg-gradient-to-b from-foreground/40 to-transparent animate-pulse" />
       </div>
     </section>
   )
@@ -51,24 +97,22 @@ export function PricingHeroSection() {
 
 export function PricingNoticeSection() {
   return (
-    <section className="py-8 glass-card rainbow-border">
-      <div className="container mx-auto px-6 md:px-12 lg:px-16">
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 text-center sm:text-left">
-          <div className="w-10 h-10 rounded-full bg-foreground/5 flex items-center justify-center shrink-0">
-            <Sparkles className="w-4 h-4 text-muted-foreground" />
+    <SectionReveal delay={0.1} duration={0.8}>
+      <section className="py-8 glass-card rainbow-border sticky top-20 z-30">
+        <div className="container mx-auto px-6 md:px-12 lg:px-16">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 text-center sm:text-left">
+            <div className="w-12 h-12 rounded-full bg-foreground/5 flex items-center justify-center shrink-0">
+              <Sparkles className="w-5 h-5 text-muted-foreground" />
+            </div>
+            <p className="type-body-compact text-sm md:text-base text-muted-foreground">
+              下記料金は参考価格です。プロジェクトの内容・規模により変動いたします。
+              <br className="hidden md:block" />
+              正式なお見積りは無料ヒアリング後にご提示いたしますので、お気軽にご相談ください。
+            </p>
           </div>
-          <ScatterText
-            as="p"
-            className="type-body-compact text-sm text-muted-foreground"
-            scrollStart={50}
-            scrollEnd={350}
-            distance={260}
-          >
-            下記料金は参考価格です。プロジェクトの内容・規模により変動いたします。正式なお見積りは無料ヒアリング後にご提示いたしますので、お気軽にご相談ください。
-          </ScatterText>
         </div>
-      </div>
-    </section>
+      </section>
+    </SectionReveal>
   )
 }
 
@@ -76,130 +120,20 @@ export function PricingServiceCategoriesSection({
   serviceCategories,
 }: PricingServiceCategoriesSectionProps) {
   return (
-    <section className="py-32 md:py-40 lg:py-56 glass-light">
-      <div className="container mx-auto px-6 md:px-12 lg:px-16">
-        <div className="space-y-20 lg:space-y-32">
+    <section className="relative py-32 md:py-40 lg:py-56 glass-light overflow-hidden">
+      {/* Background text */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none opacity-[0.015]">
+        <span className="type-display text-[35vw] whitespace-nowrap">SERVICES</span>
+      </div>
+
+      <div className="container relative z-10 mx-auto px-6 md:px-12 lg:px-16">
+        <div className="space-y-24 lg:space-y-40">
           {serviceCategories.map((category, categoryIndex) => (
-            <SectionReveal key={category.id} delay={categoryIndex * 0.03}>
-              <div className="group rounded-3xl glass-card rainbow-border p-6 md:p-8 lg:p-10">
-                <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 md:gap-8 mb-10 lg:mb-12 pb-8 border-b border-border/20">
-                  <div className="flex items-start gap-5 md:gap-6">
-                    <div className="w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-foreground/5 flex items-center justify-center shrink-0 group-hover:bg-foreground/10 transition-colors duration-300">
-                      <category.icon className="w-5 h-5 md:w-6 md:h-6 text-foreground/60" />
-                    </div>
-                    <div>
-                      <ScatterText
-                        as="h2"
-                        className="type-card-title text-xl sm:text-2xl md:text-3xl mb-1"
-                        scrollStart={50}
-                        scrollEnd={350}
-                        distance={300}
-                        gradient
-                      >
-                        {category.title}
-                      </ScatterText>
-                      <ScatterText
-                        as="p"
-                        className="type-label text-muted-foreground mb-3"
-                        scrollStart={50}
-                        scrollEnd={350}
-                        distance={220}
-                      >
-                        {category.titleEn}
-                      </ScatterText>
-                      <ScatterText
-                        as="p"
-                        className="type-body text-sm md:text-base text-muted-foreground max-w-lg"
-                        scrollStart={50}
-                        scrollEnd={350}
-                        distance={260}
-                      >
-                        {category.description}
-                      </ScatterText>
-                    </div>
-                  </div>
-                  <div className="md:text-right shrink-0">
-                    <ScatterText
-                      as="p"
-                      className="type-body-compact text-xs text-muted-foreground mb-1"
-                      scrollStart={50}
-                      scrollEnd={350}
-                      distance={160}
-                    >
-                      参考価格
-                    </ScatterText>
-                    <ScatterText
-                      as="p"
-                      className="type-card-title text-2xl sm:text-3xl"
-                      scrollStart={50}
-                      scrollEnd={350}
-                      distance={200}
-                      gradient
-                    >
-                      {category.priceRange}
-                    </ScatterText>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6 mb-8 lg:mb-10">
-                  {category.services.map((service) => (
-                    <div
-                      key={service.name}
-                      className="p-6 lg:p-8 rounded-2xl bg-background/45 rainbow-border transition-all duration-300"
-                    >
-                      <ScatterText
-                        as="h3"
-                        className="type-card-title text-sm md:text-base mb-2"
-                        scrollStart={50}
-                        scrollEnd={350}
-                        distance={220}
-                        gradient
-                      >
-                        {service.name}
-                      </ScatterText>
-                      <ScatterText
-                        as="p"
-                        className="text-lg md:text-xl font-bold text-foreground mb-2"
-                        scrollStart={50}
-                        scrollEnd={350}
-                        distance={200}
-                      >
-                        {service.price}
-                      </ScatterText>
-                      <ScatterText
-                        as="p"
-                        className="type-body-compact text-xs text-muted-foreground"
-                        scrollStart={50}
-                        scrollEnd={350}
-                        distance={180}
-                      >
-                        {service.note}
-                      </ScatterText>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="flex flex-wrap gap-2">
-                  {category.features.map((feature) => (
-                    <span
-                      key={feature}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs bg-background/45 rounded-full rainbow-border"
-                    >
-                      <Check size={10} className="text-muted-foreground" />
-                      <ScatterText
-                        as="span"
-                        className="inline-block"
-                        scrollStart={50}
-                        scrollEnd={350}
-                        distance={140}
-                      >
-                        {feature}
-                      </ScatterText>
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </SectionReveal>
+            <ServiceCategoryCard
+              key={category.id}
+              category={category}
+              index={categoryIndex}
+            />
           ))}
         </div>
       </div>
@@ -207,68 +141,210 @@ export function PricingServiceCategoriesSection({
   )
 }
 
-export function PricingFaqSection({ faqs }: PricingFaqSectionProps) {
+function ServiceCategoryCard({
+  category,
+  index,
+}: {
+  category: PricingServiceCategoriesSectionProps['serviceCategories'][0]
+  index: number
+}) {
   return (
-    <section className="py-32 md:py-40 lg:py-56 glass-card">
-      <div className="container mx-auto px-6 md:px-12 lg:px-16">
-        <div className="text-center mb-16 lg:mb-24">
-          <div className="mb-6 lg:mb-8">
+    <div className="group">
+      {/* Large category number */}
+      <SectionReveal delay={0.1} duration={0.8}>
+        <div className="mb-8 lg:mb-12 overflow-hidden">
+          <span className="type-display text-[20vw] md:text-[15vw] text-foreground/[0.03] leading-none block">
+            {String(index + 1).padStart(2, '0')}
+          </span>
+        </div>
+      </SectionReveal>
+
+      {/* Header */}
+      <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8 mb-12 lg:mb-16 pb-10 border-b border-border/20">
+        <div className="flex items-start gap-6 md:gap-8">
+          <SectionReveal delay={0.2} duration={0.8}>
+            <div className="w-16 h-16 md:w-20 md:h-20 rounded-3xl bg-foreground/5 flex items-center justify-center shrink-0 group-hover:bg-foreground/10 transition-colors duration-500">
+              <category.icon className="w-7 h-7 md:w-8 md:h-8 text-foreground/60" />
+            </div>
+          </SectionReveal>
+          <div>
+            <div className="overflow-visible mb-2">
+              <ScatterText
+                as="h2"
+                className="type-section-title text-3xl sm:text-4xl md:text-5xl"
+                scrollStart={50}
+                scrollEnd={400}
+                distance={500}
+                gradient
+              >
+                {category.title}
+              </ScatterText>
+            </div>
+            <span className="type-label text-muted-foreground mb-4 block">{category.titleEn}</span>
             <ScatterText
-              as="span"
-              className="type-eyebrow text-[clamp(3rem,10vw,7rem)] text-foreground/45 block"
+              as="p"
+              className="type-body text-base md:text-lg text-muted-foreground max-w-xl"
               scrollStart={50}
-              scrollEnd={350}
-              distance={500}
-              style={{
-                WebkitTextStroke: '1px currentColor',
-                WebkitTextFillColor: 'transparent',
-              }}
+              scrollEnd={400}
+              distance={300}
+            >
+              {category.description}
+            </ScatterText>
+          </div>
+        </div>
+
+        <SectionReveal delay={0.3} duration={0.8}>
+          <div className="lg:text-right shrink-0">
+            <span className="type-label text-muted-foreground mb-2 block">Starting from</span>
+            <span className="type-display text-4xl md:text-5xl lg:text-6xl gradient-text">
+              {category.priceRange}
+            </span>
+          </div>
+        </SectionReveal>
+      </div>
+
+      {/* Services grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 mb-10">
+        {category.services.map((service, serviceIndex) => (
+          <ServiceCard key={service.name} service={service} index={serviceIndex} />
+        ))}
+      </div>
+
+      {/* Features */}
+      <SectionReveal delay={0.4} duration={0.8}>
+        <div className="flex flex-wrap gap-3">
+          {category.features.map((feature) => (
+            <span
+              key={feature}
+              className="inline-flex items-center gap-2 px-4 py-2 text-sm bg-background/50 rounded-full rainbow-border"
+            >
+              <Check size={12} className="text-primary" />
+              {feature}
+            </span>
+          ))}
+        </div>
+      </SectionReveal>
+    </div>
+  )
+}
+
+function ServiceCard({
+  service,
+  index,
+}: {
+  service: { name: string; price: string; note: string }
+  index: number
+}) {
+  const cardRef = useRef<HTMLDivElement>(null)
+  const [isHovered, setIsHovered] = useState(false)
+  const isMobile = useIsMobile()
+
+  useEffect(() => {
+    const card = cardRef.current
+    if (!card || isMobile) return
+
+    const handleMouseMove = (e: MouseEvent) => {
+      const rect = card.getBoundingClientRect()
+      const x = e.clientX - rect.left
+      const y = e.clientY - rect.top
+      const centerX = rect.width / 2
+      const centerY = rect.height / 2
+      const rotateX = (y - centerY) / 20
+      const rotateY = (centerX - x) / 20
+
+      card.style.transform = `perspective(1000px) rotateX(${-rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`
+    }
+
+    const handleMouseLeave = () => {
+      card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)'
+    }
+
+    card.addEventListener('mousemove', handleMouseMove)
+    card.addEventListener('mouseleave', handleMouseLeave)
+
+    return () => {
+      card.removeEventListener('mousemove', handleMouseMove)
+      card.removeEventListener('mouseleave', handleMouseLeave)
+    }
+  }, [isMobile])
+
+  return (
+    <SectionReveal delay={index * 0.1} duration={0.8}>
+      <div
+        ref={cardRef}
+        className={`relative p-8 lg:p-10 rounded-3xl glass-card rainbow-border transition-all duration-300 cursor-pointer ${
+          isHovered ? 'shadow-[0_30px_80px_rgba(0,0,0,0.08)]' : ''
+        }`}
+        style={{ transformStyle: 'preserve-3d' }}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
+        {/* Number indicator */}
+        <span className="absolute top-6 right-6 type-display text-5xl text-foreground/[0.05]">
+          {String(index + 1).padStart(2, '0')}
+        </span>
+
+        <h3 className="type-card-title text-lg md:text-xl mb-4 gradient-text">{service.name}</h3>
+        
+        <p className="type-display text-3xl md:text-4xl text-foreground mb-4">{service.price}</p>
+        
+        <p className="type-body-compact text-sm text-muted-foreground">{service.note}</p>
+
+        {/* Hover glow effect */}
+        <div
+          className={`absolute inset-0 rounded-3xl bg-gradient-to-br from-primary/10 via-transparent to-accent/10 transition-opacity duration-500 pointer-events-none ${
+            isHovered ? 'opacity-100' : 'opacity-0'
+          }`}
+        />
+      </div>
+    </SectionReveal>
+  )
+}
+
+export function PricingFaqSection({ faqs }: PricingFaqSectionProps) {
+  const [openIndex, setOpenIndex] = useState<number | null>(null)
+
+  return (
+    <section className="relative py-32 md:py-40 lg:py-56 glass-card overflow-hidden">
+      {/* Background text */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none opacity-[0.015]">
+        <span className="type-display text-[35vw] whitespace-nowrap">FAQ</span>
+      </div>
+
+      <div className="container relative z-10 mx-auto px-6 md:px-12 lg:px-16">
+        <div className="text-center mb-20 lg:mb-32">
+          <div className="overflow-visible">
+            <ScatterText
+              as="h2"
+              className="type-display text-[12vw] md:text-[10vw] lg:text-[8vw] leading-[0.9]"
+              scrollStart={50}
+              scrollEnd={400}
+              distance={700}
+              gradient
             >
               FAQ
             </ScatterText>
           </div>
           <ScatterText
-            as="h2"
-            className="type-section-title text-2xl sm:text-3xl md:text-4xl lg:text-5xl"
+            as="p"
+            className="type-body text-lg md:text-xl text-muted-foreground mt-6"
             scrollStart={50}
-            scrollEnd={350}
-            distance={400}
-            gradient
+            scrollEnd={400}
+            distance={300}
           >
             よくあるご質問
           </ScatterText>
         </div>
 
-        <div className="max-w-3xl mx-auto space-y-4 lg:space-y-6">
+        <div className="max-w-4xl mx-auto space-y-4">
           {faqs.map((faq, index) => (
-            <SectionReveal key={faq.question} delay={index * 0.03}>
-              <div className="p-6 md:p-8 lg:p-10 rounded-3xl glass-card rainbow-border transition-all duration-300">
-                <div className="flex items-start gap-4 mb-4">
-                  <div className="w-8 h-8 rounded-full bg-foreground/5 flex items-center justify-center shrink-0">
-                    <HelpCircle size={14} className="text-muted-foreground" />
-                  </div>
-                  <ScatterText
-                    as="h3"
-                    className="type-card-title text-sm md:text-base"
-                    scrollStart={50}
-                    scrollEnd={350}
-                    distance={240}
-                    gradient
-                  >
-                    {faq.question}
-                  </ScatterText>
-                </div>
-                <ScatterText
-                  as="p"
-                  className="type-body-compact text-sm text-muted-foreground pl-12"
-                  scrollStart={50}
-                  scrollEnd={350}
-                  distance={260}
-                >
-                  {faq.answer}
-                </ScatterText>
-              </div>
-            </SectionReveal>
+            <FaqItem
+              key={faq.question}
+              faq={faq}
+              index={index}
+              isOpen={openIndex === index}
+              onToggle={() => setOpenIndex(openIndex === index ? null : index)}
+            />
           ))}
         </div>
       </div>
@@ -276,33 +352,144 @@ export function PricingFaqSection({ faqs }: PricingFaqSectionProps) {
   )
 }
 
-export function PricingCtaSection() {
+function FaqItem({
+  faq,
+  index,
+  isOpen,
+  onToggle,
+}: {
+  faq: { question: string; answer: string }
+  index: number
+  isOpen: boolean
+  onToggle: () => void
+}) {
+  const answerRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const answer = answerRef.current
+    if (!answer) return
+
+    if (isOpen) {
+      answer.style.height = `${answer.scrollHeight}px`
+      answer.style.opacity = '1'
+    } else {
+      answer.style.height = '0'
+      answer.style.opacity = '0'
+    }
+  }, [isOpen])
+
   return (
-    <section className="py-32 md:py-40 lg:py-56 glass-light">
-      <div className="container mx-auto px-6 md:px-12 lg:px-16 text-center">
-        <ScatterText
-          as="h2"
-          className="type-section-title text-2xl sm:text-3xl md:text-4xl lg:text-5xl mb-2"
-          scrollStart={50}
-          scrollEnd={350}
-          distance={400}
-          gradient
+    <SectionReveal delay={index * 0.1} duration={0.6}>
+      <div
+        className={`rounded-3xl glass-card rainbow-border transition-all duration-500 overflow-hidden ${
+          isOpen ? 'shadow-[0_20px_60px_rgba(0,0,0,0.06)]' : ''
+        }`}
+      >
+        <button
+          type="button"
+          onClick={onToggle}
+          className="w-full flex items-center justify-between gap-6 p-6 md:p-8 text-left"
         >
-          まずは、
-        </ScatterText>
-        <ScatterText
-          as="span"
-          className="type-section-title text-2xl sm:text-3xl md:text-4xl lg:text-5xl mb-6 lg:mb-8 block"
-          scrollStart={50}
-          scrollEnd={350}
-          distance={400}
-          gradient
+          <div className="flex items-start gap-4">
+            <div className="w-10 h-10 rounded-full bg-foreground/5 flex items-center justify-center shrink-0">
+              <HelpCircle size={18} className="text-muted-foreground" />
+            </div>
+            <h3 className="type-card-title text-base md:text-lg gradient-text">{faq.question}</h3>
+          </div>
+          <div
+            className={`w-10 h-10 rounded-full bg-foreground/5 flex items-center justify-center shrink-0 transition-transform duration-300 ${
+              isOpen ? 'rotate-180' : ''
+            }`}
+          >
+            {isOpen ? (
+              <Minus size={18} className="text-muted-foreground" />
+            ) : (
+              <Plus size={18} className="text-muted-foreground" />
+            )}
+          </div>
+        </button>
+
+        <div 
+          ref={answerRef} 
+          className="overflow-hidden transition-all duration-400 ease-out"
+          style={{ height: 0, opacity: 0 }}
         >
-          お気軽にご相談ください
-        </ScatterText>
+          <p className="type-body text-base text-muted-foreground px-6 md:px-8 pb-6 md:pb-8 pl-20 md:pl-22">
+            {faq.answer}
+          </p>
+        </div>
+      </div>
+    </SectionReveal>
+  )
+}
+
+export function PricingCtaSection() {
+  const containerRef = useRef<HTMLDivElement>(null)
+  const [ctaScatterProgress, setCtaScatterProgress] = useState(0)
+  const isMobile = useIsMobile()
+
+  useEffect(() => {
+    if (!containerRef.current || isMobile) return
+
+    let rafId: number | null = null
+
+    const handleScroll = () => {
+      const rect = containerRef.current?.getBoundingClientRect()
+      if (!rect) return
+
+      const viewportHeight = window.innerHeight
+      const elementCenter = rect.top + rect.height / 2
+      const distanceFromCenter = elementCenter - viewportHeight / 2
+      const normalizedDistance = distanceFromCenter / (viewportHeight / 2)
+      
+      const scrollProgress = Math.max(0, Math.min(1, -normalizedDistance * 0.5 + 0.5))
+      setCtaScatterProgress(scrollProgress > 0.8 ? (scrollProgress - 0.8) * 5 : 0)
+    }
+
+    const handleScrollRaf = () => {
+      if (rafId) return
+      rafId = requestAnimationFrame(() => {
+        rafId = null
+        handleScroll()
+      })
+    }
+
+    window.addEventListener('scroll', handleScrollRaf, { passive: true })
+    handleScroll()
+
+    return () => {
+      window.removeEventListener('scroll', handleScrollRaf)
+      if (rafId) cancelAnimationFrame(rafId)
+    }
+  }, [isMobile])
+
+  return (
+    <section
+      ref={containerRef}
+      className="relative min-h-[80svh] flex items-center justify-center py-32 md:py-40 lg:py-56 glass-light overflow-hidden"
+    >
+      {/* Background text */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none opacity-[0.02]">
+        <span className="type-display text-[35vw] whitespace-nowrap">START</span>
+      </div>
+
+      <div className="container relative z-10 mx-auto px-6 md:px-12 lg:px-16 text-center">
+        <div className="overflow-visible mb-8">
+          <ScatterText
+            as="h2"
+            className="type-section-title text-4xl sm:text-5xl md:text-6xl lg:text-7xl"
+            distance={600}
+            gradient
+            scatterProgress={ctaScatterProgress}
+            deferUntilActive
+          >
+            まずは、お気軽にご相談ください
+          </ScatterText>
+        </div>
+
         <ScatterText
           as="p"
-          className="type-body text-base md:text-lg text-muted-foreground max-w-lg mx-auto mb-10 lg:mb-12"
+          className="type-body text-lg md:text-xl text-muted-foreground max-w-xl mx-auto mb-12"
           scrollStart={50}
           scrollEnd={350}
           distance={300}

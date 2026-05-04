@@ -2,7 +2,7 @@
 
 import { Footer } from '@/components/footer'
 import {
-  AboutCtaSection,
+  AboutContactSection,
   AboutHeroSection,
   AboutIntroSection,
   AboutProcessSection,
@@ -19,7 +19,7 @@ export default function AboutPageClient() {
       <AboutTeamSection team={team} />
       <AboutValuesSection values={values} />
       <AboutProcessSection process={process} />
-      <AboutCtaSection />
+      <AboutContactSection />
       <Footer />
     </>
   )

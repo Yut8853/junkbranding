@@ -72,7 +72,7 @@ export function MarqueeSectionV2() {
       >
         <ScatterText
           as="span"
-          className="type-eyebrow text-4xl md:text-6xl lg:text-7xl xl:text-8xl"
+          className="font-display font-bold text-4xl md:text-6xl lg:text-7xl xl:text-8xl tracking-tight"
           distance={520}
           scatterProgress={scatterProgress}
           deferUntilActive

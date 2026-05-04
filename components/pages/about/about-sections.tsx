@@ -1,10 +1,12 @@
 'use client'
 
+import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
-import { ArrowRight, Phone, Clock } from 'lucide-react'
+import { ArrowRight, Phone, Clock, CheckCircle } from 'lucide-react'
 import { SectionReveal } from '@/components/text-reveal'
 import { ScatterText } from '@/components/scatter-text'
 import { ScatterBlock } from '@/components/scatter-block'
+import { useIsMobile } from '@/hooks/use-mobile'
 import type {
   AboutProcessSectionProps,
   AboutTeamSectionProps,
@@ -12,43 +14,89 @@ import type {
 } from '@/types/about-page'
 
 export function AboutHeroSection() {
+  const containerRef = useRef<HTMLDivElement>(null)
+  const [heroScatterProgress, setHeroScatterProgress] = useState(0)
+  const isMobile = useIsMobile()
+
+  useEffect(() => {
+    if (!containerRef.current || isMobile) return
+
+    let rafId: number | null = null
+    let lastScrollProgress = -1
+
+    const handleScroll = () => {
+      const rect = containerRef.current?.getBoundingClientRect()
+      if (!rect) return
+
+      const scrollProgress = Math.min(Math.max(-rect.top, 0) / 400, 1)
+      if (Math.abs(scrollProgress - lastScrollProgress) < 0.01) return
+      lastScrollProgress = scrollProgress
+      setHeroScatterProgress(scrollProgress)
+    }
+
+    const handleScrollRaf = () => {
+      if (rafId) return
+      rafId = requestAnimationFrame(() => {
+        rafId = null
+        handleScroll()
+      })
+    }
+
+    window.addEventListener('scroll', handleScrollRaf, { passive: true })
+    handleScroll()
+
+    return () => {
+      window.removeEventListener('scroll', handleScrollRaf)
+      if (rafId) cancelAnimationFrame(rafId)
+    }
+  }, [isMobile])
+
   return (
-    <section className="relative min-h-[70svh] sm:min-h-[80svh] flex items-center justify-center">
-      <div className="container mx-auto px-6 md:px-12 lg:px-16 py-32 md:py-40 text-center">
-        <div className="mb-6 lg:mb-8">
+    <section
+      ref={containerRef}
+      className="relative min-h-[100svh] flex items-center justify-center overflow-hidden"
+    >
+      {/* Background giant text */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none opacity-[0.015]">
+        <span className="type-display text-[50vw] whitespace-nowrap">
+          ABOUT
+        </span>
+      </div>
+
+      <div className="container relative z-10 mx-auto px-6 md:px-12 lg:px-16 text-center">
+        <div className="overflow-visible">
           <ScatterText
-            as="span"
-            className="type-eyebrow text-[clamp(3rem,10vw,7rem)] text-foreground/45 block"
-            scrollStart={50}
-            scrollEnd={350}
-            distance={500}
-            style={{
-              WebkitTextStroke: '1px currentColor',
-              WebkitTextFillColor: 'transparent',
-            }}
+            as="h1"
+            className="type-display text-[12vw] md:text-[10vw] lg:text-[8vw] leading-[0.9] tracking-[-0.04em]"
+            distance={900}
+            gradient
+            scatterProgress={heroScatterProgress}
+            deferUntilActive
           >
-            About Us
+            ABOUT US
           </ScatterText>
         </div>
-        <ScatterText
-          as="h1"
-          className="type-hero-title text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-6 lg:mb-8"
-          scrollStart={50}
-          scrollEnd={350}
-          distance={400}
-          gradient
-        >
-          私たちについて
-        </ScatterText>
-        <ScatterText
-          as="p"
-          className="type-body text-base md:text-lg text-muted-foreground max-w-lg mx-auto"
-          scrollStart={50}
-          scrollEnd={350}
-          distance={300}
-        >
-          2人だけの小さなスタジオだからこそ、できることがあります。
-        </ScatterText>
+
+        <div className="overflow-visible mt-12">
+          <ScatterText
+            as="p"
+            className="type-body text-lg md:text-xl text-muted-foreground max-w-lg mx-auto"
+            distance={400}
+            scatterProgress={heroScatterProgress}
+            deferUntilActive
+          >
+            2人だけの小さなスタジオだからこそ、できることがあります。
+          </ScatterText>
+        </div>
+      </div>
+
+      {/* Scroll indicator */}
+      <div 
+        className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4"
+        style={{ opacity: 1 - heroScatterProgress }}
+      >
+        <span className="type-label text-muted-foreground text-xs">Scroll to explore</span>
+        <div className="w-px h-16 bg-gradient-to-b from-foreground/40 to-transparent animate-pulse" />
       </div>
     </section>
   )
@@ -56,54 +104,47 @@ export function AboutHeroSection() {
 
 export function AboutIntroSection() {
   return (
-    <section className="py-32 md:py-40 lg:py-56 glass-light">
+    <section className="relative py-32 md:py-40 lg:py-56 glass-light overflow-hidden">
       <div className="container mx-auto px-6 md:px-12 lg:px-16">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
           <div className="lg:pr-8">
-            <ScatterText
-              as="h2"
-              className="type-section-title text-2xl sm:text-3xl md:text-4xl lg:text-5xl mb-2"
-              scrollStart={50}
-              scrollEnd={350}
-              distance={400}
-              gradient
-            >
-              大手にはできない、
-            </ScatterText>
-            <ScatterText
-              as="h2"
-              className="type-section-title text-2xl sm:text-3xl md:text-4xl lg:text-5xl mb-8 lg:mb-10"
-              scrollStart={50}
-              scrollEnd={350}
-              distance={400}
-              gradient
-            >
-              丁寧なものづくり
-            </ScatterText>
-            <div className="space-y-6 text-base md:text-lg text-muted-foreground">
+            <div className="mb-8 overflow-visible">
+              <ScatterText
+                as="h2"
+                className="type-section-title text-4xl sm:text-5xl md:text-6xl lg:text-7xl leading-[1.1]"
+                scrollStart={50}
+                scrollEnd={400}
+                distance={600}
+                gradient
+              >
+                大手にはできない、丁寧なものづくり
+              </ScatterText>
+            </div>
+
+            <div className="space-y-6 text-lg md:text-xl text-muted-foreground">
               <ScatterText
                 as="p"
-                className="type-body text-base md:text-lg text-muted-foreground"
+                className="type-body"
                 scrollStart={50}
-                scrollEnd={350}
+                scrollEnd={400}
                 distance={300}
               >
                 JunkBrandingは、茨城・東京・神奈川を中心に活動する、2人だけのブランディング&Web制作スタジオです。
               </ScatterText>
               <ScatterText
                 as="p"
-                className="type-body text-base md:text-lg text-muted-foreground"
+                className="type-body"
                 scrollStart={50}
-                scrollEnd={350}
+                scrollEnd={400}
                 distance={300}
               >
                 大きな組織では難しい「一人ひとりと向き合う」ことを大切に、クライアントと同じ目線で、一緒に考え、一緒に創ります。
               </ScatterText>
               <ScatterText
                 as="p"
-                className="type-body text-base md:text-lg text-muted-foreground"
+                className="type-body"
                 scrollStart={50}
-                scrollEnd={350}
+                scrollEnd={400}
                 distance={300}
               >
                 「ちょっとした相談」から「本格的なリブランディング」まで、まずはお気軽にお声がけください。
@@ -111,29 +152,25 @@ export function AboutIntroSection() {
             </div>
           </div>
 
-          <SectionReveal delay={0.2}>
-            <div className="relative aspect-square rounded-3xl overflow-hidden glass-card rainbow-border group">
-              <Image
-                src="/images/home-office-two-person-rainbow.webp"
-                alt="JunkBranding Studio - クリエイティブスタジオのワークスペース"
-                fill
-                className="object-cover transition-transform duration-700 group-hover:scale-105"
-                sizes="(max-width: 768px) calc(100vw - 48px), 50vw"
-                quality={64}
-              />
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(255,95,162,0.22),transparent_34%),radial-gradient(circle_at_80%_35%,rgba(75,180,255,0.18),transparent_32%),linear-gradient(135deg,rgba(255,215,95,0.12),transparent_35%,rgba(165,105,255,0.16))] mix-blend-screen" />
-              <div className="absolute inset-0 bg-gradient-to-t from-background/75 via-background/15 to-transparent" />
-              <div className="absolute bottom-6 left-6 right-6">
-                <ScatterText
-                  as="p"
-                  className="text-sm font-medium"
-                  scrollStart={50}
-                  scrollEnd={350}
-                  distance={220}
-                  gradient
-                >
-                  JunkBranding Studio
-                </ScatterText>
+          <SectionReveal delay={0.3} duration={1.2}>
+            <div className="relative">
+              <div className="relative aspect-[4/5] rounded-3xl overflow-hidden glass-card rainbow-border group">
+                <Image
+                  src="/images/home-office-two-person-rainbow.webp"
+                  alt="JunkBranding Studio - クリエイティブスタジオのワークスペース"
+                  fill
+                  className="object-cover transition-transform duration-1000 group-hover:scale-110"
+                  sizes="(max-width: 768px) calc(100vw - 48px), 50vw"
+                  quality={64}
+                />
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(255,95,162,0.22),transparent_34%),radial-gradient(circle_at_80%_35%,rgba(75,180,255,0.18),transparent_32%),linear-gradient(135deg,rgba(255,215,95,0.12),transparent_35%,rgba(165,105,255,0.16))] mix-blend-screen" />
+                <div className="absolute inset-0 bg-gradient-to-t from-background/85 via-transparent to-transparent" />
+                
+                {/* Floating label */}
+                <div className="absolute bottom-8 left-8 right-8">
+                  <span className="type-label text-foreground/60 mb-2 block">Studio</span>
+                  <span className="type-card-title text-2xl gradient-text">JunkBranding</span>
+                </div>
               </div>
             </div>
           </SectionReveal>
@@ -145,95 +182,40 @@ export function AboutIntroSection() {
 
 export function AboutTeamSection({ team }: AboutTeamSectionProps) {
   return (
-    <section className="py-32 md:py-40 lg:py-56 glass-card">
-      <div className="container mx-auto px-6 md:px-12 lg:px-16">
-        <div className="text-center mb-16 lg:mb-24">
-          <div className="mb-6 lg:mb-8">
+    <section className="relative py-32 md:py-40 lg:py-56 glass-card overflow-hidden">
+      {/* Background text */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none opacity-[0.02]">
+        <span className="type-display text-[40vw] whitespace-nowrap">TEAM</span>
+      </div>
+
+      <div className="container relative z-10 mx-auto px-6 md:px-12 lg:px-16">
+        <div className="text-center mb-20 lg:mb-32">
+          <div className="overflow-visible">
             <ScatterText
-              as="span"
-              className="type-eyebrow text-[clamp(3rem,10vw,7rem)] text-foreground/45 block"
+              as="h2"
+              className="type-display text-[12vw] md:text-[10vw] lg:text-[8vw] leading-[0.9]"
               scrollStart={50}
-              scrollEnd={350}
-              distance={500}
-              style={{
-                WebkitTextStroke: '1px currentColor',
-                WebkitTextFillColor: 'transparent',
-              }}
+              scrollEnd={400}
+              distance={700}
+              gradient
             >
-              Team
+              TEAM
             </ScatterText>
           </div>
           <ScatterText
-            as="h2"
-            className="type-section-title text-2xl sm:text-3xl md:text-4xl lg:text-5xl"
+            as="p"
+            className="type-body text-lg md:text-xl text-muted-foreground mt-6"
             scrollStart={50}
-            scrollEnd={350}
-            distance={400}
-            gradient
+            scrollEnd={400}
+            distance={300}
           >
-            チームメンバー
+            2人だけの、小さなチーム
           </ScatterText>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-16 max-w-4xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-20 max-w-5xl mx-auto">
           {team.map((member, index) => (
-            <SectionReveal key={member.name} delay={0.2 + index * 0.1}>
-              <div className="group">
-                <div className="relative aspect-[3/4] mb-8 lg:mb-10 rounded-3xl overflow-hidden glass-card rainbow-border">
-                  <Image
-                    src={member.image}
-                    alt={`${member.name} - ${member.role}`}
-                    fill
-                    className="object-cover transition-all duration-700 group-hover:scale-105 filter grayscale-[30%] group-hover:grayscale-0"
-                    sizes="(max-width: 768px) calc(100vw - 48px), (max-width: 1200px) 50vw, 33vw"
-                    quality={64}
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-background/85 via-background/25 to-transparent" />
-                  {/* Animated gradient overlay on hover */}
-                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-br from-primary/20 via-transparent to-accent/20" />
-                  {/* Name overlay with gradient animation */}
-                  <div className="absolute bottom-6 left-6 right-6">
-                    <ScatterText
-                      as="p"
-                      className="type-label text-foreground/70 mb-2"
-                      scrollStart={50}
-                      scrollEnd={350}
-                      distance={220}
-                    >
-                      {member.role}
-                    </ScatterText>
-                    <ScatterText
-                      as="h3"
-                      className="type-card-title text-xl sm:text-2xl"
-                      scrollStart={50}
-                      scrollEnd={350}
-                      distance={300}
-                      gradient
-                    >
-                      {member.name}
-                    </ScatterText>
-                    <ScatterText
-                      as="p"
-                      className="type-body-compact text-xs text-foreground/50 mt-1"
-                      scrollStart={50}
-                      scrollEnd={350}
-                      distance={220}
-                    >
-                      {member.nameEn}
-                    </ScatterText>
-                  </div>
-                </div>
-                <ScatterText
-                  as="p"
-                  className="type-body text-sm md:text-base text-muted-foreground whitespace-pre-wrap"
-                  scrollStart={50}
-                  scrollEnd={350}
-                  distance={260}
-                >
-                  {member.description}
-                </ScatterText>
-              </div>
-            </SectionReveal>
+            <TeamMemberCard key={member.name} member={member} index={index} />
           ))}
         </div>
       </div>
@@ -241,33 +223,82 @@ export function AboutTeamSection({ team }: AboutTeamSectionProps) {
   )
 }
 
+function TeamMemberCard({
+  member,
+  index,
+}: {
+  member: AboutTeamSectionProps['team'][0]
+  index: number
+}) {
+  return (
+    <SectionReveal delay={index * 0.2} duration={1}>
+      <div className="group">
+        <div className="relative aspect-[3/4] mb-8 rounded-3xl overflow-hidden glass-card rainbow-border">
+          <Image
+            src={member.image}
+            alt={`${member.name} - ${member.role}`}
+            fill
+            className="object-cover transition-all duration-1000 group-hover:scale-110 filter grayscale-[20%] group-hover:grayscale-0"
+            sizes="(max-width: 768px) calc(100vw - 48px), (max-width: 1200px) 50vw, 33vw"
+            quality={64}
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/30 to-transparent" />
+          
+          {/* Hover gradient overlay */}
+          <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 bg-gradient-to-br from-primary/20 via-transparent to-accent/20" />
+          
+          {/* Name overlay */}
+          <div className="absolute bottom-8 left-8 right-8">
+            <span className="type-label text-foreground/60 mb-2 block">{member.role}</span>
+            <h3 className="type-section-title text-3xl md:text-4xl gradient-text mb-1">
+              {member.name}
+            </h3>
+            <span className="type-body-compact text-sm text-foreground/50">{member.nameEn}</span>
+          </div>
+        </div>
+
+        <ScatterText
+          as="p"
+          className="type-body text-base md:text-lg text-muted-foreground"
+          scrollStart={50}
+          scrollEnd={400}
+          distance={250}
+        >
+          {member.description}
+        </ScatterText>
+      </div>
+    </SectionReveal>
+  )
+}
+
 export function AboutValuesSection({ values }: AboutValuesSectionProps) {
   return (
-    <section className="py-32 md:py-40 lg:py-56 glass-light">
-      <div className="container mx-auto px-6 md:px-12 lg:px-16">
-        <div className="text-center mb-16 lg:mb-24">
-          <div className="mb-6 lg:mb-8">
+    <section className="relative py-32 md:py-40 lg:py-56 glass-light overflow-hidden">
+      {/* Background text */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none opacity-[0.02]">
+        <span className="type-display text-[35vw] whitespace-nowrap">VALUES</span>
+      </div>
+
+      <div className="container relative z-10 mx-auto px-6 md:px-12 lg:px-16">
+        <div className="text-center mb-20 lg:mb-32">
+          <div className="overflow-visible">
             <ScatterText
-              as="span"
-              className="type-eyebrow text-[clamp(3rem,10vw,7rem)] text-foreground/45 block"
+              as="h2"
+              className="type-display text-[12vw] md:text-[10vw] lg:text-[8vw] leading-[0.9]"
               scrollStart={50}
-              scrollEnd={350}
-              distance={500}
-              style={{
-                WebkitTextStroke: '1px currentColor',
-                WebkitTextFillColor: 'transparent',
-              }}
+              scrollEnd={400}
+              distance={700}
+              gradient
             >
-              Values
+              VALUES
             </ScatterText>
           </div>
           <ScatterText
-            as="h2"
-            className="type-section-title text-2xl sm:text-3xl md:text-4xl lg:text-5xl"
+            as="p"
+            className="type-body text-lg md:text-xl text-muted-foreground mt-6"
             scrollStart={50}
-            scrollEnd={350}
-            distance={400}
-            gradient
+            scrollEnd={400}
+            distance={300}
           >
             大切にしていること
           </ScatterText>
@@ -275,41 +306,7 @@ export function AboutValuesSection({ values }: AboutValuesSectionProps) {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12">
           {values.map((value, index) => (
-            <SectionReveal key={value.title} delay={0.2 + index * 0.1}>
-              <div className="group text-center p-8 md:p-10 lg:p-12 rounded-3xl glass-card rainbow-border transition-all duration-500">
-                <div className="w-14 h-14 md:w-16 md:h-16 mx-auto mb-6 lg:mb-8 rounded-full bg-foreground/5 flex items-center justify-center group-hover:bg-foreground/10 transition-colors duration-300">
-                  <value.icon className="w-6 h-6 md:w-7 md:h-7 text-foreground/60" />
-                </div>
-                <ScatterText
-                  as="h3"
-                  className="type-card-title text-lg sm:text-xl md:text-2xl mb-2"
-                  scrollStart={50}
-                  scrollEnd={350}
-                  distance={300}
-                  gradient
-                >
-                  {value.title}
-                </ScatterText>
-                <ScatterText
-                  as="p"
-                  className="type-label text-muted-foreground mb-4 lg:mb-6"
-                  scrollStart={50}
-                  scrollEnd={350}
-                  distance={220}
-                >
-                  {value.titleEn}
-                </ScatterText>
-                <ScatterText
-                  as="p"
-                  className="type-body text-sm md:text-base text-muted-foreground"
-                  scrollStart={50}
-                  scrollEnd={350}
-                  distance={260}
-                >
-                  {value.description}
-                </ScatterText>
-              </div>
-            </SectionReveal>
+            <ValueCard key={value.title} value={value} index={index} />
           ))}
         </div>
       </div>
@@ -317,192 +314,95 @@ export function AboutValuesSection({ values }: AboutValuesSectionProps) {
   )
 }
 
+function ValueCard({
+  value,
+  index,
+}: {
+  value: AboutValuesSectionProps['values'][0]
+  index: number
+}) {
+  return (
+    <SectionReveal delay={index * 0.15} duration={0.8}>
+      <div
+        className="group relative text-center p-10 md:p-12 lg:p-16 rounded-3xl glass-card rainbow-border transition-all duration-500 hover:scale-105"
+      >
+        {/* Large number background */}
+        <span className="absolute top-6 left-6 type-display text-8xl text-foreground/[0.03] pointer-events-none">
+          {String(index + 1).padStart(2, '0')}
+        </span>
+
+        <div className="relative z-10">
+          <div className="w-16 h-16 md:w-20 md:h-20 mx-auto mb-8 rounded-full bg-foreground/5 flex items-center justify-center group-hover:bg-foreground/10 transition-colors duration-500">
+            <value.icon className="w-7 h-7 md:w-8 md:h-8 text-foreground/60 group-hover:text-foreground transition-colors duration-500" />
+          </div>
+
+          <h3 className="type-section-title text-2xl md:text-3xl mb-2 gradient-text">
+            {value.title}
+          </h3>
+          <span className="type-label text-muted-foreground mb-6 block">{value.titleEn}</span>
+          <p className="type-body text-base md:text-lg text-muted-foreground">
+            {value.description}
+          </p>
+        </div>
+      </div>
+    </SectionReveal>
+  )
+}
+
 export function AboutProcessSection({ process }: AboutProcessSectionProps) {
   return (
-    <section className="py-32 md:py-40 lg:py-56 glass-card">
-      <div className="container mx-auto px-6 md:px-12 lg:px-16">
-        <div className="text-center mb-16 lg:mb-24">
-          <div className="mb-6 lg:mb-8">
+    <section className="relative py-40 md:py-56 lg:py-72 glass-card overflow-hidden">
+      {/* Background text */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none opacity-[0.02]">
+        <span className="type-display text-[30vw] whitespace-nowrap">PROCESS</span>
+      </div>
+
+      {/* Decorative elements - positioned relative to viewport */}
+      <div className="fixed top-[20vh] left-[5vw] w-72 h-72 rounded-full bg-gradient-to-br from-primary/5 to-transparent blur-3xl pointer-events-none opacity-50" />
+      <div className="fixed bottom-[15vh] right-[5vw] w-96 h-96 rounded-full bg-gradient-to-tl from-accent/5 to-transparent blur-3xl pointer-events-none opacity-50" />
+      
+      {/* Floating lines - sticky positioned */}
+      <div className="fixed top-[30vh] left-[10%] w-px h-32 bg-gradient-to-b from-transparent via-foreground/5 to-transparent pointer-events-none" />
+      <div className="fixed bottom-[25vh] right-[12%] w-px h-24 bg-gradient-to-b from-transparent via-primary/10 to-transparent pointer-events-none" />
+
+      <div className="container relative z-10 mx-auto px-6 md:px-12 lg:px-16">
+        <div className="text-center mb-24 lg:mb-40">
+          <div className="overflow-visible">
             <ScatterText
-              as="span"
-              className="type-eyebrow text-[clamp(3rem,10vw,7rem)] text-foreground/45 block"
+              as="h2"
+              className="type-display text-[12vw] md:text-[10vw] lg:text-[8vw] leading-[0.9]"
               scrollStart={50}
-              scrollEnd={350}
-              distance={500}
-              style={{
-                WebkitTextStroke: '1px currentColor',
-                WebkitTextFillColor: 'transparent',
-              }}
+              scrollEnd={400}
+              distance={700}
+              gradient
             >
-              Process
+              PROCESS
             </ScatterText>
           </div>
           <ScatterText
-            as="h2"
-            className="type-section-title text-2xl sm:text-3xl md:text-4xl lg:text-5xl mb-6 lg:mb-8"
-            scrollStart={50}
-            scrollEnd={350}
-            distance={400}
-            gradient
-          >
-            制作の流れ
-          </ScatterText>
-          <ScatterText
             as="p"
-            className="type-body text-base md:text-lg text-muted-foreground max-w-2xl mx-auto"
+            className="type-body text-lg md:text-xl text-muted-foreground mt-8 max-w-2xl mx-auto"
             scrollStart={50}
-            scrollEnd={350}
+            scrollEnd={400}
             distance={300}
           >
             お問い合わせから公開、そしてその後まで。私たちがどのようにプロジェクトを進めていくのか、6つのステップでご紹介します。
           </ScatterText>
         </div>
 
-        <div className="max-w-5xl mx-auto space-y-12 lg:space-y-20">
+        <div className="max-w-5xl mx-auto py-8">
           {process.map((item, index) => (
-            <SectionReveal key={item.step} delay={0.1 + index * 0.05}>
-              <div className="group relative">
-                {/* Step Header */}
-                <div className="flex flex-col md:flex-row md:items-center gap-4 md:gap-8 mb-8 lg:mb-10">
-                  <div className="flex items-center gap-4 md:gap-6">
-                    <div className="relative w-14 h-14 md:w-16 md:h-16 rounded-full glass-card rainbow-border flex items-center justify-center transition-all duration-500 shrink-0">
-                      <ScatterText
-                        as="span"
-                        className="relative z-10 text-lg md:text-xl font-bold"
-                        scrollStart={50}
-                        scrollEnd={350}
-                        distance={160}
-                        gradient
-                      >
-                        {String(item.step)}
-                      </ScatterText>
-                    </div>
-                    <div>
-                      <ScatterText
-                        as="h3"
-                        className="type-card-title text-xl sm:text-2xl md:text-3xl mb-1"
-                        scrollStart={50}
-                        scrollEnd={350}
-                        distance={300}
-                        gradient
-                      >
-                        {item.title}
-                      </ScatterText>
-                      <ScatterText
-                        as="p"
-                        className="type-label text-muted-foreground"
-                        scrollStart={50}
-                        scrollEnd={350}
-                        distance={220}
-                      >
-                        {item.titleEn}
-                      </ScatterText>
-                    </div>
-                  </div>
-                  <div className="md:ml-auto flex items-center gap-2 px-4 py-2 bg-foreground/5 rounded-full w-fit">
-                    <Clock size={14} className="text-muted-foreground" />
-                    <ScatterText
-                      as="span"
-                      className="text-xs font-medium text-muted-foreground"
-                      scrollStart={50}
-                      scrollEnd={350}
-                      distance={180}
-                    >
-                      {item.duration}
-                    </ScatterText>
-                  </div>
-                </div>
-                
-                {/* Content Card */}
-                <div className="ml-0 md:ml-24 p-8 md:p-10 lg:p-12 rounded-3xl glass-card rainbow-border transition-all duration-500">
-                  {/* Short Description */}
-                  <ScatterText
-                    as="p"
-                    className="type-card-title text-base md:text-lg text-foreground mb-4 lg:mb-6"
-                    scrollStart={50}
-                    scrollEnd={350}
-                    distance={260}
-                  >
-                    {item.description}
-                  </ScatterText>
-                  
-                  {/* Full Description */}
-                  <ScatterText
-                    as="p"
-                    className="type-body text-sm md:text-base text-muted-foreground mb-8 lg:mb-10"
-                    scrollStart={50}
-                    scrollEnd={350}
-                    distance={260}
-                  >
-                    {item.fullDescription}
-                  </ScatterText>
-                  
-                  {/* Details Grid */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6 mb-8 lg:mb-10">
-                    {item.details.map((detail, i) => (
-                      <div 
-                        key={detail.title} 
-                        className="flex items-start gap-4 p-4 lg:p-5 rounded-2xl bg-background/45 rainbow-border"
-                      >
-                        <div className="relative shrink-0 w-7 h-7 rounded-full bg-foreground/5 flex items-center justify-center mt-0.5">
-                          <ScatterText
-                            as="span"
-                            className="relative z-10 text-xs font-bold text-foreground/70"
-                            scrollStart={50}
-                            scrollEnd={350}
-                            distance={120}
-                          >
-                            {String(i + 1)}
-                          </ScatterText>
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <ScatterText
-                            as="h4"
-                            className="type-card-title text-sm md:text-base mb-1"
-                            scrollStart={50}
-                            scrollEnd={350}
-                            distance={220}
-                            gradient
-                          >
-                            {detail.title}
-                          </ScatterText>
-                          <ScatterText
-                            as="p"
-                            className="type-body-compact text-xs md:text-sm text-muted-foreground"
-                            scrollStart={50}
-                            scrollEnd={350}
-                            distance={220}
-                          >
-                            {detail.desc}
-                          </ScatterText>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                  
-                  {/* Note */}
-                  <ScatterText
-                    as="p"
-                    className="text-xs md:text-sm text-muted-foreground bg-foreground/5 px-4 py-3 rounded-xl rainbow-border"
-                    scrollStart={50}
-                    scrollEnd={350}
-                    distance={220}
-                  >
-                    {item.note}
-                  </ScatterText>
-                </div>
-              </div>
-            </SectionReveal>
+            <ProcessStep key={item.step} item={item} index={index} isLast={index === process.length - 1} />
           ))}
         </div>
-        
+
         {/* Process CTA */}
-        <div className="text-center mt-16 lg:mt-24">
+        <div className="text-center mt-20 lg:mt-32">
           <ScatterText
             as="p"
-            className="type-body text-base md:text-lg text-muted-foreground mb-8 lg:mb-10"
+            className="type-body text-lg md:text-xl text-muted-foreground mb-10"
             scrollStart={50}
-            scrollEnd={350}
+            scrollEnd={400}
             distance={300}
           >
             ご不明点があれば、お気軽にお問い合わせください
@@ -523,13 +423,14 @@ export function AboutProcessSection({ process }: AboutProcessSectionProps) {
                   scrollEnd={350}
                   distance={180}
                 >
-                  お問い合わせ
+                  無料で相談する
                 </ScatterText>
                 <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
               </span>
             </ScatterBlock>
+
             <ScatterBlock
-              className="cta-secondary type-cta flex w-full items-center justify-center gap-3 rounded-full px-8 py-4 text-sm transition-all duration-300 sm:w-auto"
+              className="cta-secondary flex w-full items-center justify-center gap-3 rounded-full px-8 py-4 text-sm font-bold transition-all duration-300 sm:w-auto"
               scrollEnd={350}
               distance={400}
               seed={11}
@@ -543,7 +444,7 @@ export function AboutProcessSection({ process }: AboutProcessSectionProps) {
                 scrollEnd={350}
                 distance={180}
               >
-                電話で相談する
+                080-9155-0426
               </ScatterText>
             </ScatterBlock>
           </div>
@@ -553,38 +454,147 @@ export function AboutProcessSection({ process }: AboutProcessSectionProps) {
   )
 }
 
-export function AboutCtaSection() {
+function ProcessStep({
+  item,
+  index,
+  isLast,
+}: {
+  item: AboutProcessSectionProps['process'][0]
+  index: number
+  isLast: boolean
+}) {
+  const isEven = index % 2 === 0
+  
   return (
-    <section className="py-32 md:py-40 lg:py-56 glass-light">
-      <div className="container mx-auto px-6 md:px-12 lg:px-16 text-center">
-        <ScatterText
-          as="h2"
-          className="type-section-title text-2xl sm:text-3xl md:text-4xl lg:text-5xl"
-          scrollStart={50}
-          scrollEnd={350}
-          distance={400}
-          gradient
-        >
-          一緒に、
-        </ScatterText>
-        <ScatterText
-          as="span"
-          className="type-section-title text-2xl sm:text-3xl md:text-4xl lg:text-5xl mb-6 lg:mb-8 block"
-          scrollStart={50}
-          scrollEnd={350}
-          distance={400}
-          gradient
-        >
-          つくりませんか？
-        </ScatterText>
+    <SectionReveal delay={index * 0.1} duration={0.8} y={20}>
+      <div className={`relative ${index > 0 ? 'pt-24 lg:pt-40' : ''} last:pb-0`}>
+        {/* Marquee background title */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none select-none flex items-center">
+          <div 
+            className={`flex whitespace-nowrap opacity-[0.04] ${isEven ? 'animate-marquee-slow' : 'animate-marquee-slow-reverse'}`}
+          >
+            {Array.from({ length: 6 }).map((_, i) => (
+              <span 
+                key={i} 
+                className="type-display text-[25vw] md:text-[22vw] lg:text-[18vw] leading-none uppercase tracking-tighter mx-8"
+              >
+                {item.titleEn.split(' ')[0]}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        {/* Connecting line */}
+        {!isLast && (
+          <div className="absolute left-7 md:left-10 top-24 bottom-0 w-px bg-gradient-to-b from-primary/30 via-foreground/10 to-transparent" />
+        )}
+
+        <div className="flex flex-col md:flex-row md:items-start gap-8 md:gap-12">
+          {/* Step number */}
+          <div className="relative shrink-0">
+            {/* Glow effect */}
+            <div className="absolute inset-0 w-16 h-16 md:w-20 md:h-20 rounded-full bg-primary/20 blur-xl" />
+            <div className="relative w-16 h-16 md:w-20 md:h-20 rounded-full glass-card rainbow-border flex items-center justify-center">
+              <span className="type-display text-3xl md:text-4xl gradient-text">
+                {String(item.step)}
+              </span>
+            </div>
+          </div>
+
+          {/* Content */}
+          <div className="flex-1 pt-2">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10">
+              <div>
+                <h3 className="type-section-title text-3xl md:text-4xl gradient-text mb-2">
+                  {item.title}
+                </h3>
+                <span className="type-label text-base text-muted-foreground tracking-widest uppercase">{item.titleEn}</span>
+              </div>
+              <div className="flex items-center gap-3 px-5 py-2.5 bg-foreground/5 rounded-full shrink-0 rainbow-border">
+                <Clock size={16} className="text-primary" />
+                <span className="text-sm font-medium text-foreground">{item.duration}</span>
+              </div>
+            </div>
+
+            <div className="relative p-8 md:p-12 rounded-3xl glass-card rainbow-border overflow-hidden mt-4">
+              {/* Card decorative element */}
+              <div className={`absolute ${isEven ? '-top-16 -right-16' : '-bottom-16 -left-16'} w-48 h-48 rounded-full bg-gradient-to-br from-primary/8 to-transparent blur-3xl pointer-events-none`} />
+              
+              <p className="type-card-title text-xl md:text-2xl text-foreground mb-4 relative z-10">
+                {item.description}
+              </p>
+              <p className="type-body text-base md:text-lg text-muted-foreground mb-10 relative z-10">
+                {item.fullDescription}
+              </p>
+
+              {/* Details grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-8 relative z-10">
+                {item.details.map((detail, detailIndex) => (
+                  <div
+                    key={detail.title}
+                    className="group flex items-start gap-4 p-5 rounded-2xl bg-background/50 rainbow-border transition-all duration-300 hover:bg-background/70"
+                    style={{ animationDelay: `${detailIndex * 100}ms` }}
+                  >
+                    <div className="shrink-0 w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center transition-colors duration-300 group-hover:bg-primary/20">
+                      <CheckCircle size={16} className="text-primary" />
+                    </div>
+                    <div>
+                      <span className="type-card-title text-sm text-foreground block mb-1.5">
+                        {detail.title}
+                      </span>
+                      <span className="type-body-compact text-sm text-muted-foreground leading-relaxed">
+                        {detail.desc}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Note */}
+              {item.note && (
+                <div className="flex items-center gap-3 text-sm text-muted-foreground italic p-4 rounded-xl bg-foreground/5 relative z-10">
+                  <span className="text-primary text-lg">*</span>
+                  {item.note}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </SectionReveal>
+  )
+}
+
+export function AboutContactSection() {
+  return (
+    <section className="relative py-32 md:py-40 lg:py-56 glass-light overflow-hidden">
+      {/* Background text */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none opacity-[0.02]">
+        <span className="type-display text-[30vw] whitespace-nowrap">CONTACT</span>
+      </div>
+
+      <div className="container relative z-10 mx-auto px-6 md:px-12 lg:px-16 text-center">
+        <div className="overflow-visible mb-8">
+          <ScatterText
+            as="h2"
+            className="type-section-title text-4xl sm:text-5xl md:text-6xl lg:text-7xl"
+            scrollStart={50}
+            scrollEnd={400}
+            distance={600}
+            gradient
+          >
+            お気軽にご相談ください
+          </ScatterText>
+        </div>
+
         <ScatterText
           as="p"
-          className="type-body text-base md:text-lg text-muted-foreground max-w-lg mx-auto mb-10 lg:mb-12"
+          className="type-body text-lg md:text-xl text-muted-foreground max-w-xl mx-auto mb-12"
           scrollStart={50}
-          scrollEnd={350}
+          scrollEnd={400}
           distance={300}
         >
-          私たちは、あなたのビジネスの成長を本気で応援します。まずは気軽にお話しさせてください。
+          初回のご相談は無料です。まずはお話をお聞かせください。
         </ScatterText>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -592,7 +602,7 @@ export function AboutCtaSection() {
             className="cta-primary type-cta group w-full rounded-full px-8 py-4 text-sm transition-all duration-300 sm:w-auto"
             scrollEnd={350}
             distance={400}
-            seed={20}
+            seed={30}
             href="/contact"
           >
             <span className="flex items-center justify-center gap-4">
@@ -603,17 +613,17 @@ export function AboutCtaSection() {
                 scrollEnd={350}
                 distance={180}
               >
-                お問い合わせフォーム
+                無料相談を予約する
               </ScatterText>
               <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
             </span>
           </ScatterBlock>
-          
+
           <ScatterBlock
-            className="cta-secondary type-cta flex w-full items-center justify-center gap-3 rounded-full px-8 py-4 text-sm transition-all duration-300 sm:w-auto"
+            className="cta-secondary flex w-full items-center justify-center gap-3 rounded-full px-8 py-4 text-sm font-bold transition-all duration-300 sm:w-auto"
             scrollEnd={350}
             distance={400}
-            seed={21}
+            seed={31}
             href="tel:08091550426"
           >
             <Phone size={18} />

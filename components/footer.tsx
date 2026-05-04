@@ -32,7 +32,7 @@ export function Footer() {
             >
               <span 
                 id="footer-logo"
-                className="type-eyebrow text-2xl sm:text-3xl md:text-4xl transition-all duration-700"
+                className="font-display text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight transition-all duration-700"
               >
                 JUNKBRANDING
               </span>

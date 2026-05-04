@@ -608,19 +608,20 @@
 .gradient-text-animated {
   background: linear-gradient(
     90deg, 
-    oklch(0.65 0.25 330),
-    oklch(0.7 0.25 25),
-    oklch(0.75 0.22 60),
-    oklch(0.7 0.2 150),
-    oklch(0.6 0.25 220),
-    oklch(0.55 0.28 280),
-    oklch(0.65 0.25 330)
+    oklch(0.7 0.28 330),
+    oklch(0.75 0.28 25),
+    oklch(0.8 0.25 60),
+    oklch(0.75 0.22 150),
+    oklch(0.65 0.28 220),
+    oklch(0.6 0.32 280),
+    oklch(0.7 0.28 330)
   );
-  background-size: 300% 100%;
-  animation: rainbow-shift 4s linear infinite;
+  background-size: 400% 100%;
+  animation: rainbow-shift 6s linear infinite;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  filter: saturate(1.2);
 }
 
 /* Animate gradient text - for team member names */
@@ -1174,6 +1175,33 @@
   to {
     transform: translateX(0);
   }
+}
+
+/* Slow marquee for background decoration */
+@keyframes marquee-slow {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes marquee-slow-reverse {
+  from {
+    transform: translateX(-50%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.animate-marquee-slow {
+  animation: marquee-slow 60s linear infinite;
+}
+
+.animate-marquee-slow-reverse {
+  animation: marquee-slow-reverse 60s linear infinite;
 }
 
 /* Service card hover glow */
