@@ -80,7 +80,7 @@ export function SoundToggle() {
       {/* Label */}
       <span
         aria-hidden="true"
-        className="absolute right-full mr-3 top-1/2 -translate-y-1/2 text-xs tracking-wider text-foreground/50 whitespace-nowrap transition-all duration-300"
+        className="type-label absolute right-full mr-3 top-1/2 -translate-y-1/2 text-xs text-foreground/50 whitespace-nowrap transition-all duration-300"
         style={{
           opacity: isHovering ? 1 : 0,
           transform: `translateY(-50%) translateX(${isHovering ? 0 : 10}px)`,

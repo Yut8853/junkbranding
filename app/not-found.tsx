@@ -319,7 +319,7 @@ export default function NotFound() {
 
         {/* Message */}
         <div className="text-center mb-12">
-          <p className="text-white/80 text-lg md:text-xl mb-2 font-light tracking-wide">
+          <p className="type-body text-white/80 text-lg md:text-xl mb-2">
             迷子になってしまいましたね、、
           </p>
           <p className="text-white/50 text-sm md:text-base text-balance">
@@ -362,10 +362,10 @@ export default function NotFound() {
       />
 
       {/* Corner decorations */}
-      <div className="absolute top-8 left-8 text-white/20 text-xs font-mono tracking-widest">
+      <div className="type-label absolute top-8 left-8 text-white/20 text-xs font-mono">
         ERROR_404
       </div>
-      <div className="absolute top-8 right-8 text-white/20 text-xs font-mono tracking-widest">
+      <div className="type-label absolute top-8 right-8 text-white/20 text-xs font-mono">
         PAGE_NOT_FOUND
       </div>
       <div className="absolute bottom-8 left-8 text-white/20 text-xs font-mono">

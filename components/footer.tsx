@@ -32,12 +32,12 @@ export function Footer() {
             >
               <span 
                 id="footer-logo"
-                className="text-2xl sm:text-3xl md:text-4xl font-normal tracking-tight uppercase font-display transition-all duration-700"
+                className="type-eyebrow text-2xl sm:text-3xl md:text-4xl transition-all duration-700"
               >
                 JUNKBRANDING
               </span>
             </TransitionLink>
-            <p className="text-muted-foreground leading-[1.8] tracking-wide max-w-sm mb-10 lg:mb-12 text-pretty text-sm md:text-base">
+            <p className="type-body text-muted-foreground max-w-sm mb-10 lg:mb-12 text-sm md:text-base">
               小さなチームだからこそできる、丁寧なものづくり。お客様一人ひとりと向き合い、本当に必要なブランディングとWebデザインを提供します。
             </p>
             <MagneticButton
@@ -45,14 +45,14 @@ export function Footer() {
               className="group inline-flex items-center gap-4 text-foreground"
               data-cursor="Start"
             >
-              <span className="text-sm uppercase tracking-widest font-medium">お問い合わせ</span>
+              <span className="type-cta text-sm">お問い合わせ</span>
               <span className="w-8 h-[1px] bg-foreground transition-all duration-300 group-hover:w-12 group-hover:bg-accent" />
             </MagneticButton>
           </RevealSection>
 
           {/* Navigation column */}
           <RevealSection className="lg:col-span-2" delay={0.1}>
-            <h3 className="text-xs uppercase tracking-[0.25em] text-muted-foreground mb-6 lg:mb-8 font-medium">
+            <h3 className="type-label text-muted-foreground mb-6 lg:mb-8">
               Menu
             </h3>
             <ul className="space-y-4">
@@ -60,7 +60,7 @@ export function Footer() {
                 <li key={link.href} className="overflow-hidden">
                   <TransitionLink
                     href={link.href}
-                    className="block text-sm font-display font-medium text-foreground/80 hover:text-foreground transition-all duration-300 uppercase tracking-wider hover:translate-x-1"
+                    className="type-cta block text-sm text-foreground/80 hover:text-foreground transition-all duration-300 hover:translate-x-1"
                   >
                     {link.label}
                   </TransitionLink>
@@ -71,7 +71,7 @@ export function Footer() {
 
           {/* Contact column */}
           <RevealSection className="lg:col-span-3" delay={0.2}>
-            <h3 className="text-xs uppercase tracking-[0.25em] text-muted-foreground mb-6 lg:mb-8 font-medium">
+            <h3 className="type-label text-muted-foreground mb-6 lg:mb-8">
               Contact
             </h3>
             <div className="space-y-4">
@@ -91,7 +91,7 @@ export function Footer() {
 
           {/* Address column */}
           <RevealSection className="lg:col-span-2" delay={0.3}>
-            <h3 className="text-xs uppercase tracking-[0.25em] text-muted-foreground mb-6 lg:mb-8 font-medium">
+            <h3 className="type-label text-muted-foreground mb-6 lg:mb-8">
               Address
             </h3>
             <div className="flex items-start gap-3 text-foreground">
@@ -109,13 +109,13 @@ export function Footer() {
       {/* Bottom bar */}
       <div className="border-t border-border/20">
         <div className="container mx-auto px-6 md:px-12 lg:px-16 py-6 md:py-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-xs text-muted-foreground tracking-wide">
+          <p className="type-body-compact text-xs text-muted-foreground">
             &copy; {currentYear} JunkBranding. All rights reserved.
           </p>
           <div className="flex items-center gap-6 text-xs text-muted-foreground">
             <TransitionLink 
               href="/privacy" 
-              className="hover:text-foreground transition-all duration-300 font-medium uppercase tracking-wider"
+              className="type-cta hover:text-foreground transition-all duration-300"
             >
               Privacy Policy
             </TransitionLink>

@@ -18,7 +18,7 @@ export function AboutHeroSection() {
         <div className="mb-6 lg:mb-8">
           <ScatterText
             as="span"
-            className="font-display text-[clamp(3rem,10vw,7rem)] leading-none tracking-tight text-foreground/50 block"
+            className="type-eyebrow text-[clamp(3rem,10vw,7rem)] text-foreground/45 block"
             scrollStart={50}
             scrollEnd={350}
             distance={500}
@@ -32,7 +32,7 @@ export function AboutHeroSection() {
         </div>
         <ScatterText
           as="h1"
-          className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6 lg:mb-8"
+          className="type-hero-title text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-6 lg:mb-8"
           scrollStart={50}
           scrollEnd={350}
           distance={400}
@@ -42,7 +42,7 @@ export function AboutHeroSection() {
         </ScatterText>
         <ScatterText
           as="p"
-          className="text-base md:text-lg text-muted-foreground max-w-lg mx-auto leading-[1.8] tracking-wide"
+          className="type-body text-base md:text-lg text-muted-foreground max-w-lg mx-auto"
           scrollStart={50}
           scrollEnd={350}
           distance={300}
@@ -62,7 +62,7 @@ export function AboutIntroSection() {
           <div className="lg:pr-8">
             <ScatterText
               as="h2"
-              className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight leading-[1.2] mb-2"
+              className="type-section-title text-2xl sm:text-3xl md:text-4xl lg:text-5xl mb-2"
               scrollStart={50}
               scrollEnd={350}
               distance={400}
@@ -72,7 +72,7 @@ export function AboutIntroSection() {
             </ScatterText>
             <ScatterText
               as="h2"
-              className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight leading-[1.2] mb-8 lg:mb-10"
+              className="type-section-title text-2xl sm:text-3xl md:text-4xl lg:text-5xl mb-8 lg:mb-10"
               scrollStart={50}
               scrollEnd={350}
               distance={400}
@@ -80,10 +80,10 @@ export function AboutIntroSection() {
             >
               丁寧なものづくり
             </ScatterText>
-            <div className="space-y-6 text-base md:text-lg text-muted-foreground leading-[1.8] tracking-wide">
+            <div className="space-y-6 text-base md:text-lg text-muted-foreground">
               <ScatterText
                 as="p"
-                className="text-base md:text-lg text-muted-foreground leading-[1.8] tracking-wide"
+                className="type-body text-base md:text-lg text-muted-foreground"
                 scrollStart={50}
                 scrollEnd={350}
                 distance={300}
@@ -92,7 +92,7 @@ export function AboutIntroSection() {
               </ScatterText>
               <ScatterText
                 as="p"
-                className="text-base md:text-lg text-muted-foreground leading-[1.8] tracking-wide"
+                className="type-body text-base md:text-lg text-muted-foreground"
                 scrollStart={50}
                 scrollEnd={350}
                 distance={300}
@@ -101,7 +101,7 @@ export function AboutIntroSection() {
               </ScatterText>
               <ScatterText
                 as="p"
-                className="text-base md:text-lg text-muted-foreground leading-[1.8] tracking-wide"
+                className="type-body text-base md:text-lg text-muted-foreground"
                 scrollStart={50}
                 scrollEnd={350}
                 distance={300}
@@ -151,7 +151,7 @@ export function AboutTeamSection({ team }: AboutTeamSectionProps) {
           <div className="mb-6 lg:mb-8">
             <ScatterText
               as="span"
-              className="font-display text-[clamp(3rem,10vw,7rem)] leading-none tracking-tight text-foreground/50 block"
+              className="type-eyebrow text-[clamp(3rem,10vw,7rem)] text-foreground/45 block"
               scrollStart={50}
               scrollEnd={350}
               distance={500}
@@ -165,7 +165,7 @@ export function AboutTeamSection({ team }: AboutTeamSectionProps) {
           </div>
           <ScatterText
             as="h2"
-            className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight"
+            className="type-section-title text-2xl sm:text-3xl md:text-4xl lg:text-5xl"
             scrollStart={50}
             scrollEnd={350}
             distance={400}
@@ -195,7 +195,7 @@ export function AboutTeamSection({ team }: AboutTeamSectionProps) {
                   <div className="absolute bottom-6 left-6 right-6">
                     <ScatterText
                       as="p"
-                      className="text-xs text-foreground/70 mb-2 font-medium tracking-widest uppercase"
+                      className="type-label text-foreground/70 mb-2"
                       scrollStart={50}
                       scrollEnd={350}
                       distance={220}
@@ -204,7 +204,7 @@ export function AboutTeamSection({ team }: AboutTeamSectionProps) {
                     </ScatterText>
                     <ScatterText
                       as="h3"
-                      className="text-xl sm:text-2xl font-bold"
+                      className="type-card-title text-xl sm:text-2xl"
                       scrollStart={50}
                       scrollEnd={350}
                       distance={300}
@@ -214,7 +214,7 @@ export function AboutTeamSection({ team }: AboutTeamSectionProps) {
                     </ScatterText>
                     <ScatterText
                       as="p"
-                      className="text-xs text-foreground/50 mt-1 tracking-wide"
+                      className="type-body-compact text-xs text-foreground/50 mt-1"
                       scrollStart={50}
                       scrollEnd={350}
                       distance={220}
@@ -225,7 +225,7 @@ export function AboutTeamSection({ team }: AboutTeamSectionProps) {
                 </div>
                 <ScatterText
                   as="p"
-                  className="text-sm md:text-base text-muted-foreground leading-[1.8] tracking-wide whitespace-pre-wrap"
+                  className="type-body text-sm md:text-base text-muted-foreground whitespace-pre-wrap"
                   scrollStart={50}
                   scrollEnd={350}
                   distance={260}
@@ -249,7 +249,7 @@ export function AboutValuesSection({ values }: AboutValuesSectionProps) {
           <div className="mb-6 lg:mb-8">
             <ScatterText
               as="span"
-              className="font-display text-[clamp(3rem,10vw,7rem)] leading-none tracking-tight text-foreground/50 block"
+              className="type-eyebrow text-[clamp(3rem,10vw,7rem)] text-foreground/45 block"
               scrollStart={50}
               scrollEnd={350}
               distance={500}
@@ -263,7 +263,7 @@ export function AboutValuesSection({ values }: AboutValuesSectionProps) {
           </div>
           <ScatterText
             as="h2"
-            className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight"
+            className="type-section-title text-2xl sm:text-3xl md:text-4xl lg:text-5xl"
             scrollStart={50}
             scrollEnd={350}
             distance={400}
@@ -282,7 +282,7 @@ export function AboutValuesSection({ values }: AboutValuesSectionProps) {
                 </div>
                 <ScatterText
                   as="h3"
-                  className="text-lg sm:text-xl md:text-2xl font-bold mb-2 tracking-tight"
+                  className="type-card-title text-lg sm:text-xl md:text-2xl mb-2"
                   scrollStart={50}
                   scrollEnd={350}
                   distance={300}
@@ -292,7 +292,7 @@ export function AboutValuesSection({ values }: AboutValuesSectionProps) {
                 </ScatterText>
                 <ScatterText
                   as="p"
-                  className="text-xs text-muted-foreground mb-4 lg:mb-6 font-medium tracking-widest uppercase"
+                  className="type-label text-muted-foreground mb-4 lg:mb-6"
                   scrollStart={50}
                   scrollEnd={350}
                   distance={220}
@@ -301,7 +301,7 @@ export function AboutValuesSection({ values }: AboutValuesSectionProps) {
                 </ScatterText>
                 <ScatterText
                   as="p"
-                  className="text-sm md:text-base text-muted-foreground leading-[1.8] tracking-wide"
+                  className="type-body text-sm md:text-base text-muted-foreground"
                   scrollStart={50}
                   scrollEnd={350}
                   distance={260}
@@ -325,7 +325,7 @@ export function AboutProcessSection({ process }: AboutProcessSectionProps) {
           <div className="mb-6 lg:mb-8">
             <ScatterText
               as="span"
-              className="font-display text-[clamp(3rem,10vw,7rem)] leading-none tracking-tight text-foreground/50 block"
+              className="type-eyebrow text-[clamp(3rem,10vw,7rem)] text-foreground/45 block"
               scrollStart={50}
               scrollEnd={350}
               distance={500}
@@ -339,7 +339,7 @@ export function AboutProcessSection({ process }: AboutProcessSectionProps) {
           </div>
           <ScatterText
             as="h2"
-            className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-6 lg:mb-8"
+            className="type-section-title text-2xl sm:text-3xl md:text-4xl lg:text-5xl mb-6 lg:mb-8"
             scrollStart={50}
             scrollEnd={350}
             distance={400}
@@ -349,7 +349,7 @@ export function AboutProcessSection({ process }: AboutProcessSectionProps) {
           </ScatterText>
           <ScatterText
             as="p"
-            className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto leading-[1.8] tracking-wide"
+            className="type-body text-base md:text-lg text-muted-foreground max-w-2xl mx-auto"
             scrollStart={50}
             scrollEnd={350}
             distance={300}
@@ -380,7 +380,7 @@ export function AboutProcessSection({ process }: AboutProcessSectionProps) {
                     <div>
                       <ScatterText
                         as="h3"
-                        className="text-xl sm:text-2xl md:text-3xl font-bold mb-1 tracking-tight"
+                        className="type-card-title text-xl sm:text-2xl md:text-3xl mb-1"
                         scrollStart={50}
                         scrollEnd={350}
                         distance={300}
@@ -390,7 +390,7 @@ export function AboutProcessSection({ process }: AboutProcessSectionProps) {
                       </ScatterText>
                       <ScatterText
                         as="p"
-                        className="text-xs text-muted-foreground uppercase tracking-widest font-medium"
+                        className="type-label text-muted-foreground"
                         scrollStart={50}
                         scrollEnd={350}
                         distance={220}
@@ -418,7 +418,7 @@ export function AboutProcessSection({ process }: AboutProcessSectionProps) {
                   {/* Short Description */}
                   <ScatterText
                     as="p"
-                    className="text-base md:text-lg text-foreground leading-[1.6] mb-4 lg:mb-6 tracking-tight"
+                    className="type-card-title text-base md:text-lg text-foreground mb-4 lg:mb-6"
                     scrollStart={50}
                     scrollEnd={350}
                     distance={260}
@@ -429,7 +429,7 @@ export function AboutProcessSection({ process }: AboutProcessSectionProps) {
                   {/* Full Description */}
                   <ScatterText
                     as="p"
-                    className="text-sm md:text-base text-muted-foreground leading-[1.8] tracking-wide mb-8 lg:mb-10"
+                    className="type-body text-sm md:text-base text-muted-foreground mb-8 lg:mb-10"
                     scrollStart={50}
                     scrollEnd={350}
                     distance={260}
@@ -458,7 +458,7 @@ export function AboutProcessSection({ process }: AboutProcessSectionProps) {
                         <div className="flex-1 min-w-0">
                           <ScatterText
                             as="h4"
-                            className="text-sm md:text-base font-bold mb-1 tracking-tight"
+                            className="type-card-title text-sm md:text-base mb-1"
                             scrollStart={50}
                             scrollEnd={350}
                             distance={220}
@@ -468,7 +468,7 @@ export function AboutProcessSection({ process }: AboutProcessSectionProps) {
                           </ScatterText>
                           <ScatterText
                             as="p"
-                            className="text-xs md:text-sm text-muted-foreground leading-[1.6]"
+                            className="type-body-compact text-xs md:text-sm text-muted-foreground"
                             scrollStart={50}
                             scrollEnd={350}
                             distance={220}
@@ -500,7 +500,7 @@ export function AboutProcessSection({ process }: AboutProcessSectionProps) {
         <div className="text-center mt-16 lg:mt-24">
           <ScatterText
             as="p"
-            className="text-base md:text-lg text-muted-foreground mb-8 lg:mb-10 leading-[1.8]"
+            className="type-body text-base md:text-lg text-muted-foreground mb-8 lg:mb-10"
             scrollStart={50}
             scrollEnd={350}
             distance={300}
@@ -509,7 +509,7 @@ export function AboutProcessSection({ process }: AboutProcessSectionProps) {
           </ScatterText>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <ScatterBlock
-              className="cta-primary group w-full rounded-full px-8 py-4 text-sm font-bold tracking-widest uppercase transition-all duration-300 sm:w-auto"
+              className="cta-primary type-cta group w-full rounded-full px-8 py-4 text-sm transition-all duration-300 sm:w-auto"
               scrollEnd={350}
               distance={400}
               seed={10}
@@ -529,7 +529,7 @@ export function AboutProcessSection({ process }: AboutProcessSectionProps) {
               </span>
             </ScatterBlock>
             <ScatterBlock
-              className="cta-secondary flex w-full items-center justify-center gap-3 rounded-full px-8 py-4 text-sm font-bold transition-all duration-300 sm:w-auto"
+              className="cta-secondary type-cta flex w-full items-center justify-center gap-3 rounded-full px-8 py-4 text-sm transition-all duration-300 sm:w-auto"
               scrollEnd={350}
               distance={400}
               seed={11}
@@ -559,7 +559,7 @@ export function AboutCtaSection() {
       <div className="container mx-auto px-6 md:px-12 lg:px-16 text-center">
         <ScatterText
           as="h2"
-          className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight"
+          className="type-section-title text-2xl sm:text-3xl md:text-4xl lg:text-5xl"
           scrollStart={50}
           scrollEnd={350}
           distance={400}
@@ -569,7 +569,7 @@ export function AboutCtaSection() {
         </ScatterText>
         <ScatterText
           as="span"
-          className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-6 lg:mb-8 block"
+          className="type-section-title text-2xl sm:text-3xl md:text-4xl lg:text-5xl mb-6 lg:mb-8 block"
           scrollStart={50}
           scrollEnd={350}
           distance={400}
@@ -579,7 +579,7 @@ export function AboutCtaSection() {
         </ScatterText>
         <ScatterText
           as="p"
-          className="text-base md:text-lg text-muted-foreground max-w-lg mx-auto mb-10 lg:mb-12 leading-[1.8] tracking-wide"
+          className="type-body text-base md:text-lg text-muted-foreground max-w-lg mx-auto mb-10 lg:mb-12"
           scrollStart={50}
           scrollEnd={350}
           distance={300}
@@ -589,7 +589,7 @@ export function AboutCtaSection() {
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
           <ScatterBlock
-            className="cta-primary group w-full rounded-full px-8 py-4 text-sm font-bold tracking-widest uppercase transition-all duration-300 sm:w-auto"
+            className="cta-primary type-cta group w-full rounded-full px-8 py-4 text-sm transition-all duration-300 sm:w-auto"
             scrollEnd={350}
             distance={400}
             seed={20}
@@ -610,7 +610,7 @@ export function AboutCtaSection() {
           </ScatterBlock>
           
           <ScatterBlock
-            className="cta-secondary flex w-full items-center justify-center gap-3 rounded-full px-8 py-4 text-sm font-bold transition-all duration-300 sm:w-auto"
+            className="cta-secondary type-cta flex w-full items-center justify-center gap-3 rounded-full px-8 py-4 text-sm transition-all duration-300 sm:w-auto"
             scrollEnd={350}
             distance={400}
             seed={21}

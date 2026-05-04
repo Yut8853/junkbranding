@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import { Inter, Bebas_Neue } from 'next/font/google';
+import { Barlow_Condensed, Noto_Sans_JP } from 'next/font/google';
 import Script from 'next/script';
 import { Analytics } from '@vercel/analytics/next';
 import './globals.css';
@@ -21,17 +21,18 @@ import {
   organizationSchema,
 } from '@/lib/structured-data';
 
-const inter = Inter({
+const notoSansJp = Noto_Sans_JP({
   subsets: ['latin'],
-  variable: '--font-inter',
+  variable: '--font-sans-jp',
   display: 'swap',
+  weight: ['400', '500', '600', '700', '800'],
 });
 
-const bebasNeue = Bebas_Neue({
+const barlowCondensed = Barlow_Condensed({
   subsets: ['latin'],
   variable: '--font-display',
   display: 'swap',
-  weight: '400',
+  weight: ['500', '600', '700', '800'],
 });
 
 export const metadata: Metadata = {
@@ -173,7 +174,7 @@ export default function RootLayout({
   return (
     <html
       lang="ja"
-      className={`${inter.variable} ${bebasNeue.variable}`}
+      className={`${notoSansJp.variable} ${barlowCondensed.variable}`}
     >
       <head>
         <Script id="google-tag-manager" strategy="afterInteractive">

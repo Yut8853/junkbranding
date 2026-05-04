@@ -151,7 +151,7 @@ export function ServicesSectionV2() {
           <div className="mb-6 lg:mb-8">
             <ScatterText
               as="span"
-              className="font-display text-[clamp(3rem,10vw,7rem)] leading-none tracking-tight text-foreground/50 block"
+              className="type-eyebrow text-[clamp(3rem,10vw,7rem)] text-foreground/45 block"
               scrollStart={50}
               scrollEnd={350}
               distance={500}
@@ -165,7 +165,7 @@ export function ServicesSectionV2() {
           </div>
           <ScatterText 
             as="h2" 
-            className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight"
+            className="type-section-title text-2xl sm:text-3xl md:text-4xl lg:text-5xl"
             scrollStart={50}
             scrollEnd={350}
             distance={400}
@@ -207,7 +207,7 @@ export function ServicesSectionV2() {
               <div className="flex items-start justify-between mb-6">
                 <ScatterText
                   as="span"
-                  className="font-mono text-5xl md:text-6xl lg:text-7xl font-bold tabular-nums leading-none"
+                  className="type-display font-mono text-5xl md:text-6xl lg:text-7xl tabular-nums"
                   scrollStart={50}
                   scrollEnd={350}
                   distance={180}
@@ -237,7 +237,7 @@ export function ServicesSectionV2() {
                 {/* English title */}
                 <ScatterText
                   as="h3"
-                  className="font-display text-3xl md:text-4xl lg:text-5xl tracking-wide leading-none"
+                  className="type-eyebrow text-3xl md:text-4xl lg:text-5xl"
                   scrollStart={50}
                   scrollEnd={350}
                   distance={300}
@@ -252,7 +252,7 @@ export function ServicesSectionV2() {
                 {/* Japanese title */}
                 <ScatterText
                   as="p"
-                  className="text-base md:text-lg font-medium"
+                  className="type-card-title text-base md:text-lg"
                   scrollStart={50}
                   scrollEnd={350}
                   distance={240}
@@ -267,7 +267,7 @@ export function ServicesSectionV2() {
                 {/* Description */}
                 <ScatterText
                   as="p"
-                  className="text-sm md:text-base text-muted-foreground leading-relaxed"
+                  className="type-body-compact text-sm md:text-base text-muted-foreground"
                   scrollStart={50}
                   scrollEnd={350}
                   distance={260}
@@ -281,7 +281,7 @@ export function ServicesSectionV2() {
                     {service.features.map((feature, i) => (
                       <span 
                         key={i}
-                        className="text-xs md:text-sm px-3 py-1.5 rounded-full border"
+                        className="type-body-compact text-xs md:text-sm px-3 py-1.5 rounded-full border"
                         style={{
                           borderColor: !isMobile && activeIndex === index ? `${service.color}40` : 'var(--border)',
                           background: !isMobile && activeIndex === index ? `${service.color}10` : 'transparent',

@@ -13,7 +13,7 @@ export function PricingHeroSection() {
         <div className="mb-6 lg:mb-8">
           <ScatterText
             as="span"
-            className="font-display text-[clamp(3rem,10vw,7rem)] leading-none tracking-tight text-foreground/50 block"
+            className="type-eyebrow text-[clamp(3rem,10vw,7rem)] text-foreground/45 block"
             scrollStart={50}
             scrollEnd={350}
             distance={500}
@@ -27,7 +27,7 @@ export function PricingHeroSection() {
         </div>
         <ScatterText
           as="h1"
-          className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6 lg:mb-8"
+          className="type-hero-title text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-6 lg:mb-8"
           scrollStart={50}
           scrollEnd={350}
           distance={400}
@@ -37,7 +37,7 @@ export function PricingHeroSection() {
         </ScatterText>
         <ScatterText
           as="p"
-          className="text-base md:text-lg text-muted-foreground max-w-lg mx-auto leading-[1.8] tracking-wide"
+          className="type-body text-base md:text-lg text-muted-foreground max-w-lg mx-auto"
           scrollStart={50}
           scrollEnd={350}
           distance={300}
@@ -59,7 +59,7 @@ export function PricingNoticeSection() {
           </div>
           <ScatterText
             as="p"
-            className="text-sm text-muted-foreground leading-[1.8] tracking-wide"
+            className="type-body-compact text-sm text-muted-foreground"
             scrollStart={50}
             scrollEnd={350}
             distance={260}
@@ -90,7 +90,7 @@ export function PricingServiceCategoriesSection({
                     <div>
                       <ScatterText
                         as="h2"
-                        className="text-xl sm:text-2xl md:text-3xl font-bold mb-1 tracking-tight"
+                        className="type-card-title text-xl sm:text-2xl md:text-3xl mb-1"
                         scrollStart={50}
                         scrollEnd={350}
                         distance={300}
@@ -100,7 +100,7 @@ export function PricingServiceCategoriesSection({
                       </ScatterText>
                       <ScatterText
                         as="p"
-                        className="text-xs text-muted-foreground uppercase tracking-widest mb-3 font-medium"
+                        className="type-label text-muted-foreground mb-3"
                         scrollStart={50}
                         scrollEnd={350}
                         distance={220}
@@ -109,7 +109,7 @@ export function PricingServiceCategoriesSection({
                       </ScatterText>
                       <ScatterText
                         as="p"
-                        className="text-sm md:text-base text-muted-foreground leading-[1.8] tracking-wide max-w-lg"
+                        className="type-body text-sm md:text-base text-muted-foreground max-w-lg"
                         scrollStart={50}
                         scrollEnd={350}
                         distance={260}
@@ -121,7 +121,7 @@ export function PricingServiceCategoriesSection({
                   <div className="md:text-right shrink-0">
                     <ScatterText
                       as="p"
-                      className="text-xs text-muted-foreground mb-1 tracking-wide"
+                      className="type-body-compact text-xs text-muted-foreground mb-1"
                       scrollStart={50}
                       scrollEnd={350}
                       distance={160}
@@ -130,7 +130,7 @@ export function PricingServiceCategoriesSection({
                     </ScatterText>
                     <ScatterText
                       as="p"
-                      className="text-2xl sm:text-3xl font-bold"
+                      className="type-card-title text-2xl sm:text-3xl"
                       scrollStart={50}
                       scrollEnd={350}
                       distance={200}
@@ -149,7 +149,7 @@ export function PricingServiceCategoriesSection({
                     >
                       <ScatterText
                         as="h3"
-                        className="text-sm md:text-base font-bold mb-2 tracking-tight"
+                        className="type-card-title text-sm md:text-base mb-2"
                         scrollStart={50}
                         scrollEnd={350}
                         distance={220}
@@ -168,7 +168,7 @@ export function PricingServiceCategoriesSection({
                       </ScatterText>
                       <ScatterText
                         as="p"
-                        className="text-xs text-muted-foreground tracking-wide"
+                        className="type-body-compact text-xs text-muted-foreground"
                         scrollStart={50}
                         scrollEnd={350}
                         distance={180}
@@ -215,7 +215,7 @@ export function PricingFaqSection({ faqs }: PricingFaqSectionProps) {
           <div className="mb-6 lg:mb-8">
             <ScatterText
               as="span"
-              className="font-display text-[clamp(3rem,10vw,7rem)] leading-none tracking-tight text-foreground/50 block"
+              className="type-eyebrow text-[clamp(3rem,10vw,7rem)] text-foreground/45 block"
               scrollStart={50}
               scrollEnd={350}
               distance={500}
@@ -229,7 +229,7 @@ export function PricingFaqSection({ faqs }: PricingFaqSectionProps) {
           </div>
           <ScatterText
             as="h2"
-            className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight"
+            className="type-section-title text-2xl sm:text-3xl md:text-4xl lg:text-5xl"
             scrollStart={50}
             scrollEnd={350}
             distance={400}
@@ -249,7 +249,7 @@ export function PricingFaqSection({ faqs }: PricingFaqSectionProps) {
                   </div>
                   <ScatterText
                     as="h3"
-                    className="text-sm md:text-base font-bold leading-[1.6] tracking-tight"
+                    className="type-card-title text-sm md:text-base"
                     scrollStart={50}
                     scrollEnd={350}
                     distance={240}
@@ -260,7 +260,7 @@ export function PricingFaqSection({ faqs }: PricingFaqSectionProps) {
                 </div>
                 <ScatterText
                   as="p"
-                  className="text-sm text-muted-foreground leading-[1.8] tracking-wide pl-12"
+                  className="type-body-compact text-sm text-muted-foreground pl-12"
                   scrollStart={50}
                   scrollEnd={350}
                   distance={260}
@@ -282,7 +282,7 @@ export function PricingCtaSection() {
       <div className="container mx-auto px-6 md:px-12 lg:px-16 text-center">
         <ScatterText
           as="h2"
-          className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-2"
+          className="type-section-title text-2xl sm:text-3xl md:text-4xl lg:text-5xl mb-2"
           scrollStart={50}
           scrollEnd={350}
           distance={400}
@@ -292,7 +292,7 @@ export function PricingCtaSection() {
         </ScatterText>
         <ScatterText
           as="span"
-          className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-6 lg:mb-8 block"
+          className="type-section-title text-2xl sm:text-3xl md:text-4xl lg:text-5xl mb-6 lg:mb-8 block"
           scrollStart={50}
           scrollEnd={350}
           distance={400}
@@ -302,7 +302,7 @@ export function PricingCtaSection() {
         </ScatterText>
         <ScatterText
           as="p"
-          className="text-base md:text-lg text-muted-foreground max-w-lg mx-auto mb-10 lg:mb-12 leading-[1.8] tracking-wide"
+          className="type-body text-base md:text-lg text-muted-foreground max-w-lg mx-auto mb-10 lg:mb-12"
           scrollStart={50}
           scrollEnd={350}
           distance={300}
@@ -312,7 +312,7 @@ export function PricingCtaSection() {
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
           <ScatterBlock
-            className="cta-primary group w-full rounded-full px-8 py-4 text-sm font-bold tracking-widest uppercase transition-all duration-300 sm:w-auto"
+            className="cta-primary type-cta group w-full rounded-full px-8 py-4 text-sm transition-all duration-300 sm:w-auto"
             scrollEnd={350}
             distance={400}
             seed={40}

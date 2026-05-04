@@ -141,7 +141,7 @@ export function LoadingScreen({ progress, canSelectAudio, audioChoice, onSelectA
         </div>
       </div>
 
-      <div className="absolute bottom-8 right-6 z-20 font-display text-[clamp(4rem,12vw,10rem)] leading-none tracking-tight text-white/12 md:right-10" aria-hidden="true">
+      <div className="type-display absolute bottom-8 right-6 z-20 text-[clamp(4rem,12vw,10rem)] text-white/12 md:right-10" aria-hidden="true">
         {progressValue}
         <span className="ml-2 text-[0.38em] text-white/18">%</span>
       </div>

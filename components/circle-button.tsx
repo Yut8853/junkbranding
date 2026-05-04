@@ -56,7 +56,7 @@ export function CircleButton({ href, children, size = 'md', className }: CircleB
       />
       
       {/* Text */}
-      <span className="relative z-10 uppercase tracking-wider">
+      <span className="type-cta relative z-10">
         {children}
       </span>
     </Link>

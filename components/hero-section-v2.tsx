@@ -143,7 +143,7 @@ export function HeroSectionV2() {
           <div className="overflow-visible">
             <ScatterText
               as="h1"
-              className="font-display text-[18vw] md:text-[16vw] leading-[0.85] tracking-[-0.02em] whitespace-nowrap"
+              className="type-display text-[17vw] md:text-[15vw] whitespace-nowrap"
               distance={900}
               gradient
               scatterProgress={heroScatterProgress}
@@ -157,7 +157,7 @@ export function HeroSectionV2() {
           <div className="overflow-visible -mt-[2vw]">
             <ScatterText
               as="h1"
-              className="font-display text-[18vw] md:text-[16vw] leading-[0.85] tracking-[-0.02em] whitespace-nowrap"
+              className="type-display text-[17vw] md:text-[15vw] whitespace-nowrap"
               distance={900}
               gradient
               scatterProgress={heroScatterProgress}
@@ -171,7 +171,7 @@ export function HeroSectionV2() {
           <div className="overflow-visible mt-[3vw]">
             <ScatterText
               as="p"
-              className="text-[4vw] md:text-[2.5vw] tracking-[0.2em] font-light whitespace-nowrap"
+              className="type-section-title text-[3.6vw] md:text-[2.2vw] font-semibold whitespace-nowrap"
               distance={650}
               gradient
               scatterProgress={heroScatterProgress}
@@ -196,7 +196,7 @@ export function HeroSectionV2() {
           <div className="flex flex-col gap-1">
             <ScatterText
               as="span"
-              className="text-[10px] md:text-xs tracking-[0.3em] text-foreground/40 uppercase"
+              className="type-label text-foreground/40"
               scrollStart={50}
               scrollEnd={350}
               distance={180}
@@ -205,7 +205,7 @@ export function HeroSectionV2() {
             </ScatterText>
             <ScatterText
               as="span"
-              className="text-sm md:text-base text-foreground/80"
+              className="type-body-compact text-sm md:text-base text-foreground/80"
               scrollStart={50}
               scrollEnd={350}
               distance={220}

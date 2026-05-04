@@ -43,7 +43,7 @@ export default function WorksPageClient() {
           <div className="mb-6 lg:mb-8">
             <ScatterText
               as="span"
-              className="font-display text-[clamp(3rem,10vw,7rem)] leading-none tracking-tight text-foreground/50 block"
+              className="type-eyebrow text-[clamp(3rem,10vw,7rem)] text-foreground/45 block"
               scrollStart={50}
               scrollEnd={350}
               distance={500}
@@ -58,7 +58,7 @@ export default function WorksPageClient() {
           
           <ScatterText
             as="h1"
-            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6 lg:mb-8"
+            className="type-hero-title text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-6 lg:mb-8"
             scrollStart={50}
             scrollEnd={350}
             distance={400}
@@ -69,7 +69,7 @@ export default function WorksPageClient() {
           
           <ScatterText
             as="p"
-            className="text-base md:text-lg text-muted-foreground max-w-lg mx-auto leading-[1.8] tracking-wide"
+            className="type-body text-base md:text-lg text-muted-foreground max-w-lg mx-auto"
             scrollStart={50}
             scrollEnd={350}
             distance={300}
@@ -84,7 +84,7 @@ export default function WorksPageClient() {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8">
             <ScatterText
               as="span"
-              className="text-xs uppercase tracking-widest text-muted-foreground font-medium"
+              className="type-label text-muted-foreground"
               scrollStart={50}
               scrollEnd={350}
               distance={180}
@@ -102,7 +102,7 @@ export default function WorksPageClient() {
                     setSelectedCategory(category)
                   }}
                   aria-pressed={selectedCategory === category}
-                  className={`px-5 py-2.5 text-xs rounded-full transition-all duration-300 ${
+                  className={`type-label px-5 py-2.5 text-xs rounded-full transition-all duration-300 ${
                     selectedCategory === category
                       ? 'bg-foreground text-background'
                       : 'bg-card rainbow-border'
@@ -160,7 +160,7 @@ export default function WorksPageClient() {
             <div className="mb-6 lg:mb-8">
               <ScatterText
                 as="span"
-                className="font-display text-[clamp(2.5rem,8vw,5rem)] leading-none tracking-tight text-foreground/50 block"
+                className="type-eyebrow text-[clamp(2.5rem,8vw,5rem)] text-foreground/45 block"
                 scrollStart={50}
                 scrollEnd={350}
                 distance={500}
@@ -175,7 +175,7 @@ export default function WorksPageClient() {
             
             <ScatterText
               as="h2"
-              className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-6 lg:mb-8"
+              className="type-section-title text-2xl sm:text-3xl md:text-4xl lg:text-5xl mb-6 lg:mb-8"
               scrollStart={50}
               scrollEnd={350}
               distance={400}
@@ -186,7 +186,7 @@ export default function WorksPageClient() {
             
             <ScatterText
               as="p"
-              className="text-base md:text-lg text-muted-foreground mb-10 lg:mb-12 leading-[1.8] tracking-wide"
+              className="type-body text-base md:text-lg text-muted-foreground mb-10 lg:mb-12"
               scrollStart={50}
               scrollEnd={350}
               distance={300}
@@ -196,7 +196,7 @@ export default function WorksPageClient() {
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <ScatterBlock
-                className="cta-primary group w-full rounded-full px-8 py-4 text-sm font-bold tracking-widest uppercase transition-all duration-300 sm:w-auto"
+                className="cta-primary type-cta group w-full rounded-full px-8 py-4 text-sm transition-all duration-300 sm:w-auto"
                 scrollEnd={350}
                 distance={400}
                 seed={20}
@@ -218,7 +218,7 @@ export default function WorksPageClient() {
               </ScatterBlock>
               
               <ScatterBlock
-                className="cta-secondary flex w-full items-center justify-center gap-3 rounded-full px-8 py-4 text-sm font-bold transition-all duration-300 sm:w-auto"
+                className="cta-secondary type-cta flex w-full items-center justify-center gap-3 rounded-full px-8 py-4 text-sm transition-all duration-300 sm:w-auto"
                 scrollEnd={350}
                 distance={400}
                 seed={21}
@@ -245,7 +245,7 @@ export default function WorksPageClient() {
           <div className="mb-6 lg:mb-8">
             <ScatterText
               as="span"
-              className="font-display text-[clamp(3rem,10vw,7rem)] leading-none tracking-tight text-foreground/50 block"
+              className="type-eyebrow text-[clamp(3rem,10vw,7rem)] text-foreground/45 block"
               scrollStart={50}
               scrollEnd={350}
               distance={500}
@@ -259,7 +259,7 @@ export default function WorksPageClient() {
           </div>
           <ScatterText 
             as="h2" 
-            className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-6 lg:mb-8"
+            className="type-section-title text-2xl sm:text-3xl md:text-4xl lg:text-5xl mb-6 lg:mb-8"
             scrollStart={50}
             scrollEnd={350}
             distance={400}
@@ -269,7 +269,7 @@ export default function WorksPageClient() {
           </ScatterText>
           <ScatterText
             as="p"
-            className="text-base md:text-lg text-muted-foreground max-w-lg mx-auto mb-10 lg:mb-12 leading-[1.8] tracking-wide"
+            className="type-body text-base md:text-lg text-muted-foreground max-w-lg mx-auto mb-10 lg:mb-12"
             scrollStart={50}
             scrollEnd={350}
             distance={300}
@@ -278,7 +278,7 @@ export default function WorksPageClient() {
           </ScatterText>
           
           <ScatterBlock
-            className="cta-secondary inline-flex items-center gap-4 rounded-full px-8 py-4 text-sm font-bold tracking-widest uppercase transition-all duration-300"
+            className="cta-secondary type-cta inline-flex items-center gap-4 rounded-full px-8 py-4 text-sm transition-all duration-300"
             scrollEnd={350}
             distance={400}
             seed={30}

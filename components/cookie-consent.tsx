@@ -159,7 +159,7 @@ export function CookieConsent() {
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
                       <h4 className="font-medium text-sm">必須Cookie</h4>
-                      <span className="text-[10px] uppercase tracking-wider px-1.5 py-0.5 bg-accent/20 text-accent rounded">
+                      <span className="type-label text-[10px] px-1.5 py-0.5 bg-accent/20 text-accent rounded">
                         必須
                       </span>
                     </div>

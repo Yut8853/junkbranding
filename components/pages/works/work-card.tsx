@@ -138,7 +138,7 @@ export function WorkCard({
         <div className="hidden lg:flex lg:col-span-1 items-center justify-center">
           <ScatterText
             as="span"
-            className={`inline-flex min-w-[1.4em] whitespace-nowrap text-4xl lg:text-5xl xl:text-6xl font-bold tabular-nums transition-all duration-500 ${effectiveHovered ? 'gradient-text' : 'text-foreground/10'}`}
+            className={`type-display inline-flex min-w-[1.4em] whitespace-nowrap text-4xl lg:text-5xl xl:text-6xl tabular-nums transition-all duration-500 ${effectiveHovered ? 'gradient-text' : 'text-foreground/10'}`}
             scrollStart={50}
             scrollEnd={350}
             distance={180}
@@ -156,7 +156,7 @@ export function WorkCard({
             <div className={`absolute inset-0 bg-gradient-to-br from-primary/10 via-accent/10 to-primary/5 transition-opacity duration-700 ${effectiveHovered ? 'opacity-100' : 'opacity-60'}`} />
 
             <div className="absolute inset-0 flex items-center justify-center">
-              <span className={`text-[6rem] sm:text-[8rem] md:text-[10rem] font-bold transition-all duration-700 ${effectiveHovered ? 'gradient-text scale-110' : 'text-foreground/[0.03] scale-100'}`}>
+              <span className={`type-display text-[6rem] sm:text-[8rem] md:text-[10rem] transition-all duration-700 ${effectiveHovered ? 'gradient-text scale-110' : 'text-foreground/[0.03] scale-100'}`}>
                 {work.title.charAt(0)}
               </span>
             </div>
@@ -164,7 +164,7 @@ export function WorkCard({
             <div className="absolute top-4 left-4 z-10">
               <ScatterText
                 as="span"
-                className="px-3 py-1.5 text-xs bg-foreground text-background rounded-full"
+                className="type-label px-3 py-1.5 text-xs bg-foreground text-background rounded-full"
                 scrollStart={50}
                 scrollEnd={350}
                 distance={160}
@@ -176,7 +176,7 @@ export function WorkCard({
             <div className="absolute top-4 right-4 z-10">
               <ScatterText
                 as="span"
-                className="px-3 py-1.5 text-xs font-mono bg-background/80 backdrop-blur-sm rounded-full rainbow-border"
+                className="type-label px-3 py-1.5 text-xs bg-background/80 backdrop-blur-sm rounded-full rainbow-border"
                 scrollStart={50}
                 scrollEnd={350}
                 distance={160}
@@ -186,7 +186,7 @@ export function WorkCard({
             </div>
 
             <div className={`absolute inset-0 rounded-2xl flex items-center justify-center transition-opacity duration-500 ${effectiveHovered ? 'opacity-100' : 'opacity-0'}`} style={{ background: 'linear-gradient(135deg, rgba(255,255,255,0.86), rgba(255,255,255,0.62))' }}>
-              <span className="text-foreground flex items-center gap-3 text-xl sm:text-2xl font-bold uppercase tracking-[0.15em] font-display">
+              <span className="type-cta text-foreground flex items-center gap-3 text-xl sm:text-2xl">
                 <ScatterText
                   as="span"
                   className="inline-block"
@@ -218,7 +218,7 @@ export function WorkCard({
         <div className="lg:col-span-6">
           <ScatterText
             as="h3"
-            className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight mb-3 sm:mb-4"
+            className="type-section-title text-2xl sm:text-3xl lg:text-4xl mb-3 sm:mb-4"
             scrollStart={50}
             scrollEnd={350}
             distance={300}
@@ -229,7 +229,7 @@ export function WorkCard({
 
           <ScatterText
             as="p"
-            className="text-base sm:text-lg text-muted-foreground leading-relaxed mb-6 text-balance"
+            className="type-body text-base sm:text-lg text-muted-foreground mb-6 text-balance"
             scrollStart={50}
             scrollEnd={350}
             distance={260}
@@ -242,7 +242,7 @@ export function WorkCard({
               <ScatterText
                 as="span"
                 key={tag}
-                className={`text-xs px-3 py-1.5 rounded-full border transition-all duration-500 ${
+                className={`type-body-compact text-xs px-3 py-1.5 rounded-full border transition-all duration-500 ${
                   effectiveHovered
                     ? 'border-primary/50 bg-primary/5 text-primary'
                     : 'border-border bg-card text-muted-foreground'
@@ -262,7 +262,7 @@ export function WorkCard({
               <ScatterText
                 as="span"
                 key={tech}
-                className="text-xs px-3 py-1.5 rounded-full border border-primary/30 bg-primary/5 text-primary"
+                className="type-body-compact text-xs px-3 py-1.5 rounded-full border border-primary/30 bg-primary/5 text-primary"
                 scrollStart={50}
                 scrollEnd={350}
                 distance={160}
@@ -272,10 +272,10 @@ export function WorkCard({
             ))}
           </div>
 
-          <div className={`flex items-center gap-2 text-sm font-medium transition-all duration-500 ${effectiveHovered ? 'text-primary translate-x-2' : 'text-muted-foreground'}`}>
+          <div className={`type-cta flex items-center gap-2 text-sm transition-all duration-500 ${effectiveHovered ? 'text-primary translate-x-2' : 'text-muted-foreground'}`}>
             <ScatterText
               as="span"
-              className="uppercase tracking-wider"
+              className="inline-block"
               scrollStart={50}
               scrollEnd={350}
               distance={180}

@@ -141,7 +141,7 @@ export function NavigationMenuOverlay({
         >
           <TransitionLink
             href="/"
-            className="text-xl md:text-2xl font-display uppercase tracking-wide gradient-text-soft"
+            className="type-eyebrow text-xl md:text-2xl gradient-text-soft"
             onClick={() => isOpen && closeMenu()}
           >
             JunkBranding
@@ -189,7 +189,7 @@ export function NavigationMenuOverlay({
                     {/* Label assembles with Canvas scatter to avoid one DOM node per character. */}
                     <ScatterText
                       as="span"
-                      className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-display uppercase tracking-tight"
+                      className="type-eyebrow text-2xl sm:text-3xl md:text-4xl lg:text-5xl"
                       distance={520}
                       scatterProgress={isMobile || !isOpen ? 0 : 1 - assembleProgress}
                       ariaHidden

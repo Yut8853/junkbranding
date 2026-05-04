@@ -302,7 +302,7 @@ export function CTASectionV2() {
           <div className="mb-6 lg:mb-8">
             <ScatterText
               as="span"
-              className="font-display text-[clamp(3rem,10vw,7rem)] leading-none tracking-tight text-foreground/50 block"
+              className="type-eyebrow text-[clamp(3rem,10vw,7rem)] text-foreground/45 block"
               scrollStart={50}
               scrollEnd={350}
               distance={500}
@@ -316,7 +316,7 @@ export function CTASectionV2() {
           </div>
           <ScatterText
             as="h2"
-            className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-6 lg:mb-8"
+            className="type-section-title text-2xl sm:text-3xl md:text-4xl lg:text-5xl mb-6 lg:mb-8"
             scrollStart={50}
             scrollEnd={350}
             distance={400}
@@ -326,7 +326,7 @@ export function CTASectionV2() {
           </ScatterText>
           <ScatterText
             as="p"
-            className="text-base md:text-lg text-muted-foreground max-w-lg mx-auto leading-[1.8] tracking-wide"
+            className="type-body text-base md:text-lg text-muted-foreground max-w-lg mx-auto"
             scrollStart={50}
             scrollEnd={350}
             distance={300}
@@ -395,7 +395,7 @@ export function CTASectionV2() {
             <div className="relative z-10 flex w-full flex-col items-center justify-center px-8 text-center text-white md:px-12 lg:px-16">
               <ScatterText
                 as="span"
-                className="mb-3 block font-display text-base tracking-[0.18em] md:mb-4 md:text-xl lg:text-2xl"
+                className="type-eyebrow mb-3 block text-base md:mb-4 md:text-xl lg:text-2xl"
                 scrollStart={50}
                 scrollEnd={350}
                 distance={220}
@@ -411,7 +411,7 @@ export function CTASectionV2() {
                 <a
                   href="/contact"
                   onClick={handleContactClick}
-                  className="group/link inline-flex items-center justify-center py-1.5 text-xs font-bold tracking-[0.12em] text-white transition-all duration-300 hover:-translate-y-0.5 hover:text-white/80 md:text-sm"
+                  className="type-cta group/link inline-flex items-center justify-center py-1.5 text-xs text-white transition-all duration-300 hover:-translate-y-0.5 hover:text-white/80 md:text-sm"
                   data-cursor="Contact"
                 >
                   問い合わせフォーム
@@ -423,7 +423,7 @@ export function CTASectionV2() {
                 <a
                   href="tel:08091550426"
                   onClick={addRipple}
-                  className="inline-flex items-center justify-center py-1.5 text-base font-bold tracking-tight text-white transition-all duration-300 hover:-translate-y-0.5 hover:text-white/80 md:text-xl lg:text-2xl"
+                  className="type-card-title inline-flex items-center justify-center py-1.5 text-base text-white transition-all duration-300 hover:-translate-y-0.5 hover:text-white/80 md:text-xl lg:text-2xl"
                   data-cursor="Call"
                   aria-label="080-9155-0426 に電話する"
                 >
@@ -432,7 +432,7 @@ export function CTASectionV2() {
               </div>
 
               <span
-                className="mt-3 block max-w-[220px] text-[0.56rem] uppercase leading-relaxed tracking-[0.18em] text-white/70 transition-all duration-300 md:mt-4 md:text-[0.65rem]"
+                className="type-label mt-3 block max-w-[220px] text-[0.56rem] text-white/70 transition-all duration-300 md:mt-4 md:text-[0.65rem]"
                 style={{
                   transform: isHovering ? 'translateY(4px)' : 'translateY(0)',
                   opacity: isHovering ? 1 : 0.75,

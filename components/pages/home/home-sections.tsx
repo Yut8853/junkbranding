@@ -30,7 +30,7 @@ export function HomeAboutPreviewSection({
             <div className="mb-6 lg:mb-8">
               <ScatterText
                 as="span"
-                className="font-display text-[clamp(3rem,10vw,7rem)] leading-none tracking-tight text-foreground/50 block"
+                className="type-eyebrow text-[clamp(3rem,10vw,7rem)] text-foreground/45 block"
                 scrollStart={50}
                 scrollEnd={350}
                 distance={500}
@@ -45,7 +45,7 @@ export function HomeAboutPreviewSection({
             <div className="mb-8 lg:mb-10">
               <ScatterText
                 as="h2"
-                className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight leading-[1.2]"
+                className="type-section-title text-2xl sm:text-3xl md:text-4xl lg:text-5xl"
                 scrollStart={50}
                 scrollEnd={350}
                 distance={400}
@@ -56,7 +56,7 @@ export function HomeAboutPreviewSection({
             </div>
             <ScatterText
               as="p"
-              className="text-base md:text-lg text-muted-foreground leading-[1.8] tracking-wide mb-10 lg:mb-12 max-w-lg"
+              className="type-body text-base md:text-lg text-muted-foreground mb-10 lg:mb-12 max-w-lg"
               scrollStart={50}
               scrollEnd={350}
               distance={300}
@@ -64,7 +64,7 @@ export function HomeAboutPreviewSection({
               {aboutPreview.description}
             </ScatterText>
             <ScatterBlock
-              className="cta-primary inline-flex items-center gap-4 rounded-full px-8 py-4 text-sm font-bold tracking-widest uppercase transition-all duration-300"
+              className="cta-primary type-cta inline-flex items-center gap-4 rounded-full px-8 py-4 text-sm transition-all duration-300"
               scrollEnd={350}
               distance={400}
               seed={1}

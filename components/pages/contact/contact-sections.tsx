@@ -15,15 +15,15 @@ export function ContactSuccessSection() {
             <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-6 sm:mb-8 rounded-full bg-primary/10 flex items-center justify-center">
               <CheckCircle className="w-8 h-8 sm:w-10 sm:h-10 text-primary" />
             </div>
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 sm:mb-6">
+            <h1 className="type-hero-title text-3xl sm:text-4xl md:text-5xl mb-4 sm:mb-6">
               送信完了しました。
             </h1>
-            <p className="text-base sm:text-lg text-muted-foreground mb-8 sm:mb-10 leading-relaxed text-balance">
+            <p className="type-body text-base sm:text-lg text-muted-foreground mb-8 sm:mb-10 text-balance">
               お問い合わせいただきありがとうございます。内容を確認の上、1営業日以内にご連絡いたします。
             </p>
             <MagneticButton
               href="/"
-              className="cta-primary group rounded-full px-6 py-3.5 font-bold transition-all duration-300 sm:px-8 sm:py-4"
+              className="cta-primary type-cta group rounded-full px-6 py-3.5 transition-all duration-300 sm:px-8 sm:py-4"
             >
               <span className="flex items-center gap-3">
                 トップに戻る
@@ -44,7 +44,7 @@ export function ContactHeroSection() {
         <div className="mb-6 lg:mb-8">
           <ScatterText
             as="span"
-            className="font-display text-[clamp(3rem,10vw,7rem)] leading-none tracking-tight text-foreground/50 block"
+            className="type-eyebrow text-[clamp(3rem,10vw,7rem)] text-foreground/45 block"
             scrollStart={50}
             scrollEnd={350}
             distance={500}
@@ -58,7 +58,7 @@ export function ContactHeroSection() {
         </div>
         <ScatterText
           as="h1"
-          className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6 lg:mb-8"
+          className="type-hero-title text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-6 lg:mb-8"
           scrollStart={50}
           scrollEnd={350}
           distance={400}
@@ -68,7 +68,7 @@ export function ContactHeroSection() {
         </ScatterText>
         <ScatterText
           as="p"
-          className="text-base md:text-lg text-muted-foreground max-w-lg mx-auto leading-[1.8] tracking-wide"
+          className="type-body text-base md:text-lg text-muted-foreground max-w-lg mx-auto"
           scrollStart={50}
           scrollEnd={350}
           distance={300}
@@ -98,8 +98,8 @@ function ContactInfoSection() {
     <SectionReveal className="lg:col-span-1">
       <div className="space-y-10 lg:space-y-12">
         <div>
-          <h2 className="text-lg md:text-xl font-bold mb-4 tracking-tight">お問い合わせ先</h2>
-          <p className="text-sm text-muted-foreground leading-[1.8] tracking-wide">
+          <h2 className="type-card-title text-lg md:text-xl mb-4">お問い合わせ先</h2>
+          <p className="type-body-compact text-sm text-muted-foreground">
             フォームまたはお電話にてお気軽にご連絡ください。1営業日以内にご返信いたします。
           </p>
         </div>
@@ -113,7 +113,7 @@ function ContactInfoSection() {
               <Mail size={16} className="text-muted-foreground" />
             </div>
             <div>
-              <p className="text-xs text-muted-foreground tracking-widest uppercase font-medium">
+              <p className="type-label text-muted-foreground">
                 Email
               </p>
               <p className="text-sm font-medium group-hover:text-foreground transition-colors">hello@junkbranding.com</p>
@@ -128,7 +128,7 @@ function ContactInfoSection() {
               <Phone size={16} className="text-muted-foreground" />
             </div>
             <div>
-              <p className="text-xs text-muted-foreground tracking-widest uppercase font-medium">
+              <p className="type-label text-muted-foreground">
                 Phone
               </p>
               <p className="text-sm font-medium group-hover:text-foreground transition-colors">080-9155-0426</p>
@@ -140,11 +140,11 @@ function ContactInfoSection() {
               <MapPin size={16} className="text-muted-foreground" />
             </div>
             <div>
-              <p className="text-xs text-muted-foreground tracking-widest uppercase font-medium">
+              <p className="type-label text-muted-foreground">
                 Address
               </p>
               <p className="text-sm font-medium">〒300-0410</p>
-              <p className="text-xs text-muted-foreground tracking-wide">茨城県稲敷郡美浦村みどり台767-43</p>
+              <p className="type-body-compact text-xs text-muted-foreground">茨城県稲敷郡美浦村みどり台767-43</p>
             </div>
           </div>
 
@@ -153,7 +153,7 @@ function ContactInfoSection() {
               <Clock size={16} className="text-muted-foreground" />
             </div>
             <div>
-              <p className="text-xs text-muted-foreground tracking-widest uppercase font-medium">
+              <p className="type-label text-muted-foreground">
                 Business Hours
               </p>
               <p className="text-sm font-medium">平日 10:00 - 18:00</p>
@@ -205,7 +205,7 @@ function ContactForm({
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 lg:gap-6">
           <div>
-            <label htmlFor="name" className="block text-xs font-medium mb-2 tracking-wide">
+            <label htmlFor="name" className="type-label block text-foreground/80 mb-2">
               お名前 <span className="text-destructive">*</span>
             </label>
             <input
@@ -231,7 +231,7 @@ function ContactForm({
           </div>
 
           <div>
-            <label htmlFor="email" className="block text-xs font-medium mb-2 tracking-wide">
+            <label htmlFor="email" className="type-label block text-foreground/80 mb-2">
               メールアドレス <span className="text-destructive">*</span>
             </label>
             <input
@@ -257,7 +257,7 @@ function ContactForm({
           </div>
 
           <div>
-            <label htmlFor="company" className="block text-xs font-medium mb-2 tracking-wide">
+            <label htmlFor="company" className="type-label block text-foreground/80 mb-2">
               会社名・屋号
             </label>
             <input
@@ -273,7 +273,7 @@ function ContactForm({
           </div>
 
           <div>
-            <label htmlFor="phone" className="block text-xs font-medium mb-2 tracking-wide">
+            <label htmlFor="phone" className="type-label block text-foreground/80 mb-2">
               電話番号
             </label>
             <input
@@ -289,7 +289,7 @@ function ContactForm({
           </div>
 
           <div>
-            <label htmlFor="service" className="block text-xs font-medium mb-2 tracking-wide">
+            <label htmlFor="service" className="type-label block text-foreground/80 mb-2">
               ご依頼内容
             </label>
             <select
@@ -308,7 +308,7 @@ function ContactForm({
           </div>
 
           <div>
-            <label htmlFor="budget" className="block text-xs font-medium mb-2 tracking-wide">
+            <label htmlFor="budget" className="type-label block text-foreground/80 mb-2">
               ご予算
             </label>
             <select
@@ -328,7 +328,7 @@ function ContactForm({
         </div>
 
         <div>
-          <label htmlFor="message" className="block text-xs font-medium mb-2 tracking-wide">
+          <label htmlFor="message" className="type-label block text-foreground/80 mb-2">
             お問い合わせ内容 <span className="text-destructive">*</span>
           </label>
           <textarea
@@ -363,7 +363,7 @@ function ContactForm({
           disabled={isSubmitting}
           aria-busy={isSubmitting}
           aria-disabled={isSubmitting}
-          className="cta-primary flex w-full items-center justify-center gap-4 rounded-full px-8 py-4 text-sm font-bold tracking-widest uppercase transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
+          className="cta-primary type-cta flex w-full items-center justify-center gap-4 rounded-full px-8 py-4 text-sm transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
         >
           {isSubmitting ? (
             <>

@@ -25,7 +25,7 @@ function HomeWorksPreviewSection({
           <div className="mb-6 lg:mb-8">
             <ScatterText
               as="span"
-              className="font-display text-[clamp(3rem,10vw,7rem)] leading-none tracking-tight text-foreground/50 block"
+              className="type-eyebrow text-[clamp(3rem,10vw,7rem)] text-foreground/45 block"
               scrollStart={50}
               scrollEnd={350}
               distance={500}
@@ -39,7 +39,7 @@ function HomeWorksPreviewSection({
           </div>
           <ScatterText
             as="h2"
-            className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-6 lg:mb-8"
+            className="type-section-title text-2xl sm:text-3xl md:text-4xl lg:text-5xl mb-6 lg:mb-8"
             scrollStart={50}
             scrollEnd={350}
             distance={400}
@@ -49,7 +49,7 @@ function HomeWorksPreviewSection({
           </ScatterText>
           <ScatterText
             as="p"
-            className="text-base md:text-lg text-muted-foreground max-w-xl mx-auto leading-[1.8] tracking-wide"
+            className="type-body text-base md:text-lg text-muted-foreground max-w-xl mx-auto"
             scrollStart={50}
             scrollEnd={350}
             distance={300}
@@ -61,7 +61,7 @@ function HomeWorksPreviewSection({
         <div className="relative p-10 md:p-14 lg:p-20 rounded-3xl glass-card border border-border/20 text-center max-w-3xl mx-auto">
           <ScatterText
             as="p"
-            className="text-base md:text-lg text-muted-foreground mb-8 lg:mb-10 leading-[1.8]"
+            className="type-body text-base md:text-lg text-muted-foreground mb-8 lg:mb-10"
             scrollStart={50}
             scrollEnd={350}
             distance={300}
@@ -69,7 +69,7 @@ function HomeWorksPreviewSection({
             {worksPreview.note}
           </ScatterText>
           <ScatterBlock
-            className="cta-primary inline-flex items-center gap-4 rounded-full px-8 py-4 text-sm font-bold tracking-widest uppercase transition-all duration-300"
+            className="cta-primary type-cta inline-flex items-center gap-4 rounded-full px-8 py-4 text-sm transition-all duration-300"
             scrollEnd={350}
             distance={400}
             seed={2}
@@ -90,7 +90,7 @@ function HomeAreaSection({ area }: HomeAreaSectionProps) {
         <div className="mb-6 lg:mb-8">
           <ScatterText
             as="span"
-            className="font-display text-[clamp(3rem,10vw,7rem)] leading-none tracking-tight text-foreground/50 block"
+              className="type-eyebrow text-[clamp(3rem,10vw,7rem)] text-foreground/45 block"
             scrollStart={50}
             scrollEnd={350}
             distance={500}
@@ -104,7 +104,7 @@ function HomeAreaSection({ area }: HomeAreaSectionProps) {
         </div>
         <ScatterText
           as="h2"
-          className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight mb-8 lg:mb-10"
+          className="type-section-title text-2xl sm:text-3xl md:text-4xl mb-8 lg:mb-10"
           scrollStart={50}
           scrollEnd={350}
           distance={400}
@@ -113,7 +113,7 @@ function HomeAreaSection({ area }: HomeAreaSectionProps) {
         </ScatterText>
         <ScatterText
           as="p"
-          className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-8 lg:mb-10 tracking-tight"
+          className="type-hero-title text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-8 lg:mb-10"
           scrollStart={50}
           scrollEnd={350}
           distance={500}
@@ -123,7 +123,7 @@ function HomeAreaSection({ area }: HomeAreaSectionProps) {
         </ScatterText>
         <ScatterText
           as="p"
-          className="text-base md:text-lg text-muted-foreground max-w-xl mx-auto leading-[1.8] tracking-wide"
+          className="type-body text-base md:text-lg text-muted-foreground max-w-xl mx-auto"
           scrollStart={50}
           scrollEnd={350}
           distance={300}
