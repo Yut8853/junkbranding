@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 
 const SITE_URL = 'https://junkbranding.com'
 const SITE_NAME = 'JunkBranding'
-const DEFAULT_OG_IMAGE = '/opengraph-image'
+const DEFAULT_OG_IMAGE = '/ogp.png'
 const DEFAULT_DESCRIPTION =
   '茨城・東京・神奈川を中心に活動する、2人だけの小さなブランディング&Web制作スタジオ。Webサイト制作、ロゴ制作、ブランド設計、マーケティング支援まで、事業のらしさを成果につながる形へ整えます。'
 
@@ -26,9 +26,10 @@ const defaultKeywords = [
 
 type PageMetadataOptions = {
   title: string
-  description: string
+  description?: string
   path?: string
   keywords?: string[]
+  image?: string
   imageAlt?: string
   index?: boolean
   category?: string
@@ -36,24 +37,26 @@ type PageMetadataOptions = {
 
 export function createPageMetadata({
   title,
-  description,
+  description = DEFAULT_DESCRIPTION,
   path = '',
   keywords = [],
-  imageAlt = `${SITE_NAME} - ブランディング & Web制作スタジオ`,
+  image = DEFAULT_OG_IMAGE,
+  imageAlt = `${SITE_NAME} - ブランディング&Web制作スタジオ`,
   index = true,
   category = 'Web制作・ブランディング',
 }: PageMetadataOptions): Metadata {
   const url = `${SITE_URL}${path}`
-  const mergedKeywords = [...defaultKeywords, ...keywords]
+  const fullTitle = title.includes(SITE_NAME) ? title : `${title} | ${SITE_NAME}`
+  const mergedKeywords = Array.from(new Set([...defaultKeywords, ...keywords]))
 
   return {
     metadataBase: new URL(SITE_URL),
-    title,
+    title: fullTitle,
     description,
     applicationName: SITE_NAME,
     referrer: 'origin-when-cross-origin',
     generator: 'Next.js',
-    keywords: Array.from(new Set(mergedKeywords)),
+    keywords: mergedKeywords,
     authors: [{ name: SITE_NAME, url: SITE_URL }],
     creator: SITE_NAME,
     publisher: SITE_NAME,
@@ -65,7 +68,7 @@ export function createPageMetadata({
       },
     },
     openGraph: {
-      title: `${title} | ${SITE_NAME}`,
+      title: fullTitle,
       description,
       url,
       siteName: SITE_NAME,
@@ -73,7 +76,7 @@ export function createPageMetadata({
       locale: 'ja_JP',
       images: [
         {
-          url: DEFAULT_OG_IMAGE,
+          url: image,
           width: 1200,
           height: 630,
           alt: imageAlt,
@@ -82,14 +85,9 @@ export function createPageMetadata({
     },
     twitter: {
       card: 'summary_large_image',
-      title: `${title} | ${SITE_NAME}`,
+      title: fullTitle,
       description,
-      images: [DEFAULT_OG_IMAGE],
-    },
-    appleWebApp: {
-      capable: true,
-      title: SITE_NAME,
-      statusBarStyle: 'black-translucent',
+      images: [image],
     },
     robots: {
       index,
@@ -104,11 +102,12 @@ export function createPageMetadata({
     },
     other: {
       'llms-txt': `${SITE_URL}/llms.txt`,
-      'ai-summary': description || DEFAULT_DESCRIPTION,
+      'ai-summary': description,
       'service-area': '茨城県, 東京都, 神奈川県, 全国オンライン対応',
-      'primary-services': 'ブランディング, Web制作, Webデザイン, ロゴ制作, SEO対策, マーケティング支援',
-      'accessibility-summary': 'キーボード操作、スクリーンリーダー、WAI-ARIA属性、SPでのモーション削減に配慮しています。',
+      'primary-services':
+        'ブランディング, Web制作, Webデザイン, ロゴ制作, SEO対策, マーケティング支援',
+      'accessibility-summary':
+        'キーボード操作、スクリーンリーダー、WAI-ARIA属性、SPでのモーション削減に配慮しています。',
     },
   }
 }
-

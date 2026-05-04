@@ -1,40 +1,97 @@
+// lib/structured-data.ts
 // Structured Data (JSON-LD) helpers for SEO
 
 const BASE_URL = 'https://junkbranding.com'
 const LOGO_URL = `${BASE_URL}/icon.svg`
-const OG_IMAGE_URL = `${BASE_URL}/opengraph-image`
+const OG_IMAGE_URL = `${BASE_URL}/ogp.png`
 
 const areaServed = [
   { '@type': 'State', name: '茨城県' },
   { '@type': 'State', name: '東京都' },
   { '@type': 'State', name: '神奈川県' },
+  { '@type': 'Country', name: '日本' },
 ]
 
 const knowsAbout = [
   'Web制作',
   'ホームページ制作',
+  'LP制作',
+  'ランディングページ制作',
   'ブランディング',
+  'ブランド設計',
   'Webデザイン',
   'ロゴ制作',
   'コーポレートサイト制作',
-  'ランディングページ制作',
+  'CMS構築',
+  'WordPress',
   'SEO対策',
-  'マーケティング',
+  'マーケティング支援',
 ]
 
 const serviceCatalog = {
   '@type': 'OfferCatalog',
   name: 'JunkBrandingのサービス',
   itemListElement: [
-    { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Webサイト制作', serviceType: 'Web Design and Development' } },
-    { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'ブランディング', serviceType: 'Brand Strategy and Identity Design' } },
-    { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'ロゴデザイン', serviceType: 'Logo Design' } },
-    { '@type': 'Offer', itemOffered: { '@type': 'Service', name: '動画制作', serviceType: 'Video Production' } },
-    { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'マーケティング支援', serviceType: 'Digital Marketing' } },
+    {
+      '@type': 'Offer',
+      itemOffered: {
+        '@type': 'Service',
+        name: 'Webサイト制作',
+        serviceType: 'Web Design and Development',
+      },
+    },
+    {
+      '@type': 'Offer',
+      itemOffered: {
+        '@type': 'Service',
+        name: 'LP制作',
+        serviceType: 'Landing Page Design and Development',
+      },
+    },
+    {
+      '@type': 'Offer',
+      itemOffered: {
+        '@type': 'Service',
+        name: 'ブランディング',
+        serviceType: 'Brand Strategy and Identity Design',
+      },
+    },
+    {
+      '@type': 'Offer',
+      itemOffered: {
+        '@type': 'Service',
+        name: 'ロゴデザイン',
+        serviceType: 'Logo Design',
+      },
+    },
+    {
+      '@type': 'Offer',
+      itemOffered: {
+        '@type': 'Service',
+        name: 'CMS構築',
+        serviceType: 'CMS Development',
+      },
+    },
+    {
+      '@type': 'Offer',
+      itemOffered: {
+        '@type': 'Service',
+        name: '保守・運用',
+        serviceType: 'Website Maintenance',
+      },
+    },
   ],
 }
 
 type JsonLdNode = Record<string, unknown>
+
+function pageId(path = '') {
+  return `${BASE_URL}${path}#webpage`
+}
+
+function pageUrl(path = '') {
+  return `${BASE_URL}${path}`
+}
 
 export function generateJsonLdGraph(items: JsonLdNode[]) {
   return {
@@ -59,7 +116,8 @@ export const organizationSchema = {
   legalName: 'JunkBranding',
   alternateName: ['ジャンクブランディング', 'JUNKBRANDING'],
   slogan: 'あなたの「らしさ」をカタチに。',
-  description: '茨城・東京・神奈川を中心に活動するブランディング&Web制作スタジオ。',
+  description:
+    '茨城・東京・神奈川を中心に活動するブランディング&Web制作スタジオ。',
   url: BASE_URL,
   logo: {
     '@type': 'ImageObject',
@@ -67,62 +125,18 @@ export const organizationSchema = {
     width: 32,
     height: 32,
   },
-  image: OG_IMAGE_URL,
-  telephone: '+81-80-9155-0426',
-  email: 'hello@junkbranding.com',
-  contactPoint: {
-    '@type': 'ContactPoint',
-    telephone: '+81-80-9155-0426',
-    email: 'hello@junkbranding.com',
-    contactType: 'sales',
-    areaServed: ['JP'],
-    availableLanguage: ['Japanese'],
-  },
-  address: {
-    '@type': 'PostalAddress',
-    postalCode: '300-0410',
-    addressRegion: '茨城県',
-    addressLocality: '稲敷郡美浦村',
-    streetAddress: 'みどり台767-43',
-    addressCountry: 'JP',
+  image: {
+    '@type': 'ImageObject',
+    url: OG_IMAGE_URL,
+    width: 1200,
+    height: 630,
   },
   areaServed,
   knowsAbout,
   makesOffer: serviceCatalog,
-  sameAs: [],
 }
 
-export const localBusinessSchema = {
-  '@type': ['LocalBusiness', 'ProfessionalService'],
-  '@id': `${BASE_URL}/#localbusiness`,
-  name: 'JunkBranding',
-  url: BASE_URL,
-  image: OG_IMAGE_URL,
-  description:
-    '茨城県を拠点に、東京・神奈川・全国オンライン対応でWeb制作、ブランディング、ロゴ制作、マーケティング支援を行う小規模クリエイティブスタジオ。',
-  telephone: '+81-80-9155-0426',
-  email: 'hello@junkbranding.com',
-  priceRange: '¥¥',
-  address: organizationSchema.address,
-  geo: {
-    '@type': 'GeoCoordinates',
-    latitude: 35.9833,
-    longitude: 140.3167,
-  },
-  areaServed,
-  knowsAbout,
-  makesOffer: serviceCatalog,
-  parentOrganization: {
-    '@id': `${BASE_URL}/#organization`,
-  },
-  openingHoursSpecification: {
-    '@type': 'OpeningHoursSpecification',
-    dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
-    opens: '10:00',
-    closes: '18:00',
-  },
-}
-
+// WebSite schema
 export function generateWebsiteSchema() {
   return {
     '@type': 'WebSite',
@@ -147,39 +161,6 @@ export function generateWebsiteSchema() {
   }
 }
 
-export function generateFaqSchema() {
-  return {
-    '@type': 'FAQPage',
-    '@id': `${BASE_URL}/#faq`,
-    mainEntity: [
-      {
-        '@type': 'Question',
-        name: 'JunkBrandingはどの地域に対応していますか？',
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: '茨城・東京・神奈川を中心に、オンラインで全国からのWeb制作・ブランディング相談に対応しています。',
-        },
-      },
-      {
-        '@type': 'Question',
-        name: 'どのようなサービスを依頼できますか？',
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: 'Webサイト制作、ブランディング、ロゴデザイン、CMS構築、動画制作、SEO対策、マーケティング支援、保守運用に対応しています。',
-        },
-      },
-      {
-        '@type': 'Question',
-        name: 'JunkBrandingの特徴は何ですか？',
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: '2人だけの小さなチームとして、事業者一人ひとりのらしさに向き合い、ブランド体験と成果につながるWeb制作を丁寧に行うことです。',
-        },
-      },
-    ],
-  }
-}
-
 // WebPage schema generator
 export function generateWebPageSchema({
   title,
@@ -193,10 +174,9 @@ export function generateWebPageSchema({
   type?: string
 }) {
   return {
-    '@context': 'https://schema.org',
     '@type': type,
-    '@id': `${BASE_URL}${path}/#webpage`,
-    url: `${BASE_URL}${path}`,
+    '@id': pageId(path),
+    url: pageUrl(path),
     name: title,
     description,
     primaryImageOfPage: {
@@ -221,14 +201,14 @@ export function generateWebPageSchema({
 // AboutPage schema
 export function generateAboutPageSchema() {
   return {
-    '@context': 'https://schema.org',
     '@graph': [
       {
         '@type': 'AboutPage',
-        '@id': `${BASE_URL}/about/#webpage`,
-        url: `${BASE_URL}/about`,
+        '@id': pageId('/about'),
+        url: pageUrl('/about'),
         name: '私たちについて | JunkBranding',
-        description: '茨城・東京・神奈川を中心に活動する、2人だけのブランディング&Web制作スタジオ。大手にはできない、丁寧なものづくりを。',
+        description:
+          'JunkBrandingは、茨城発のブランディング&Web制作スタジオです。東京・神奈川にも対応し、戦略設計・デザイン・実装まで一貫して支援します。',
         isPartOf: {
           '@id': `${BASE_URL}/#website`,
         },
@@ -244,19 +224,7 @@ export function generateAboutPageSchema() {
         inLanguage: 'ja',
       },
       {
-        '@type': 'Organization',
-        '@id': `${BASE_URL}/#organization`,
-        name: 'JunkBranding',
-        url: BASE_URL,
-        logo: {
-          '@type': 'ImageObject',
-          url: LOGO_URL,
-          width: 32,
-          height: 32,
-        },
-        description: '茨城・東京・神奈川を中心に活動する、2人だけのブランディング&Web制作スタジオ。',
-        areaServed,
-        knowsAbout,
+        ...organizationSchema,
         founder: [
           {
             '@type': 'Person',
@@ -289,14 +257,14 @@ export function generateAboutPageSchema() {
 // ContactPage schema
 export function generateContactPageSchema() {
   return {
-    '@context': 'https://schema.org',
     '@graph': [
       {
         '@type': 'ContactPage',
-        '@id': `${BASE_URL}/contact/#webpage`,
-        url: `${BASE_URL}/contact`,
-        name: 'お問い合わせ | JunkBranding',
-        description: 'JunkBrandingへのお問い合わせページ。Webサイト制作、ロゴデザイン、ブランディングのご相談はこちらから。',
+        '@id': pageId('/contact'),
+        url: pageUrl('/contact'),
+        name: 'お問い合わせ | Web制作・ブランディングのご相談 | JunkBranding',
+        description:
+          'JunkBrandingへのお問い合わせページです。Webサイト制作、LP制作、ブランディング、ロゴデザインのご相談・お見積もりはこちらからお気軽にご連絡ください。',
         isPartOf: {
           '@id': `${BASE_URL}/#website`,
         },
@@ -316,17 +284,17 @@ export function generateContactPageSchema() {
   }
 }
 
-// Works/Portfolio CollectionPage schema
+// Works / Portfolio CollectionPage schema
 export function generateWorksPageSchema() {
   return {
-    '@context': 'https://schema.org',
     '@graph': [
       {
         '@type': 'CollectionPage',
-        '@id': `${BASE_URL}/works/#webpage`,
-        url: `${BASE_URL}/works`,
-        name: '制作実績 | JunkBranding',
-        description: 'JunkBrandingの制作実績。Webサイト制作、ブランディング、ロゴデザインのポートフォリオをご覧いただけます。',
+        '@id': pageId('/works'),
+        url: pageUrl('/works'),
+        name: '制作実績 | Web制作・LP制作・ブランディング事例 | JunkBranding',
+        description:
+          'JunkBrandingの制作実績ページです。コーポレートサイト、LP制作、ブランディングなど、ブランド体験と成果を意識した制作事例をご紹介します。',
         isPartOf: {
           '@id': `${BASE_URL}/#website`,
         },
@@ -343,6 +311,7 @@ export function generateWorksPageSchema() {
       },
       {
         '@type': 'ItemList',
+        name: '制作実績一覧',
         itemListElement: [
           {
             '@type': 'ListItem',
@@ -350,8 +319,9 @@ export function generateWorksPageSchema() {
             item: {
               '@type': 'CreativeWork',
               name: 'JunkBranding',
-              description: '自身のクリエイティブと思想を表現するポートフォリオサイト。',
-              url: `${BASE_URL}/`,
+              description:
+                '自身のクリエイティブと思想を表現するポートフォリオサイト。',
+              url: BASE_URL,
               creator: {
                 '@id': `${BASE_URL}/#organization`,
               },
@@ -363,7 +333,8 @@ export function generateWorksPageSchema() {
             item: {
               '@type': 'CreativeWork',
               name: 'TO PLACE',
-              description: '不動産会社のコーポレートサイト。信頼感と先進性を両立したデザイン。',
+              description:
+                '不動産会社のコーポレートサイト。信頼感と先進性を両立したデザイン。',
               url: 'https://to-place.co.jp/',
               creator: {
                 '@id': `${BASE_URL}/#organization`,
@@ -376,7 +347,8 @@ export function generateWorksPageSchema() {
             item: {
               '@type': 'CreativeWork',
               name: 'LUZ REAL',
-              description: '洗練されたビジュアルと使いやすさを追求したコーポレートサイト。',
+              description:
+                '洗練されたビジュアルと使いやすさを追求したコーポレートサイト。',
               url: 'https://luz-real.com/',
               creator: {
                 '@id': `${BASE_URL}/#organization`,
@@ -385,6 +357,7 @@ export function generateWorksPageSchema() {
           },
         ],
       },
+      organizationSchema,
     ],
   }
 }
@@ -392,12 +365,12 @@ export function generateWorksPageSchema() {
 // Privacy Policy page schema
 export function generatePrivacyPageSchema() {
   return {
-    '@context': 'https://schema.org',
     '@type': 'WebPage',
-    '@id': `${BASE_URL}/privacy/#webpage`,
-    url: `${BASE_URL}/privacy`,
+    '@id': pageId('/privacy'),
+    url: pageUrl('/privacy'),
     name: 'プライバシーポリシー | JunkBranding',
-    description: 'JunkBrandingのプライバシーポリシー。個人情報の取り扱いについてご説明します。',
+    description:
+      'JunkBrandingのプライバシーポリシーです。個人情報の取り扱い、Cookieの使用、外部サービス利用時の情報管理についてご説明します。',
     isPartOf: {
       '@id': `${BASE_URL}/#website`,
     },
@@ -418,17 +391,18 @@ export function generatePrivacyPageSchema() {
 // Service schema for homepage
 export function generateServiceSchema() {
   return {
-    '@context': 'https://schema.org',
     '@type': 'ItemList',
+    name: 'JunkBrandingの主なサービス',
     itemListElement: [
       {
         '@type': 'ListItem',
         position: 1,
         item: {
           '@type': 'Service',
-          name: 'Webデザイン',
-          description: 'ユーザー体験を最優先に、ブランドの世界観を表現するWebサイトをデザインします。',
-          serviceType: 'Web Design',
+          name: 'Webサイト制作',
+          description:
+            'ブランドの世界観とユーザー導線を両立したWebサイトを設計・デザイン・実装します。',
+          serviceType: 'Web Design and Development',
           areaServed,
           provider: {
             '@id': `${BASE_URL}/#organization`,
@@ -440,9 +414,10 @@ export function generateServiceSchema() {
         position: 2,
         item: {
           '@type': 'Service',
-          name: 'ブランディング',
-          description: 'ロゴ、カラー、トーン&マナーなど、ブランドの核となるアイデンティティを構築します。',
-          serviceType: 'Branding',
+          name: 'LP制作',
+          description:
+            '商品やサービスの魅力を整理し、問い合わせや購入につながるランディングページを制作します。',
+          serviceType: 'Landing Page Design and Development',
           areaServed,
           provider: {
             '@id': `${BASE_URL}/#organization`,
@@ -454,9 +429,10 @@ export function generateServiceSchema() {
         position: 3,
         item: {
           '@type': 'Service',
-          name: '開発・実装',
-          description: '高速で安全、そして保守性の高いWebサイトを、最新技術で実装します。',
-          serviceType: 'Web Development',
+          name: 'ブランディング',
+          description:
+            'ブランドの方向性、言葉、ビジュアル表現を整理し、事業のらしさが伝わる形へ整えます。',
+          serviceType: 'Branding',
           areaServed,
           provider: {
             '@id': `${BASE_URL}/#organization`,
@@ -468,9 +444,40 @@ export function generateServiceSchema() {
         position: 4,
         item: {
           '@type': 'Service',
-          name: 'コンサルティング',
-          description: 'Web戦略の立案から運用まで、ビジネス成長に貢献する提案を行います。',
-          serviceType: 'Consulting',
+          name: 'ロゴデザイン',
+          description:
+            'ブランドの価値や世界観を表すロゴ、カラー、トーン&マナーを設計します。',
+          serviceType: 'Logo Design',
+          areaServed,
+          provider: {
+            '@id': `${BASE_URL}/#organization`,
+          },
+        },
+      },
+      {
+        '@type': 'ListItem',
+        position: 5,
+        item: {
+          '@type': 'Service',
+          name: 'CMS構築',
+          description:
+            'WordPressなどを活用し、更新しやすく運用しやすいWebサイトを構築します。',
+          serviceType: 'CMS Development',
+          areaServed,
+          provider: {
+            '@id': `${BASE_URL}/#organization`,
+          },
+        },
+      },
+      {
+        '@type': 'ListItem',
+        position: 6,
+        item: {
+          '@type': 'Service',
+          name: '保守・運用',
+          description:
+            '公開後の更新、改善、保守を通じて、Webサイトを継続的に育てます。',
+          serviceType: 'Website Maintenance',
           areaServed,
           provider: {
             '@id': `${BASE_URL}/#organization`,
@@ -484,14 +491,14 @@ export function generateServiceSchema() {
 // Pricing page schema with Service offerings
 export function generatePricingPageSchema() {
   return {
-    '@context': 'https://schema.org',
     '@graph': [
       {
         '@type': 'WebPage',
-        '@id': `${BASE_URL}/pricing/#webpage`,
-        url: `${BASE_URL}/pricing`,
-        name: '制作料金 | JunkBranding',
-        description: 'JunkBrandingの制作料金のご案内。Webサイト制作、CMS構築、アプリ開発、デザイン、紙媒体、動画制作、マーケティングまで幅広く対応。',
+        '@id': pageId('/pricing'),
+        url: pageUrl('/pricing'),
+        name: '制作料金 | Web制作・LP制作・ブランディングの料金 | JunkBranding',
+        description:
+          'JunkBrandingの制作料金ページです。Webサイト制作、CMS構築、デザインなど、目的やご予算に合わせて柔軟にご提案します。',
         isPartOf: {
           '@id': `${BASE_URL}/#website`,
         },
@@ -516,19 +523,20 @@ export function generatePricingPageSchema() {
             item: {
               '@type': 'Service',
               name: 'Webサイト制作',
-              description: 'コーポレートサイト、ランディングページ、ECサイトなど',
+              description:
+                'コーポレートサイト、サービスサイト、採用サイトなどのWebサイト制作。',
               serviceType: 'Web Design and Development',
               areaServed,
               offers: {
                 '@type': 'Offer',
-                priceSpecification: {
-                  '@type': 'PriceSpecification',
-                  price: '150000',
-                  priceCurrency: 'JPY',
-                  minPrice: '150000',
-                },
+                priceCurrency: 'JPY',
+                price: '150000',
+                availability: 'https://schema.org/InStock',
+                url: `${BASE_URL}/pricing`,
               },
-              provider: { '@id': `${BASE_URL}/#organization` },
+              provider: {
+                '@id': `${BASE_URL}/#organization`,
+              },
             },
           },
           {
@@ -536,20 +544,21 @@ export function generatePricingPageSchema() {
             position: 2,
             item: {
               '@type': 'Service',
-              name: 'CMS構築',
-              description: 'WordPress、microCMS、Notion連携など',
-              serviceType: 'CMS Development',
+              name: 'LP制作',
+              description:
+                '商品・サービスの魅力を整理し、成果につながるランディングページを制作します。',
+              serviceType: 'Landing Page Design and Development',
               areaServed,
               offers: {
                 '@type': 'Offer',
-                priceSpecification: {
-                  '@type': 'PriceSpecification',
-                  price: '100000',
-                  priceCurrency: 'JPY',
-                  minPrice: '100000',
-                },
+                priceCurrency: 'JPY',
+                price: '150000',
+                availability: 'https://schema.org/InStock',
+                url: `${BASE_URL}/pricing`,
               },
-              provider: { '@id': `${BASE_URL}/#organization` },
+              provider: {
+                '@id': `${BASE_URL}/#organization`,
+              },
             },
           },
           {
@@ -557,20 +566,21 @@ export function generatePricingPageSchema() {
             position: 3,
             item: {
               '@type': 'Service',
-              name: 'アプリ開発',
-              description: 'Webアプリ、PWA、LINE連携、業務効率化ツール',
-              serviceType: 'Application Development',
+              name: 'CMS構築',
+              description:
+                'WordPressなどを活用し、更新しやすく運用しやすいWebサイトを構築します。',
+              serviceType: 'CMS Development',
               areaServed,
               offers: {
                 '@type': 'Offer',
-                priceSpecification: {
-                  '@type': 'PriceSpecification',
-                  price: '500000',
-                  priceCurrency: 'JPY',
-                  minPrice: '500000',
-                },
+                priceCurrency: 'JPY',
+                price: '100000',
+                availability: 'https://schema.org/InStock',
+                url: `${BASE_URL}/pricing`,
               },
-              provider: { '@id': `${BASE_URL}/#organization` },
+              provider: {
+                '@id': `${BASE_URL}/#organization`,
+              },
             },
           },
           {
@@ -578,20 +588,21 @@ export function generatePricingPageSchema() {
             position: 4,
             item: {
               '@type': 'Service',
-              name: 'デザイン',
-              description: 'ロゴ、名刺、バナー、UIデザイン、ブランドガイドライン',
-              serviceType: 'Graphic Design',
+              name: 'ブランディング',
+              description:
+                'ブランド設計、トーン&マナー、ビジュアル方針などを整理します。',
+              serviceType: 'Brand Strategy and Identity Design',
               areaServed,
               offers: {
                 '@type': 'Offer',
-                priceSpecification: {
-                  '@type': 'PriceSpecification',
-                  price: '10000',
-                  priceCurrency: 'JPY',
-                  minPrice: '10000',
-                },
+                priceCurrency: 'JPY',
+                price: '100000',
+                availability: 'https://schema.org/InStock',
+                url: `${BASE_URL}/pricing`,
               },
-              provider: { '@id': `${BASE_URL}/#organization` },
+              provider: {
+                '@id': `${BASE_URL}/#organization`,
+              },
             },
           },
           {
@@ -599,20 +610,21 @@ export function generatePricingPageSchema() {
             position: 5,
             item: {
               '@type': 'Service',
-              name: '紙媒体',
-              description: 'チラシ、パンフレット、ポスター、会社案内',
-              serviceType: 'Print Design',
+              name: 'ロゴデザイン',
+              description:
+                'ブランドの価値や世界観を表すロゴデザインを制作します。',
+              serviceType: 'Logo Design',
               areaServed,
               offers: {
                 '@type': 'Offer',
-                priceSpecification: {
-                  '@type': 'PriceSpecification',
-                  price: '10000',
-                  priceCurrency: 'JPY',
-                  minPrice: '10000',
-                },
+                priceCurrency: 'JPY',
+                price: '50000',
+                availability: 'https://schema.org/InStock',
+                url: `${BASE_URL}/pricing`,
               },
-              provider: { '@id': `${BASE_URL}/#organization` },
+              provider: {
+                '@id': `${BASE_URL}/#organization`,
+              },
             },
           },
           {
@@ -620,20 +632,21 @@ export function generatePricingPageSchema() {
             position: 6,
             item: {
               '@type': 'Service',
-              name: '動画制作',
-              description: 'SNSショート動画、サービス紹介、企業紹介、モーショングラフィックス',
-              serviceType: 'Video Production',
+              name: 'デザイン制作',
+              description:
+                'バナー、名刺、チラシなど、ブランドに合わせた各種デザインを制作します。',
+              serviceType: 'Graphic Design',
               areaServed,
               offers: {
                 '@type': 'Offer',
-                priceSpecification: {
-                  '@type': 'PriceSpecification',
-                  price: '100000',
-                  priceCurrency: 'JPY',
-                  minPrice: '100000',
-                },
+                priceCurrency: 'JPY',
+                price: '10000',
+                availability: 'https://schema.org/InStock',
+                url: `${BASE_URL}/pricing`,
               },
-              provider: { '@id': `${BASE_URL}/#organization` },
+              provider: {
+                '@id': `${BASE_URL}/#organization`,
+              },
             },
           },
           {
@@ -641,43 +654,21 @@ export function generatePricingPageSchema() {
             position: 7,
             item: {
               '@type': 'Service',
-              name: 'マーケティング',
-              description: 'SNS運用、Web広告、SEO対策、アクセス解析、MEO対策',
-              serviceType: 'Digital Marketing',
-              areaServed,
-              offers: {
-                '@type': 'Offer',
-                priceSpecification: {
-                  '@type': 'PriceSpecification',
-                  price: '30000',
-                  priceCurrency: 'JPY',
-                  minPrice: '30000',
-                  billingDuration: 'P1M',
-                },
-              },
-              provider: { '@id': `${BASE_URL}/#organization` },
-            },
-          },
-          {
-            '@type': 'ListItem',
-            position: 8,
-            item: {
-              '@type': 'Service',
               name: '保守・運用',
-              description: 'サイト更新、バックアップ、セキュリティ対策',
+              description:
+                'サイト更新、改善提案、軽微な修正、保守運用に対応します。',
               serviceType: 'Website Maintenance',
               areaServed,
               offers: {
                 '@type': 'Offer',
-                priceSpecification: {
-                  '@type': 'PriceSpecification',
-                  price: '5000',
-                  priceCurrency: 'JPY',
-                  minPrice: '5000',
-                  billingDuration: 'P1M',
-                },
+                priceCurrency: 'JPY',
+                price: '5000',
+                availability: 'https://schema.org/InStock',
+                url: `${BASE_URL}/pricing`,
               },
-              provider: { '@id': `${BASE_URL}/#organization` },
+              provider: {
+                '@id': `${BASE_URL}/#organization`,
+              },
             },
           },
         ],
@@ -687,12 +678,46 @@ export function generatePricingPageSchema() {
   }
 }
 
+// FAQPage schema
+// 注意: このFAQを使う場合は、同じ質問と回答をページ本文にも表示してください。
+export function generateFaqSchema() {
+  return {
+    '@type': 'FAQPage',
+    '@id': `${BASE_URL}/#faq`,
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: 'JunkBrandingはどの地域に対応していますか？',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: '茨城・東京・神奈川を中心に、オンラインで全国からのWeb制作・ブランディング相談に対応しています。',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'どのようなサービスを依頼できますか？',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Webサイト制作、LP制作、ブランディング、ロゴデザイン、CMS構築、保守運用などに対応しています。',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'JunkBrandingの特徴は何ですか？',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: '事業者一人ひとりのらしさに向き合い、ブランド体験と成果につながるWeb制作を丁寧に行うことです。',
+        },
+      },
+    ],
+  }
+}
+
 // BreadcrumbList schema generator
 export function generateBreadcrumbSchema(items: { name: string; url: string }[]) {
   return {
-    '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
-    '@id': `${items[items.length - 1]?.url ?? BASE_URL}/#breadcrumb`,
+    '@id': `${items[items.length - 1]?.url ?? BASE_URL}#breadcrumb`,
     itemListElement: items.map((item, index) => ({
       '@type': 'ListItem',
       position: index + 1,

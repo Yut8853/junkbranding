@@ -408,8 +408,8 @@ RESEND_API_KEY=your_resend_api_key
   メニュー文字はラベル単位の組み立てを維持しつつ、Canvas散布で「散った状態からまとまる」表現を復帰。
 - `components/text-reveal/text-reveal.tsx`
   1文字分割をやめ、要素単位のrevealに変更。
-- `components/english-text.tsx` / `components/unified-english-text.tsx` / `components/hero-title.tsx` / `components/loading-screen.tsx`
-  文字分割と常時レイヤー化を削減。
+- `components/loading-screen.tsx`
+  文字分割と常時レイヤー化を削減。旧英字演出コンポーネントは未使用化したため削除済み。
 - `components/deferred-visual-effects.tsx`
   カスタムカーソル、背景パーティクル、下部WebGL陽炎を初回描画後に読み込む。SPと監査環境では読み込まない。
 - `components/deferred-site-widgets.tsx`
