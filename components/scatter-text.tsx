@@ -371,6 +371,25 @@ export function ScatterText({
   }, [children])
 
   const delay = Math.min(children.length * 0.008, 0.35)
+
+  if (isMobile || isAudit) {
+    return (
+      <Component
+        ref={containerRef as React.RefObject<HTMLDivElement>}
+        className={className}
+        aria-hidden={ariaHidden}
+        style={style}
+      >
+        <span
+          ref={textRef}
+          className={gradient ? 'gradient-text-soft' : undefined}
+        >
+          {children}
+        </span>
+      </Component>
+    )
+  }
+
   const shouldShowText = !hasMounted || isMobile || isVisible
   const textOpacity = isScattering
     ? currentProgress < TEXT_REENTRY_THRESHOLD
