@@ -114,13 +114,14 @@ export function AboutIntroSection() {
           <SectionReveal delay={0.2}>
             <div className="relative aspect-square rounded-3xl overflow-hidden glass-card rainbow-border group">
               <Image
-                src="/images/studio.jpg"
+                src="/images/home-office-two-person-rainbow.webp"
                 alt="JunkBranding Studio - クリエイティブスタジオのワークスペース"
                 fill
                 className="object-cover transition-transform duration-700 group-hover:scale-105"
                 sizes="(max-width: 768px) calc(100vw - 48px), 50vw"
                 quality={64}
               />
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(255,95,162,0.22),transparent_34%),radial-gradient(circle_at_80%_35%,rgba(75,180,255,0.18),transparent_32%),linear-gradient(135deg,rgba(255,215,95,0.12),transparent_35%,rgba(165,105,255,0.16))] mix-blend-screen" />
               <div className="absolute inset-0 bg-gradient-to-t from-background/75 via-background/15 to-transparent" />
               <div className="absolute bottom-6 left-6 right-6">
                 <ScatterText
