@@ -129,21 +129,21 @@ export function HeroSectionV2() {
   return (
     <section 
       ref={containerRef}
-      className="relative h-[110vh]"
+      className="relative h-[100svh] md:h-[110vh]"
     >
       {/* Sticky container */}
-      <div className="sticky top-0 h-screen w-full overflow-hidden">
+      <div className="relative h-[100svh] w-full overflow-hidden md:sticky md:top-0 md:h-screen">
 
         {/* Main typography */}
         <div 
           ref={titleWrapperRef}
-          className="absolute inset-0 flex flex-col justify-center items-center z-10"
+          className="absolute inset-0 z-10 flex flex-col items-center justify-center px-6 text-center"
         >
           {/* Line 1 - JUNK */}
           <div className="overflow-visible">
             <ScatterText
               as="h1"
-              className="type-display text-[17vw] md:text-[15vw] whitespace-nowrap"
+              className="type-display text-[28vw] sm:text-[24vw] md:text-[15vw] whitespace-nowrap"
               distance={900}
               gradient
               scatterProgress={heroScatterProgress}
@@ -157,7 +157,7 @@ export function HeroSectionV2() {
           <div className="overflow-visible -mt-[2vw]">
             <ScatterText
               as="h1"
-              className="type-display text-[17vw] md:text-[15vw] whitespace-nowrap"
+              className="type-display text-[28vw] sm:text-[24vw] md:text-[15vw] whitespace-nowrap"
               distance={900}
               gradient
               scatterProgress={heroScatterProgress}
@@ -171,7 +171,7 @@ export function HeroSectionV2() {
           <div className="overflow-visible mt-[3vw]">
             <ScatterText
               as="p"
-              className="type-section-title text-[3.6vw] md:text-[2.2vw] font-semibold whitespace-nowrap"
+              className="type-section-title max-w-[18rem] text-[clamp(1rem,5vw,1.4rem)] font-semibold leading-[1.45] md:max-w-none md:text-[2.2vw] md:leading-[1.08] md:whitespace-nowrap"
               distance={650}
               gradient
               scatterProgress={heroScatterProgress}
@@ -185,7 +185,7 @@ export function HeroSectionV2() {
         {/* Bottom info bar */}
         <div 
           ref={bottomBarRef}
-          className="absolute bottom-0 left-0 right-0 z-30 px-6 md:px-12 pb-8 flex items-end justify-between"
+          className="absolute bottom-6 left-0 right-0 z-30 flex items-end justify-between px-6 md:bottom-0 md:px-12 md:pb-8"
           style={{
             opacity: isLoaded ? 1 : 0,
             transform: isLoaded ? 'translateY(0)' : 'translateY(30px)',

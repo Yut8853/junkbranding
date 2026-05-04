@@ -13,7 +13,7 @@ import { HomeInvertedScroll } from '@/components/pages/home/home-inverted-scroll
 
 export default function HomePageClient() {
   const deferredTriggerRef = useRef<HTMLDivElement>(null)
-  const [layoutMode, setLayoutMode] = useState<'pending' | 'desktop-inverted' | 'mobile-normal'>('pending')
+  const [layoutMode, setLayoutMode] = useState<'desktop-inverted' | 'mobile-normal'>('mobile-normal')
   const [shouldRenderDeferred, setShouldRenderDeferred] = useState(false)
   const isDesktopInverted = layoutMode === 'desktop-inverted'
 
@@ -50,10 +50,6 @@ export default function HomePageClient() {
     observer.observe(trigger)
     return () => observer.disconnect()
   }, [isDesktopInverted, shouldRenderDeferred])
-
-  if (layoutMode === 'pending') {
-    return <div className="min-h-screen" aria-hidden="true" />
-  }
 
   if (isDesktopInverted) {
     return (

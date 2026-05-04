@@ -1521,7 +1521,4 @@ html[data-performance-mode='lean'] .home-ascent-section {
     gap: 2.5rem !important;
   }
 
-  .h-\[110vh\] {
-    height: 100svh !important;
-  }
 }
