@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useState, type ReactNode, useCallback, useMemo, useRef, useEffect } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
+import { shouldUseFastStart } from '@/lib/performance-mode'
 
 interface TransitionContextType {
   isTransitioning: boolean
@@ -75,6 +76,11 @@ export function TransitionProvider({ children }: { children: ReactNode }) {
   const navigateWithTransition = useCallback((href: string) => {
     const nextPath = href.split('#')[0].split('?')[0] || '/'
     if (nextPath === pathname) return
+
+    if (shouldUseFastStart()) {
+      router.push(href)
+      return
+    }
 
     // Prevent multiple navigations
     if (isNavigating.current || isTransitioning) return

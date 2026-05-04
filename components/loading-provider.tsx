@@ -6,7 +6,7 @@ import { LoadingScreen } from './loading-screen'
 import { scheduleIdleTask, shouldUseFastStart } from '@/lib/performance-mode'
 import type { LoadingContextType, LoadingProviderProps } from '@/types/component-props'
 
-const LOADING_SEEN_KEY = 'junkbranding-loading-seen-session-v2'
+const LOADING_SEEN_KEY = 'junkbranding-loading-seen-session-v3'
 const AUDIO_PREFERENCE_KEY = 'junkbranding-audio-preference'
 const FAST_START_AUDIO_FALLBACK_MS = 180
 const FAST_START_COMPLETE_MS = 80
