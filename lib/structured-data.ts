@@ -136,6 +136,29 @@ export const organizationSchema = {
   makesOffer: serviceCatalog,
 }
 
+export const localBusinessSchema = {
+  '@type': 'LocalBusiness',
+  '@id': `${BASE_URL}/#localbusiness`,
+  name: 'JunkBranding',
+  url: BASE_URL,
+  image: OG_IMAGE_URL,
+  logo: LOGO_URL,
+  description:
+    '茨城・東京・神奈川を中心に、全国オンライン対応でブランディングとWeb制作を行うクリエイティブスタジオ。',
+  priceRange: '¥¥',
+  areaServed,
+  knowsAbout,
+  makesOffer: serviceCatalog,
+  parentOrganization: {
+    '@id': `${BASE_URL}/#organization`,
+  },
+  address: {
+    '@type': 'PostalAddress',
+    addressRegion: '茨城県',
+    addressCountry: 'JP',
+  },
+}
+
 // WebSite schema
 export function generateWebsiteSchema() {
   return {
