@@ -1412,6 +1412,14 @@ html[data-performance-mode='lean'] .home-ascent-section {
 
 /* SP optimization: keep content readable and remove decorative motion. */
 @media (max-width: 767px) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+
   html {
     scroll-behavior: auto;
   }

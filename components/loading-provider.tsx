@@ -25,6 +25,11 @@ const DEFAULT_PROGRESS_STEPS = [
 
 const wait = (ms: number) => new Promise<void>((resolve) => window.setTimeout(resolve, ms))
 
+const getInitialFastStart = () => {
+  if (typeof window === 'undefined') return false
+  return shouldUseFastStart()
+}
+
 const LoadingContext = createContext<LoadingContextType | undefined>(undefined)
 
 export function useLoading() {
@@ -37,14 +42,15 @@ export function useLoading() {
 
 export function LoadingProvider({ children }: LoadingProviderProps) {
   const { startSound, stopSound } = useAudio()
+  const initialFastStart = getInitialFastStart()
   const [hasCheckedLoadingState, setHasCheckedLoadingState] = useState(true)
-  const [isLoading, setIsLoading] = useState(true)
-  const [progress, setProgress] = useState(0)
-  const [isFirstLoad, setIsFirstLoad] = useState(true)
-  const [audioChoice, setAudioChoice] = useState<'sound-on' | 'sound-off' | null>(null)
+  const [isLoading, setIsLoading] = useState(!initialFastStart)
+  const [progress, setProgress] = useState(initialFastStart ? 100 : 0)
+  const [isFirstLoad, setIsFirstLoad] = useState(!initialFastStart)
+  const [audioChoice, setAudioChoice] = useState<'sound-on' | 'sound-off' | null>(initialFastStart ? 'sound-off' : null)
   const [isSelectingAudio, setIsSelectingAudio] = useState(false)
-  const [preloadComplete, setPreloadComplete] = useState(false)
-  const [isFastStart, setIsFastStart] = useState(false)
+  const [preloadComplete, setPreloadComplete] = useState(initialFastStart)
+  const [isFastStart, setIsFastStart] = useState(initialFastStart)
 
   useEffect(() => {
     const fastStart = shouldUseFastStart()
@@ -52,7 +58,15 @@ export function LoadingProvider({ children }: LoadingProviderProps) {
     document.documentElement.dataset.performanceMode = fastStart ? 'lean' : 'full'
     const hasSeenLoading = window.sessionStorage.getItem(LOADING_SEEN_KEY) === 'true'
 
-    if (fastStart && hasSeenLoading) {
+    if (fastStart) {
+      setProgress(100)
+      setPreloadComplete(true)
+      setIsLoading(false)
+      setIsFirstLoad(false)
+      setAudioChoice('sound-off')
+      window.sessionStorage.setItem(LOADING_SEEN_KEY, 'true')
+      window.localStorage.setItem(AUDIO_PREFERENCE_KEY, 'sound-off')
+    } else if (hasSeenLoading) {
       setProgress(100)
       setPreloadComplete(true)
       setIsLoading(false)
