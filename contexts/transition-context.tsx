@@ -5,6 +5,7 @@ import { usePathname, useRouter } from 'next/navigation'
 import { shouldUseFastStart } from '@/lib/performance-mode'
 
 interface TransitionContextType {
+  hasNavigated: boolean
   isTransitioning: boolean
   navigateWithTransition: (href: string) => void
   prefetchRoute: (href: string) => void
@@ -16,12 +17,14 @@ const ENTER_DURATION_MS = 420
 const TRANSITION_FALLBACK_MS = 2400
 
 const TransitionContext = createContext<TransitionContextType>({
+  hasNavigated: false,
   isTransitioning: false,
   navigateWithTransition: () => {},
   prefetchRoute: () => {},
 })
 
 export function TransitionProvider({ children }: { children: ReactNode }) {
+  const [hasNavigated, setHasNavigated] = useState(false)
   const [isTransitioning, setIsTransitioning] = useState(false)
   const router = useRouter()
   const pathname = usePathname()
@@ -107,6 +110,7 @@ export function TransitionProvider({ children }: { children: ReactNode }) {
     }, EXIT_DURATION_MS)
 
     fallbackTimer.current = window.setTimeout(() => {
+      setHasNavigated(true)
       setIsTransitioning(false)
       isNavigating.current = false
       pendingHref.current = null
@@ -120,6 +124,7 @@ export function TransitionProvider({ children }: { children: ReactNode }) {
     if (completeTimer.current) window.clearTimeout(completeTimer.current)
 
     completeTimer.current = window.setTimeout(() => {
+      setHasNavigated(true)
       setIsTransitioning(false)
       isNavigating.current = false
       pendingHref.current = null
@@ -140,10 +145,11 @@ export function TransitionProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const contextValue = useMemo(() => ({
+    hasNavigated,
     isTransitioning,
     navigateWithTransition,
     prefetchRoute,
-  }), [isTransitioning, navigateWithTransition, prefetchRoute])
+  }), [hasNavigated, isTransitioning, navigateWithTransition, prefetchRoute])
 
   return (
     <TransitionContext.Provider value={contextValue}>
