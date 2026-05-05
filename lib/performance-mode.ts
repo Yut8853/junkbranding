@@ -1,8 +1,6 @@
 'use client'
 
-type IdleTaskHandle = {
-  cancel: () => void
-}
+import type { IdleTaskHandle } from '@/types/performance'
 
 export const isBrowser = () => typeof window !== 'undefined'
 

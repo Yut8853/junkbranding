@@ -5,11 +5,11 @@ import { useEffect, useState } from 'react'
 import { isSmallScreen, scheduleIdleTask } from '@/lib/performance-mode'
 
 const SoundToggle = dynamic(
-  () => import('@/components/sound-toggle').then((mod) => mod.SoundToggle),
+  () => import('@/components/widgets/sound-toggle').then((mod) => mod.SoundToggle),
   { ssr: false }
 )
 const CookieConsent = dynamic(
-  () => import('@/components/cookie-consent').then((mod) => mod.CookieConsent),
+  () => import('@/components/widgets/cookie-consent').then((mod) => mod.CookieConsent),
   { ssr: false }
 )
 

@@ -1,6 +1,8 @@
 // lib/structured-data.ts
 // Structured Data (JSON-LD) helpers for SEO
 
+import type { JsonLdNode } from '@/types/seo'
+
 const BASE_URL = 'https://junkbranding.com'
 const LOGO_URL = `${BASE_URL}/icon.svg`
 const OG_IMAGE_URL = `${BASE_URL}/ogp.png`
@@ -82,8 +84,6 @@ const serviceCatalog = {
     },
   ],
 }
-
-type JsonLdNode = Record<string, unknown>
 
 function pageId(path = '') {
   return `${BASE_URL}${path}#webpage`

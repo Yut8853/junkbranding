@@ -1,6 +1,6 @@
 'use client'
 
-import { Footer } from '@/components/footer'
+import { Footer } from '@/components/layout/footer'
 import { pricingFaqs, serviceCategories } from '@/content/pricing-page'
 import { useDeferredRender } from '@/hooks/use-deferred-render'
 import {

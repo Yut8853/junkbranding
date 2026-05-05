@@ -1,10 +1,10 @@
 'use client'
 
-import { SectionReveal } from '@/components/text-reveal'
-import { ScatterBlock } from '@/components/scatter-block'
-import { ScatterText } from '@/components/scatter-text'
-import { HeroSectionV2 } from '@/components/hero-section-v2'
-import { MarqueeSectionV2 } from '@/components/marquee-section-v2'
+import { SectionReveal } from '@/components/motion/text-reveal'
+import { ScatterBlock } from '@/components/motion/scatter-block'
+import { ScatterText } from '@/components/motion/scatter-text'
+import { HeroSectionV2 } from '@/components/sections/hero-section-v2'
+import { MarqueeSectionV2 } from '@/components/sections/marquee-section-v2'
 import { useLazyVideo } from '@/components/pages/home/use-lazy-video'
 import type { HomeAboutPreviewSectionProps } from '@/types/home-page'
 

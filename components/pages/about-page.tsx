@@ -1,6 +1,6 @@
 'use client'
 
-import { Footer } from '@/components/footer'
+import { Footer } from '@/components/layout/footer'
 import { useDeferredRender } from '@/hooks/use-deferred-render'
 import {
   AboutContactSection,

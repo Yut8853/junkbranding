@@ -7,3 +7,16 @@ export type UseInViewOptions = {
 }
 
 export type UseInViewRef = RefObject<Element | null>
+
+export type UsePointerTiltOptions = {
+  disabled?: boolean
+  perspective?: number
+  scale?: number
+  strength?: number
+}
+
+export type UseScrollScatterProgressOptions = {
+  disabled?: boolean
+  maxDistance?: number
+  threshold?: number
+}

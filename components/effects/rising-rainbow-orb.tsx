@@ -3,19 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { usePathname } from 'next/navigation'
 import { useIsMobile } from '@/hooks/use-mobile'
-
-type Orb = {
-  id: number
-  x: number
-  y: number
-  vx: number // velocity x
-  vy: number // velocity y
-  hue: number
-  size: number
-  phase: 'hidden' | 'floating' | 'attracted' | 'absorbed'
-  targetX: number
-  targetY: number
-}
+import type { Orb } from '@/types/effects'
 
 export function RisingRainbowOrb() {
   const pathname = usePathname()

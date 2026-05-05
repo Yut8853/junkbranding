@@ -8,7 +8,7 @@ import { useScrollProgress } from '@/hooks/use-scroll-progress'
 import type { SmoothScrollProps } from '@/types/component-props'
 
 const DesktopSmoothScroll = dynamic(
-  () => import('@/components/desktop-smooth-scroll').then((mod) => mod.DesktopSmoothScroll),
+  () => import('@/components/layout/desktop-smooth-scroll').then((mod) => mod.DesktopSmoothScroll),
   { ssr: false }
 )
 

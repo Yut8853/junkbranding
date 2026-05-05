@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { X, Cookie, Settings, Check } from 'lucide-react'
-import { TransitionLink } from '@/components/transition-link'
+import { TransitionLink } from '@/components/layout/transition-link'
 import type { CookiePreferences } from '@/types/component-props'
 
 const COOKIE_CONSENT_KEY = 'junkbranding-cookie-consent'

@@ -1,20 +1,4 @@
-export interface ScatterValue {
-  x: number
-  y: number
-  rotation: number
-  scale?: number
-}
-
-interface ScatterValueOptions {
-  seed: number
-  minDistance: number
-  distanceRange: number
-  rotationRange: number
-  scale?: {
-    min: number
-    range: number
-  }
-}
+import type { ScatterValue, ScatterValueOptions } from '@/types/effects'
 
 export function seededRandom(seed: number) {
   const x = Math.sin(seed * 9999) * 10000

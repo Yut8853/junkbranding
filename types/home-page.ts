@@ -1,3 +1,5 @@
+import type { ReactNode } from 'react'
+
 export type HomeAboutPreview = {
   eyebrow: string
   title: string
@@ -33,4 +35,17 @@ export type HomeWorksPreviewSectionProps = {
 
 export type HomeAreaSectionProps = {
   area: HomeArea
+}
+
+export type HomeDeferredSectionsProps = HomeWorksPreviewSectionProps & HomeAreaSectionProps & {
+  inverted?: boolean
+}
+
+export type HomeAscentSectionProps = {
+  children: ReactNode
+  label: string
+}
+
+export type HomeInvertedScrollProps = {
+  children: ReactNode
 }

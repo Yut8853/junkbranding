@@ -2,9 +2,9 @@
 
 import Link from 'next/link'
 import { Phone, Mail, MapPin } from 'lucide-react'
-import { RevealSection } from './reveal-section'
-import { MagneticButton } from './magnetic-button'
-import { TransitionLink } from '@/components/transition-link'
+import { RevealSection } from '@/components/motion/reveal-section'
+import { MagneticButton } from '@/components/ui/magnetic-button'
+import { TransitionLink } from '@/components/layout/transition-link'
 
 const footerLinks = {
   navigation: [

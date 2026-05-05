@@ -1,6 +1,7 @@
 'use client'
 
 import { createContext, useContext, useState, useRef, useEffect, useCallback, type ReactNode } from 'react'
+import type { AudioContextConstructor, AudioContextValue } from '@/types/audio'
 
 const BACKGROUND_AUDIO_SRC = '/audio/128_BPM124.mp3'
 const AUDIO_PREFERENCE_KEY = 'junkbranding-audio-preference'
@@ -8,8 +9,6 @@ const MAX_VOLUME = 0.4
 const START_VOLUME = 0.001
 const FADE_DURATION_MS = 1200
 const clampVolume = (volume: number) => Math.min(1, Math.max(0, volume))
-
-type AudioContextConstructor = typeof AudioContext
 
 class GeneratedAudioPlayer {
   private context: AudioContext | null = null
@@ -242,14 +241,6 @@ function getAudioPlayer() {
     audioPlayerInstance = new BackgroundAudioPlayer()
   }
   return audioPlayerInstance
-}
-
-interface AudioContextValue {
-  isPlaying: boolean
-  toggleSound: () => Promise<void>
-  startSound: () => Promise<boolean>
-  stopSound: () => void
-  hasStarted: boolean
 }
 
 const AudioCtx = createContext<AudioContextValue | null>(null)

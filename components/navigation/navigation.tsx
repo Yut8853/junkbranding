@@ -5,12 +5,13 @@ import { usePathname } from 'next/navigation'
 import { useCallback, useEffect, useState, type CSSProperties } from 'react'
 import { ArrowRight } from 'lucide-react'
 import { navItems } from '@/components/navigation/nav-config'
-import { TransitionLink } from '@/components/transition-link'
+import { TransitionLink } from '@/components/layout/transition-link'
+import { useHeaderIntroAnimation } from '@/components/navigation/use-header-intro-animation'
 import { useMenuAssembleAnimation } from '@/components/navigation/use-menu-assemble-animation'
 import { useTransition } from '@/contexts/transition-context'
 import { useIsMobile } from '@/hooks/use-mobile'
 import { shouldUseFastStart } from '@/lib/performance-mode'
-import { useLoading } from '@/components/loading-provider'
+import { useLoading } from '@/components/loading/loading-provider'
 
 const NavigationMenuOverlay = dynamic(
   () => import('@/components/navigation/navigation-menu-overlay').then((mod) => mod.NavigationMenuOverlay),
@@ -26,8 +27,6 @@ export function Navigation() {
   const [isOpen, setIsOpen] = useState(false)
   const [hoveredItem, setHoveredItem] = useState<string | null>(null)
   const [isLeanMotion, setIsLeanMotion] = useState(false)
-  const [showHeaderIntro, setShowHeaderIntro] = useState(false)
-  const [hasHeaderIntroCompleted, setHasHeaderIntroCompleted] = useState(false)
   const { prefetchRoute } = useTransition()
   const { isLoading } = useLoading()
   const isMobile = useIsMobile()
@@ -37,28 +36,15 @@ export function Navigation() {
     setIsLeanMotion(shouldUseFastStart())
   }, [])
 
-  useEffect(() => {
-    if (!hasMounted || isLoading || isMobile || isLeanMotion) return
-
-    const showTimer = window.setTimeout(() => {
-      setHasHeaderIntroCompleted(false)
-      setShowHeaderIntro(true)
-    }, 250)
-
-    const activateMenuTimer = window.setTimeout(() => {
-      setHasHeaderIntroCompleted(true)
-    }, 2050)
-
-    const hideTimer = window.setTimeout(() => {
-      setShowHeaderIntro(false)
-    }, 3300)
-
-    return () => {
-      window.clearTimeout(showTimer)
-      window.clearTimeout(activateMenuTimer)
-      window.clearTimeout(hideTimer)
-    }
-  }, [hasMounted, isLeanMotion, isLoading, isMobile])
+  const {
+    hasHeaderIntroCompleted,
+    showHeaderIntro,
+  } = useHeaderIntroAnimation({
+    hasMounted,
+    isLeanMotion,
+    isLoading,
+    isMobile,
+  })
 
   const prefetchMenuRoutes = useCallback(() => {
     navItems.forEach((item) => prefetchRoute(item.href))

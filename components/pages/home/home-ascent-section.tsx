@@ -1,11 +1,6 @@
 'use client'
 
-import type { ReactNode } from 'react'
-
-type HomeAscentSectionProps = {
-  children: ReactNode
-  label: string
-}
+import type { HomeAscentSectionProps } from '@/types/home-page'
 
 export function HomeAscentSection({
   children,

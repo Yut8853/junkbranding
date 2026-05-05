@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { ScatterText } from '@/components/scatter-text'
+import { ScatterText } from '@/components/motion/scatter-text'
 import { useIsMobile } from '@/hooks/use-mobile'
 
 export function HeroSectionV2() {

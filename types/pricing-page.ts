@@ -29,3 +29,8 @@ export type PricingServiceCategoriesSectionProps = {
 export type PricingFaqSectionProps = {
   faqs: PricingFaq[]
 }
+
+export type PricingServiceCardProps = {
+  service: PricingServiceItem
+  index: number
+}

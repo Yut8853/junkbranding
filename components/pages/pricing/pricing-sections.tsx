@@ -1,11 +1,11 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useState } from 'react'
 import { ArrowRight, Check, HelpCircle, MessageCircle, Phone, Sparkles, Plus, Minus } from 'lucide-react'
-import { SectionReveal } from '@/components/text-reveal'
-import { ScatterBlock } from '@/components/scatter-block'
-import { ScatterText } from '@/components/scatter-text'
-import { useIsMobile } from '@/hooks/use-mobile'
+import { SectionReveal } from '@/components/motion/text-reveal'
+import { ScatterBlock } from '@/components/motion/scatter-block'
+import { ScatterText } from '@/components/motion/scatter-text'
+import { ServiceCard } from '@/components/pages/pricing/pricing-service-card'
 import type { PricingFaqSectionProps, PricingServiceCategoriesSectionProps } from '@/types/pricing-page'
 
 export function PricingHeroSection() {
@@ -229,110 +229,6 @@ function ServiceCategoryCard({
         </div>
       </SectionReveal>
     </div>
-  )
-}
-
-function ServiceCard({
-  service,
-  index,
-}: {
-  service: { name: string; price: string; note: string }
-  index: number
-}) {
-  const cardRef = useRef<HTMLDivElement>(null)
-  const [isHovered, setIsHovered] = useState(false)
-  const isMobile = useIsMobile()
-
-  useEffect(() => {
-    const card = cardRef.current
-    if (!card || isMobile) return
-
-    const handleMouseMove = (e: MouseEvent) => {
-      const rect = card.getBoundingClientRect()
-      const x = e.clientX - rect.left
-      const y = e.clientY - rect.top
-      const centerX = rect.width / 2
-      const centerY = rect.height / 2
-      const rotateX = (y - centerY) / 20
-      const rotateY = (centerX - x) / 20
-
-      card.style.transform = `perspective(1000px) rotateX(${-rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`
-    }
-
-    const handleMouseLeave = () => {
-      card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)'
-    }
-
-    card.addEventListener('mousemove', handleMouseMove)
-    card.addEventListener('mouseleave', handleMouseLeave)
-
-    return () => {
-      card.removeEventListener('mousemove', handleMouseMove)
-      card.removeEventListener('mouseleave', handleMouseLeave)
-    }
-  }, [isMobile])
-
-  return (
-    <SectionReveal delay={index * 0.1} duration={0.8}>
-      <div
-        ref={cardRef}
-        className={`relative p-8 lg:p-10 rounded-3xl glass-card rainbow-border transition-all duration-300 cursor-pointer ${
-          isHovered ? 'shadow-[0_30px_80px_rgba(0,0,0,0.08)]' : ''
-        }`}
-        style={{ transformStyle: 'preserve-3d' }}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-      >
-        {/* Number indicator */}
-        <ScatterText
-          as="span"
-          className="absolute top-6 right-6 type-display text-5xl text-foreground/[0.05]"
-          scrollStart={50}
-          scrollEnd={350}
-          distance={160}
-        >
-          {String(index + 1).padStart(2, '0')}
-        </ScatterText>
-
-        <ScatterText
-          as="h3"
-          className="type-card-title text-lg md:text-xl mb-4 gradient-text"
-          scrollStart={50}
-          scrollEnd={350}
-          distance={180}
-          gradient
-        >
-          {service.name}
-        </ScatterText>
-        
-        <ScatterText
-          as="p"
-          className="type-readable-number text-3xl md:text-4xl text-foreground mb-4"
-          scrollStart={50}
-          scrollEnd={350}
-          distance={200}
-        >
-          {service.price}
-        </ScatterText>
-        
-        <ScatterText
-          as="p"
-          className="type-body-compact text-sm text-muted-foreground"
-          scrollStart={50}
-          scrollEnd={350}
-          distance={160}
-        >
-          {service.note}
-        </ScatterText>
-
-        {/* Hover glow effect */}
-        <div
-          className={`absolute inset-0 rounded-3xl bg-gradient-to-br from-primary/10 via-transparent to-accent/10 transition-opacity duration-500 pointer-events-none ${
-            isHovered ? 'opacity-100' : 'opacity-0'
-          }`}
-        />
-      </div>
-    </SectionReveal>
   )
 }
 

@@ -4,17 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { usePathname } from 'next/navigation'
 import { isSmallScreen } from '@/lib/performance-mode'
-
-type FilmParticle = {
-  x: number
-  y: number
-  vx: number
-  vy: number
-  size: number
-  hue: number
-  alpha: number
-  phase: number
-}
+import type { FilmParticle } from '@/types/effects'
 
 export function TopCanvasFilmOverlay() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null)

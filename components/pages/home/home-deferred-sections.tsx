@@ -1,19 +1,16 @@
 'use client'
 
-import { Footer } from '@/components/footer'
-import { ScatterBlock } from '@/components/scatter-block'
-import { ScatterText } from '@/components/scatter-text'
+import { Footer } from '@/components/layout/footer'
+import { ScatterBlock } from '@/components/motion/scatter-block'
+import { ScatterText } from '@/components/motion/scatter-text'
 import { HomeAscentSection } from '@/components/pages/home/home-ascent-section'
-import { ServicesSectionV2 } from '@/components/services-section-v2'
-import { CTASectionV2 } from '@/components/cta-section-v2'
+import { ServicesSectionV2 } from '@/components/sections/services-section-v2'
+import { CTASectionV2 } from '@/components/sections/cta-section-v2'
 import type {
   HomeAreaSectionProps,
+  HomeDeferredSectionsProps,
   HomeWorksPreviewSectionProps,
 } from '@/types/home-page'
-
-type HomeDeferredSectionsProps = HomeWorksPreviewSectionProps & HomeAreaSectionProps & {
-  inverted?: boolean
-}
 
 function HomeWorksPreviewSection({
   worksPreview,

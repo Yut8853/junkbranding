@@ -19,3 +19,13 @@ export type WorkCardProps = {
   onHover: (index: number | null) => void
   isHovered: boolean
 }
+
+export type ImmersiveWorkCardProps = {
+  work: PortfolioWork
+  index: number
+}
+
+export type WorksFilterSectionProps = {
+  selectedCategory: string
+  setSelectedCategory: (category: string) => void
+}

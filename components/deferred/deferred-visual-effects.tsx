@@ -5,19 +5,19 @@ import { useEffect, useState } from 'react'
 import { isSmallScreen, scheduleIdleTask } from '@/lib/performance-mode'
 
 const CustomCursor = dynamic(
-  () => import('@/components/custom-cursor').then((mod) => mod.CustomCursor),
+  () => import('@/components/effects/custom-cursor').then((mod) => mod.CustomCursor),
   { ssr: false }
 )
 const FloatingParticles = dynamic(
-  () => import('@/components/floating-particles').then((mod) => mod.FloatingParticles),
+  () => import('@/components/effects/floating-particles').then((mod) => mod.FloatingParticles),
   { ssr: false }
 )
 const BottomHeatHaze = dynamic(
-  () => import('@/components/bottom-heat-haze').then((mod) => mod.BottomHeatHaze),
+  () => import('@/components/effects/bottom-heat-haze').then((mod) => mod.BottomHeatHaze),
   { ssr: false }
 )
 const RisingRainbowOrb = dynamic(
-  () => import('@/components/rising-rainbow-orb').then((mod) => mod.RisingRainbowOrb),
+  () => import('@/components/effects/rising-rainbow-orb').then((mod) => mod.RisingRainbowOrb),
   { ssr: false }
 )
 

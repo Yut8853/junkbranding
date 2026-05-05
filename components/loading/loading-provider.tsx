@@ -151,9 +151,9 @@ export function LoadingProvider({ children }: LoadingProviderProps) {
 
     const idleTask = scheduleIdleTask(() => {
       void Promise.allSettled([
-        import('@/components/text-reveal'),
-        import('@/components/scatter-text'),
-        import('@/components/scatter-block'),
+        import('@/components/motion/text-reveal'),
+        import('@/components/motion/scatter-text'),
+        import('@/components/motion/scatter-block'),
       ])
     }, 4500, 2600)
 

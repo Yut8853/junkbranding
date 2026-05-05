@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { ArrowRight, ArrowUpRight } from 'lucide-react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { ScatterText } from '@/components/scatter-text'
+import { ScatterText } from '@/components/motion/scatter-text'
 import { useIsMobile } from '@/hooks/use-mobile'
 import type { WorkCardProps } from '@/types/works-page'
 

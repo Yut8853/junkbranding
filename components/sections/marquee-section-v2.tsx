@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { clamp01 } from '@/lib/scatter'
-import { ScatterText } from '@/components/scatter-text'
+import { ScatterText } from '@/components/motion/scatter-text'
 import { useIsMobile } from '@/hooks/use-mobile'
 
 const marqueeTexts = ['Branding', 'Web Design', 'Graphic Design', 'Print Media', 'Logo Design', 'Art Direction']

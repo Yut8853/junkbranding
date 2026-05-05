@@ -1,14 +1,4 @@
-type ScrollUpdate = {
-  rect: DOMRect
-  viewportHeight: number
-  scrollY: number
-}
-
-type ScrollSubscriber = {
-  element: HTMLElement
-  callback: (update: ScrollUpdate) => void
-  isActive: boolean
-}
+import type { ScrollSubscriber, ScrollUpdate } from '@/types/scroll-manager'
 
 const subscribers = new Set<ScrollSubscriber>()
 let rafId: number | null = null

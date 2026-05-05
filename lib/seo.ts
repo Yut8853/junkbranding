@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import type { PageMetadataOptions } from '@/types/seo'
 
 const SITE_URL = 'https://junkbranding.com'
 const SITE_NAME = 'JunkBranding'
@@ -23,17 +24,6 @@ const defaultKeywords = [
   '東京',
   '神奈川',
 ]
-
-type PageMetadataOptions = {
-  title: string
-  description?: string
-  path?: string
-  keywords?: string[]
-  image?: string
-  imageAlt?: string
-  index?: boolean
-  category?: string
-}
 
 export function createPageMetadata({
   title,

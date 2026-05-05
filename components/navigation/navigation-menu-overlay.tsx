@@ -2,8 +2,8 @@
 
 import { useMemo, useRef } from 'react'
 import { ArrowUpRight, Mail, Phone } from 'lucide-react'
-import { TransitionLink } from '@/components/transition-link'
-import { ScatterText } from '@/components/scatter-text'
+import { TransitionLink } from '@/components/layout/transition-link'
+import { ScatterText } from '@/components/motion/scatter-text'
 import { MenuHeatHazeBackground } from '@/components/navigation/menu-heat-haze-background'
 import { clamp01, createScatterValue, seededRandom } from '@/lib/scatter'
 import { navItems, rainbowColors } from './nav-config'

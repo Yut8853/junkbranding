@@ -3,13 +3,7 @@
 import { createContext, useContext, useState, type ReactNode, useCallback, useMemo, useRef, useEffect } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 import { shouldUseFastStart } from '@/lib/performance-mode'
-
-interface TransitionContextType {
-  hasNavigated: boolean
-  isTransitioning: boolean
-  navigateWithTransition: (href: string) => void
-  prefetchRoute: (href: string) => void
-}
+import type { TransitionContextType } from '@/types/navigation'
 
 const PREFETCH_ROUTES = ['/', '/about', '/works', '/pricing', '/contact', '/privacy'] as const
 const EXIT_DURATION_MS = 420

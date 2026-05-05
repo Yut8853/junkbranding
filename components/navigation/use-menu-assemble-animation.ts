@@ -1,13 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useState } from 'react'
-
-type UseMenuAssembleAnimationOptions = {
-  isOpen: boolean
-  setIsOpen: (isOpen: boolean) => void
-  isMobile: boolean
-  onOpen?: () => void
-}
+import type { UseMenuAssembleAnimationOptions } from '@/types/navigation'
 
 export function useMenuAssembleAnimation({
   isOpen,

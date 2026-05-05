@@ -1,4 +1,4 @@
-import { PrivacyBackground } from '@/components/privacy-background';
+import { PrivacyBackground } from '@/components/effects/privacy-background';
 import type { LayoutProps } from '@/types/layout';
 
 export default function PrivacyLayout({

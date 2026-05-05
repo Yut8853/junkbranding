@@ -4,6 +4,11 @@ import { useCallback, useEffect, useRef, useMemo, useState } from 'react'
 import { clamp01, createScatterValue } from '@/lib/scatter'
 import { useIsMobile } from '@/hooks/use-mobile'
 import type { ScatterTextProps } from '@/types/component-props'
+import type {
+  CanvasContextWithLetterSpacing,
+  GlyphMeasurement,
+  MeasurementCache,
+} from '@/types/effects'
 
 const SOFT_GRADIENT_STOPS = [
   [0, 'hsl(350, 65%, 72%)'],
@@ -19,23 +24,6 @@ const SOFT_GRADIENT_STOPS = [
 const SCATTER_VISIBILITY_THRESHOLD = 0.015
 const TEXT_REENTRY_THRESHOLD = 0.12
 const ASSEMBLE_DURATION_MS = 720
-
-type CanvasContextWithLetterSpacing = CanvasRenderingContext2D & {
-  letterSpacing?: string
-}
-
-type GlyphMeasurement = {
-  char: string
-  x: number
-  y: number
-  width: number
-  height: number
-}
-
-type MeasurementCache = {
-  key: string
-  glyphs: GlyphMeasurement[]
-}
 
 export function ScatterText({
   children,
