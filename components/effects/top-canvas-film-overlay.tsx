@@ -22,7 +22,7 @@ export function TopCanvasFilmOverlay() {
 
     const timer = window.setTimeout(() => {
       setShouldStartCanvas(true)
-    }, 4200)
+    }, 11000)
 
     return () => window.clearTimeout(timer)
   }, [mounted])

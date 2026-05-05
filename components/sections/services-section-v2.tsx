@@ -1,12 +1,8 @@
 'use client'
 
 import { useEffect, useRef, useState, useCallback } from 'react'
-import { gsap } from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { ScatterText } from '@/components/motion/scatter-text'
 import { useIsMobile } from '@/hooks/use-mobile'
-
-gsap.registerPlugin(ScrollTrigger)
 
 const services = [
   {
@@ -86,47 +82,59 @@ export function ServicesSectionV2() {
 
     if (isMobile || isInvertedHome) {
       setCountedNumbers(services.map((service) => service.num))
-      if (headerRef.current) {
-        gsap.set(headerRef.current, { clearProps: 'all' })
-      }
-      itemsRef.current.forEach((item) => {
-        if (item) gsap.set(item, { clearProps: 'all' })
-      })
       return
     }
 
-    const ctx = gsap.context(() => {
+    let cleanup: (() => void) | undefined
+    let cancelled = false
+
+    const setupAnimation = async () => {
+      const [{ gsap }, { ScrollTrigger }] = await Promise.all([
+        import('gsap'),
+        import('gsap/ScrollTrigger'),
+      ])
+      if (cancelled || !sectionRef.current) return
+
+      gsap.registerPlugin(ScrollTrigger)
+      const ctx = gsap.context(() => {
       // Header reveal
-      gsap.from(headerRef.current, {
-        y: 48,
-        opacity: 0,
-        duration: 0.8,
-        ease: 'power3.out',
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: 'top bottom-=50',
-        },
-      })
-
-      // Items staggered reveal
-      itemsRef.current.forEach((item, index) => {
-        if (!item) return
-
-        gsap.from(item, {
+        gsap.from(headerRef.current, {
           y: 48,
           opacity: 0,
           duration: 0.8,
           ease: 'power3.out',
           scrollTrigger: {
-            trigger: item,
+            trigger: sectionRef.current,
             start: 'top bottom-=50',
-            onEnter: () => animateCounter(index),
           },
         })
-      })
-    }, sectionRef)
 
-    return () => ctx.revert()
+      // Items staggered reveal
+        itemsRef.current.forEach((item, index) => {
+          if (!item) return
+
+          gsap.from(item, {
+            y: 48,
+            opacity: 0,
+            duration: 0.8,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: item,
+              start: 'top bottom-=50',
+              onEnter: () => animateCounter(index),
+            },
+          })
+        })
+      }, sectionRef)
+      cleanup = () => ctx.revert()
+    }
+
+    void setupAnimation()
+
+    return () => {
+      cancelled = true
+      cleanup?.()
+    }
   }, [animateCounter, isMobile])
 
   return (

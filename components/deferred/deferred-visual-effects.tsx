@@ -32,11 +32,11 @@ export function DeferredVisualEffects() {
 
     const cursorTask = scheduleIdleTask(() => {
       setShouldRenderCursor(true)
-    }, 5000, 4200)
+    }, 12000, 10000)
 
     const effectsTask = scheduleIdleTask(() => {
       setShouldRenderEffects(true)
-    }, 9000, 7600)
+    }, 16000, 14000)
 
     return () => {
       cursorTask.cancel()
