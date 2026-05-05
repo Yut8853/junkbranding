@@ -2,6 +2,7 @@
 
 import { Footer } from '@/components/footer'
 import { pricingFaqs, serviceCategories } from '@/content/pricing-page'
+import { useDeferredRender } from '@/hooks/use-deferred-render'
 import {
   PricingCtaSection,
   PricingFaqSection,
@@ -11,14 +12,20 @@ import {
 } from '@/components/pages/pricing/pricing-sections'
 
 export default function PricingPageClient() {
+  const shouldRenderSections = useDeferredRender()
+
   return (
     <>
       <PricingHeroSection />
-      <PricingNoticeSection />
-      <PricingServiceCategoriesSection serviceCategories={serviceCategories} />
-      <PricingFaqSection faqs={pricingFaqs} />
-      <PricingCtaSection />
-      <Footer />
+      {shouldRenderSections && (
+        <>
+          <PricingNoticeSection />
+          <PricingServiceCategoriesSection serviceCategories={serviceCategories} />
+          <PricingFaqSection faqs={pricingFaqs} />
+          <PricingCtaSection />
+          <Footer />
+        </>
+      )}
     </>
   )
 }

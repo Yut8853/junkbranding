@@ -1,6 +1,7 @@
 'use client'
 
 import { Footer } from '@/components/footer'
+import { useDeferredRender } from '@/hooks/use-deferred-render'
 import {
   AboutContactSection,
   AboutHeroSection,
@@ -12,15 +13,21 @@ import {
 import { process, team, values } from '@/content/about-page'
 
 export default function AboutPageClient() {
+  const shouldRenderSections = useDeferredRender()
+
   return (
     <>
       <AboutHeroSection />
-      <AboutIntroSection />
-      <AboutTeamSection team={team} />
-      <AboutValuesSection values={values} />
-      <AboutProcessSection process={process} />
-      <AboutContactSection />
-      <Footer />
+      {shouldRenderSections && (
+        <>
+          <AboutIntroSection />
+          <AboutTeamSection team={team} />
+          <AboutValuesSection values={values} />
+          <AboutProcessSection process={process} />
+          <AboutContactSection />
+          <Footer />
+        </>
+      )}
     </>
   )
 }

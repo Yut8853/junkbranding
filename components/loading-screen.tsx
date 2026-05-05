@@ -10,15 +10,24 @@ export function LoadingScreen({ progress, canSelectAudio, audioChoice, onSelectA
 
   // Smooth progress counter
   useEffect(() => {
+    if (animationRef.current) {
+      cancelAnimationFrame(animationRef.current)
+    }
+
     const animate = () => {
       setDisplayProgress(prev => {
         const diff = progress - prev
         const step = diff * 0.08
-        if (Math.abs(diff) < 0.5) return progress
+        if (Math.abs(diff) < 0.5) {
+          animationRef.current = 0
+          return progress
+        }
+
+        animationRef.current = requestAnimationFrame(animate)
         return prev + step
       })
-      animationRef.current = requestAnimationFrame(animate)
     }
+
     animationRef.current = requestAnimationFrame(animate)
     return () => {
       if (animationRef.current) cancelAnimationFrame(animationRef.current)

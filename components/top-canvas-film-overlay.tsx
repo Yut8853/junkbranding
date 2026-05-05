@@ -193,7 +193,7 @@ export function TopCanvasFilmOverlay() {
     }
 
     const render = (now: number) => {
-      const frameInterval = prefersReducedMotion ? 1000 : 33
+      const frameInterval = prefersReducedMotion ? 1000 : 50
 
       if (now - lastFrameTime >= frameInterval) {
         lastFrameTime = now

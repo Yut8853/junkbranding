@@ -64,13 +64,23 @@ export function TransitionProvider({ children }: { children: ReactNode }) {
       })
     }
 
-    if (idleWindow.requestIdleCallback) {
-      const idleId = idleWindow.requestIdleCallback(prefetchAll, { timeout: 1800 })
-      return () => idleWindow.cancelIdleCallback?.(idleId)
+    let cancelIdlePrefetch: (() => void) | undefined
+    const startPrefetch = () => {
+      if (idleWindow.requestIdleCallback) {
+        const idleId = idleWindow.requestIdleCallback(prefetchAll, { timeout: 5000 })
+        cancelIdlePrefetch = () => idleWindow.cancelIdleCallback?.(idleId)
+        return
+      }
+
+      const fallbackTimeout = window.setTimeout(prefetchAll, 2500)
+      cancelIdlePrefetch = () => window.clearTimeout(fallbackTimeout)
     }
 
-    const timeout = setTimeout(prefetchAll, 1200)
-    return () => clearTimeout(timeout)
+    const timeout = window.setTimeout(startPrefetch, 7000)
+    return () => {
+      clearTimeout(timeout)
+      cancelIdlePrefetch?.()
+    }
   }, [prefetchRoute])
 
   const navigateWithTransition = useCallback((href: string) => {

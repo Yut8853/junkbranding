@@ -7,6 +7,7 @@ import { ScatterText } from '@/components/scatter-text'
 import { ScatterBlock } from '@/components/scatter-block'
 import { SectionReveal } from '@/components/text-reveal'
 import { categories, works } from '@/content/works-page'
+import { useDeferredRender } from '@/hooks/use-deferred-render'
 import Link from 'next/link'
 
 const worksSummary = [
@@ -562,6 +563,7 @@ function WorksCtaSection() {
 
 export default function WorksPageClient() {
   const [selectedCategory, setSelectedCategory] = useState('すべて')
+  const shouldRenderSections = useDeferredRender()
 
   const filteredWorks = useMemo(() => {
     if (selectedCategory === 'すべて') return works
@@ -571,34 +573,38 @@ export default function WorksPageClient() {
   return (
     <>
       <WorksHeroSection />
-      <WorksSummarySection />
+      {shouldRenderSections && (
+        <>
+          <WorksSummarySection />
 
-      <section className="relative glass-light">
-        <WorksFilterSection
-          selectedCategory={selectedCategory}
-          setSelectedCategory={setSelectedCategory}
-        />
+          <section className="relative glass-light">
+            <WorksFilterSection
+              selectedCategory={selectedCategory}
+              setSelectedCategory={setSelectedCategory}
+            />
 
-        {filteredWorks.map((work, index) => (
-          <ImmersiveWorkCard
-            key={`${selectedCategory}-${work.id}`}
-            work={work}
-            index={index}
-          />
-        ))}
+            {filteredWorks.map((work, index) => (
+              <ImmersiveWorkCard
+                key={`${selectedCategory}-${work.id}`}
+                work={work}
+                index={index}
+              />
+            ))}
 
-        {filteredWorks.length === 0 && (
-          <div className="py-32 text-center">
-            <p className="text-xl text-muted-foreground">
-              該当する実績がありません
-            </p>
-          </div>
-        )}
-      </section>
+            {filteredWorks.length === 0 && (
+              <div className="py-32 text-center">
+                <p className="text-xl text-muted-foreground">
+                  該当する実績がありません
+                </p>
+              </div>
+            )}
+          </section>
 
-      <WorksApproachSection />
-      <WorksCtaSection />
-      <Footer />
+          <WorksApproachSection />
+          <WorksCtaSection />
+          <Footer />
+        </>
+      )}
     </>
   )
 }
