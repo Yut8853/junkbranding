@@ -231,7 +231,7 @@ export function TopCanvasFilmOverlay() {
   return createPortal(
     <div
       aria-hidden="true"
-      className="pointer-events-none fixed inset-0 z-[95] overflow-hidden"
+      className={`pointer-events-none fixed inset-0 overflow-hidden ${isHome ? 'z-[6]' : 'z-[95]'}`}
     >
       <canvas
         ref={canvasRef}

@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { ScatterText } from '@/components/motion/scatter-text'
 import { useIsMobile } from '@/hooks/use-mobile'
 
@@ -9,20 +9,39 @@ export function HeroSectionV2() {
   const titleWrapperRef = useRef<HTMLDivElement>(null)
   const bottomBarRef = useRef<HTMLDivElement>(null)
   const sideTextRef = useRef<HTMLDivElement>(null)
+  const photoRefs = useRef<(HTMLDivElement | null)[]>([])
   const cornerRefs = useRef<(HTMLDivElement | null)[]>([])
   
   const [isLoaded, setIsLoaded] = useState(false)
+  const [shouldRenderDesktopPhotos, setShouldRenderDesktopPhotos] = useState(false)
   const [heroScatterProgress, setHeroScatterProgress] = useState(0)
   const rafRef = useRef<number | null>(null)
   const isMobile = useIsMobile()
   const targetMousePos = useRef({ x: 0, y: 0 })
   const currentMousePos = useRef({ x: 0, y: 0 })
+  const lastHeroScrollProgress = useRef(0)
   const isMouseAnimatingRef = useRef(false)
 
   // Text content
   const line1 = 'JUNK'
   const line2 = 'BRANDING'
-  const line3 = 'あなたの「らしさ」をカタチに。'
+  const logoText = `${line1}${line2}`
+  const line3 = 'あなたの「らしさ」を、選ばれるカタチに。'
+
+  const applyPhotoParallax = useCallback(() => {
+    photoRefs.current.forEach((el, index) => {
+      if (!el) return
+
+      const direction = index === 0 ? -1 : 1
+      const mouseX = currentMousePos.current.x * (index === 0 ? 36 : -48)
+      const mouseY = currentMousePos.current.y * (index === 0 ? 24 : -32)
+      const scrollX = direction * lastHeroScrollProgress.current * (index === 0 ? 130 : 170)
+      const scrollY = lastHeroScrollProgress.current * (index === 0 ? -180 : -240)
+      const rotate = direction * (lastHeroScrollProgress.current * 5 + currentMousePos.current.x * 1.8)
+
+      el.style.transform = `translate3d(${mouseX + scrollX}px, ${mouseY + scrollY}px, 0) rotate(${rotate}deg)`
+    })
+  }, [])
 
   useEffect(() => {
     if (isMobile) return
@@ -49,6 +68,8 @@ export function HeroSectionV2() {
         if (titleWrapperRef.current) {
           titleWrapperRef.current.style.transform = `translate3d(${currentMousePos.current.x * -15}px, ${currentMousePos.current.y * -15}px, 0)`
         }
+
+        applyPhotoParallax()
       }
 
       const dx = targetMousePos.current.x - currentMousePos.current.x
@@ -68,12 +89,30 @@ export function HeroSectionV2() {
       window.removeEventListener('mousemove', handleMouseMove)
       if (rafRef.current) cancelAnimationFrame(rafRef.current)
     }
-  }, [isMobile])
+  }, [applyPhotoParallax, isMobile])
 
   // Initial load animation
   useEffect(() => {
     const timer = setTimeout(() => setIsLoaded(true), 100)
     return () => clearTimeout(timer)
+  }, [])
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(min-width: 768px)')
+    const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
+
+    const updatePhotoVisibility = () => {
+      setShouldRenderDesktopPhotos(mediaQuery.matches && !motionQuery.matches)
+    }
+
+    updatePhotoVisibility()
+    mediaQuery.addEventListener('change', updatePhotoVisibility)
+    motionQuery.addEventListener('change', updatePhotoVisibility)
+
+    return () => {
+      mediaQuery.removeEventListener('change', updatePhotoVisibility)
+      motionQuery.removeEventListener('change', updatePhotoVisibility)
+    }
   }, [])
 
   // Direct scroll-based explosion (no GSAP scrub delay)
@@ -85,46 +124,47 @@ export function HeroSectionV2() {
       sideTextRef.current,
       ...cornerRefs.current.filter(Boolean),
     ].filter(Boolean)
-    let rafId: number | null = null
-    let lastScrollProgress = -1
+    let rafId = 0
+    let lastScatterProgress = -1
+    let lastPhotoProgress = -1
 
-    const handleScroll = () => {
+    const updateHeroMotion = () => {
       const rect = containerRef.current?.getBoundingClientRect()
       if (!rect) return
 
-      // Hero can live at the bottom of the inverted TOP page, so use local scroll.
-      const scrollProgress = Math.min(Math.max(-rect.top, 0) / 350, 1)
-      if (Math.abs(scrollProgress - lastScrollProgress) < 0.01) return
-      lastScrollProgress = scrollProgress
-      setHeroScatterProgress(scrollProgress)
+      // The TOP page moves this section with a parent transform, so track viewport position directly.
+      const photoProgress = Math.min(Math.max((window.innerHeight - rect.top) / (window.innerHeight + rect.height), 0), 1)
+      const scatterProgress = Math.min(Math.max(-rect.top / 350, 0), 1)
 
-      if (titleWrapperRef.current) {
-        titleWrapperRef.current.style.opacity = '1'
-        titleWrapperRef.current.style.filter = ''
+      if (Math.abs(photoProgress - lastPhotoProgress) >= 0.003) {
+        lastPhotoProgress = photoProgress
+        lastHeroScrollProgress.current = photoProgress
+        applyPhotoParallax()
       }
 
-      // Fade out other elements
-      otherElements.forEach((el) => {
-        if (el) (el as HTMLElement).style.opacity = String(1 - scrollProgress)
-      })
+      if (Math.abs(scatterProgress - lastScatterProgress) >= 0.01) {
+        lastScatterProgress = scatterProgress
+        setHeroScatterProgress(scatterProgress)
+
+        if (titleWrapperRef.current) {
+          titleWrapperRef.current.style.opacity = '1'
+          titleWrapperRef.current.style.filter = ''
+        }
+
+        otherElements.forEach((el) => {
+          if (el) (el as HTMLElement).style.opacity = String(1 - scatterProgress)
+        })
+      }
+
+      rafId = requestAnimationFrame(updateHeroMotion)
     }
 
-    const handleScrollRaf = () => {
-      if (rafId) return
-      rafId = requestAnimationFrame(() => {
-        rafId = null
-        handleScroll()
-      })
-    }
-
-    window.addEventListener('scroll', handleScrollRaf, { passive: true })
-    handleScroll() // Initial call
+    rafId = requestAnimationFrame(updateHeroMotion)
 
     return () => {
-      window.removeEventListener('scroll', handleScrollRaf)
-      if (rafId) cancelAnimationFrame(rafId)
+      cancelAnimationFrame(rafId)
     }
-  }, [isLoaded, isMobile])
+  }, [applyPhotoParallax, isLoaded, isMobile])
 
   return (
     <section 
@@ -133,37 +173,61 @@ export function HeroSectionV2() {
     >
       {/* Sticky container */}
       <div className="relative h-[100svh] w-full overflow-hidden md:sticky md:top-0 md:h-screen">
+        {shouldRenderDesktopPhotos && (
+          <div className="pointer-events-none absolute inset-0 z-[8] hidden md:block" aria-hidden="true">
+            <div
+              ref={(el) => { photoRefs.current[0] = el }}
+              className="absolute left-[4vw] top-[8vh] h-[48vh] w-[24vw] will-change-transform overflow-hidden rounded-[2rem] opacity-[0.64] mix-blend-normal shadow-[0_34px_100px_rgba(0,0,0,0.3)]"
+              style={{
+                transition: isLoaded ? 'opacity 1.6s ease 0.35s' : 'none',
+                opacity: isLoaded ? 0.64 : 0,
+              }}
+            >
+              <img
+                src="/images/hero-parallax-junk-letter-j.jpg"
+                alt=""
+                className="h-full w-full scale-105 object-cover saturate-[1.08] contrast-[1.12]"
+                decoding="async"
+                fetchPriority="low"
+                loading="lazy"
+              />
+            </div>
+
+            <div
+              ref={(el) => { photoRefs.current[1] = el }}
+              className="absolute bottom-[7vh] right-[4vw] h-[52vh] w-[25vw] will-change-transform overflow-hidden rounded-[2rem] opacity-[0.66] mix-blend-normal shadow-[0_34px_120px_rgba(0,0,0,0.3)]"
+              style={{
+                transition: isLoaded ? 'opacity 1.6s ease 0.55s' : 'none',
+                opacity: isLoaded ? 0.66 : 0,
+              }}
+            >
+              <img
+                src="/images/hero-parallax-junk-letter-b.jpg"
+                alt=""
+                className="h-full w-full scale-105 object-cover saturate-[1.16] contrast-[1.14]"
+                decoding="async"
+                fetchPriority="low"
+                loading="lazy"
+              />
+            </div>
+          </div>
+        )}
 
         {/* Main typography */}
         <div 
           ref={titleWrapperRef}
           className="absolute inset-0 z-10 flex flex-col items-center justify-center px-6 text-center"
         >
-          {/* Line 1 - JUNK */}
           <div className="overflow-visible">
             <ScatterText
               as="h1"
-              className="type-display text-[28vw] sm:text-[24vw] md:text-[15vw] whitespace-nowrap"
+              className="font-display text-[clamp(3.2rem,16vw,14rem)] font-normal uppercase tracking-[0.02em] whitespace-nowrap"
               distance={900}
               gradient
               scatterProgress={heroScatterProgress}
               deferUntilActive
             >
-              {line1}
-            </ScatterText>
-          </div>
-
-          {/* Line 2 - BRANDING */}
-          <div className="overflow-visible -mt-[2vw]">
-            <ScatterText
-              as="h1"
-              className="type-display text-[28vw] sm:text-[24vw] md:text-[15vw] whitespace-nowrap"
-              distance={900}
-              gradient
-              scatterProgress={heroScatterProgress}
-              deferUntilActive
-            >
-              {line2}
+              {logoText}
             </ScatterText>
           </div>
 
