@@ -4,6 +4,7 @@ import { useMemo, useRef } from 'react'
 import { ArrowUpRight, Mail, Phone } from 'lucide-react'
 import { TransitionLink } from '@/components/transition-link'
 import { ScatterText } from '@/components/scatter-text'
+import { MenuHeatHazeBackground } from '@/components/navigation/menu-heat-haze-background'
 import { clamp01, createScatterValue, seededRandom } from '@/lib/scatter'
 import { navItems, rainbowColors } from './nav-config'
 import type { NavigationMenuOverlayProps } from '@/types/component-props'
@@ -55,6 +56,18 @@ export function NavigationMenuOverlay({
       aria-hidden={!isOpen}
       inert={!isOpen ? true : undefined}
     >
+      {/* Heat haze background that rises from bottom */}
+      <MenuHeatHazeBackground progress={assembleProgress} isOpen={isOpen} />
+
+      {/* Base dark overlay that fades in - reduced opacity for heat haze visibility */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 bg-[oklch(0.08_0.02_280)]"
+        style={{
+          opacity: assembleProgress * 0.65,
+        }}
+      />
+
       {/* Background fragments that assemble from scattered positions */}
       <div className="absolute inset-0 hidden overflow-visible pointer-events-none md:block">
         {!isLeanMotion && bgPanelScatter.map((panel, i) => {
@@ -82,15 +95,6 @@ export function NavigationMenuOverlay({
           )
         })}
       </div>
-
-      {/* Base dark overlay that fades in */}
-      <div
-        aria-hidden="true"
-        className="absolute inset-0 bg-[oklch(0.08_0.02_280)]"
-        style={{
-          opacity: assembleProgress * 0.85,
-        }}
-      />
 
       {/* Floating particles that also assemble */}
       <div className="absolute inset-0 hidden overflow-visible pointer-events-none md:block">
@@ -282,7 +286,7 @@ export function NavigationMenuOverlay({
             </div>
           </div>
           <div className="text-xs text-white/40">
-            &copy; 2024 JunkBranding
+            &copy; 2026 JunkBranding
           </div>
         </div>
       </nav>
