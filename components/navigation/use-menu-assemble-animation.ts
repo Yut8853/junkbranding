@@ -71,6 +71,13 @@ export function useMenuAssembleAnimation({
     window.scrollTo(0, parseInt(scrollY || '0') * -1)
   }, [])
 
+  const forceCloseMenu = useCallback(() => {
+    restoreScrollPosition()
+    setAssembleProgress(0)
+    setIsOpen(false)
+    setIsAnimating(false)
+  }, [restoreScrollPosition, setIsOpen])
+
   const openMenu = useCallback(() => {
     if (isAnimating) return
     setIsAnimating(true)
@@ -136,6 +143,7 @@ export function useMenuAssembleAnimation({
   return {
     assembleProgress,
     closeMenu,
+    forceCloseMenu,
     isAnimating,
     openMenu,
   }

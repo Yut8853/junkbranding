@@ -68,6 +68,7 @@ export function Navigation() {
   const {
     assembleProgress,
     closeMenu,
+    forceCloseMenu,
     isAnimating,
     openMenu,
   } = useMenuAssembleAnimation({
@@ -90,7 +91,7 @@ export function Navigation() {
   // Close on route change
   useEffect(() => {
     if (isOpen) {
-      closeMenu()
+      forceCloseMenu()
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname])
@@ -112,7 +113,7 @@ export function Navigation() {
     <>
       {showHeaderIntro && !isOpen && (
         <nav
-          className="header-link-intro fixed right-28 top-8 z-50 hidden h-16 items-center gap-2 md:right-36 md:top-10 md:flex md:h-20"
+          className="header-link-intro fixed right-28 top-8 z-[120] hidden h-16 items-center gap-2 md:right-36 md:top-10 md:flex md:h-20"
           aria-label="ページリンク"
         >
           {navItems.map((item, index) => (
@@ -135,7 +136,7 @@ export function Navigation() {
       {shouldShowContactPrompt && (
         <TransitionLink
           href="/contact"
-          className={`fixed left-6 top-8 z-50 inline-flex items-center gap-3 rounded-full border border-white/45 bg-background/80 px-4 py-3 text-xs backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5 hover:bg-background md:left-12 md:top-10 md:px-5 md:py-3.5 ${
+          className={`fixed left-6 top-8 z-[120] inline-flex items-center gap-3 rounded-full border border-white/45 bg-background/80 px-4 py-3 text-xs backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5 hover:bg-background md:left-12 md:top-10 md:px-5 md:py-3.5 ${
             isOpen ? 'pointer-events-none opacity-0' : 'opacity-100'
           }`}
           aria-label="お問い合わせページへ移動"
@@ -154,7 +155,7 @@ export function Navigation() {
       <button
         onClick={toggleMenu}
         disabled={isAnimating}
-        className="header-menu-button fixed top-8 right-8 md:top-10 md:right-12 z-50 w-16 h-16 md:w-20 md:h-20 flex items-center justify-center group"
+        className="header-menu-button fixed top-8 right-8 md:top-10 md:right-12 z-[130] w-16 h-16 md:w-20 md:h-20 flex items-center justify-center group"
         aria-label={isOpen ? 'メニューを閉じる' : 'メニューを開く'}
         aria-controls="site-navigation-menu"
         aria-expanded={isOpen}

@@ -50,7 +50,7 @@ export function NavigationMenuOverlay({
       role="dialog"
       aria-modal={isOpen}
       aria-label="サイトメニュー"
-      className={`fixed inset-0 z-40 overflow-hidden transition-opacity duration-500 ${
+      className={`fixed inset-0 z-[110] overflow-hidden transition-opacity duration-500 ${
         isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
       }`}
       aria-hidden={!isOpen}
