@@ -80,7 +80,7 @@ export function Footer() {
                 className="flex items-center gap-3 text-foreground hover:text-accent transition-colors duration-300"
               >
                 <Phone size={16} className="text-accent" />
-                <span>080-9155-0426</span>
+                <span className="type-readable-number">080-9155-0426</span>
               </a>
               <div className="flex items-center gap-3 text-foreground">
                 <Mail size={16} className="text-accent" />

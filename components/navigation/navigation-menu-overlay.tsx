@@ -274,7 +274,7 @@ export function NavigationMenuOverlay({
               aria-label="電話番号 080-9155-0426"
             >
               <Phone size={14} className="group-hover:text-[hsl(350,65%,72%)] transition-colors" aria-hidden="true" />
-              <span className="hidden sm:inline">080-9155-0426</span>
+              <span className="type-readable-number hidden sm:inline">080-9155-0426</span>
             </a>
             <div className="flex items-center gap-2 text-white/60 text-sm">
               <Mail size={14} className="text-[hsl(200,60%,72%)]" aria-hidden="true" />

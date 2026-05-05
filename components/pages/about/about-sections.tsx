@@ -1,12 +1,10 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import { ArrowRight, Phone, Clock, CheckCircle } from 'lucide-react'
 import { SectionReveal } from '@/components/text-reveal'
 import { ScatterText } from '@/components/scatter-text'
 import { ScatterBlock } from '@/components/scatter-block'
-import { useIsMobile } from '@/hooks/use-mobile'
 import type {
   AboutProcessSectionProps,
   AboutTeamSectionProps,
@@ -14,51 +12,11 @@ import type {
 } from '@/types/about-page'
 
 export function AboutHeroSection() {
-  const containerRef = useRef<HTMLDivElement>(null)
-  const [heroScatterProgress, setHeroScatterProgress] = useState(0)
-  const isMobile = useIsMobile()
-
-  useEffect(() => {
-    if (!containerRef.current || isMobile) return
-
-    let rafId: number | null = null
-    let lastScrollProgress = -1
-
-    const handleScroll = () => {
-      const rect = containerRef.current?.getBoundingClientRect()
-      if (!rect) return
-
-      const scrollProgress = Math.min(Math.max(-rect.top, 0) / 400, 1)
-      if (Math.abs(scrollProgress - lastScrollProgress) < 0.01) return
-      lastScrollProgress = scrollProgress
-      setHeroScatterProgress(scrollProgress)
-    }
-
-    const handleScrollRaf = () => {
-      if (rafId) return
-      rafId = requestAnimationFrame(() => {
-        rafId = null
-        handleScroll()
-      })
-    }
-
-    window.addEventListener('scroll', handleScrollRaf, { passive: true })
-    handleScroll()
-
-    return () => {
-      window.removeEventListener('scroll', handleScrollRaf)
-      if (rafId) cancelAnimationFrame(rafId)
-    }
-  }, [isMobile])
-
   return (
-    <section
-      ref={containerRef}
-      className="relative min-h-[100svh] flex items-center justify-center overflow-hidden"
-    >
+    <section className="relative min-h-[100svh] flex items-center justify-center overflow-hidden">
       {/* Background giant text */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none opacity-[0.03]">
-        <span className="type-display text-[50vw] whitespace-nowrap">
+        <span className="type-display text-[42vw] whitespace-nowrap">
           ABOUT
         </span>
       </div>
@@ -67,14 +25,14 @@ export function AboutHeroSection() {
       <div className="absolute inset-0 flex flex-col justify-center pointer-events-none select-none overflow-hidden opacity-[0.04]">
         <div className="flex whitespace-nowrap animate-marquee-slow">
           {Array.from({ length: 8 }).map((_, i) => (
-            <span key={`marquee-1-${i}`} className="type-display text-[8vw] mx-8 marquee-stroke">
+            <span key={`marquee-1-${i}`} className="type-display text-[6vw] mx-8 marquee-stroke">
               ABOUT US
             </span>
           ))}
         </div>
         <div className="flex whitespace-nowrap animate-marquee-slow-reverse mt-4">
           {Array.from({ length: 8 }).map((_, i) => (
-            <span key={`marquee-2-${i}`} className="type-display text-[8vw] mx-8 marquee-stroke">
+            <span key={`marquee-2-${i}`} className="type-display text-[6vw] mx-8 marquee-stroke">
               JUNK BRANDING
             </span>
           ))}
@@ -85,23 +43,19 @@ export function AboutHeroSection() {
         <div className="overflow-visible">
           <ScatterText
             as="h1"
-            className="type-display text-[12vw] md:text-[10vw] lg:text-[8vw] leading-[0.9] tracking-[-0.04em]"
+            className="type-display text-[10vw] md:text-[8vw] lg:text-[6.5vw] leading-[0.9] tracking-[-0.04em]"
             distance={900}
             gradient
-            scatterProgress={heroScatterProgress}
-            deferUntilActive
           >
             ABOUT US
           </ScatterText>
         </div>
 
-        <div className="overflow-visible mt-12">
+        <div className="overflow-visible mt-8">
           <ScatterText
             as="p"
-            className="type-body text-lg md:text-xl text-muted-foreground max-w-lg mx-auto"
+            className="type-body text-base md:text-lg text-muted-foreground max-w-lg mx-auto"
             distance={400}
-            scatterProgress={heroScatterProgress}
-            deferUntilActive
           >
             2人だけの小さなスタジオだからこそ、できることがあります。
           </ScatterText>
@@ -111,7 +65,6 @@ export function AboutHeroSection() {
       {/* Scroll indicator */}
       <div 
         className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4"
-        style={{ opacity: 1 - heroScatterProgress }}
       >
         <span className="type-label text-muted-foreground text-xs">Scroll to explore</span>
         <div className="w-px h-16 bg-gradient-to-b from-foreground/40 to-transparent animate-pulse" />
@@ -122,14 +75,14 @@ export function AboutHeroSection() {
 
 export function AboutIntroSection() {
   return (
-    <section className="relative py-32 md:py-40 lg:py-56 glass-light overflow-hidden">
+    <section className="relative py-24 md:py-32 lg:py-40 glass-light overflow-hidden">
       <div className="container mx-auto px-6 md:px-12 lg:px-16">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
           <div className="lg:pr-8">
             <div className="mb-8 overflow-visible">
               <ScatterText
                 as="h2"
-                className="type-section-title text-4xl sm:text-5xl md:text-6xl lg:text-7xl leading-[1.1]"
+                className="type-section-title text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-[1.1]"
                 scrollStart={50}
                 scrollEnd={400}
                 distance={600}
@@ -139,7 +92,7 @@ export function AboutIntroSection() {
               </ScatterText>
             </div>
 
-            <div className="space-y-6 text-lg md:text-xl text-muted-foreground">
+            <div className="space-y-5 text-base md:text-lg text-muted-foreground">
               <ScatterText
                 as="p"
                 className="type-body"
@@ -200,18 +153,18 @@ export function AboutIntroSection() {
 
 export function AboutTeamSection({ team }: AboutTeamSectionProps) {
   return (
-    <section className="relative py-32 md:py-40 lg:py-56 glass-card overflow-hidden">
+    <section className="relative py-24 md:py-32 lg:py-40 glass-card overflow-hidden">
       {/* Background text */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none opacity-[0.02]">
-        <span className="type-display text-[40vw] whitespace-nowrap">TEAM</span>
+        <span className="type-display text-[32vw] whitespace-nowrap">TEAM</span>
       </div>
 
       <div className="container relative z-10 mx-auto px-6 md:px-12 lg:px-16">
-        <div className="text-center mb-20 lg:mb-32">
+        <div className="text-center mb-16 lg:mb-24">
           <div className="overflow-visible">
             <ScatterText
               as="h2"
-              className="type-display text-[12vw] md:text-[10vw] lg:text-[8vw] leading-[0.9]"
+              className="type-display text-[10vw] md:text-[8vw] lg:text-[6.5vw] leading-[0.9]"
               scrollStart={50}
               scrollEnd={400}
               distance={700}
@@ -222,7 +175,7 @@ export function AboutTeamSection({ team }: AboutTeamSectionProps) {
           </div>
           <ScatterText
             as="p"
-            className="type-body text-lg md:text-xl text-muted-foreground mt-6"
+            className="type-body text-base md:text-lg text-muted-foreground mt-5"
             scrollStart={50}
             scrollEnd={400}
             distance={300}
@@ -291,18 +244,18 @@ function TeamMemberCard({
 
 export function AboutValuesSection({ values }: AboutValuesSectionProps) {
   return (
-    <section className="relative py-32 md:py-40 lg:py-56 glass-light overflow-hidden">
+    <section className="relative py-24 md:py-32 lg:py-40 glass-light overflow-hidden">
       {/* Background text */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none opacity-[0.02]">
-        <span className="type-display text-[35vw] whitespace-nowrap">VALUES</span>
+        <span className="type-display text-[30vw] whitespace-nowrap">VALUES</span>
       </div>
 
       <div className="container relative z-10 mx-auto px-6 md:px-12 lg:px-16">
-        <div className="text-center mb-20 lg:mb-32">
+        <div className="text-center mb-16 lg:mb-24">
           <div className="overflow-visible">
             <ScatterText
               as="h2"
-              className="type-display text-[12vw] md:text-[10vw] lg:text-[8vw] leading-[0.9]"
+              className="type-display text-[10vw] md:text-[8vw] lg:text-[6.5vw] leading-[0.9]"
               scrollStart={50}
               scrollEnd={400}
               distance={700}
@@ -313,7 +266,7 @@ export function AboutValuesSection({ values }: AboutValuesSectionProps) {
           </div>
           <ScatterText
             as="p"
-            className="type-body text-lg md:text-xl text-muted-foreground mt-6"
+            className="type-body text-base md:text-lg text-muted-foreground mt-5"
             scrollStart={50}
             scrollEnd={400}
             distance={300}
@@ -349,13 +302,34 @@ function ValueCard({
             <value.icon className="w-7 h-7 md:w-8 md:h-8 text-foreground/60 group-hover:text-foreground transition-colors duration-500" />
           </div>
 
-          <h3 className="type-section-title text-2xl md:text-3xl mb-2 gradient-text">
+          <ScatterText
+            as="h3"
+            className="type-section-title text-2xl md:text-3xl mb-2 gradient-text"
+            scrollStart={50}
+            scrollEnd={350}
+            distance={260}
+            gradient
+          >
             {value.title}
-          </h3>
-          <span className="type-label text-muted-foreground mb-6 block">{value.titleEn}</span>
-          <p className="type-body text-base md:text-lg text-muted-foreground">
+          </ScatterText>
+          <ScatterText
+            as="span"
+            className="type-label text-muted-foreground mb-6 block"
+            scrollStart={50}
+            scrollEnd={350}
+            distance={180}
+          >
+            {value.titleEn}
+          </ScatterText>
+          <ScatterText
+            as="p"
+            className="type-body text-base md:text-lg text-muted-foreground"
+            scrollStart={50}
+            scrollEnd={350}
+            distance={220}
+          >
             {value.description}
-          </p>
+          </ScatterText>
         </div>
       </div>
     </SectionReveal>
@@ -364,7 +338,7 @@ function ValueCard({
 
 export function AboutProcessSection({ process }: AboutProcessSectionProps) {
   return (
-    <section className="relative py-40 md:py-56 lg:py-72 glass-card overflow-hidden">
+    <section className="relative py-28 md:py-40 lg:py-52 glass-card overflow-hidden">
 
 
       {/* Decorative elements - positioned relative to viewport */}
@@ -376,11 +350,11 @@ export function AboutProcessSection({ process }: AboutProcessSectionProps) {
       <div className="fixed bottom-[25vh] right-[12%] w-px h-24 bg-gradient-to-b from-transparent via-primary/10 to-transparent pointer-events-none" />
 
       <div className="container relative z-10 mx-auto px-6 md:px-12 lg:px-16">
-        <div className="text-center mb-24 lg:mb-40">
+        <div className="text-center mb-16 lg:mb-28">
           <div className="overflow-visible">
             <ScatterText
               as="h2"
-              className="type-display text-[12vw] md:text-[10vw] lg:text-[8vw] leading-[0.9]"
+              className="type-display text-[10vw] md:text-[8vw] lg:text-[6.5vw] leading-[0.9]"
               scrollStart={50}
               scrollEnd={400}
               distance={700}
@@ -391,7 +365,7 @@ export function AboutProcessSection({ process }: AboutProcessSectionProps) {
           </div>
           <ScatterText
             as="p"
-            className="type-body text-lg md:text-xl text-muted-foreground mt-8 max-w-2xl mx-auto"
+            className="type-body text-base md:text-lg text-muted-foreground mt-6 max-w-2xl mx-auto"
             scrollStart={50}
             scrollEnd={400}
             distance={300}
@@ -449,7 +423,7 @@ export function AboutProcessSection({ process }: AboutProcessSectionProps) {
               <Phone size={18} />
               <ScatterText
                 as="span"
-                className="inline-block"
+                className="type-readable-number inline-block"
                 scrollStart={50}
                 scrollEnd={350}
                 distance={180}
@@ -479,11 +453,11 @@ function ProcessStep({
     <SectionReveal delay={index * 0.1} duration={0.8} y={20}>
       <div className={`relative ${index > 0 ? 'pt-24 lg:pt-40' : ''} last:pb-0`}>
         {/* Marquee background title */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none select-none flex items-center">
+        <div className="pointer-events-none absolute inset-y-0 left-[calc(50%-50vw)] right-[calc(50%-50vw)] flex select-none items-center overflow-hidden">
           <div 
-            className={`flex whitespace-nowrap opacity-[0.04] ${isEven ? 'animate-marquee-slow' : 'animate-marquee-slow-reverse'}`}
+            className={`flex min-w-max whitespace-nowrap opacity-[0.04] ${isEven ? 'animate-marquee-slow' : 'animate-marquee-slow-reverse'}`}
           >
-            {Array.from({ length: 6 }).map((_, i) => (
+            {Array.from({ length: 12 }).map((_, i) => (
               <span 
                 key={i} 
                 className="type-display text-[25vw] md:text-[22vw] lg:text-[18vw] leading-none uppercase tracking-tighter mx-8"
@@ -499,15 +473,21 @@ function ProcessStep({
           <div className="absolute left-7 md:left-10 top-24 bottom-0 w-px bg-gradient-to-b from-primary/30 via-foreground/10 to-transparent" />
         )}
 
-        <div className="flex flex-col md:flex-row md:items-start gap-8 md:gap-12">
+        <div className="border-hue-card flex flex-col md:flex-row md:items-start gap-8 md:gap-12">
           {/* Step number */}
           <div className="relative shrink-0">
             {/* Glow effect */}
             <div className="absolute inset-0 w-16 h-16 md:w-20 md:h-20 rounded-full bg-primary/20 blur-xl" />
             <div className="relative w-16 h-16 md:w-20 md:h-20 rounded-full glass-card rainbow-border flex items-center justify-center">
-              <span className="type-display text-3xl md:text-4xl gradient-text">
+              <ScatterText
+                as="span"
+                className="type-readable-number text-3xl md:text-4xl gradient-text"
+                scrollStart={50}
+                scrollEnd={350}
+                distance={180}
+              >
                 {String(item.step)}
-              </span>
+              </ScatterText>
             </div>
           </div>
 
@@ -515,14 +495,37 @@ function ProcessStep({
           <div className="flex-1 pt-2">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10">
               <div>
-                <h3 className="type-section-title text-3xl md:text-4xl gradient-text mb-2">
+                <ScatterText
+                  as="h3"
+                  className="type-section-title text-3xl md:text-4xl gradient-text mb-2"
+                  scrollStart={50}
+                  scrollEnd={350}
+                  distance={320}
+                  gradient
+                >
                   {item.title}
-                </h3>
-                <span className="type-label text-base text-muted-foreground tracking-widest uppercase">{item.titleEn}</span>
+                </ScatterText>
+                <ScatterText
+                  as="span"
+                  className="type-label text-base text-muted-foreground tracking-widest uppercase"
+                  scrollStart={50}
+                  scrollEnd={350}
+                  distance={220}
+                >
+                  {item.titleEn}
+                </ScatterText>
               </div>
               <div className="flex items-center gap-3 px-5 py-2.5 bg-foreground/5 rounded-full shrink-0 rainbow-border">
                 <Clock size={16} className="text-primary" />
-                <span className="text-sm font-medium text-foreground">{item.duration}</span>
+                <ScatterText
+                  as="span"
+                  className="type-readable-number text-sm text-foreground"
+                  scrollStart={50}
+                  scrollEnd={350}
+                  distance={160}
+                >
+                  {item.duration}
+                </ScatterText>
               </div>
             </div>
 
@@ -530,12 +533,24 @@ function ProcessStep({
               {/* Card decorative element */}
               <div className={`absolute ${isEven ? '-top-16 -right-16' : '-bottom-16 -left-16'} w-48 h-48 rounded-full bg-gradient-to-br from-primary/8 to-transparent blur-3xl pointer-events-none`} />
               
-              <p className="type-card-title text-xl md:text-2xl text-foreground mb-4 relative z-10">
+              <ScatterText
+                as="p"
+                className="type-card-title text-xl md:text-2xl text-foreground mb-4 relative z-10"
+                scrollStart={50}
+                scrollEnd={350}
+                distance={260}
+              >
                 {item.description}
-              </p>
-              <p className="type-body text-base md:text-lg text-muted-foreground mb-10 relative z-10">
+              </ScatterText>
+              <ScatterText
+                as="p"
+                className="type-body text-base md:text-lg text-muted-foreground mb-10 relative z-10"
+                scrollStart={50}
+                scrollEnd={350}
+                distance={220}
+              >
                 {item.fullDescription}
-              </p>
+              </ScatterText>
 
               {/* Details grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-8 relative z-10">
@@ -549,12 +564,24 @@ function ProcessStep({
                       <CheckCircle size={16} className="text-primary" />
                     </div>
                     <div>
-                      <span className="type-card-title text-sm text-foreground block mb-1.5">
+                      <ScatterText
+                        as="span"
+                        className="type-card-title text-sm text-foreground block mb-1.5"
+                        scrollStart={50}
+                        scrollEnd={350}
+                        distance={160}
+                      >
                         {detail.title}
-                      </span>
-                      <span className="type-body-compact text-sm text-muted-foreground leading-relaxed">
+                      </ScatterText>
+                      <ScatterText
+                        as="span"
+                        className="type-body-compact text-sm text-muted-foreground leading-relaxed"
+                        scrollStart={50}
+                        scrollEnd={350}
+                        distance={160}
+                      >
                         {detail.desc}
-                      </span>
+                      </ScatterText>
                     </div>
                   </div>
                 ))}
@@ -564,7 +591,15 @@ function ProcessStep({
               {item.note && (
                 <div className="flex items-center gap-3 text-sm text-muted-foreground italic p-4 rounded-xl bg-foreground/5 relative z-10">
                   <span className="text-primary text-lg">*</span>
-                  {item.note}
+                  <ScatterText
+                    as="span"
+                    className="type-body-compact"
+                    scrollStart={50}
+                    scrollEnd={350}
+                    distance={160}
+                  >
+                    {item.note}
+                  </ScatterText>
                 </div>
               )}
             </div>
@@ -618,7 +653,7 @@ export function AboutContactSection() {
             <span className="flex items-center justify-center gap-4">
               <ScatterText
                 as="span"
-                className="inline-block"
+                className="type-readable-number inline-block"
                 scrollStart={50}
                 scrollEnd={350}
                 distance={180}
@@ -639,7 +674,7 @@ export function AboutContactSection() {
             <Phone size={18} />
             <ScatterText
               as="span"
-              className="inline-block"
+              className="type-readable-number inline-block"
               scrollStart={50}
               scrollEnd={350}
               distance={180}

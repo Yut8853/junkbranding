@@ -138,7 +138,7 @@ export function WorkCard({
         <div className="hidden lg:flex lg:col-span-1 items-center justify-center">
           <ScatterText
             as="span"
-            className={`type-display inline-flex min-w-[1.4em] whitespace-nowrap text-4xl lg:text-5xl xl:text-6xl tabular-nums transition-all duration-500 ${effectiveHovered ? 'gradient-text' : 'text-foreground/10'}`}
+            className={`type-readable-number inline-flex min-w-[1.4em] whitespace-nowrap text-4xl lg:text-5xl xl:text-6xl tabular-nums transition-all duration-500 ${effectiveHovered ? 'gradient-text' : 'text-foreground/10'}`}
             scrollStart={50}
             scrollEnd={350}
             distance={180}
@@ -203,7 +203,7 @@ export function WorkCard({
             <div className="lg:hidden absolute bottom-4 left-4 z-10">
               <ScatterText
                 as="span"
-                className="inline-flex whitespace-nowrap text-4xl font-bold tabular-nums"
+                className="type-readable-number inline-flex whitespace-nowrap text-4xl"
                 scrollStart={50}
                 scrollEnd={350}
                 distance={180}

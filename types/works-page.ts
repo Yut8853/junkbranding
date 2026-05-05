@@ -3,6 +3,10 @@ export type PortfolioWork = {
   title: string
   category: string
   description: string
+  role: string
+  scope: string
+  outcome: string
+  highlights: string[]
   tags: string[]
   stack: string[]
   url: string

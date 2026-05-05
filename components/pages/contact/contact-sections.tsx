@@ -197,7 +197,7 @@ function ContactInfoSection() {
               <p className="type-label text-muted-foreground">
                 Phone
               </p>
-              <p className="text-sm font-medium group-hover:text-foreground transition-colors">080-9155-0426</p>
+              <p className="type-readable-number text-sm group-hover:text-foreground transition-colors">080-9155-0426</p>
             </div>
           </a>
 

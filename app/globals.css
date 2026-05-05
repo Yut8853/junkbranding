@@ -499,6 +499,16 @@
   text-transform: uppercase;
 }
 
+.type-readable-number {
+  font-family: var(--font-sans-jp), ui-sans-serif, system-ui, sans-serif;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1, 'lnum' 1;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  line-height: 1.12;
+  text-transform: none;
+}
+
 @keyframes btnGradientFlow {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
@@ -954,6 +964,25 @@
   -webkit-mask-composite: xor;
   mask-composite: exclude;
   pointer-events: none;
+}
+
+.border-hue-card {
+  --card-border-hue: 0deg;
+}
+
+.border-hue-card .rainbow-border::before {
+  transition: filter 0.45s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.border-hue-card:hover,
+.border-hue-card:focus-within {
+  --card-border-hue: 72deg;
+}
+
+.border-hue-card:hover .rainbow-border::before,
+.border-hue-card:focus-within .rainbow-border::before {
+  filter: hue-rotate(var(--card-border-hue)) saturate(1.18);
+  opacity: 0.95;
 }
 
 /* Horizontal scroll container */

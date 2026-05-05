@@ -286,7 +286,9 @@ export function ServicesSectionV2() {
                           borderColor: !isMobile && activeIndex === index ? `${service.color}40` : 'var(--border)',
                           background: !isMobile && activeIndex === index ? `${service.color}10` : 'transparent',
                           color: !isMobile && activeIndex === index ? service.color : 'var(--muted-foreground)',
-                          transition: isMobile ? 'none' : 'all 0.3s ease',
+                          transitionProperty: isMobile ? 'none' : 'border-color, background, color',
+                          transitionDuration: isMobile ? '0s' : '0.3s',
+                          transitionTimingFunction: 'ease',
                           transitionDelay: isMobile ? '0s' : `${i * 0.05}s`,
                         }}
                       >

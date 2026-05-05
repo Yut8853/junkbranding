@@ -2,8 +2,10 @@
 
 import { usePathname } from 'next/navigation'
 import { useCallback, useEffect, useState } from 'react'
+import { ArrowRight } from 'lucide-react'
 import { NavigationMenuOverlay } from '@/components/navigation/navigation-menu-overlay'
 import { navItems } from '@/components/navigation/nav-config'
+import { TransitionLink } from '@/components/transition-link'
 import { useMenuAssembleAnimation } from '@/components/navigation/use-menu-assemble-animation'
 import { useTransition } from '@/contexts/transition-context'
 import { useIsMobile } from '@/hooks/use-mobile'
@@ -69,8 +71,28 @@ export function Navigation() {
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [isOpen, closeMenu])
 
+  const shouldShowContactPrompt = hasMounted && pathname !== '/' && pathname !== '/contact'
+
   return (
     <>
+      {shouldShowContactPrompt && (
+        <TransitionLink
+          href="/contact"
+          className={`fixed left-6 top-8 z-50 inline-flex items-center gap-3 rounded-full border border-white/45 bg-background/80 px-4 py-3 text-xs backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5 hover:bg-background md:left-12 md:top-10 md:px-5 md:py-3.5 ${
+            isOpen ? 'pointer-events-none opacity-0' : 'opacity-100'
+          }`}
+          aria-label="お問い合わせページへ移動"
+        >
+          <span className="type-label text-[0.65rem] text-muted-foreground md:text-xs">
+            Need a website?
+          </span>
+          <span className="type-cta hidden text-xs gradient-text-soft sm:inline">
+            Contact
+          </span>
+          <ArrowRight className="h-4 w-4 text-foreground/70" aria-hidden="true" />
+        </TransitionLink>
+      )}
+
       {/* Rainbow Hamburger Button */}
       <button
         onClick={toggleMenu}

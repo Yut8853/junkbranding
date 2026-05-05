@@ -390,7 +390,7 @@ export function ScatterText({
     )
   }
 
-  const shouldShowText = !hasMounted || isMobile || isVisible
+  const shouldShowText = isMobile || isVisible
   const textOpacity = isScattering
     ? currentProgress < TEXT_REENTRY_THRESHOLD
       ? 1 - currentProgress / TEXT_REENTRY_THRESHOLD

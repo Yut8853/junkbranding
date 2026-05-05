@@ -423,7 +423,7 @@ export function CTASectionV2() {
                 <a
                   href="tel:08091550426"
                   onClick={addRipple}
-                  className="type-card-title inline-flex items-center justify-center py-1.5 text-base text-white transition-all duration-300 hover:-translate-y-0.5 hover:text-white/80 md:text-xl lg:text-2xl"
+                  className="type-readable-number inline-flex items-center justify-center py-1.5 text-base text-white transition-all duration-300 hover:-translate-y-0.5 hover:text-white/80 md:text-xl lg:text-2xl"
                   data-cursor="Call"
                   aria-label="080-9155-0426 に電話する"
                 >
