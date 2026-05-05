@@ -50,7 +50,7 @@ export function NavigationMenuOverlay({
       role="dialog"
       aria-modal={isOpen}
       aria-label="サイトメニュー"
-      className={`fixed inset-0 z-[110] overflow-hidden transition-opacity duration-500 ${
+      className={`global-nav-overlay fixed inset-0 z-[110] overflow-hidden transition-opacity duration-500 ${
         isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
       }`}
       aria-hidden={!isOpen}
@@ -132,7 +132,7 @@ export function NavigationMenuOverlay({
 
       {/* Menu Content */}
       <nav
-        className="relative h-full flex flex-col justify-between px-6 md:px-16 lg:px-24 py-6 md:py-8"
+        className="global-nav-panel relative h-full flex flex-col justify-between px-6 md:px-16 lg:px-24 py-6 md:py-8"
         aria-label="メインナビゲーション"
       >
         {/* Top bar with logo */}
@@ -167,7 +167,7 @@ export function NavigationMenuOverlay({
               >
                 <TransitionLink
                   href={item.href}
-                  className={`group flex items-center justify-between py-3 md:py-4 transition-all duration-500 ${
+                  className={`global-nav-link group flex items-center justify-between py-3 md:py-4 transition-all duration-500 ${
                     pathname === item.href ? 'text-white' : 'text-white'
                   }`}
                   aria-current={pathname === item.href ? 'page' : undefined}
@@ -193,7 +193,7 @@ export function NavigationMenuOverlay({
                     {/* Label assembles with Canvas scatter to avoid one DOM node per character. */}
 <ScatterText
                                       as="span"
-                                      className="font-display font-bold text-2xl sm:text-3xl md:text-4xl lg:text-5xl tracking-tight"
+                                      className="global-nav-link__label font-display font-bold text-2xl sm:text-3xl md:text-4xl lg:text-5xl tracking-tight"
                                       distance={520}
                       scatterProgress={isMobile || !isOpen ? 0 : 1 - assembleProgress}
                       ariaHidden

@@ -521,6 +521,43 @@
   will-change: transform, opacity, filter;
 }
 
+.global-nav-toggle,
+.global-nav-contact,
+.global-nav-intro,
+.global-nav-overlay {
+  isolation: isolate;
+}
+
+.global-nav-toggle {
+  color: var(--foreground);
+}
+
+.global-nav-contact {
+  box-shadow: 0 18px 45px rgba(18, 14, 28, 0.08);
+}
+
+.global-nav-overlay {
+  color: white;
+  background:
+    radial-gradient(circle at 15% 15%, rgba(255, 144, 170, 0.22), transparent 32%),
+    radial-gradient(circle at 82% 78%, rgba(118, 210, 255, 0.22), transparent 36%),
+    oklch(0.08 0.02 280);
+}
+
+.global-nav-panel {
+  color: white;
+}
+
+.global-nav-link {
+  color: white;
+  text-decoration: none;
+}
+
+.global-nav-link__label {
+  color: white;
+  text-shadow: 0 18px 55px rgba(255, 255, 255, 0.12);
+}
+
 @keyframes header-link-intro-shell {
   0% {
     opacity: 0;

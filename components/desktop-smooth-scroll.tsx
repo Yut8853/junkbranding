@@ -10,10 +10,10 @@ export function DesktopSmoothScroll({ children }: SmoothScrollProps) {
       root
       options={{
         autoRaf: true,
-        lerp: 0.08,
+        lerp: 0.055,
         smoothWheel: true,
         syncTouch: false,
-        wheelMultiplier: 0.85,
+        wheelMultiplier: 0.72,
         touchMultiplier: 1,
         infinite: false,
       }}
