@@ -1,7 +1,7 @@
 'use client'
 
 import { usePathname } from 'next/navigation'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState, type CSSProperties } from 'react'
 import { ArrowRight } from 'lucide-react'
 import { NavigationMenuOverlay } from '@/components/navigation/navigation-menu-overlay'
 import { navItems } from '@/components/navigation/nav-config'
@@ -10,6 +10,7 @@ import { useMenuAssembleAnimation } from '@/components/navigation/use-menu-assem
 import { useTransition } from '@/contexts/transition-context'
 import { useIsMobile } from '@/hooks/use-mobile'
 import { shouldUseFastStart } from '@/lib/performance-mode'
+import { useLoading } from '@/components/loading-provider'
 
 export function Navigation() {
   const pathname = usePathname()
@@ -17,13 +18,39 @@ export function Navigation() {
   const [isOpen, setIsOpen] = useState(false)
   const [hoveredItem, setHoveredItem] = useState<string | null>(null)
   const [isLeanMotion, setIsLeanMotion] = useState(false)
+  const [showHeaderIntro, setShowHeaderIntro] = useState(false)
+  const [hasHeaderIntroCompleted, setHasHeaderIntroCompleted] = useState(false)
   const { prefetchRoute } = useTransition()
+  const { isLoading } = useLoading()
   const isMobile = useIsMobile()
 
   useEffect(() => {
     setHasMounted(true)
     setIsLeanMotion(shouldUseFastStart())
   }, [])
+
+  useEffect(() => {
+    if (!hasMounted || isLoading || isMobile) return
+
+    const showTimer = window.setTimeout(() => {
+      setHasHeaderIntroCompleted(false)
+      setShowHeaderIntro(true)
+    }, 250)
+
+    const activateMenuTimer = window.setTimeout(() => {
+      setHasHeaderIntroCompleted(true)
+    }, 2050)
+
+    const hideTimer = window.setTimeout(() => {
+      setShowHeaderIntro(false)
+    }, 3300)
+
+    return () => {
+      window.clearTimeout(showTimer)
+      window.clearTimeout(activateMenuTimer)
+      window.clearTimeout(hideTimer)
+    }
+  }, [hasMounted, isLoading, isMobile])
 
   const prefetchMenuRoutes = useCallback(() => {
     navItems.forEach((item) => prefetchRoute(item.href))
@@ -71,10 +98,32 @@ export function Navigation() {
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [isOpen, closeMenu])
 
-  const shouldShowContactPrompt = hasMounted && pathname !== '/' && pathname !== '/contact'
+  const shouldShowContactPrompt = hasMounted && !showHeaderIntro && pathname !== '/' && pathname !== '/contact'
 
   return (
     <>
+      {showHeaderIntro && !isOpen && (
+        <nav
+          className="header-link-intro fixed right-28 top-8 z-50 hidden h-16 items-center gap-2 md:right-36 md:top-10 md:flex md:h-20"
+          aria-label="ページリンク"
+        >
+          {navItems.map((item, index) => (
+            <TransitionLink
+              key={item.href}
+              href={item.href}
+              className={`header-link-intro__item type-label rounded-full px-4 py-2 text-[0.68rem] transition-colors hover:text-foreground ${
+                pathname === item.href ? 'text-foreground' : 'text-muted-foreground'
+              }`}
+              style={{
+                '--intro-index': index,
+              } as CSSProperties}
+            >
+              {item.label}
+            </TransitionLink>
+          ))}
+        </nav>
+      )}
+
       {shouldShowContactPrompt && (
         <TransitionLink
           href="/contact"
@@ -97,7 +146,7 @@ export function Navigation() {
       <button
         onClick={toggleMenu}
         disabled={isAnimating}
-        className="fixed top-8 right-8 md:top-10 md:right-12 z-50 w-16 h-16 md:w-20 md:h-20 flex items-center justify-center group"
+        className="header-menu-button fixed top-8 right-8 md:top-10 md:right-12 z-50 w-16 h-16 md:w-20 md:h-20 flex items-center justify-center group"
         aria-label={isOpen ? 'メニューを閉じる' : 'メニューを開く'}
         aria-controls="site-navigation-menu"
         aria-expanded={isOpen}
@@ -115,11 +164,13 @@ export function Navigation() {
             border: '2px solid transparent',
             backgroundImage: isOpen 
               ? 'linear-gradient(rgba(255,255,255,0.1), rgba(255,255,255,0.1)), linear-gradient(90deg, hsl(350,65%,72%), hsl(30,70%,72%), hsl(60,65%,70%), hsl(150,50%,65%), hsl(200,60%,72%), hsl(280,50%,72%), hsl(350,65%,72%))'
-              : 'linear-gradient(var(--background), var(--background)), linear-gradient(90deg, hsl(350,65%,72%), hsl(30,70%,72%), hsl(60,65%,70%), hsl(150,50%,65%), hsl(200,60%,72%), hsl(280,50%,72%), hsl(350,65%,72%))',
+              : hasHeaderIntroCompleted
+                ? 'linear-gradient(var(--background), var(--background)), linear-gradient(90deg, hsl(350,65%,72%), hsl(30,70%,72%), hsl(60,65%,70%), hsl(150,50%,65%), hsl(200,60%,72%), hsl(280,50%,72%), hsl(350,65%,72%))'
+                : 'linear-gradient(var(--background), var(--background)), linear-gradient(var(--foreground), var(--foreground))',
             backgroundOrigin: 'border-box',
             backgroundClip: 'padding-box, border-box',
             backgroundSize: '100% 100%, 300% 100%',
-            animation: isMobile || isLeanMotion ? 'none' : 'rainbow-flow 4s linear infinite',
+            animation: hasHeaderIntroCompleted && !isMobile && !isLeanMotion ? 'rainbow-flow 4s linear infinite' : 'none',
           }}
         />
         
@@ -128,31 +179,37 @@ export function Navigation() {
           <span
             className={`w-full h-[2px] transition-all duration-500 origin-center ${
               isOpen ? 'rotate-45 translate-y-[9px]' : 'rotate-0 translate-y-0'
-            } ${isOpen ? '' : 'animate-rainbow-line'}`}
+            } ${!isOpen && hasHeaderIntroCompleted ? 'animate-rainbow-line' : ''}`}
             style={{
               backgroundImage: isOpen
                 ? 'linear-gradient(white, white)'
-                : 'linear-gradient(90deg, hsl(350,65%,72%), hsl(60,65%,70%), hsl(200,60%,72%))',
+                : hasHeaderIntroCompleted
+                  ? 'linear-gradient(90deg, hsl(350,65%,72%), hsl(60,65%,70%), hsl(200,60%,72%))'
+                  : 'linear-gradient(var(--foreground), var(--foreground))',
               backgroundSize: '200% 100%',
             }}
           />
           <span
-            className={`w-full h-[2px] transition-all duration-300 animate-rainbow-line ${
+            className={`w-full h-[2px] transition-all duration-300 ${
               isOpen ? 'opacity-0 scale-x-0' : 'opacity-100 scale-x-100'
-            }`}
+            } ${!isOpen && hasHeaderIntroCompleted ? 'animate-rainbow-line' : ''}`}
             style={{
-              backgroundImage: 'linear-gradient(90deg, hsl(60,65%,70%), hsl(150,50%,65%), hsl(280,50%,72%))',
+              backgroundImage: hasHeaderIntroCompleted
+                ? 'linear-gradient(90deg, hsl(60,65%,70%), hsl(150,50%,65%), hsl(280,50%,72%))'
+                : 'linear-gradient(var(--foreground), var(--foreground))',
               backgroundSize: '200% 100%',
             }}
           />
           <span
             className={`w-full h-[2px] transition-all duration-500 origin-center ${
               isOpen ? '-rotate-45 -translate-y-[9px]' : 'rotate-0 translate-y-0'
-            } ${isOpen ? '' : 'animate-rainbow-line'}`}
+            } ${!isOpen && hasHeaderIntroCompleted ? 'animate-rainbow-line' : ''}`}
             style={{
               backgroundImage: isOpen
                 ? 'linear-gradient(white, white)'
-                : 'linear-gradient(90deg, hsl(150,50%,65%), hsl(200,60%,72%), hsl(350,65%,72%))',
+                : hasHeaderIntroCompleted
+                  ? 'linear-gradient(90deg, hsl(150,50%,65%), hsl(200,60%,72%), hsl(350,65%,72%))'
+                  : 'linear-gradient(var(--foreground), var(--foreground))',
               backgroundSize: '200% 100%',
             }}
           />

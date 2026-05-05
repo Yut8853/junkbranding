@@ -286,10 +286,13 @@ export function ServicesSectionV2() {
                           borderColor: !isMobile && activeIndex === index ? `${service.color}40` : 'var(--border)',
                           background: !isMobile && activeIndex === index ? `${service.color}10` : 'transparent',
                           color: !isMobile && activeIndex === index ? service.color : 'var(--muted-foreground)',
-                          transitionProperty: isMobile ? 'none' : 'border-color, background, color',
-                          transitionDuration: isMobile ? '0s' : '0.3s',
-                          transitionTimingFunction: 'ease',
-                          transitionDelay: isMobile ? '0s' : `${i * 0.05}s`,
+                          transition: isMobile
+                            ? 'none'
+                            : [
+                                `border-color 0.3s ease ${i * 0.05}s`,
+                                `background 0.3s ease ${i * 0.05}s`,
+                                `color 0.3s ease ${i * 0.05}s`,
+                              ].join(', '),
                         }}
                       >
                         <ScatterText
