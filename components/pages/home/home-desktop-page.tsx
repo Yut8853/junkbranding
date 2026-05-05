@@ -12,7 +12,7 @@ import { HomeInvertedScroll } from '@/components/pages/home/home-inverted-scroll
 import { useDeferredRender } from '@/hooks/use-deferred-render'
 
 export function HomeDesktopPage() {
-  const shouldRenderAscentSections = useDeferredRender(6500, 4800)
+  const shouldRenderAscentSections = useDeferredRender(12000, 4000)
 
   return (
     <div className="home-ascent-page home-ascent-page--inverted">

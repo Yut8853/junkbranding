@@ -19,6 +19,7 @@ type FilmParticle = {
 export function TopCanvasFilmOverlay() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
   const [mounted, setMounted] = useState(false)
+  const [shouldStartCanvas, setShouldStartCanvas] = useState(false)
   const pathname = usePathname()
   const isHome = pathname === '/'
 
@@ -27,7 +28,17 @@ export function TopCanvasFilmOverlay() {
   }, [])
 
   useEffect(() => {
-    if (!mounted) return
+    if (!mounted || isSmallScreen()) return
+
+    const timer = window.setTimeout(() => {
+      setShouldStartCanvas(true)
+    }, 4200)
+
+    return () => window.clearTimeout(timer)
+  }, [mounted])
+
+  useEffect(() => {
+    if (!mounted || !shouldStartCanvas) return
 
     const canvas = canvasRef.current
     if (!canvas) return
@@ -223,7 +234,7 @@ export function TopCanvasFilmOverlay() {
       window.removeEventListener('resize', queueResize)
       window.cancelAnimationFrame(animationFrameId)
     }
-  }, [isHome, mounted])
+  }, [isHome, mounted, shouldStartCanvas])
 
   if (!mounted || isSmallScreen()) return null
 
