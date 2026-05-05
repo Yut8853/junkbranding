@@ -10,6 +10,7 @@ import { SmoothScroll } from '@/components/smooth-scroll';
 import { DeferredVisualEffects } from '@/components/deferred-visual-effects';
 import { DeferredSiteWidgets } from '@/components/deferred-site-widgets';
 import { LoadingProvider } from '@/components/loading-provider';
+import { TopCanvasFilmOverlay } from '@/components/top-canvas-film-overlay';
 import { AudioProvider } from '@/contexts/audio-context';
 import { TransitionProvider } from '@/contexts/transition-context';
 import type { LayoutProps } from '@/types/layout';
@@ -207,6 +208,7 @@ export default function RootLayout({
         <TransitionProvider>
           <AudioProvider>
             <DeferredVisualEffects />
+            <TopCanvasFilmOverlay />
             <LoadingProvider>
               <SmoothScroll>
                 <Navigation />

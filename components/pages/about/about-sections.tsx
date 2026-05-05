@@ -453,7 +453,7 @@ function ProcessStep({
     <SectionReveal delay={index * 0.1} duration={0.8} y={20}>
       <div className={`relative ${index > 0 ? 'pt-24 lg:pt-40' : ''} last:pb-0`}>
         {/* Marquee background title */}
-        <div className="pointer-events-none absolute inset-y-0 left-[calc(50%-50vw)] right-[calc(50%-50vw)] flex select-none items-center overflow-hidden">
+        <div className={`pointer-events-none absolute bottom-0 left-[calc(50%-50vw)] right-[calc(50%-50vw)] ${index > 0 ? 'top-24 lg:top-40' : 'top-0'} flex select-none items-center overflow-hidden`}>
           <div 
             className={`flex min-w-max whitespace-nowrap opacity-[0.04] ${isEven ? 'animate-marquee-slow' : 'animate-marquee-slow-reverse'}`}
           >
