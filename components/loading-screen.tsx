@@ -104,6 +104,7 @@ export function LoadingScreen({ progress, canSelectAudio, audioChoice, onSelectA
           <div className="flex flex-col gap-3 sm:flex-row">
             <button
               type="button"
+              onPointerDown={() => canSelectAudio && onSelectAudio(true)}
               onClick={() => canSelectAudio && onSelectAudio(true)}
               disabled={!canSelectAudio || audioChoice !== null}
               aria-describedby="loading-audio-help"

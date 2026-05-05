@@ -5,11 +5,103 @@ import { createContext, useContext, useState, useRef, useEffect, useCallback, ty
 const BACKGROUND_AUDIO_SRC = '/audio/128_BPM124.mp3'
 const AUDIO_PREFERENCE_KEY = 'junkbranding-audio-preference'
 const MAX_VOLUME = 0.4
+const START_VOLUME = 0.001
 const FADE_DURATION_MS = 1200
 const clampVolume = (volume: number) => Math.min(1, Math.max(0, volume))
 
+type AudioContextConstructor = typeof AudioContext
+
+class GeneratedAudioPlayer {
+  private context: AudioContext | null = null
+  private masterGain: GainNode | null = null
+  private oscillators: OscillatorNode[] = []
+  private _isPlaying = false
+
+  get isPlaying() {
+    return this._isPlaying && this.context?.state !== 'closed'
+  }
+
+  async start() {
+    if (this.isPlaying) return true
+
+    const AudioContextClass =
+      window.AudioContext ||
+      (window as typeof window & { webkitAudioContext?: AudioContextConstructor }).webkitAudioContext
+    if (!AudioContextClass) return false
+
+    const context = new AudioContextClass()
+    const masterGain = context.createGain()
+    const lowpass = context.createBiquadFilter()
+    const now = context.currentTime
+
+    lowpass.type = 'lowpass'
+    lowpass.frequency.setValueAtTime(900, now)
+    lowpass.Q.setValueAtTime(0.85, now)
+    masterGain.gain.setValueAtTime(0.0001, now)
+    masterGain.gain.exponentialRampToValueAtTime(0.14, now + 1.4)
+    lowpass.connect(masterGain)
+    masterGain.connect(context.destination)
+
+    const voices = [
+      { frequency: 146.83, type: 'sine' as OscillatorType, gain: 0.2, detune: -5 },
+      { frequency: 220, type: 'triangle' as OscillatorType, gain: 0.12, detune: 7 },
+      { frequency: 293.66, type: 'sine' as OscillatorType, gain: 0.08, detune: 12 },
+    ]
+
+    this.oscillators = voices.map((voice) => {
+      const oscillator = context.createOscillator()
+      const voiceGain = context.createGain()
+      oscillator.type = voice.type
+      oscillator.frequency.setValueAtTime(voice.frequency, now)
+      oscillator.detune.setValueAtTime(voice.detune, now)
+      voiceGain.gain.setValueAtTime(voice.gain, now)
+      oscillator.connect(voiceGain)
+      voiceGain.connect(lowpass)
+      oscillator.start(now)
+      return oscillator
+    })
+
+    if (context.state === 'suspended') {
+      await context.resume()
+    }
+
+    this.context = context
+    this.masterGain = masterGain
+    this._isPlaying = true
+    return true
+  }
+
+  stop() {
+    if (!this.context || !this.masterGain) return
+
+    const context = this.context
+    const now = context.currentTime
+    this._isPlaying = false
+    this.masterGain.gain.cancelScheduledValues(now)
+    this.masterGain.gain.setValueAtTime(this.masterGain.gain.value, now)
+    this.masterGain.gain.linearRampToValueAtTime(0, now + 0.45)
+
+    window.setTimeout(() => {
+      this.oscillators.forEach((oscillator) => {
+        try {
+          oscillator.stop()
+        } catch {
+          // The oscillator may already have been stopped by a fast toggle.
+        }
+      })
+      this.oscillators = []
+      context.close().catch(() => undefined)
+      if (this.context === context) {
+        this.context = null
+        this.masterGain = null
+      }
+    }, 520)
+  }
+}
+
 class BackgroundAudioPlayer {
   private audio: HTMLAudioElement | null = null
+  private generatedAudio = new GeneratedAudioPlayer()
   private fadeFrame: number | null = null
   private startPromise: Promise<boolean> | null = null
   private hasRequestedLoad = false
@@ -17,7 +109,7 @@ class BackgroundAudioPlayer {
   private _isPlaying = false
 
   get isPlaying() {
-    return this._isPlaying && Boolean(this.audio && !this.audio.paused)
+    return (this._isPlaying && Boolean(this.audio && !this.audio.paused)) || this.generatedAudio.isPlaying
   }
 
   init() {
@@ -29,7 +121,7 @@ class BackgroundAudioPlayer {
     this.audio.volume = 0
 
     this.audio.addEventListener('error', () => {
-      this._isPlaying = false
+      if (!this.generatedAudio.isPlaying) this._isPlaying = false
       console.warn(`Background audio could not be loaded: ${BACKGROUND_AUDIO_SRC}`)
     })
   }
@@ -52,7 +144,8 @@ class BackgroundAudioPlayer {
 
     try {
       this.audio.preload = 'auto'
-      this.audio.volume = 0
+      this.audio.muted = false
+      this.audio.volume = START_VOLUME
       if (!this.hasRequestedLoad && this.audio.readyState === HTMLMediaElement.HAVE_NOTHING) {
         this.hasRequestedLoad = true
         this.audio.load()
@@ -72,13 +165,20 @@ class BackgroundAudioPlayer {
     } catch (error) {
       this._isPlaying = false
       console.warn('Background audio playback was blocked or failed.', error)
-      return false
+      return this.startGeneratedAudio()
     }
+  }
+
+  private async startGeneratedAudio() {
+    const started = await this.generatedAudio.start()
+    this._isPlaying = started
+    return started
   }
 
   stop() {
     this.shouldPlay = false
     this._isPlaying = false
+    this.generatedAudio.stop()
 
     if (this.fadeFrame) {
       cancelAnimationFrame(this.fadeFrame)

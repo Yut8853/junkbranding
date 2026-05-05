@@ -1,6 +1,6 @@
 'use client'
 
-import { createContext, useContext, useState, useEffect, useLayoutEffect } from 'react'
+import { createContext, useContext, useState, useEffect, useLayoutEffect, useRef } from 'react'
 import { useAudio } from '@/contexts/audio-context'
 import { LoadingScreen } from './loading-screen'
 import { scheduleIdleTask, shouldUseFastStart } from '@/lib/performance-mode'
@@ -52,6 +52,7 @@ export function LoadingProvider({ children }: LoadingProviderProps) {
   const [isSelectingAudio, setIsSelectingAudio] = useState(false)
   const [preloadComplete, setPreloadComplete] = useState(initialFastStart)
   const [isFastStart, setIsFastStart] = useState(initialFastStart)
+  const selectionInFlightRef = useRef(false)
 
   useEffect(() => {
     const fastStart = shouldUseFastStart()
@@ -185,8 +186,9 @@ export function LoadingProvider({ children }: LoadingProviderProps) {
   }, [audioChoice, isFastStart, isFirstLoad, preloadComplete, progress])
 
   const handleSelectAudio = async (withSound: boolean) => {
-    if (audioChoice || isSelectingAudio) return
+    if (audioChoice || isSelectingAudio || selectionInFlightRef.current) return
 
+    selectionInFlightRef.current = true
     setIsSelectingAudio(true)
 
     if (withSound) {
@@ -196,6 +198,7 @@ export function LoadingProvider({ children }: LoadingProviderProps) {
         setAudioChoice('sound-on')
       } else {
         window.localStorage.setItem(AUDIO_PREFERENCE_KEY, 'sound-off')
+        selectionInFlightRef.current = false
         setIsSelectingAudio(false)
       }
       return
