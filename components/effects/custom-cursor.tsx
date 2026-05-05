@@ -211,14 +211,14 @@ export function CustomCursor() {
 
       ctx.clearRect(0, 0, canvas.width, canvas.height)
 
-      // Smooth cursor movement
+      // カーソル位置を滑らかに追従させる。
       const ease = 0.22
       positionRef.current.x += (targetRef.current.x - positionRef.current.x) * ease
       positionRef.current.y += (targetRef.current.y - positionRef.current.y) * ease
 
       const now = Date.now()
 
-      // Spawn trail particles
+      // カーソルの軌跡粒子を一定間隔で追加する。
       const trailInterval = reduceEffectsRef.current ? TRAIL_INTERVAL_MS * 2 : TRAIL_INTERVAL_MS
       if (now - lastSpawnRef.current > trailInterval) {
         spawnTrailParticle(positionRef.current.x, positionRef.current.y)
@@ -227,12 +227,12 @@ export function CustomCursor() {
 
       let hasLiveParticles = false
 
-      // Update and draw particles
+      // 粒子の位置と寿命を更新しながら描画する。
       particlesRef.current = particlesRef.current.filter(particle => {
         particle.x += particle.vx
         particle.y += particle.vy
-        particle.vy += 0.1 // gravity
-        particle.vx *= 0.98 // friction
+        particle.vy += 0.1 // 重力
+        particle.vx *= 0.98 // 摩擦
         particle.vy *= 0.98
         particle.life -= 0.02 / particle.maxLife
 
@@ -242,7 +242,7 @@ export function CustomCursor() {
         const alpha = particle.life
         const size = particle.size * particle.life
 
-        // Draw particle with rainbow gradient
+        // 虹色の粒子を描画する。
         ctx.save()
         ctx.globalAlpha = alpha
         ctx.beginPath()
@@ -250,7 +250,7 @@ export function CustomCursor() {
         ctx.fillStyle = `hsl(${particle.hue}, 80%, 60%)`
         ctx.fill()
 
-        // Glow effect
+        // 粒子の発光を足す。
         ctx.shadowBlur = size * 1.4
         ctx.shadowColor = `hsl(${particle.hue}, 80%, 60%)`
         ctx.fill()
@@ -259,12 +259,12 @@ export function CustomCursor() {
         return true
       })
 
-      // Draw main cursor
+      // メインカーソルを描画する。
       const cursorSize = isHoveringRef.current ? 50 : 24
       const x = positionRef.current.x
       const y = positionRef.current.y
 
-      // Outer ring with rainbow gradient
+      // 外側リングには虹色グラデーションを使う。
       const gradient = ctx.createConicGradient(hueRef.current * Math.PI / 180, x, y)
       gradient.addColorStop(0, 'hsl(330, 80%, 60%)')
       gradient.addColorStop(0.17, 'hsl(25, 80%, 60%)')
@@ -281,13 +281,13 @@ export function CustomCursor() {
       ctx.lineWidth = 2
       ctx.stroke()
 
-      // Inner glow
+      // 内側の発光。
       ctx.beginPath()
       ctx.arc(x, y, cursorSize * 0.3, 0, Math.PI * 2)
       ctx.fillStyle = `hsla(${hueRef.current}, 80%, 60%, 0.3)`
       ctx.fill()
 
-      // Center dot
+      // 中心点。
       ctx.beginPath()
       ctx.arc(x, y, 3, 0, Math.PI * 2)
       ctx.fillStyle = `hsl(${hueRef.current}, 80%, 70%)`

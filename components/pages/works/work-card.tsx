@@ -33,7 +33,7 @@ export function WorkCard({
     onHover(null)
   }
 
-  // Scroll animation using gsap.context for clean scoping
+  // カードごとのScrollTriggerをgsap.contextへ閉じ込め、フィルター切替時に安全に破棄できるようにする。
   useEffect(() => {
     if (isMobile) return
 
@@ -77,10 +77,10 @@ export function WorkCard({
       })
     }, card)
 
-    return () => ctx.revert() // Cleanup only this card's triggers
-  }, [isMobile, work.id]) // Re-run when the item itself changes via filter
+    return () => ctx.revert() // このカードに紐づくトリガーだけを破棄する。
+  }, [isMobile, work.id]) // フィルターでカード内容が変わったときだけ再設定する。
 
-  // 3D tilt effect on hover
+  // ホバー位置に応じて画像面を少し傾け、カードに奥行きを出す。
   useEffect(() => {
     if (isMobile) return
 

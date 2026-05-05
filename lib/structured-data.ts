@@ -1,11 +1,11 @@
-// lib/structured-data.ts
-// Structured Data (JSON-LD) helpers for SEO
+// SEO用の構造化データ(JSON-LD)を生成するヘルパー。
+// 各ページでは必要なschemaだけを組み合わせ、最終的に@graphへ正規化して出力する。
 
 import type { JsonLdNode } from '@/types/seo'
 
 const BASE_URL = 'https://junkbranding.com'
 const LOGO_URL = `${BASE_URL}/icon.svg`
-const OG_IMAGE_URL = `${BASE_URL}/ogp.png`
+const OG_IMAGE_URL = `${BASE_URL}/ogp.jpg`
 
 const areaServed = [
   { '@type': 'State', name: '茨城県' },
@@ -108,7 +108,7 @@ export function generateJsonLdGraph(items: JsonLdNode[]) {
   }
 }
 
-// Organization schema - base for all pages
+// 全ページ共通の事業者情報。WebSite / WebPage / 各サービスschemaから参照される土台。
 export const organizationSchema = {
   '@type': 'Organization',
   '@id': `${BASE_URL}/#organization`,
@@ -159,7 +159,7 @@ export const localBusinessSchema = {
   },
 }
 
-// WebSite schema
+// サイト全体を表すschema。検索エンジンにサイト名・運営者・相談導線を伝える。
 export function generateWebsiteSchema() {
   return {
     '@type': 'WebSite',
@@ -184,7 +184,7 @@ export function generateWebsiteSchema() {
   }
 }
 
-// WebPage schema generator
+// 汎用WebPage schema。個別ページで特別な型が不要な場合のベースとして使う。
 export function generateWebPageSchema({
   title,
   description,
@@ -221,7 +221,7 @@ export function generateWebPageSchema({
   }
 }
 
-// AboutPage schema
+// Aboutページ用schema。スタジオ情報に加えて、メンバーや拠点の文脈を補う。
 export function generateAboutPageSchema() {
   return {
     '@graph': [
@@ -277,7 +277,7 @@ export function generateAboutPageSchema() {
   }
 }
 
-// ContactPage schema
+// Contactページ用schema。問い合わせ導線が事業者情報と結びつくようにする。
 export function generateContactPageSchema() {
   return {
     '@graph': [
@@ -307,7 +307,7 @@ export function generateContactPageSchema() {
   }
 }
 
-// Works / Portfolio CollectionPage schema
+// Worksページ用schema。制作実績をCollectionPageとItemListで表現する。
 export function generateWorksPageSchema() {
   return {
     '@graph': [
@@ -385,7 +385,7 @@ export function generateWorksPageSchema() {
   }
 }
 
-// Privacy Policy page schema
+// プライバシーポリシー用schema。法務系ページとして最終確認日も含める。
 export function generatePrivacyPageSchema() {
   return {
     '@type': 'WebPage',
@@ -411,7 +411,7 @@ export function generatePrivacyPageSchema() {
   }
 }
 
-// Service schema for homepage
+// TOPページ用の主要サービスschema。サービス名と提供者の関係を明示する。
 export function generateServiceSchema() {
   return {
     '@type': 'ItemList',
@@ -511,7 +511,7 @@ export function generateServiceSchema() {
   }
 }
 
-// Pricing page schema with Service offerings
+// Pricingページ用schema。価格目安をOfferとして出し、料金ページの意味を補強する。
 export function generatePricingPageSchema() {
   return {
     '@graph': [
@@ -701,7 +701,7 @@ export function generatePricingPageSchema() {
   }
 }
 
-// FAQPage schema
+// FAQページ用schema。
 // 注意: このFAQを使う場合は、同じ質問と回答をページ本文にも表示してください。
 export function generateFaqSchema() {
   return {
@@ -736,7 +736,7 @@ export function generateFaqSchema() {
   }
 }
 
-// BreadcrumbList schema generator
+// パンくずリストschema。各ページの階層関係を検索エンジンへ渡す。
 export function generateBreadcrumbSchema(items: { name: string; url: string }[]) {
   return {
     '@type': 'BreadcrumbList',

@@ -47,7 +47,7 @@ export function ServicesSectionV2() {
   const [countedNumbers, setCountedNumbers] = useState<string[]>(['00', '00', '00', '00'])
   const isMobile = useIsMobile()
 
-  // Counter animation
+  // カードが表示されたタイミングで、サービス番号を0から目的値まで軽くカウントアップする。
   const animateCounter = useCallback((index: number) => {
     const targetNum = parseInt(services[index].num)
     let current = 0
@@ -74,7 +74,7 @@ export function ServicesSectionV2() {
     requestAnimationFrame(animate)
   }, [])
 
-  // GSAP animations
+  // スクロール連動の演出はPC通常レイアウトだけで読み込む。反転TOPやSPでは初期表示を優先する。
   useEffect(() => {
     if (!sectionRef.current) return
 
@@ -97,7 +97,7 @@ export function ServicesSectionV2() {
 
       gsap.registerPlugin(ScrollTrigger)
       const ctx = gsap.context(() => {
-      // Header reveal
+        // セクション見出しを下からフェードインさせる。
         gsap.from(headerRef.current, {
           y: 48,
           opacity: 0,
@@ -109,7 +109,7 @@ export function ServicesSectionV2() {
           },
         })
 
-      // Items staggered reveal
+        // 各カードは個別のScrollTriggerで表示し、入ったカードだけ番号演出を走らせる。
         itemsRef.current.forEach((item, index) => {
           if (!item) return
 
@@ -142,7 +142,7 @@ export function ServicesSectionV2() {
       ref={sectionRef}
       className="py-32 md:py-40 lg:py-56 relative overflow-hidden"
     >
-      {/* Background gradient accent */}
+      {/* ホバー中カードの色をセクション背景へ薄く広げる装飾 */}
       <div 
         className="absolute inset-0 pointer-events-none opacity-20"
         style={{
@@ -154,7 +154,7 @@ export function ServicesSectionV2() {
       />
 
       <div className="container mx-auto px-6 md:px-12 lg:px-16 relative z-10">
-        {/* Header */}
+        {/* 見出し */}
         <div ref={headerRef} className="mb-16 lg:mb-24 text-center">
           <div className="mb-6 lg:mb-8">
             <ScatterText
@@ -183,7 +183,7 @@ export function ServicesSectionV2() {
           </ScatterText>
         </div>
 
-        {/* Service items - Card style */}
+        {/* サービスカード一覧 */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">
           {services.map((service, index) => (
             <div
@@ -200,7 +200,7 @@ export function ServicesSectionV2() {
                   : 'none',
               }}
             >
-              {/* Hover background */}
+              {/* ホバー時のカード内背景 */}
               <div 
                 className="absolute inset-0 rounded-2xl -z-10"
                 style={{
@@ -211,7 +211,7 @@ export function ServicesSectionV2() {
                 }}
               />
 
-              {/* Number */}
+              {/* サービス番号 */}
               <div className="flex items-start justify-between mb-6">
                 <ScatterText
                   as="span"
@@ -228,7 +228,7 @@ export function ServicesSectionV2() {
                   {countedNumbers[index]}
                 </ScatterText>
                 
-                {/* Color indicator */}
+                {/* サービスごとの色チップ */}
                 <div 
                   className="w-3 h-3 rounded-full mt-2"
                   style={{
@@ -240,9 +240,9 @@ export function ServicesSectionV2() {
                 />
               </div>
 
-              {/* Content */}
+              {/* カード本文 */}
               <div className="space-y-4">
-                {/* English title */}
+                {/* 英語タイトル */}
                 <ScatterText
                   as="h3"
                   className="type-eyebrow text-3xl md:text-4xl lg:text-5xl"
@@ -257,7 +257,7 @@ export function ServicesSectionV2() {
                   {service.title}
                 </ScatterText>
                 
-                {/* Japanese title */}
+                {/* 日本語タイトル */}
                 <ScatterText
                   as="p"
                   className="type-card-title text-base md:text-lg"
@@ -272,7 +272,7 @@ export function ServicesSectionV2() {
                   {service.titleJa}
                 </ScatterText>
 
-                {/* Description */}
+                {/* 説明文 */}
                 <ScatterText
                   as="p"
                   className="type-body-compact text-sm md:text-base text-muted-foreground"
@@ -283,7 +283,7 @@ export function ServicesSectionV2() {
                   {service.description}
                 </ScatterText>
 
-                {/* Features */}
+                {/* 対応内容タグ */}
                 <div className="pt-4 border-t border-foreground/5">
                   <div className="flex flex-wrap gap-2">
                     {service.features.map((feature, i) => (
@@ -318,7 +318,7 @@ export function ServicesSectionV2() {
                 </div>
               </div>
 
-              {/* Corner accent */}
+              {/* 右上の発光アクセント */}
               <div 
                 className="absolute top-0 right-0 w-16 h-16 overflow-hidden rounded-tr-2xl"
                 style={{

@@ -3,7 +3,7 @@ import type { PageMetadataOptions } from '@/types/seo'
 
 const SITE_URL = 'https://junkbranding.com'
 const SITE_NAME = 'JunkBranding'
-const DEFAULT_OG_IMAGE = '/ogp.png'
+const DEFAULT_OG_IMAGE = '/ogp.jpg'
 const DEFAULT_DESCRIPTION =
   '茨城・東京・神奈川を中心に活動する、2人だけの小さなブランディング&Web制作スタジオ。Webサイト制作、ロゴ制作、ブランド設計、マーケティング支援まで、事業のらしさを成果につながる形へ整えます。'
 

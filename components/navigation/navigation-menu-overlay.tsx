@@ -22,7 +22,7 @@ export function NavigationMenuOverlay({
   const menuRef = useRef<HTMLDivElement>(null)
   const itemsRef = useRef<(HTMLLIElement | null)[]>([])
 
-  // Generate scatter positions for background panels
+  // 背景パネルは毎回同じ軌道で組み上がるよう、seed付き乱数で散らばり位置を固定する。
   const bgPanelScatter = useMemo(() => {
     if (isLeanMotion) return []
 
@@ -56,10 +56,10 @@ export function NavigationMenuOverlay({
       aria-hidden={!isOpen}
       inert={!isOpen ? true : undefined}
     >
-      {/* Heat haze background that rises from bottom */}
+      {/* 下から立ち上がるヒートヘイズ背景 */}
       <MenuHeatHazeBackground progress={assembleProgress} isOpen={isOpen} />
 
-      {/* Base dark overlay that fades in - reduced opacity for heat haze visibility */}
+      {/* ヒートヘイズが見えるよう、暗幕は控えめな濃度でフェードインさせる */}
       <div
         aria-hidden="true"
         className="absolute inset-0 bg-[oklch(0.08_0.02_280)]"
@@ -68,7 +68,7 @@ export function NavigationMenuOverlay({
         }}
       />
 
-      {/* Background fragments that assemble from scattered positions */}
+      {/* 散らばった位置から集まる背景フラグメント */}
       <div className="absolute inset-0 hidden overflow-visible pointer-events-none md:block">
         {!isLeanMotion && bgPanelScatter.map((panel, i) => {
           const adjustedProgress = clamp01((assembleProgress - panel.delay) / (1 - panel.delay))
@@ -96,7 +96,7 @@ export function NavigationMenuOverlay({
         })}
       </div>
 
-      {/* Floating particles that also assemble */}
+      {/* メニューの組み上がりに合わせて集まる浮遊粒子 */}
       <div className="absolute inset-0 hidden overflow-visible pointer-events-none md:block">
         {!isLeanMotion && [...Array(40)].map((_, i) => {
           const seed = i * 23 + 7
@@ -130,12 +130,12 @@ export function NavigationMenuOverlay({
         })}
       </div>
 
-      {/* Menu Content */}
+      {/* メニュー本体 */}
       <nav
         className="global-nav-panel relative h-full flex flex-col justify-between px-6 md:px-16 lg:px-24 py-6 md:py-8"
         aria-label="メインナビゲーション"
       >
-        {/* Top bar with logo */}
+        {/* 上部ロゴ */}
         <div
           className="shrink-0 transition-all duration-700"
           style={{
@@ -152,7 +152,7 @@ export function NavigationMenuOverlay({
           </TransitionLink>
         </div>
 
-        {/* Main navigation items - Characters assemble from scattered positions */}
+        {/* メインナビゲーション。文字は散らばった状態から組み上がる */}
         <div className="flex-1 flex items-center min-h-0">
           <ul className="w-full max-w-4xl">
             {navItems.map((item, itemIndex) => (
@@ -176,7 +176,7 @@ export function NavigationMenuOverlay({
                   <span className="sr-only">
                     {item.labelJa}ページへ移動
                   </span>
-                  {/* Left: Number + Assembling Label */}
+                  {/* 左側: 番号と組み上がる英字ラベル */}
                   <div className="flex items-baseline gap-3 md:gap-5">
                     <span
                       aria-hidden="true"
@@ -190,7 +190,7 @@ export function NavigationMenuOverlay({
                       {item.num}
                     </span>
 
-                    {/* Label assembles with Canvas scatter to avoid one DOM node per character. */}
+                    {/* 文字単位DOMを増やさないため、ラベルの散らばりはCanvas版ScatterTextに任せる。 */}
 <ScatterText
                                       as="span"
                                       className="global-nav-link__label font-display font-bold text-2xl sm:text-3xl md:text-4xl lg:text-5xl tracking-tight"
@@ -214,7 +214,7 @@ export function NavigationMenuOverlay({
                     </ScatterText>
                   </div>
 
-                  {/* Right: Japanese label + Arrow */}
+                  {/* 右側: 日本語ラベルと矢印 */}
                   <div
                     className="flex items-center gap-2 md:gap-4 transition-all duration-500"
                     style={{
@@ -263,7 +263,7 @@ export function NavigationMenuOverlay({
           </ul>
         </div>
 
-        {/* Footer info */}
+        {/* 下部の連絡先情報 */}
         <div
           className="flex items-center justify-between gap-4 pt-4 border-t border-white/10 shrink-0 transition-all duration-700"
           style={{

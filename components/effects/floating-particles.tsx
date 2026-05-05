@@ -108,7 +108,7 @@ export function FloatingParticles() {
       }
     }
 
-    // Mouse move handler
+    // マウス位置を記録し、粒子の吸引計算に使う。
     const handleMouseMove = (e: MouseEvent) => {
       targetMouseRef.current = { x: e.clientX, y: e.clientY }
     }
@@ -145,24 +145,24 @@ export function FloatingParticles() {
       transitionIntensityRef.current += (transitionTarget - transitionIntensityRef.current) * intensityEase
       const transitionIntensity = transitionIntensityRef.current
 
-      // Smooth mouse position interpolation (faster response)
+      // マウス位置を滑らかに補間しつつ、反応はやや速めにする。
       mouseRef.current.x += (targetMouseRef.current.x - mouseRef.current.x) * 0.25
       mouseRef.current.y += (targetMouseRef.current.y - mouseRef.current.y) * 0.25
 
       ctx.clearRect(0, 0, width, height)
 
       particlesRef.current.forEach((p) => {
-        // Base movement
+        // 基準位置をゆっくり横へ流す。
         p.baseX += p.speed
 
         const wave = Math.sin(time * p.frequency + p.phase) * p.amplitude
         
-        // Calculate distance from mouse
+        // マウスとの距離を計算する。
         const dx = mouseRef.current.x - p.x
         const dy = mouseRef.current.y - p.y
         const distanceSq = dx * dx + dy * dy
         
-        // Mouse attraction effect - particles are drawn toward cursor
+        // マウスに近い粒子だけ、カーソルへ吸い寄せる。
         let proximity = 0
         if (distanceSq < attractionRadiusSq && distanceSq > 0) {
           const distance = Math.sqrt(distanceSq)
@@ -172,18 +172,18 @@ export function FloatingParticles() {
           p.vy += (dy / distance) * force * 4
         }
 
-        // Apply velocity with damping (less damping for faster movement)
+        // 速度を反映し、少し弱めの減衰で軽快に動かす。
         p.x += p.vx
         p.y += p.vy
         p.vx *= 0.88
         p.vy *= 0.88
 
-        // Gradually return to base position
+        // 少しずつ基準位置へ戻す。
         const returnStrength = 0.02
         p.x += (p.baseX - p.x) * returnStrength
         p.y += (p.baseY + wave - p.y) * returnStrength
 
-        // Reset when particle goes off screen
+        // 画面外へ流れた粒子は左側から出し直す。
         if (p.baseX > width + 50) {
           p.baseX = -30
           p.x = -30
@@ -192,7 +192,7 @@ export function FloatingParticles() {
           p.hue = Math.random() * 360
         }
 
-        // Color shift based on proximity to mouse
+        // マウスに近いほど色相変化を少し強める。
         const colorShift = proximity * 30
         p.hue = (p.hue + 0.015 + colorShift * 0.1) % 360
 

@@ -19,6 +19,7 @@ export function useScrollScatterProgress<TElement extends HTMLElement>(
   useEffect(() => {
     if (!elementRef.current || isMobile || disabled) return
 
+    // scrollイベントでは直接state更新せず、RAFにまとめてCanvas散らばりの進捗だけを返す。
     let rafId: number | null = null
 
     const updateProgress = () => {

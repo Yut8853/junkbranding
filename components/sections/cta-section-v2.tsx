@@ -31,7 +31,7 @@ export function CTASectionV2() {
     }
   }, [])
 
-  // Initialize particles
+  // CTA周辺の粒子はPCだけ初期化する。SPではCanvas処理を避けて操作感を優先する。
   useEffect(() => {
     if (isMobile) return
 
@@ -47,13 +47,13 @@ export function CTASectionV2() {
         speedX: (Math.random() - 0.5) * 0.5,
         speedY: (Math.random() - 0.5) * 0.5,
         opacity: Math.random() * 0.5 + 0.2,
-        hue: Math.random() * 60 + 300, // Purple to pink range
+        hue: Math.random() * 60 + 300, // 紫からピンク寄りの色域に収める。
       })
     }
     particlesRef.current = particles
   }, [isMobile])
 
-  // Animate particles
+  // 粒子アニメーションは画面内かつタブ表示中だけ進め、不要なRAFを回し続けない。
   useEffect(() => {
     if (isMobile) return
 
@@ -127,15 +127,15 @@ export function CTASectionV2() {
       }
       
       particlesRef.current.forEach(particle => {
-        // Update position
+        // 粒子位置を更新する。
         particle.x += particle.speedX
         particle.y += particle.speedY
 
-        // Boundary check
+        // Canvas端で軽く跳ね返す。
         if (particle.x < 0 || particle.x > canvas.width) particle.speedX *= -1
         if (particle.y < 0 || particle.y > canvas.height) particle.speedY *= -1
 
-        // Mouse attraction when hovering
+        // CTAホバー中は粒子をボタン中心へ少し引き寄せる。
         if (buttonCenter) {
           const dx = buttonCenter.x - particle.x
           const dy = buttonCenter.y - particle.y
@@ -147,14 +147,14 @@ export function CTASectionV2() {
           }
         }
 
-        // Draw particle
+        // 粒子本体を描画する。
         ctx.beginPath()
         ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2)
         ctx.fillStyle = `oklch(0.7 0.2 ${particle.hue} / ${particle.opacity})`
         ctx.fill()
       })
 
-      // Draw connections between nearby particles
+      // 近い粒子同士を線で結び、CTA周辺にネットワーク感を出す。
       particlesRef.current.forEach((p1, i) => {
         particlesRef.current.slice(i + 1).forEach(p2 => {
           const dx = p1.x - p2.x
@@ -185,7 +185,7 @@ export function CTASectionV2() {
     }
   }, [isMobile])
 
-  // Magnetic button effect
+  // マウスに追従する磁力ボタン演出。transformだけを更新してレイアウト再計算を抑える。
   const handleMouseMove = useCallback((e: React.MouseEvent) => {
     if (isMobile) return
     if (!buttonRef.current) return
@@ -198,7 +198,7 @@ export function CTASectionV2() {
     const deltaY = e.clientY - centerY
     const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY)
     
-    // Magnetic pull when within range
+    // 一定距離内だけ中心からの差分を使って引き寄せる。
     if (distance < 200) {
       const pull = (200 - distance) / 200
       buttonOffsetRef.current = {
@@ -222,13 +222,13 @@ export function CTASectionV2() {
     const rect = buttonRef.current?.getBoundingClientRect()
     if (!rect) return
 
-    // Add ripple at click position
+    // クリック位置から波紋を出す。
     const x = e.clientX - rect.left
     const y = e.clientY - rect.top
     const newRipple = { id: Date.now(), x, y }
     setRipples(prev => [...prev, newRipple])
 
-    // Remove ripple after animation
+    // アニメーション終了後に波紋要素を破棄する。
     setTimeout(() => {
       setRipples(prev => prev.filter(r => r.id !== newRipple.id))
     }, 1000)
@@ -240,7 +240,7 @@ export function CTASectionV2() {
     navigateWithTransition('/contact')
   }
 
-  // GSAP scroll animation
+  // CTA見出しのスクロール表示演出。GSAPは必要になってから動的に読み込む。
   useEffect(() => {
     if (!sectionRef.current || isMobile) return
 
@@ -292,14 +292,14 @@ export function CTASectionV2() {
         }
       }}
     >
-      {/* Particle canvas background */}
+      {/* 粒子Canvas背景 */}
         <canvas
         ref={canvasRef}
         className="absolute inset-0 hidden pointer-events-none md:block"
         style={{ opacity: 0.6 }}
       />
 
-      {/* Background gradient */}
+      {/* ホバー時に広がる背景グラデーション */}
       <div 
         className="absolute inset-0 pointer-events-none"
         style={{
@@ -311,7 +311,7 @@ export function CTASectionV2() {
       />
 
       <div className="container mx-auto px-6 md:px-12 lg:px-16 relative z-10">
-        {/* Header text */}
+        {/* 見出しテキスト */}
         <div ref={textRef} className="text-center mb-16 lg:mb-24">
           <div className="mb-6 lg:mb-8">
             <ScatterText
@@ -349,7 +349,7 @@ export function CTASectionV2() {
           </ScatterText>
         </div>
 
-        {/* Giant circular CTA */}
+        {/* 円形CTA */}
         <div className="flex justify-center">
           <div
             ref={buttonRef}
@@ -369,7 +369,7 @@ export function CTASectionV2() {
             }}
             data-cursor="Contact"
           >
-            {/* Outer glow ring */}
+            {/* 外側の発光リング */}
             <div 
               className="absolute inset-0 rounded-full"
               style={{
@@ -382,7 +382,7 @@ export function CTASectionV2() {
               }}
             />
 
-            {/* Gradient overlay on hover */}
+            {/* ホバー時のグラデーション面 */}
             <div 
               className="absolute inset-0"
               style={{
@@ -392,7 +392,7 @@ export function CTASectionV2() {
               }}
             />
 
-            {/* Ripple effects */}
+            {/* クリック波紋 */}
             {ripples.map(ripple => (
               <span
                 key={ripple.id}
@@ -405,7 +405,7 @@ export function CTASectionV2() {
               />
             ))}
 
-            {/* Button content */}
+            {/* ボタン内コンテンツ */}
             <div className="relative z-10 flex w-full flex-col items-center justify-center px-8 text-center text-white md:px-12 lg:px-16">
               <ScatterText
                 as="span"
@@ -456,7 +456,7 @@ export function CTASectionV2() {
               </span>
             </div>
 
-            {/* Rotating border decoration */}
+            {/* 回転する境界線装飾 */}
             <div 
               className="absolute inset-0 rounded-full border border-dashed border-foreground/20"
               style={{

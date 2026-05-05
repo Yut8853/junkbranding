@@ -45,7 +45,7 @@ export function CircleButton({ href, children, size = 'md', className }: CircleB
       onMouseEnter={() => href.startsWith('/') && prefetchRoute(href)}
       onFocus={() => href.startsWith('/') && prefetchRoute(href)}
     >
-      {/* Background hover effect - gradient animation like "カタチに。" */}
+      {/* 「カタチに。」と同じ流れのグラデーションをホバー時に広げる */}
       <span 
         className="absolute inset-0 scale-0 rounded-full transition-transform duration-500 ease-out group-hover:scale-100"
         style={{
@@ -55,7 +55,7 @@ export function CircleButton({ href, children, size = 'md', className }: CircleB
         }}
       />
       
-      {/* Text */}
+      {/* ボタンテキスト */}
       <span className="type-cta relative z-10">
         {children}
       </span>

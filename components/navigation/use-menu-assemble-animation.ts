@@ -12,7 +12,7 @@ export function useMenuAssembleAnimation({
   const [isAnimating, setIsAnimating] = useState(false)
   const [assembleProgress, setAssembleProgress] = useState(0)
 
-  // Animate assembly when menu opens
+  // メニューを開いたとき、散らばった要素が組み上がる進捗を進める。
   useEffect(() => {
     if (!isOpen) {
       setAssembleProgress(0)
@@ -26,7 +26,7 @@ export function useMenuAssembleAnimation({
 
     let startTime: number | null = null
     let lastFrameTime = 0
-    const duration = 1200 // 1.2 seconds for full assembly
+    const duration = 1200 // 全体が組み上がるまでの時間。
 
     const animate = (timestamp: number) => {
       if (!startTime) startTime = timestamp
@@ -39,7 +39,7 @@ export function useMenuAssembleAnimation({
       const elapsed = timestamp - startTime
       const progress = Math.min(elapsed / duration, 1)
 
-      // Easing function for smooth assembly
+      // 終盤だけ少し緩めて、吸い込まれる動きを滑らかに見せる。
       const eased = 1 - Math.pow(1 - progress, 3)
       setAssembleProgress(eased)
 

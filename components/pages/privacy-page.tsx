@@ -11,7 +11,7 @@ export default function PrivacyPageClient() {
     <div className="relative z-10 min-h-screen overflow-hidden">
       <main className="container mx-auto px-6 md:px-12 lg:px-16 py-28 md:py-36 lg:py-44">
         <div className="mx-auto max-w-6xl">
-          {/* Hero */}
+          {/* ヒーロー */}
           <section className="relative mb-20 lg:mb-28">
             <div className="absolute -left-20 top-10 h-64 w-64 rounded-full bg-primary/10 blur-[90px]" />
             <div className="absolute -right-24 bottom-0 h-72 w-72 rounded-full bg-accent/10 blur-[100px]" />
@@ -90,7 +90,7 @@ export default function PrivacyPageClient() {
           </section>
 
           <div className="grid gap-10 lg:grid-cols-[260px_1fr] lg:gap-14">
-            {/* Index */}
+            {/* 目次 */}
             <aside className="hidden lg:block">
               <div className="sticky top-28 rounded-3xl rainbow-border p-6">
                 <ScatterText
@@ -121,7 +121,7 @@ export default function PrivacyPageClient() {
               </div>
             </aside>
 
-            {/* Content sections */}
+            {/* 本文セクション */}
             <div className="space-y-6 lg:space-y-8">
               {privacySections.map((section, index) => (
                 <SectionReveal key={section.id} delay={0.06 + index * 0.03}>
@@ -228,7 +228,7 @@ export default function PrivacyPageClient() {
             </div>
           </div>
 
-          {/* Back link */}
+          {/* 戻るリンク */}
           <div className="mt-14 lg:mt-20">
             <ScatterBlock
               className="cta-primary type-cta inline-flex items-center gap-3 rounded-full px-6 py-3 text-sm transition-all duration-300"

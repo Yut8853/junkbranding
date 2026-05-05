@@ -13,7 +13,7 @@ export function PrivacyBackground() {
     setMounted(true);
   }, []);
 
-  // Particle animation logic
+  // プライバシーページ専用の背景粒子。SPではCanvasを動かさず、静的な背景だけにする。
   useEffect(() => {
     if (!mounted || isMobile) return;
 
@@ -112,8 +112,7 @@ export function PrivacyBackground() {
 
   if (!mounted) return null;
 
-  // createPortalを使用してbodyの直下に背景をレンダリング
-  // これにより、PageTransitionのtransformの影響を受けない
+  // body直下へ描画して、PageTransitionのtransformで背景まで動いて見えることを避ける。
   return createPortal(
     <div
       className="fixed inset-0 pointer-events-none"

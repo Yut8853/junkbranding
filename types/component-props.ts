@@ -1,5 +1,6 @@
 import type { CSSProperties, ReactNode } from 'react'
 
+// 複数ディレクトリから使われるUI基盤コンポーネントのpropsをまとめ、循環importを避ける。
 export type TextTag = 'h1' | 'h2' | 'h3' | 'h4' | 'p' | 'span' | 'div'
 
 export type CookiePreferences = {
@@ -46,6 +47,7 @@ export type NavigationMenuOverlayProps = {
 }
 
 export type ScatterTextProps = {
+  // Canvasで文字単位の散らばりを作るため、childrenは文字列に限定する。
   children: string
   as?: TextTag
   className?: string

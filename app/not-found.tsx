@@ -35,11 +35,11 @@ export default function NotFound() {
       initParticles()
     }
 
-    // Create particles that form "404"
+    // 一度Canvasへ「404」を描き、そのピクセルを粒子の目標座標として使う。
     const initParticles = () => {
       particlesRef.current = []
       
-      // Create text particles
+      // 文字形状をサンプリングするため、一時的にCanvasへ描画する。
       ctx.save()
       ctx.font = `bold ${Math.min(width * 0.35, 400)}px Inter, sans-serif`
       ctx.textAlign = 'center'
@@ -53,7 +53,7 @@ export default function NotFound() {
       ctx.clearRect(0, 0, width, height)
       ctx.restore()
 
-      // Sample pixels to create particles
+      // 不透明ピクセルだけを拾い、文字を構成する粒子へ変換する。
       const gap = Math.max(4, Math.floor(width / 200))
       for (let y = 0; y < height * dpr; y += gap * dpr) {
         for (let x = 0; x < width * dpr; x += gap * dpr) {
@@ -80,7 +80,7 @@ export default function NotFound() {
         }
       }
 
-      // Add ambient particles
+      // 文字とは別に、背景を漂う環境粒子を追加する。
       const ambientCount = Math.min(100, Math.floor((width * height) / 15000))
       for (let i = 0; i < ambientCount; i++) {
         const x = Math.random() * width
@@ -147,7 +147,7 @@ export default function NotFound() {
 
     resize()
 
-    // Animation loop
+    // 粒子の戻り・反発・発光を毎フレーム更新する。
     const animate = () => {
       ctx.fillStyle = 'rgba(15, 15, 20, 0.15)'
       ctx.fillRect(0, 0, width, height)
@@ -158,14 +158,14 @@ export default function NotFound() {
 
       particlesRef.current.forEach((p) => {
         if (p.isText) {
-          // Text particles behavior
+          // 文字粒子はマウスから逃げつつ、元の「404」形状へ戻る。
           const dx = mouseX - p.x
           const dy = mouseY - p.y
           const distance = Math.sqrt(dx * dx + dy * dy)
           const maxDist = isPressed ? 250 : 150
 
           if (distance < maxDist) {
-            // Repel from mouse
+            // マウス位置から外向きの力を受ける。
             const force = (maxDist - distance) / maxDist
             const angle = Math.atan2(dy, dx)
             const repelStrength = isPressed ? 15 : 5
@@ -173,18 +173,18 @@ export default function NotFound() {
             p.vy -= Math.sin(angle) * force * repelStrength
           }
 
-          // Return to origin
+          // 元の文字形状へ戻る力を加える。
           const returnForce = 0.03
           p.vx += (p.originX - p.x) * returnForce
           p.vy += (p.originY - p.y) * returnForce
 
-          // Apply velocity with damping
+          // 速度を減衰させながら位置へ反映する。
           p.vx *= 0.92
           p.vy *= 0.92
           p.x += p.vx
           p.y += p.vy
 
-          // Draw text particle
+          // 文字粒子を描画する。
           const distFromOrigin = Math.sqrt(
             Math.pow(p.x - p.originX, 2) + Math.pow(p.y - p.originY, 2)
           )
@@ -195,7 +195,7 @@ export default function NotFound() {
           ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2)
           ctx.fill()
 
-          // Glow effect
+          // 文字粒子の周囲に淡い発光を重ねる。
           const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size * 4)
           gradient.addColorStop(0, `hsla(${p.hue}, 80%, 70%, ${alpha * 0.3})`)
           gradient.addColorStop(1, `hsla(${p.hue}, 80%, 70%, 0)`)
@@ -204,18 +204,18 @@ export default function NotFound() {
           ctx.arc(p.x, p.y, p.size * 4, 0, Math.PI * 2)
           ctx.fill()
         } else {
-          // Ambient particles - float around
+          // 環境粒子は背景内をゆっくり漂う。
           p.x += p.vx
           p.y += p.vy
 
-          // Bounce off edges
+          // 画面端で反射させる。
           if (p.x < 0 || p.x > width) p.vx *= -1
           if (p.y < 0 || p.y > height) p.vy *= -1
 
-          // Slowly shift hue
+          // 色相を少しずつ回して、静止画に見えないようにする。
           p.hue = (p.hue + 0.1) % 360
 
-          // Draw ambient particle
+          // 環境粒子を描画する。
           ctx.beginPath()
           ctx.fillStyle = `hsla(${p.hue}, 60%, 70%, 0.4)`
           ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2)
@@ -240,7 +240,7 @@ export default function NotFound() {
     }
   }, [])
 
-  // Glitch effect for text
+  // 装飾用テキストを一瞬だけ崩して、404画面にノイズ感を出す。
   useEffect(() => {
     const glitchChars = '!@#$%^&*()_+-=[]{}|;:,.<>?/\\~`'
     let interval: NodeJS.Timeout
@@ -261,7 +261,7 @@ export default function NotFound() {
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-[#0f0f14]">
-      {/* Gradient overlay */}
+      {/* 背景グラデーション */}
       <div 
         className="absolute inset-0 opacity-60"
         style={{
@@ -269,18 +269,18 @@ export default function NotFound() {
         }}
       />
 
-      {/* Interactive canvas */}
+      {/* クリックやタップに反応するCanvas */}
       <canvas
         ref={canvasRef}
         className="absolute inset-0 cursor-crosshair"
       />
 
-      {/* Content overlay */}
+      {/* 前面のコンテンツ */}
       <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-6 pointer-events-none">
-        {/* Glitch text overlay (hidden visually, for screen readers) */}
+        {/* スクリーンリーダー向けの見出し */}
         <h1 className="sr-only">404 - ページが見つかりません</h1>
 
-        {/* Decorative glitch text */}
+        {/* 装飾用のグリッチ文字 */}
         <div className="relative mb-8">
           <span 
             className="text-[12vw] md:text-[10vw] font-bold text-transparent opacity-10 select-none"
@@ -292,7 +292,7 @@ export default function NotFound() {
             {glitchText}
           </span>
           
-          {/* Glitch layers */}
+          {/* ずらして重ねるグリッチレイヤー */}
           <span 
             className="absolute inset-0 text-[12vw] md:text-[10vw] font-bold text-transparent opacity-20 select-none animate-pulse"
             style={{
@@ -317,7 +317,7 @@ export default function NotFound() {
           </span>
         </div>
 
-        {/* Message */}
+        {/* メッセージ */}
         <div className="text-center mb-12">
           <p className="type-body text-white/80 text-lg md:text-xl mb-2">
             迷子になってしまいましたね、、
@@ -327,12 +327,12 @@ export default function NotFound() {
           </p>
         </div>
 
-        {/* Instruction */}
+        {/* 操作案内 */}
         <p className="text-white/30 text-xs md:text-sm mb-8 animate-pulse">
           画面をクリック or タップして遊んでみてください
         </p>
 
-        {/* Navigation buttons */}
+        {/* ナビゲーションボタン */}
         <div className="flex flex-col sm:flex-row items-center gap-4 pointer-events-auto">
           <Link
             href="/"
@@ -352,7 +352,7 @@ export default function NotFound() {
         </div>
       </div>
 
-      {/* Scan lines effect */}
+      {/* スキャンライン風のノイズ */}
       <div 
         className="absolute inset-0 pointer-events-none opacity-[0.03]"
         style={{
@@ -361,7 +361,7 @@ export default function NotFound() {
         aria-hidden="true"
       />
 
-      {/* Corner decorations */}
+      {/* 画面四隅の装飾テキスト */}
       <div className="type-label absolute top-8 left-8 text-white/20 text-xs font-mono">
         ERROR_404
       </div>

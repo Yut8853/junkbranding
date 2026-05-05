@@ -36,6 +36,7 @@ const barlowCondensed = Barlow_Condensed({
   weight: ['500', '600', '700', '800'],
 });
 
+// ルートmetadataは各ページmetadataの土台になるため、サイト全体で共通のSEO・OGP・AI向け情報をここに集約する。
 export const metadata: Metadata = {
   metadataBase: new URL('https://junkbranding.com'),
   applicationName: 'JunkBranding',
@@ -86,7 +87,7 @@ export const metadata: Metadata = {
       '茨城・東京・神奈川を中心に活動する、2人だけの小さなブランディング&Web制作スタジオ。大手にはできない、丁寧なものづくりを。',
     images: [
       {
-        url: '/opengraph-image',
+        url: '/ogp.jpg',
         width: 1200,
         height: 630,
         alt: 'JunkBranding - 茨城・東京・神奈川のブランディング & Web制作スタジオ',
@@ -98,7 +99,7 @@ export const metadata: Metadata = {
     title: 'JunkBranding | 茨城・東京・神奈川のブランディング & Web制作',
     description:
       '茨城・東京・神奈川を中心に活動する、2人だけの小さなブランディング&Web制作スタジオ。',
-    images: ['/opengraph-image'],
+    images: ['/ogp.jpg'],
   },
   robots: {
     index: true,
@@ -160,6 +161,7 @@ export const viewport: Viewport = {
   viewportFit: 'cover',
 };
 
+// 構造化データは全ページ共通の事業情報を先に出し、個別ページでは不足分だけを追加する。
 const jsonLd = generateJsonLdGraph([
   generateWebsiteSchema(),
   organizationSchema,
@@ -178,6 +180,7 @@ export default function RootLayout({
       className={`${notoSansJp.variable} ${barlowCondensed.variable}`}
     >
       <head>
+        {/* GTMはafterInteractiveにして、初期描画より計測タグを後回しにする。 */}
         <Script id="google-tag-manager" strategy="afterInteractive">
           {`
             (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':

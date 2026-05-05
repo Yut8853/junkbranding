@@ -1,5 +1,6 @@
 import type { RefObject } from 'react'
 
+// 汎用hookの設定型。UIコンポーネント側からアニメーション強度だけを調整できるようにする。
 export type UseInViewOptions = {
   once?: boolean
   margin?: string

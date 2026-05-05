@@ -22,7 +22,7 @@ export function HeroSectionV2() {
   const lastHeroScrollProgress = useRef(0)
   const isMouseAnimatingRef = useRef(false)
 
-  // Text content
+  // HEROで表示するテキスト。ロゴはScatterTextが扱いやすいよう1文字列にまとめる。
   const line1 = 'JUNK'
   const line2 = 'BRANDING'
   const logoText = `${line1}${line2}`
@@ -91,7 +91,7 @@ export function HeroSectionV2() {
     }
   }, [applyPhotoParallax, isMobile])
 
-  // Initial load animation
+  // 初期表示のフェードイン開始タイミングを少しだけ遅らせる。
   useEffect(() => {
     const timer = setTimeout(() => setIsLoaded(true), 100)
     return () => clearTimeout(timer)
@@ -115,7 +115,7 @@ export function HeroSectionV2() {
     }
   }, [])
 
-  // Direct scroll-based explosion (no GSAP scrub delay)
+  // GSAPを使わず、HEROの画面内位置から散らばりと写真の視差を直接更新する。
   useEffect(() => {
     if (!containerRef.current || !isLoaded || isMobile) return
 
@@ -132,7 +132,7 @@ export function HeroSectionV2() {
       const rect = containerRef.current?.getBoundingClientRect()
       if (!rect) return
 
-      // The TOP page moves this section with a parent transform, so track viewport position directly.
+      // TOPページでは親がtransformで動くため、window scrollではなく画面内位置を直接見る。
       const photoProgress = Math.min(Math.max((window.innerHeight - rect.top) / (window.innerHeight + rect.height), 0), 1)
       const scatterProgress = Math.min(Math.max(-rect.top / 350, 0), 1)
 
@@ -171,7 +171,7 @@ export function HeroSectionV2() {
       ref={containerRef}
       className="relative h-[100svh] md:h-[110vh]"
     >
-      {/* Sticky container */}
+      {/* スクロール中に画面へ留まるHEROコンテナ */}
       <div className="relative h-[100svh] w-full overflow-hidden md:sticky md:top-0 md:h-screen">
         {shouldRenderDesktopPhotos && (
           <div className="pointer-events-none absolute inset-0 z-[8] hidden md:block" aria-hidden="true">
@@ -213,7 +213,7 @@ export function HeroSectionV2() {
           </div>
         )}
 
-        {/* Main typography */}
+        {/* メインタイポグラフィ */}
         <div 
           ref={titleWrapperRef}
           className="absolute inset-0 z-10 flex flex-col items-center justify-center px-6 text-center"
@@ -231,7 +231,7 @@ export function HeroSectionV2() {
             </ScatterText>
           </div>
 
-          {/* Line 3 - Japanese tagline */}
+          {/* 日本語タグライン */}
           <div className="overflow-visible mt-[3vw]">
             <ScatterText
               as="p"
@@ -246,7 +246,7 @@ export function HeroSectionV2() {
           </div>
         </div>
 
-        {/* Bottom info bar */}
+        {/* 下部情報バー */}
         <div 
           ref={bottomBarRef}
           className="absolute bottom-6 left-0 right-0 z-30 flex items-end justify-between px-6 md:bottom-0 md:px-12 md:pb-8"
@@ -256,7 +256,7 @@ export function HeroSectionV2() {
             transition: isMobile ? 'none' : 'opacity 1s cubic-bezier(0.77, 0, 0.175, 1) 1s, transform 1s cubic-bezier(0.77, 0, 0.175, 1) 1s',
           }}
         >
-          {/* Left - Location */}
+          {/* 左側の所在地表示 */}
           <div className="flex flex-col gap-1">
             <ScatterText
               as="span"
@@ -280,7 +280,7 @@ export function HeroSectionV2() {
 
           </div>
 
-        {/* Side text - vertical */}
+        {/* 左側の縦書きテキスト */}
         <div 
           ref={sideTextRef}
           className="absolute left-6 md:left-12 top-1/2 -translate-y-1/2 z-30 hidden lg:block"
@@ -303,7 +303,7 @@ export function HeroSectionV2() {
           </ScatterText>
         </div>
 
-        {/* Corner accents */}
+        {/* 角のアクセント */}
         <div 
           ref={(el) => { cornerRefs.current[0] = el }}
           className="absolute top-8 right-8 w-16 h-16 z-30"

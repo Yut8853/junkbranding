@@ -1,6 +1,7 @@
 import type { ScatterValue, ScatterValueOptions } from '@/types/effects'
 
 export function seededRandom(seed: number) {
+  // 見た目の散らばりを毎回同じにするための決定的乱数。暗号用途では使わない。
   const x = Math.sin(seed * 9999) * 10000
   return x - Math.floor(x)
 }
@@ -12,6 +13,7 @@ export function createScatterValue({
   rotationRange,
   scale,
 }: ScatterValueOptions): ScatterValue {
+  // seedから距離・回転・スケールを生成し、SSR後の再描画でも文字の飛び方を安定させる。
   const angle = seededRandom(seed) * Math.PI * 2
   const distance = minDistance + seededRandom(seed + 1) * distanceRange
 

@@ -20,6 +20,7 @@ export function TopCanvasFilmOverlay() {
   useEffect(() => {
     if (!mounted || isSmallScreen()) return
 
+    // 初期表示とLCPを優先するため、幻想的なCanvas加工はページが落ち着いてから開始する。
     const timer = window.setTimeout(() => {
       setShouldStartCanvas(true)
     }, 11000)
@@ -62,6 +63,7 @@ export function TopCanvasFilmOverlay() {
     })
 
     const resize = () => {
+      // 高DPR端末でもCanvasサイズを抑え、PCのPSI測定でTBTが膨らみすぎないようにする。
       dpr = Math.min(window.devicePixelRatio || 1, 1.5)
       width = window.innerWidth
       height = window.innerHeight
@@ -88,6 +90,7 @@ export function TopCanvasFilmOverlay() {
     }
 
     const drawFilm = (time: number) => {
+      // screen合成でページ全体に虹色の光だけを乗せ、元のデザインを塗りつぶさない。
       ctx.clearRect(0, 0, width, height)
       ctx.globalCompositeOperation = 'screen'
 
@@ -108,6 +111,7 @@ export function TopCanvasFilmOverlay() {
         ctx.fillRect(0, 0, width, height)
       }
 
+      // TOPは2点、下層は1点にして、ページごとの密度差を出す。
       const orbPositions = isHome
         ? [
             {
@@ -194,6 +198,7 @@ export function TopCanvasFilmOverlay() {
     }
 
     const render = (now: number) => {
+      // 常時60fpsではなく、演出として十分な頻度に落としてCPU負荷を抑える。
       const frameInterval = prefersReducedMotion ? 1000 : 50
 
       if (now - lastFrameTime >= frameInterval) {

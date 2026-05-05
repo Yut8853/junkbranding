@@ -100,7 +100,7 @@ export function MarqueeSectionV2() {
         setHoveredItem(null)
       }}
     >
-      {/* Background gradient that follows hovered item */}
+      {/* ホバー中の語句に合わせて広がる背景グラデーション */}
       <div 
         className="absolute inset-0 pointer-events-none"
         style={{

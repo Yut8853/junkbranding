@@ -19,6 +19,7 @@ export function usePointerTilt<TElement extends HTMLElement>(
     const element = elementRef.current
     if (!element || isMobile || disabled) return
 
+    // カード専用の軽い3D傾き。CSS transformだけを直接更新してReact再描画を起こさない。
     const resetTransform = () => {
       element.style.transform = `perspective(${perspective}px) rotateX(0deg) rotateY(0deg) scale(1)`
     }

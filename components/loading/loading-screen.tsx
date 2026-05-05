@@ -8,7 +8,7 @@ export function LoadingScreen({ progress, canSelectAudio, audioChoice, onSelectA
   const [phase, setPhase] = useState<'loading' | 'complete' | 'exit'>('loading')
   const animationRef = useRef<number>(0)
 
-  // Smooth progress counter
+  // 実際の進捗をそのまま出さず、ローディング画面上では滑らかに追従させる。
   useEffect(() => {
     if (animationRef.current) {
       cancelAnimationFrame(animationRef.current)
@@ -34,7 +34,7 @@ export function LoadingScreen({ progress, canSelectAudio, audioChoice, onSelectA
     }
   }, [progress])
 
-  // Phase transitions
+  // 読み込み完了と音声選択が揃ったら、完了表示から退場アニメーションへ進める。
   useEffect(() => {
     if (progress >= 100 && audioChoice) {
       const completeTimer = setTimeout(() => setPhase('complete'), 200)
@@ -65,7 +65,7 @@ export function LoadingScreen({ progress, canSelectAudio, audioChoice, onSelectA
       aria-labelledby="loading-screen-title"
       aria-describedby="loading-screen-status loading-screen-progress-label"
     >
-      {/* Gradient orbs */}
+      {/* 背景のグラデーションオーブ */}
       <div className="absolute inset-0 overflow-hidden" aria-hidden="true">
         <div 
           className="absolute top-1/4 left-1/4 w-[500px] h-[500px] rounded-full blur-[120px] opacity-30 animate-spin"
@@ -83,9 +83,9 @@ export function LoadingScreen({ progress, canSelectAudio, audioChoice, onSelectA
         />
       </div>
 
-      {/* Main content */}
+      {/* メインコンテンツ */}
       <div className="relative z-10 flex w-full max-w-5xl flex-col items-center gap-10 px-6 pb-20 sm:gap-14">
-        {/* Logo with morph animation */}
+        {/* ローディング画面のロゴ */}
         <div className="relative w-full">
           <h1 id="loading-screen-title" className="text-center text-[clamp(3.8rem,12vw,9rem)] font-normal tracking-[0.02em] uppercase font-display drop-shadow-[0_10px_35px_rgba(255,255,255,0.08)]">
             <span className="gradient-text-soft">
@@ -132,7 +132,7 @@ export function LoadingScreen({ progress, canSelectAudio, audioChoice, onSelectA
           </div>
         </div>
 
-        {/* Status text */}
+        {/* 状態テキスト */}
         <div className="flex flex-col items-center gap-2">
           <p
             id="loading-screen-status"

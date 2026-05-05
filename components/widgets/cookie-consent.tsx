@@ -18,19 +18,19 @@ export function CookieConsent() {
   const [isClosing, setIsClosing] = useState(false)
 
   useEffect(() => {
-    // Check if user has already made a choice
+    // すでに同意設定が保存されているか確認する。
     const consent = localStorage.getItem(COOKIE_CONSENT_KEY)
     if (!consent) {
-      // Show banner after a short delay
+      // 初回訪問時は、初期表示を邪魔しないよう少し遅らせて表示する。
       const timer = setTimeout(() => setIsVisible(true), 1000)
       return () => clearTimeout(timer)
     } else {
-      // Load saved preferences
+      // 保存済みの設定を復元する。
       try {
         const saved = JSON.parse(consent)
         setPreferences(saved)
       } catch {
-        // Invalid stored data, show banner
+        // 壊れた保存データの場合は、再選択できるようバナーを表示する。
         setIsVisible(true)
       }
     }
@@ -40,13 +40,13 @@ export function CookieConsent() {
     localStorage.setItem(COOKIE_CONSENT_KEY, JSON.stringify(prefs))
     setPreferences(prefs)
     
-    // Apply cookie preferences
+    // 将来の計測タグ連携に備え、選択内容をここで反映する。
     if (prefs.analytics) {
-      // Enable analytics (e.g., Google Analytics)
+      // 分析Cookieを有効化する場合の例: Google Analyticsのconsent更新など。
       // window.gtag && window.gtag('consent', 'update', { analytics_storage: 'granted' })
     }
     if (prefs.marketing) {
-      // Enable marketing cookies
+      // マーケティングCookieを有効化する場合の例: 広告ストレージのconsent更新など。
       // window.gtag && window.gtag('consent', 'update', { ad_storage: 'granted' })
     }
   }
@@ -89,7 +89,7 @@ export function CookieConsent() {
       aria-describedby="cookie-consent-description"
     >
       <div className="bg-foreground text-background rounded-2xl shadow-2xl overflow-hidden">
-        {/* Header */}
+        {/* ヘッダー */}
         <div className="p-5 pb-0">
           <p id="cookie-consent-description" className="sr-only">
             Cookieの利用許可と詳細設定を選択できます。
@@ -114,7 +114,7 @@ export function CookieConsent() {
           </div>
         </div>
 
-        {/* Content */}
+        {/* 内容 */}
         <div className="p-5">
           {!showSettings ? (
             <>
@@ -125,7 +125,7 @@ export function CookieConsent() {
                 </TransitionLink>
               </p>
 
-              {/* Quick action buttons */}
+              {/* すぐ選べるアクション */}
               <div className="flex flex-col gap-2">
                 <button
                   onClick={handleAcceptAll}
@@ -152,9 +152,9 @@ export function CookieConsent() {
             </>
           ) : (
             <>
-              {/* Detailed settings */}
+              {/* 詳細設定 */}
               <div className="space-y-4 mb-5">
-                {/* Necessary cookies */}
+                {/* 必須Cookie */}
                 <div className="flex items-start justify-between gap-4 p-3 bg-background/5 rounded-xl">
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
@@ -172,7 +172,7 @@ export function CookieConsent() {
                   </div>
                 </div>
 
-                {/* Analytics cookies */}
+                {/* 分析Cookie */}
                 <div className="flex items-start justify-between gap-4 p-3 bg-background/5 rounded-xl">
                   <div className="flex-1">
                     <h4 className="font-medium text-sm">分析Cookie</h4>
@@ -194,7 +194,7 @@ export function CookieConsent() {
                   </button>
                 </div>
 
-                {/* Marketing cookies */}
+                {/* マーケティングCookie */}
                 <div className="flex items-start justify-between gap-4 p-3 bg-background/5 rounded-xl">
                   <div className="flex-1">
                     <h4 className="font-medium text-sm">マーケティングCookie</h4>
@@ -217,7 +217,7 @@ export function CookieConsent() {
                 </div>
               </div>
 
-              {/* Settings action buttons */}
+              {/* 詳細設定の操作ボタン */}
               <div className="flex gap-2">
                 <button
                   onClick={() => setShowSettings(false)}

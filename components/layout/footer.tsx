@@ -21,10 +21,10 @@ export function Footer() {
 
   return (
     <footer className="relative glass-card border-t border-border/20">
-      {/* Main footer content */}
+      {/* フッター本文 */}
       <div className="container mx-auto px-6 md:px-12 lg:px-16 py-16 md:py-20 lg:py-28">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-12">
-          {/* Brand column */}
+          {/* ブランド列 */}
           <RevealSection className="sm:col-span-2 lg:col-span-5" delay={0}>
             <TransitionLink 
               href="/"
@@ -50,7 +50,7 @@ export function Footer() {
             </MagneticButton>
           </RevealSection>
 
-          {/* Navigation column */}
+          {/* ナビゲーション列 */}
           <RevealSection className="lg:col-span-2" delay={0.1}>
             <h3 className="type-label text-muted-foreground mb-6 lg:mb-8">
               Menu
@@ -69,7 +69,7 @@ export function Footer() {
             </ul>
           </RevealSection>
 
-          {/* Contact column */}
+          {/* 連絡先列 */}
           <RevealSection className="lg:col-span-3" delay={0.2}>
             <h3 className="type-label text-muted-foreground mb-6 lg:mb-8">
               Contact
@@ -89,7 +89,7 @@ export function Footer() {
             </div>
           </RevealSection>
 
-          {/* Address column */}
+          {/* 住所列 */}
           <RevealSection className="lg:col-span-2" delay={0.3}>
             <h3 className="type-label text-muted-foreground mb-6 lg:mb-8">
               Address
@@ -106,7 +106,7 @@ export function Footer() {
         </div>
       </div>
 
-      {/* Bottom bar */}
+      {/* 最下部バー */}
       <div className="border-t border-border/20">
         <div className="container mx-auto px-6 md:px-12 lg:px-16 py-6 md:py-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="type-body-compact text-xs text-muted-foreground">
@@ -123,7 +123,7 @@ export function Footer() {
         </div>
       </div>
 
-      {/* Decorative corner elements */}
+      {/* 角の装飾 */}
       <div className="absolute top-8 left-8 w-8 h-8 border-l border-t border-border/30 pointer-events-none" />
       <div className="absolute top-8 right-8 w-8 h-8 border-r border-t border-border/30 pointer-events-none" />
     </footer>

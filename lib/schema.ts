@@ -9,7 +9,7 @@ const containsDangerousContent = (val: string) =>
 
 // 電話番号の形式チェック（日本の電話番号）
 const isValidJapanesePhone = (val: string) => {
-  if (!val) return true // optional
+  if (!val) return true // 任意項目なので空欄は許可する
   const cleaned = val.replace(/[-\s]/g, '')
   return /^(0[789]0\d{8}|0\d{9,10})$/.test(cleaned)
 }

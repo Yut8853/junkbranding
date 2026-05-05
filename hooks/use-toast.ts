@@ -1,6 +1,6 @@
 'use client'
 
-// Inspired by react-hot-toast library
+// react-hot-toastの設計を参考にした、軽量な内部toast管理。
 import * as React from 'react'
 import type { Toast, ToastAction, ToastActionType, ToasterToast, ToastState } from '@/types/toast'
 
@@ -58,8 +58,8 @@ export const reducer = (state: ToastState, action: ToastAction): ToastState => {
     case 'DISMISS_TOAST': {
       const { toastId } = action
 
-      // ! Side effects ! - This could be extracted into a dismissToast() action,
-      // but I'll keep it here for simplicity
+      // 閉じるアニメーション後に削除するため、dismiss時点で削除キューへ積む。
+      // reducer内の副作用だが、toast用途に閉じた小さな状態管理としてここに留める。
       if (toastId) {
         addToRemoveQueue(toastId)
       } else {

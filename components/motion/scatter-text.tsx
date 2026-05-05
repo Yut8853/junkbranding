@@ -288,7 +288,7 @@ export function ScatterText({
     assembleFrameRef.current = requestAnimationFrame(step)
   }, [applyScatter])
 
-  // Controlled scatter is used by TOP/Menu. Normal page text only assembles once.
+  // TOPやメニューは外部から散らばり量を制御する。通常ページのテキストは一度だけ組み上げる。
   useEffect(() => {
     if (!containerRef.current) return
 

@@ -1,7 +1,7 @@
-// app/sitemap.ts
 import { MetadataRoute } from 'next'
 
 export default function sitemap(): MetadataRoute.Sitemap {
+  // Next.js標準のサイトマップ。通常のクローラー向けに主要ページだけを明示する。
   const baseUrl = 'https://junkbranding.com'
   const lastModified = new Date('2026-05-02')
 

@@ -17,7 +17,7 @@ export function RisingRainbowOrb() {
   const [hasScrolled, setHasScrolled] = useState(false)
   const isMobile = useIsMobile()
 
-  // Detect first scroll to show orbs
+  // 初回スクロールを合図にオーブを出現させる。初期表示では負荷と視覚ノイズを抑える。
   useEffect(() => {
     if (isMobile) return
 
@@ -31,7 +31,7 @@ export function RisingRainbowOrb() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [isMobile, hasScrolled])
 
-  // Apply rainbow gradient to logo when all orbs are absorbed
+  // すべてのオーブがフッターロゴに吸収されたら、ロゴ側を虹色アニメーションへ切り替える。
   useEffect(() => {
     if (!logoActivated) return
 
@@ -49,7 +49,7 @@ export function RisingRainbowOrb() {
   useEffect(() => {
     if (isMobile) return
 
-    // Initialize orbs - starts hidden at bottom
+    // オーブは画面下で待機させ、スクロール後に浮遊フェーズへ移す。
     const initialOrbs: Orb[] = []
     for (let i = 0; i < orbCount; i++) {
       initialOrbs.push({
@@ -70,7 +70,7 @@ export function RisingRainbowOrb() {
 
     let lastTime = performance.now()
 
-    // Simplex-like noise using multiple sine waves
+    // 複数のsin波を重ね、軽量な擬似ノイズとして自然な揺れを作る。
     const noise = (t: number, seed: number) => {
       return (
         Math.sin(t * 0.7 + seed) * 0.5 +
@@ -90,7 +90,7 @@ export function RisingRainbowOrb() {
 
       const time = currentTime * 0.001
 
-      // Check if footer logo is visible and get its position
+      // フッターロゴが見えているかを確認し、吸収先の座標として使う。
       const logo = document.getElementById('footer-logo')
       let logoRect: DOMRect | null = null
       if (logo) {
@@ -112,19 +112,19 @@ export function RisingRainbowOrb() {
         }
 
         if (currentOrb.phase === 'hidden') {
-          // Stay hidden until scroll triggers
+          // スクロールで起動されるまでは非表示のまま待機する。
         } else if (currentOrb.phase === 'floating') {
-          // Physics-based floating with noise
+          // ノイズと速度減衰で、物理っぽい浮遊に見せる。
           const dt = deltaTime * 0.001
 
-          // Random force using noise (creates organic wandering) - use different seeds for each orb
+          // オーブごとにseedを変え、同じ動きに見えない有機的な揺れを加える。
           const noiseX = noise(time * 0.4, index * 100) * 12
           const noiseY = noise(time * 0.35, index * 100 + 50) * 8
 
-          // Gentle upward drift force (stronger at start)
+          // 序盤は強め、上がってからは弱めの上昇力をかける。
           const upwardForce = currentOrb.y > 50 ? -15 : -2
 
-          // Boundary forces (soft walls) - slightly different bounds for each orb
+          // 画面外へ出すぎないよう、柔らかい壁のような反発力を与える。
           const leftBound = 15 + index * 5
           const rightBound = 85 - index * 5
           const boundaryForceX = currentOrb.x < leftBound ? (leftBound - currentOrb.x) * 0.5 :
@@ -132,20 +132,20 @@ export function RisingRainbowOrb() {
           const boundaryForceY = currentOrb.y < 25 ? (25 - currentOrb.y) * 0.3 :
                                  currentOrb.y > 85 ? (85 - currentOrb.y) * 0.3 : 0
 
-          // Apply forces to velocity with damping
+          // 各力を速度へ反映し、減衰で暴れすぎを抑える。
           newVx = currentOrb.vx * 0.98 + (noiseX + boundaryForceX) * dt
           newVy = currentOrb.vy * 0.98 + (noiseY + upwardForce + boundaryForceY) * dt
 
-          // Clamp velocity
+          // 急加速を防ぐため速度の上限を決める。
           const maxVel = 1.5
           newVx = Math.max(-maxVel, Math.min(maxVel, newVx))
           newVy = Math.max(-maxVel, Math.min(maxVel, newVy))
 
-          // Update position
+          // 速度を位置へ反映する。
           newX = currentOrb.x + newVx
           newY = currentOrb.y + newVy
 
-          // Check if logo is visible after orb has risen enough
+          // ある程度上昇してから、見えているフッターロゴへの吸収へ切り替える。
           if (currentOrb.y < 70 && logoRect) {
             const logoInView = logoRect.top < window.innerHeight && logoRect.bottom > 0
             if (logoInView) {
@@ -155,7 +155,7 @@ export function RisingRainbowOrb() {
             }
           }
         } else if (currentOrb.phase === 'attracted') {
-          // Update target position in case of scroll
+          // スクロールでロゴ位置が変わるため、吸収中も目標座標を更新する。
           if (logoRect) {
             targetX = ((logoRect.left + logoRect.width / 2) / window.innerWidth) * 100
             targetY = ((logoRect.top + logoRect.height / 2) / window.innerHeight) * 100
@@ -165,35 +165,35 @@ export function RisingRainbowOrb() {
           const dy = targetY - currentOrb.y
           const distance = Math.sqrt(dx * dx + dy * dy)
 
-          // Acceleration towards target increases as we get closer
+          // 近づくほど吸い込まれる印象が強くなるよう、距離に応じて加速を変える。
           const attractionStrength = 0.02 + (1 / (distance + 5)) * 0.08
 
-          // Spiral/wobble effect using noise - different phase offset for each orb
+          // 直線的に吸い込まれないよう、螺旋状の揺れを少し混ぜる。
           const spiralPhase = time * 3 + index * Math.PI
           const spiralRadius = Math.max(0, distance * 0.15)
           const spiralX = Math.cos(spiralPhase) * spiralRadius
           const spiralY = Math.sin(spiralPhase) * spiralRadius
 
-          // Apply attraction with spiral
+          // 吸引力と螺旋成分を合成して位置を進める。
           newVx = currentOrb.vx * 0.92 + dx * attractionStrength
           newVy = currentOrb.vy * 0.92 + dy * attractionStrength
 
           newX = currentOrb.x + newVx + spiralX * 0.05
           newY = currentOrb.y + newVy + spiralY * 0.05
 
-          // Check if close enough to be absorbed
+          // 十分近づいたら吸収済みとして描画対象から外す。
           if (distance < 2) {
             newPhase = 'absorbed'
           }
         } else if (currentOrb.phase === 'absorbed') {
-          // Stay at logo position
+          // 吸収後はロゴ位置に固定し、ロゴ側の虹色演出へつなげる。
           if (logoRect) {
             newX = ((logoRect.left + logoRect.width / 2) / window.innerWidth) * 100
             newY = ((logoRect.top + logoRect.height / 2) / window.innerHeight) * 100
           }
         }
 
-        // Rainbow color cycling - different speed for each orb
+        // オーブごとに少し違う速度で色相を回す。
         const newHue = (currentOrb.hue + deltaTime * (0.02 + index * 0.01)) % 360
 
         return {
@@ -209,7 +209,7 @@ export function RisingRainbowOrb() {
         }
       })
 
-      // Check if all orbs are absorbed to activate logo
+      // 全オーブ吸収後にフッターロゴを起動する。
       if (allAbsorbed && updatedOrbs.length > 0 && updatedOrbs.every(o => o.phase === 'absorbed')) {
         setLogoActivated(true)
       }
@@ -226,7 +226,7 @@ export function RisingRainbowOrb() {
     }
   }, [isMobile, orbCount])
 
-  // Trigger floating phase when user scrolls
+  // 初回スクロール後、待機中のオーブを浮遊フェーズへ進める。
   useEffect(() => {
     if (hasScrolled && orbsRef.current.length > 0) {
       const hasHiddenOrbs = orbsRef.current.some(o => o.phase === 'hidden')
@@ -242,7 +242,7 @@ export function RisingRainbowOrb() {
 
   if (isMobile || orbs.length === 0) return null
 
-  // Filter out hidden and absorbed orbs
+  // 非表示中・吸収済みのオーブは描画しない。
   const visibleOrbs = orbs.filter(orb => orb.phase !== 'hidden' && orb.phase !== 'absorbed')
 
   if (visibleOrbs.length === 0) return null
@@ -253,7 +253,7 @@ export function RisingRainbowOrb() {
       aria-hidden="true"
       className="pointer-events-none fixed inset-0 z-[85] overflow-hidden"
     >
-      {/* Rainbow animation keyframes */}
+      {/* ロゴ吸収後に使う虹色アニメーション定義 */}
       <style jsx global>{`
         @keyframes rainbow-flow {
           0% { background-position: 0% 50%; }
@@ -261,7 +261,7 @@ export function RisingRainbowOrb() {
         }
       `}</style>
 
-      {/* Render each visible orb */}
+      {/* 表示中のオーブを描画 */}
       {visibleOrbs.map((orb) => (
         <div
           key={orb.id}
@@ -273,7 +273,7 @@ export function RisingRainbowOrb() {
             opacity: orb.phase === 'attracted' ? Math.max(0.3, 1 - (1 / (Math.sqrt((orb.targetX - orb.x) ** 2 + (orb.targetY - orb.y) ** 2) + 1)) * 0.7) : 1,
           }}
         >
-          {/* Outermost atmospheric glow */}
+          {/* 外側の空気感を作る発光 */}
           <div
             className="absolute rounded-full"
             style={{
@@ -286,7 +286,7 @@ export function RisingRainbowOrb() {
             }}
           />
 
-          {/* Middle glow layer */}
+          {/* 中間の発光レイヤー */}
           <div
             className="absolute rounded-full"
             style={{
@@ -299,7 +299,7 @@ export function RisingRainbowOrb() {
             }}
           />
 
-          {/* Inner soft core */}
+          {/* 中心の柔らかい核 */}
           <div
             className="relative rounded-full"
             style={{

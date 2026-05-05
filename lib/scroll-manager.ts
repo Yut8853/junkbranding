@@ -5,6 +5,7 @@ let rafId: number | null = null
 let isListening = false
 let observer: IntersectionObserver | null = null
 
+// スクロール監視を1か所へ集約し、複数のScatterTextが個別にscroll listenerを持つ状態を避ける。
 const scheduleUpdate = () => {
   if (rafId !== null) return
 
@@ -37,6 +38,7 @@ const ensureObserver = () => {
       })
       scheduleUpdate()
     },
+    // 画面に入る少し前から更新を始め、スクロール演出の立ち上がりを遅らせない。
     { rootMargin: '120% 0px' }
   )
 
@@ -51,6 +53,7 @@ const ensureListening = () => {
 }
 
 const cleanupListening = () => {
+  // 購読者がいなくなったらグローバルリスナーとObserverを止め、ページ遷移後の残留処理を防ぐ。
   if (subscribers.size > 0 || !isListening) return
 
   isListening = false
@@ -70,6 +73,7 @@ export const subscribeToScrollUpdates = (
   element: HTMLElement,
   callback: (update: ScrollUpdate) => void
 ) => {
+  // 登録側には解除関数だけを返し、各コンポーネントは購読の生存期間だけを管理すればよい形にする。
   const subscriber: ScrollSubscriber = {
     element,
     callback,

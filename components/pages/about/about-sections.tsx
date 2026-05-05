@@ -14,14 +14,14 @@ export { AboutProcessSection } from '@/components/pages/about/about-process-sect
 export function AboutHeroSection() {
   return (
     <section className="relative min-h-[100svh] flex items-center justify-center overflow-hidden">
-      {/* Background giant text */}
+      {/* 背景の巨大テキスト */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none opacity-[0.03]">
         <span className="type-display text-[42vw] whitespace-nowrap">
           ABOUT
         </span>
       </div>
 
-      {/* Marquee decoration */}
+      {/* マーキー装飾 */}
       <div className="absolute inset-0 flex flex-col justify-center pointer-events-none select-none overflow-hidden opacity-[0.04]">
         <div className="flex whitespace-nowrap animate-marquee-slow">
           {Array.from({ length: 8 }).map((_, i) => (
@@ -62,7 +62,7 @@ export function AboutHeroSection() {
         </div>
       </div>
 
-      {/* Scroll indicator */}
+      {/* スクロール案内 */}
       <div 
         className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4"
       >
@@ -137,7 +137,7 @@ export function AboutIntroSection() {
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(255,95,162,0.22),transparent_34%),radial-gradient(circle_at_80%_35%,rgba(75,180,255,0.18),transparent_32%),linear-gradient(135deg,rgba(255,215,95,0.12),transparent_35%,rgba(165,105,255,0.16))] mix-blend-screen" />
                 <div className="absolute inset-0 bg-gradient-to-t from-background/85 via-transparent to-transparent" />
                 
-                {/* Floating label */}
+                {/* 写真上に浮かせるラベル */}
                 <div className="absolute bottom-8 left-8 right-8">
                   <span className="type-label text-foreground/60 mb-2 block">Studio</span>
                   <span className="type-card-title text-2xl gradient-text">JunkBranding</span>
@@ -154,7 +154,7 @@ export function AboutIntroSection() {
 export function AboutTeamSection({ team }: AboutTeamSectionProps) {
   return (
     <section className="relative py-24 md:py-32 lg:py-40 glass-card overflow-hidden">
-      {/* Background text */}
+      {/* 背景テキスト */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none opacity-[0.02]">
         <span className="type-display text-[32vw] whitespace-nowrap">TEAM</span>
       </div>
@@ -215,10 +215,10 @@ function TeamMemberCard({
           />
           <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/30 to-transparent" />
           
-          {/* Hover gradient overlay */}
+          {/* ホバー時のグラデーションオーバーレイ */}
           <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 bg-gradient-to-br from-primary/20 via-transparent to-accent/20" />
           
-          {/* Name overlay */}
+          {/* 名前オーバーレイ */}
           <div className="absolute bottom-8 left-8 right-8">
             <span className="type-label text-foreground/60 mb-2 block">{member.role}</span>
             <h3 className="type-section-title text-3xl md:text-4xl gradient-text mb-1">
@@ -245,7 +245,7 @@ function TeamMemberCard({
 export function AboutValuesSection({ values }: AboutValuesSectionProps) {
   return (
     <section className="relative py-24 md:py-32 lg:py-40 glass-light overflow-hidden">
-      {/* Background text */}
+      {/* 背景テキスト */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none opacity-[0.02]">
         <span className="type-display text-[30vw] whitespace-nowrap">VALUES</span>
       </div>
@@ -339,7 +339,7 @@ function ValueCard({
 export function AboutContactSection() {
   return (
     <section className="relative py-32 md:py-40 lg:py-56 glass-light overflow-hidden">
-      {/* Background text */}
+      {/* 背景テキスト */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none opacity-[0.02]">
         <span className="type-display text-[30vw] whitespace-nowrap">CONTACT</span>
       </div>

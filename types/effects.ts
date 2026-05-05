@@ -1,3 +1,4 @@
+// CanvasやWebGLではReact stateに載せない値が多いため、描画ループで共有する最小限の形だけを型にする。
 export type FloatingParticle = {
   x: number
   y: number
@@ -67,6 +68,7 @@ export type CanvasContextWithLetterSpacing = CanvasRenderingContext2D & {
   letterSpacing?: string
 }
 
+// ScatterTextは文字ごとの計測結果をキャッシュし、スクロール中の再計測を避ける。
 export type GlyphMeasurement = {
   char: string
   x: number

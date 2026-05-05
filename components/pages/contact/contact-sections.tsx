@@ -50,14 +50,14 @@ export function ContactHeroSection() {
       ref={containerRef}
       className="relative min-h-[100svh] flex items-center justify-center overflow-hidden"
     >
-      {/* Background giant text */}
+      {/* 背景の巨大テキスト */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none opacity-[0.03]">
         <span className="type-display text-[50vw] whitespace-nowrap">
           CONTACT
         </span>
       </div>
 
-      {/* Marquee decoration */}
+      {/* マーキー装飾 */}
       <div className="absolute inset-0 flex flex-col justify-center pointer-events-none select-none overflow-hidden opacity-[0.04]">
         <div className="flex whitespace-nowrap animate-marquee-slow">
           {Array.from({ length: 8 }).map((_, i) => (
@@ -102,7 +102,7 @@ export function ContactHeroSection() {
         </div>
       </div>
 
-      {/* Scroll indicator */}
+      {/* スクロール案内 */}
       <div 
         className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4"
         style={{ opacity: 1 - heroScatterProgress }}

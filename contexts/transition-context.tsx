@@ -37,7 +37,7 @@ export function TransitionProvider({ children }: { children: ReactNode }) {
       router.prefetch(href)
       prefetchedRoutes.current.add(href)
     } catch {
-      // Next can reject very early prefetches during dev HMR/router startup.
+      // dev中のHMRやrouter起動直後はprefetchが失敗することがあるため、遷移自体は止めない。
     }
   }, [router])
 
@@ -55,6 +55,7 @@ export function TransitionProvider({ children }: { children: ReactNode }) {
       cancelIdleCallback?: (handle: number) => void
     }
 
+    // 初期表示直後に全ルートを取りに行くとTBTが伸びるため、idle後に少しずつ先読みする。
     const prefetchAll = () => {
       PREFETCH_ROUTES.forEach((href, index) => {
         setTimeout(() => prefetchRoute(href), index * 180)
@@ -89,20 +90,21 @@ export function TransitionProvider({ children }: { children: ReactNode }) {
       return
     }
 
-    // Prevent multiple navigations
+    // 遷移アニメーション中の二重pushを防ぐ。
     if (isNavigating.current || isTransitioning) return
 
     isNavigating.current = true
     pendingHref.current = nextPath
     
-    // Phase 1: Start transition (show overlay & particles)
+    // フェーズ1: オーバーレイと粒子を表示し、現ページを退場させる。
     setIsTransitioning(true)
     
-    // Phase 2: After content fades out, navigate
+    // フェーズ2: コンテンツがフェードアウトした後にNext.jsの遷移を実行する。
     pushTimer.current = window.setTimeout(() => {
       router.push(href)
     }, EXIT_DURATION_MS)
 
+    // ルート確定イベントを取りこぼしても画面が固まらないよう、保険の完了タイマーを置く。
     fallbackTimer.current = window.setTimeout(() => {
       setHasNavigated(true)
       setIsTransitioning(false)
@@ -117,6 +119,7 @@ export function TransitionProvider({ children }: { children: ReactNode }) {
 
     if (completeTimer.current) window.clearTimeout(completeTimer.current)
 
+    // pathnameが目的地に変わったら、入場アニメーション分だけ待って遷移状態を解除する。
     completeTimer.current = window.setTimeout(() => {
       setHasNavigated(true)
       setIsTransitioning(false)

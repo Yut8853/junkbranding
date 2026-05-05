@@ -1,3 +1,4 @@
+// ナビゲーションは表示状態・組み上げアニメーション・ページ遷移を分けて持つため、hook間の契約をここに集約する。
 export type UseMenuAssembleAnimationOptions = {
   isOpen: boolean
   setIsOpen: (isOpen: boolean) => void

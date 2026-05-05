@@ -74,6 +74,7 @@ export function BottomHeatHaze() {
       return;
     }
 
+    // 画面下部だけの装飾なので、WebGLは必要最小限の設定で初期化する。
     const gl = canvas.getContext('webgl', {
       alpha: true,
       antialias: false,
@@ -125,6 +126,7 @@ export function BottomHeatHaze() {
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
     const resize = () => {
+      // 下部100pxの演出に過剰な解像度は不要なため、DPRを抑えてGPU負荷を下げる。
       const dpr = Math.min(window.devicePixelRatio || 1, 1.25);
       width = Math.max(1, Math.floor(window.innerWidth * dpr));
       height = Math.max(1, Math.floor(canvas.clientHeight * dpr));
@@ -137,6 +139,7 @@ export function BottomHeatHaze() {
     };
 
     const render = (now: number) => {
+      // 常時60fpsにせず、煙として自然に見える範囲で更新頻度を制限する。
       const frameInterval = prefersReducedMotion ? 90 : 33;
 
       if (now - lastFrameTime >= frameInterval) {

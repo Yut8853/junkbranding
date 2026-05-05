@@ -23,6 +23,7 @@ export const isSmallScreen = () => {
   return window.matchMedia('(max-width: 767px)').matches
 }
 
+// SPでは重い演出より初期操作性を優先するため、複数箇所で同じ判定を共有する。
 export const shouldUseFastStart = () => isSmallScreen()
 
 export const scheduleIdleTask = (
@@ -36,12 +37,14 @@ export const scheduleIdleTask = (
   }
 
   if (win.requestIdleCallback && win.cancelIdleCallback) {
+    // 対応ブラウザではidle時間を使い、指定timeoutで必ず実行されるようにする。
     const idleId = win.requestIdleCallback(task, { timeout })
     return {
       cancel: () => win.cancelIdleCallback?.(idleId),
     }
   }
 
+  // SafariなどrequestIdleCallbackがない環境向けの簡易フォールバック。
   const timeoutId = window.setTimeout(task, fallbackDelay)
   return {
     cancel: () => window.clearTimeout(timeoutId),

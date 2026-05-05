@@ -18,7 +18,7 @@ export function ScatterBlock({
   const [isVisible, setIsVisible] = useState(false)
   const isMobile = useIsMobile()
 
-  // CTA blocks should reveal into place, but never scatter away while scrolling.
+  // CTAブロックは表示時だけ組み上げ、スクロールで散らばらないようにする。
   useEffect(() => {
     const element = ref.current
     if (!element) return
@@ -42,7 +42,7 @@ export function ScatterBlock({
     return () => observer.disconnect()
   }, [isMobile])
 
-  // Calculate styles
+  // 表示状態に応じた最小限のstyleを返す。
   const getStyles = () => {
     return {
       transform: isMobile || isVisible ? 'translate3d(0,0,0) scale(1)' : 'translate3d(0,24px,0) scale(0.98)',

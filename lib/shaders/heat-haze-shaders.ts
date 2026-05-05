@@ -1,3 +1,5 @@
+// ヒートヘイズ系WebGL演出で共有するシェーダー定義。
+// vertexは全画面四角形を描くための共通処理、fragmentは表示場所ごとに濃度や高さの扱いを分ける。
 export const HEAT_HAZE_VERTEX_SHADER_SOURCE = `
   attribute vec2 a_position;
 
@@ -70,6 +72,7 @@ export const BOTTOM_HEAT_HAZE_FRAGMENT_SHADER_SOURCE = `
   }
 `;
 
+// メニュー用はu_progressで煙の高さを制御し、ハンバーガーメニューの開閉に合わせて下から立ち上げる。
 export const MENU_HEAT_HAZE_FRAGMENT_SHADER_SOURCE = `
   precision mediump float;
 

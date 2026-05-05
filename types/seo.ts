@@ -1,3 +1,4 @@
+// ページmetadata生成とJSON-LD生成で共有する、SEO周りの入力型。
 export type PageMetadataOptions = {
   title: string
   description?: string

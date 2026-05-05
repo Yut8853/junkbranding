@@ -41,6 +41,7 @@ class GeneratedAudioPlayer {
     lowpass.connect(masterGain)
     masterGain.connect(context.destination)
 
+    // MP3が再生できない環境でも「音あり」を選んだ体験を壊さないため、Web Audioで控えめな持続音を生成する。
     const voices = [
       { frequency: 146.83, type: 'sine' as OscillatorType, gain: 0.2, detune: -5 },
       { frequency: 220, type: 'triangle' as OscillatorType, gain: 0.12, detune: 7 },
@@ -85,7 +86,7 @@ class GeneratedAudioPlayer {
         try {
           oscillator.stop()
         } catch {
-          // The oscillator may already have been stopped by a fast toggle.
+          // 連打で先に停止済みになっている場合は、そのまま後片付けを続ける。
         }
       })
       this.oscillators = []
@@ -142,6 +143,7 @@ class BackgroundAudioPlayer {
     if (!this.audio) return false
 
     try {
+      // ユーザー操作直後にload/playをまとめて行い、ブラウザの自動再生制限に引っかかりにくくする。
       this.audio.preload = 'auto'
       this.audio.muted = false
       this.audio.volume = START_VOLUME
@@ -169,6 +171,7 @@ class BackgroundAudioPlayer {
   }
 
   private async startGeneratedAudio() {
+    // 実ファイルの読み込み失敗や再生ブロック時は、生成音へフォールバックする。
     const started = await this.generatedAudio.start()
     this._isPlaying = started
     return started
@@ -217,6 +220,7 @@ class BackgroundAudioPlayer {
     const safeTargetVolume = clampVolume(targetVolume)
     const startedAt = performance.now()
 
+    // HTMLAudioElementのvolumeをRAFで補間し、開始・停止時のクリックノイズを避ける。
     const step = (now: number) => {
       const progress = Math.min((now - startedAt) / durationMs, 1)
       audio.volume = clampVolume(startVolume + (safeTargetVolume - startVolume) * progress)
@@ -237,6 +241,7 @@ class BackgroundAudioPlayer {
 let audioPlayerInstance: BackgroundAudioPlayer | null = null
 
 function getAudioPlayer() {
+  // ページ遷移でProviderが再マウントされても、音声プレイヤーは1つだけを共有する。
   if (!audioPlayerInstance) {
     audioPlayerInstance = new BackgroundAudioPlayer()
   }
@@ -253,7 +258,7 @@ export function AudioProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     audioPlayerRef.current = getAudioPlayer()
     
-    // Sync state with audio player
+    // Provider再マウント時に、既存プレイヤーの再生状態をReact側へ同期する。
     setIsPlaying(audioPlayerRef.current.isPlaying)
   }, [])
 

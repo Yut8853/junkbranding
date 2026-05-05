@@ -1,6 +1,7 @@
 const baseUrl = 'https://junkbranding.com'
 const lastModified = '2026-05-02'
 
+// Search Consoleへ直接提出しやすい固定XML。Next標準sitemapとは別URLで運用する。
 const pages = [
   { path: '', changeFrequency: 'daily', priority: '1.0' },
   { path: '/about', changeFrequency: 'monthly', priority: '0.8' },
@@ -11,6 +12,7 @@ const pages = [
 ]
 
 function escapeXml(value: string) {
+  // URLへ将来クエリや特殊文字が入ってもXMLを壊さないように最低限エスケープする。
   return value
     .replaceAll('&', '&amp;')
     .replaceAll('<', '&lt;')
@@ -37,6 +39,7 @@ ${pages
 export const dynamic = 'force-static'
 
 export function GET() {
+  // CDNでは長めに、ブラウザでは短めにキャッシュさせて更新反映と配信効率のバランスを取る。
   return new Response(sitemapXml, {
     headers: {
       'Content-Type': 'application/xml; charset=utf-8',

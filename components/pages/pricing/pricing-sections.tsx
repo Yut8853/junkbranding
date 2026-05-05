@@ -11,12 +11,12 @@ import type { PricingFaqSectionProps, PricingServiceCategoriesSectionProps } fro
 export function PricingHeroSection() {
   return (
     <section className="relative min-h-[100svh] flex items-center justify-center overflow-hidden">
-      {/* Background giant text */}
+      {/* 背景の巨大テキスト */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none opacity-[0.03]">
         <span className="type-display text-[42vw] whitespace-nowrap">PRICING</span>
       </div>
 
-      {/* Marquee decoration */}
+      {/* マーキー装飾 */}
       <div className="absolute inset-0 flex flex-col justify-center pointer-events-none select-none overflow-hidden opacity-[0.04]">
         <div className="flex whitespace-nowrap animate-marquee-slow">
           {Array.from({ length: 8 }).map((_, i) => (
@@ -57,7 +57,7 @@ export function PricingHeroSection() {
         </div>
       </div>
 
-      {/* Scroll indicator */}
+      {/* スクロール案内 */}
       <div 
         className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4"
       >
@@ -118,7 +118,7 @@ function ServiceCategoryCard({
 }) {
   return (
     <div className="group">
-      {/* Large category number */}
+      {/* 大きなカテゴリ番号 */}
       <SectionReveal delay={0.1} duration={0.8}>
         <div className="mb-8 lg:mb-12 overflow-hidden">
           <ScatterText
@@ -133,7 +133,7 @@ function ServiceCategoryCard({
         </div>
       </SectionReveal>
 
-      {/* Header */}
+      {/* カテゴリ見出し */}
       <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8 mb-12 lg:mb-16 pb-10 border-b border-border/20">
         <div className="flex items-start gap-6 md:gap-8">
           <SectionReveal delay={0.2} duration={0.8}>
@@ -199,14 +199,14 @@ function ServiceCategoryCard({
         </SectionReveal>
       </div>
 
-      {/* Services grid */}
+      {/* サービス一覧グリッド */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 mb-10">
         {category.services.map((service, serviceIndex) => (
           <ServiceCard key={service.name} service={service} index={serviceIndex} />
         ))}
       </div>
 
-      {/* Features */}
+      {/* 付帯する特徴タグ */}
       <SectionReveal delay={0.4} duration={0.8}>
         <div className="flex flex-wrap gap-3">
           {category.features.map((feature) => (
@@ -237,7 +237,7 @@ export function PricingFaqSection({ faqs }: PricingFaqSectionProps) {
 
   return (
     <section className="relative py-24 md:py-32 lg:py-40 glass-card overflow-hidden">
-      {/* Background text */}
+      {/* 背景テキスト */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none opacity-[0.03]">
         <span className="type-display text-[28vw] whitespace-nowrap">FAQ</span>
       </div>
@@ -353,7 +353,7 @@ function FaqItem({
 export function PricingCtaSection() {
   return (
     <section className="relative min-h-[60svh] flex items-center justify-center py-24 md:py-32 lg:py-40 glass-light overflow-hidden">
-      {/* Background text */}
+      {/* 背景テキスト */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none opacity-[0.02]">
         <span className="type-display text-[28vw] whitespace-nowrap">START</span>
       </div>

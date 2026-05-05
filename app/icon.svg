@@ -1,10 +1,14 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
   <defs>
-    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#a855f7"/>
-      <stop offset="100%" style="stop-color:#ec4899"/>
+    <linearGradient id="rainbow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ff5f9e"/>
+      <stop offset="16%" stop-color="#ff9f5f"/>
+      <stop offset="32%" stop-color="#ffe66d"/>
+      <stop offset="50%" stop-color="#76f2a8"/>
+      <stop offset="66%" stop-color="#5fd9ff"/>
+      <stop offset="82%" stop-color="#9b7cff"/>
+      <stop offset="100%" stop-color="#ff5f9e"/>
     </linearGradient>
   </defs>
-  <rect width="32" height="32" rx="6" fill="#0f0f14"/>
-  <text x="50%" y="58%" dominant-baseline="middle" text-anchor="middle" fill="url(#grad)" font-family="system-ui, sans-serif" font-weight="700" font-size="22">J</text>
+  <rect width="32" height="32" rx="7" fill="url(#rainbow)"/>
 </svg>

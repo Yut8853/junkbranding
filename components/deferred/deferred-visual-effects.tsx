@@ -30,6 +30,7 @@ export function DeferredVisualEffects() {
       return
     }
 
+    // カーソルは比較的軽いので先に、Canvas/WebGL系の常駐エフェクトはさらに後のidleへ回す。
     const cursorTask = scheduleIdleTask(() => {
       setShouldRenderCursor(true)
     }, 12000, 10000)

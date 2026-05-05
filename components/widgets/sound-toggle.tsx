@@ -34,7 +34,7 @@ export function SoundToggle() {
           backdropFilter: 'blur(10px)',
         }}
       >
-        {/* Sound wave bars */}
+        {/* 再生状態を示す波形バー */}
         <div className="flex items-end gap-[3px] h-5">
           {[0, 1, 2, 3].map((i) => (
             <div
@@ -55,7 +55,7 @@ export function SoundToggle() {
           ))}
         </div>
 
-        {/* Ripple effect when playing */}
+        {/* 再生中の波紋エフェクト */}
         {isPlaying && (
           <>
             <div 
@@ -77,7 +77,7 @@ export function SoundToggle() {
         )}
       </div>
 
-      {/* Label */}
+      {/* ホバー時のラベル */}
       <span
         aria-hidden="true"
         className="type-label absolute right-full mr-3 top-1/2 -translate-y-1/2 text-xs text-foreground/50 whitespace-nowrap transition-all duration-300"

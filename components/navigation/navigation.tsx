@@ -74,7 +74,7 @@ export function Navigation() {
 
   const shouldRenderMenu = hasMounted && (isOpen || isAnimating || assembleProgress > 0)
 
-  // Close on route change
+  // ページ遷移が確定したら、開いたままのメニューを強制的に閉じる。
   useEffect(() => {
     if (isOpen) {
       forceCloseMenu()
@@ -82,7 +82,7 @@ export function Navigation() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname])
 
-  // Keyboard accessibility
+  // キーボード操作でもEscapeでメニューを閉じられるようにする。
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && isOpen) {
@@ -137,7 +137,7 @@ export function Navigation() {
         </TransitionLink>
       )}
 
-      {/* Rainbow Hamburger Button */}
+      {/* 虹色へ変化するハンバーガーボタン */}
       <button
         onClick={toggleMenu}
         disabled={isAnimating}
@@ -147,7 +147,7 @@ export function Navigation() {
         aria-expanded={isOpen}
         aria-haspopup="dialog"
       >
-        {/* Rainbow gradient background */}
+        {/* 虹色グラデーションの背景リング */}
         <span
           aria-hidden="true"
           className={`absolute inset-0 rounded-full transition-all duration-500 ${
@@ -169,7 +169,7 @@ export function Navigation() {
           }}
         />
         
-        {/* Hamburger lines with rainbow gradient */}
+        {/* 虹色グラデーションのハンバーガー線 */}
         <span className="relative w-7 h-5 flex flex-col justify-between" aria-hidden="true">
           <span
             className={`w-full h-[2px] transition-all duration-500 origin-center ${
@@ -211,7 +211,7 @@ export function Navigation() {
         </span>
       </button>
 
-      {/* Fullscreen Menu Overlay */}
+      {/* 全画面メニューオーバーレイ */}
       {shouldRenderMenu && (
         <NavigationMenuOverlay
           assembleProgress={assembleProgress}

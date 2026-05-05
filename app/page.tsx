@@ -47,6 +47,7 @@ const homeJsonLd = generateJsonLdGraph([
 export default function HomePage() {
   return (
     <>
+      {/* TOPページ固有の構造化データを追加し、共通JSON-LDと合わせて検索エンジンへ文脈を渡す。 */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(homeJsonLd) }}

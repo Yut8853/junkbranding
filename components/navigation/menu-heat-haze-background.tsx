@@ -63,7 +63,7 @@ export function MenuHeatHazeBackground({ progress, isOpen }: MenuHeatHazeBackgro
   const progressRef = useRef(progress);
   const [useFallback, setUseFallback] = useState(false);
 
-  // Update progress ref
+  // RAF内で最新の開閉進捗を読むため、Reactの再描画に頼らずrefへ同期する。
   useEffect(() => {
     progressRef.current = progress;
   }, [progress]);
@@ -75,6 +75,7 @@ export function MenuHeatHazeBackground({ progress, isOpen }: MenuHeatHazeBackgro
       return;
     }
 
+    // メニュー背景は大きい面積を描くため、不要なWebGL機能を切って軽量にする。
     const gl = canvas.getContext('webgl', {
       alpha: true,
       antialias: false,
@@ -127,6 +128,7 @@ export function MenuHeatHazeBackground({ progress, isOpen }: MenuHeatHazeBackgro
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
     const resize = () => {
+      // 高DPR端末では解像度を抑え、煙の滑らかさと負荷のバランスを取る。
       const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
       width = Math.max(1, Math.floor(window.innerWidth * dpr));
       height = Math.max(1, Math.floor(window.innerHeight * dpr));
@@ -139,6 +141,7 @@ export function MenuHeatHazeBackground({ progress, isOpen }: MenuHeatHazeBackgro
     };
 
     const render = (now: number) => {
+      // reduce motion時は更新頻度を落とし、演出を残しつつ負荷を下げる。
       const frameInterval = prefersReducedMotion ? 90 : 33;
 
       if (now - lastFrameTime >= frameInterval) {

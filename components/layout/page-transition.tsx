@@ -77,7 +77,7 @@ export function PageTransition({ children }: PageTransitionProps) {
 
   return (
     <>
-      {/* Soft rainbow gradient overlay during transition - below canvas (99999) */}
+      {/* 遷移中に全体を包む柔らかい虹色グラデーション。Canvas演出より下に置く */}
       <div
         style={{
           ...overlayBaseStyle,
@@ -88,7 +88,7 @@ export function PageTransition({ children }: PageTransitionProps) {
         }}
         aria-hidden="true"
       />
-      {/* Floating mist orbs */}
+      {/* 遷移中に漂う霧状のオーブ */}
       <div
         style={{
           ...overlayBaseStyle,
@@ -114,7 +114,7 @@ export function PageTransition({ children }: PageTransitionProps) {
             }}
           />
         ))}
-        {/* Heat haze shimmer effect at bottom with rainbow tint */}
+        {/* 画面下部に虹色を含んだヒートヘイズ感を足す */}
         <div
           style={{
             position: 'absolute',
