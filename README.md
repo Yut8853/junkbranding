@@ -1,1091 +1,433 @@
 # JunkBranding 開発メモ
 
-自分用のプロジェクトメモ。
+JunkBrandingは、茨城・東京・神奈川を中心に活動する小規模ブランディング/Web制作スタジオのサイト。  
+ブランドの「らしさ」を、Web・言葉・ビジュアル・動きで伝える。
 
-環境、デザイン方針、コードの置き場所、実装で気をつけることをまとめる。
+## 技術スタック
 
-## 使っているもの
-
-Next.js 16 App Router
-
-React 19
-
-TypeScript
-
-Tailwind CSS v4
-
-GSAP / ScrollTrigger
-
-Lenis
-
-Three.js / React Three Fiber
-
-Resend
-
-Vercel Analytics
-
-pnpm
+- Next.js 16 App Router
+- React 19
+- TypeScript
+- Tailwind CSS v4
+- GSAP / ScrollTrigger
+- Lenis
+- Resend
+- Vercel Analytics
+- pnpm
 
 ## 開発コマンド
-
-このプロジェクトは `pnpm-lock.yaml` があるので pnpm 前提。
-
-インストールと開発起動
 
 ```bash
 pnpm install
 pnpm dev
 ```
 
-ビルド確認
-
 ```bash
 pnpm build
 pnpm start
 ```
 
-型チェック
-
-```bash
-pnpm exec tsc --noEmit
-```
-
-lint
-
 ```bash
 pnpm lint
+pnpm exec tsc --noEmit
 ```
 
 ## 環境変数
 
-問い合わせフォームのメール送信に Resend を使う。
+問い合わせフォームのメール送信にResendを使う。
 
 ```env
 RESEND_API_KEY=your_resend_api_key
 ```
 
-`actions/contact.ts` で `RESEND_API_KEY` が未設定だとエラーになる。
+`actions/contact.ts` で参照。ローカルで問い合わせ送信まで確認する場合は `.env.local` に設定。
 
-ローカルで問い合わせフォームまで確認する場合は `.env.local` に入れる。
+## サイト仕様
 
-## デザイン仕様
+### ページ
 
-### 全体の方向
+- `/`: TOP
+- `/about`: スタジオ紹介
+- `/works`: 制作実績
+- `/pricing`: 料金
+- `/contact`: 問い合わせ
+- `/privacy`: プライバシーポリシー
+- `/sitemap.xml`: Next標準サイトマップ
+- `/search-console-sitemap.xml`: Search Console提出用XMLサイトマップ
+- `/llms.txt`: AI/LLM向けサイト説明
 
-小規模スタジオらしい丁寧さ、余白、軽さを大事にする。
+### TOP
 
-淡いグラス表現、虹色グラデーションを基本トーンにする。
+PCでは反転スクロールのステージ構成。最下層のHEROから始まり、スクロールに応じて上方向のセクションへ進む。
 
-黒ベタのボタンは避ける。
+HEROにはPC限定で2枚のパララックス写真を表示。写真はゴミ素材で作った `J` と `B` の文字で、JunkBrandingの「価値がなさそうなものをブランドとして見える形にする」コンセプトを表す。
 
-CTA は基本 `cta-primary` か `cta-secondary` を使う。
+SPでは通常の縦積みレイアウトにし、重い背景演出やCanvas処理は抑える。
 
-### 文字
+### ナビゲーション
 
-本文
+ナビゲーションは `components/navigation/` に集約。
 
-`Inter`
+- `navigation.tsx`: ヘッダー、問い合わせ導線、ハンバーガー制御
+- `navigation-menu-overlay.tsx`: 全画面メニュー
+- `menu-heat-haze-background.tsx`: WebGLのヒートヘイズ背景
+- `use-header-intro-animation.ts`: ロード後のリンク吸い込み演出
+- `use-menu-assemble-animation.ts`: メニュー組み上げ進捗
+- `nav-config.ts`: メニュー項目と色
 
-見出し / 英字ディスプレイ
+内部リンクは基本的に `TransitionLink` を使う。外部リンク、`tel:`、修飾キー付きクリックは通常遷移のまま。
 
-`Bebas Neue`
+### 音声
 
-大きい英字見出し
+背景音楽は `contexts/audio-context.tsx` で管理。
 
-アウトライン、グラデーション、字間で雰囲気を作る。
+- 音源: `public/audio/128_BPM124.mp3`
+- 最大音量: `MAX_VOLUME`
+- ユーザー選択: `localStorage`
+- 音源再生に失敗した場合: Web Audioで生成音へフォールバック
 
-長い日本語
-
-読みやすさ優先。SPではアニメーションより可読性を優先する。
-
-### 色と装飾
-
-アクセント
-
-ピンク、コーラル、イエロー、グリーン、ブルー、パープルの虹色グラデーション。
-
-カードやセクションの枠
-
-`rainbow-border`
-
-半透明の面
-
-`glass-card` / `glass-light`
-
-PC
-
-背景パーティクル、カスタムカーソル、下部の虹色陽炎、ページ遷移演出を入れる。
-
-SP
-
-パーティクル、カスタムカーソル、Lenis、下部WebGL陽炎、文字の散りアニメーションは止める。
-
-### 動き
-
-テキスト演出
-
-`ScatterText` / `ScatterBlock` を中心に統一する。
-
-ページ遷移
-
-`TransitionProvider`、`PageTransition`、`TransitionLink` で制御する。
-
-内部リンク
-
-ページ遷移演出を通したい場合は `TransitionLink` か `navigateWithTransition()` を使う。
-
-外部リンク
-
-`tel:`、外部リンク、修飾キー付きクリックでは独自遷移を走らせない。
-
-## コード仕様
-
-### TypeScript
-
-`strict: true`
-
-パスエイリアスは `@/*`。
-
-ページ固有の型は `types/` に分ける。
-
-共通UI props、演出用の粒子型、hook用の補助型も `types/` に切り出す。
-
-component / hook の中には、実装ロジックだけを残す。
-
-主な型ファイル
-
-`types/about-page.ts`
-
-`types/works-page.ts`
-
-`types/home-page.ts`
-
-`types/pricing-page.ts`
-
-`types/contact-page.ts`
-
-`types/layout.ts`
-
-`types/component-props.ts`
-
-`types/effects.ts`
-
-`types/english-text.ts`
-
-`types/hooks.ts`
-
-`types/toast.ts`
-
-### コンポーネント
-
-ページ全体の client component
-
-`components/pages/*-page.tsx`
-
-大きいページ
-
-表示データを `content/`、セクションを `components/pages/<page>/` に分ける。
-
-共通 UI
-
-`components/` 直下に置く。
-
-アニメーションやスクロール制御
-
-可能なら hook / helper に逃がす。
-
-ファイルが大きくなったら
-
-まず「データ」「セクション」「アニメーション補助」を分ける。
-
-IntersectionObserver やスクロール進捗
-
-複数コンポーネントで使う場合は `hooks/` に分ける。
-
-ページ切り出しの基本方針
-
-`components/pages/<page>-page.tsx`
-
-そのページの入口として、セクションを並べるだけに近づける。
-
-`content/<page>.ts`
-
-文言、料金、FAQ、選択肢、一覧データを置く。
-
-`components/pages/<page>/<page>-sections.tsx`
-
-セクション単位の JSX を置く。
-
-`components/pages/<page>/use-*.ts`
-
-ページ固有の状態管理や IntersectionObserver を置く。
-
-`types/<page>.ts`
-
-ページ固有型を置く。
-
-既存の見た目
-
-className、`ScatterText` の `scrollStart` / `scrollEnd` / `distance`、`ScatterBlock` の `seed` は不用意に変えない。
-
-大きな共通演出
-
-`HeroSectionV2`、`ServicesSectionV2`、`CTASectionV2` はページ配下へ無理に移さない。
-
-### スタイル
-
-グローバルスタイル
-
-`app/globals.css`
-
-CTA
-
-`.cta-primary` / `.cta-secondary`
-
-グラデーション枠
-
-`.rainbow-border`
-
-SP 最適化
-
-`@media (max-width: 767px)` にまとめる。
-
-SP
-
-重い装飾、無限アニメーション、blur、backdrop-filter をできるだけ止める。
-
-### 音楽
-
-背景音楽
-
-`contexts/audio-context.tsx`
-
-音声ファイル
-
-`public/audio/128_BPM124.mp3`
-
-最大音量
-
-`MAX_VOLUME`
-
-現在の音量
-
-`0.4`
-
-ユーザーの選択
-
-localStorage に保存する。
-
-ロード画面中
-
-音楽選択をロックし、ロード後に選べるようにする。
+ロード画面で音あり/無音を選び、選択後にサイトへ入る。
 
 ### 問い合わせフォーム
 
-送信処理
+- 送信処理: `actions/contact.ts`
+- 入力検証: `lib/schema.ts`
+- フォーム状態: `components/pages/contact/use-contact-form.ts`
+- 選択肢データ: `content/contact-page.ts`
 
-`actions/contact.ts` で Server Action と Resend を使う。
+honeypot、3秒未満送信のbot判定、IPベースの簡易レート制限を入れている。入力エラーは `aria-invalid`、`aria-describedby`、`role="alert"` で伝える。
 
-入力検証
+## デザイン仕様
 
-`lib/schema.ts` の Zod schema で検証する。
+### トーン
 
-必須項目
+小さなスタジオらしい丁寧さ、余白、軽さを大事にする。淡いグラス表現と虹色グラデーションを基調にする。
 
-`required` / `aria-required` を使う。
+黒ベタのボタンは避け、CTAは基本的に `.cta-primary` / `.cta-secondary` を使う。
 
-入力エラー
+### フォント
 
-`aria-invalid` / `aria-describedby` / `role="alert"` で読み上げる。
+- 日本語/本文: `Noto Sans JP`
+- 英字ディスプレイ: `Barlow Condensed`
 
-フォーム全体
+フォントは `app/layout.tsx` で `next/font/google` から読み込み、CSS変数へ渡す。
 
-説明文と送信状態の `aria-live` を持たせる。
+### 色と装飾
 
-保護
+- アクセント: ピンク、コーラル、イエロー、グリーン、ブルー、パープルの虹色
+- グラデーション枠: `.rainbow-border`
+- 半透明カード: `.glass-card` / `.glass-light`
+- CTA: `.cta-primary` / `.cta-secondary`
+- ファビコン: `app/icon.svg` の文字なし虹色アイコン
+- OGP: `public/ogp.jpg`
 
-honeypot、3秒未満送信のbot判定、IPベースの簡易レート制限を入れる。
+## アニメーション仕様
 
-### SEO / アクセシビリティ
+### テキスト
 
-ページ共通SEO
+テキスト演出は `ScatterText` / `ScatterBlock` を中心に統一。
 
-`app/layout.tsx`
+`ScatterText` はHTMLテキストを残し、見た目の散らばりは `aria-hidden` のCanvasで描画。SEOとアクセシビリティ用のテキストを保持しながら、1文字DOM分割による負荷を避けるため。
 
-ページ別SEO
-
-`lib/seo.ts` の `createPageMetadata()` で作る。
-
-metadata
-
-canonical、OGP、Twitter Card、robots、JSON-LD、AI/LLM向けmetaを入れる。
-
-JSON-LD
-
-`WebSite`、`Organization`、`LocalBusiness`、`Service`、`BreadcrumbList`、各ページ用schemaを使う。
-
-スキップリンク
-
-先頭に置いて、キーボード操作で `#main-content` へ移動できるようにする。
-
-ナビメニュー
-
-`role="dialog"`、`aria-modal`、`aria-controls`、`aria-expanded`、`aria-current` を使う。
-
-ロード画面
-
-`role="dialog"`、`role="progressbar"`、`aria-live` を使う。
-
-音楽ボタン
-
-`aria-pressed` を使う。
-
-Cookie の切り替え
-
-`role="switch"` / `aria-checked` を使う。
-
-装飾要素
-
-分割文字、アイコン、背景パーティクルは可能な範囲で `aria-hidden` にする。
-
-SP
-
-重い演出を止め、スクリーンリーダーや `prefers-reduced-motion` と相性が悪い演出を増やさない。
-
-## 構成
-
-### まず見る場所
-
-`app/`
-
-ルーティング、metadata、JSON-LD、全体レイアウト。
-
-`components/pages/`
-
-ページごとの client 入口とページ固有セクション。
-
-`content/`
-
-ページに表示する文言、一覧、料金、FAQ、選択肢。
-
-`types/`
-
-ページ固有型、共通props型、演出用の状態型。
-
-`contexts/`
-
-音楽とページ遷移のグローバル状態。
-
-`hooks/`
-
-SP判定、可視判定、スクロール進捗、toastなどの共通hook。
-
-`lib/`
-
-SEO、JSON-LD、Zod schema、散り演出、scroll集約などの補助処理。
-
-### ページまわり
-
-`app/layout.tsx`
-
-全ページ共通。metadata、構造化データ、Provider、Navigation、skip linkを置く。
-
-`app/*/page.tsx`
-
-各ページの Server Component。ページ別 metadata と JSON-LD を出して、`components/pages/*-page.tsx` を呼ぶ。
-
-`app/globals.css`
-
-全体の見た目。CTA、グラス表現、グラデーション、陽炎、SP最適化、focus / skip link など。
-
-`app/not-found.tsx`
-
-404ページ。
-
-`app/sitemap.ts` / `app/robots.ts` / `app/llms.txt/route.ts`
-
-検索エンジンとAIクローラー向け。
-
-### ページ別コンポーネント
-
-`components/pages/home-page.tsx`
-
-TOPの入口。各TOPセクションを並べる。
-
-`components/pages/home/home-sections.tsx`
-
-TOPの Hero、Marquee、About preview、Works preview、Area、CTA。
-
-`components/pages/home/use-lazy-video.ts`
-
-TOPの preview 動画を遅延読み込みする hook。
-
-`components/pages/about-page.tsx`
-
-ABOUTの入口。
-
-`components/pages/about/about-sections.tsx`
-
-ABOUTの Hero、Intro、Team、Values、Process、CTA。
-
-`components/pages/works-page.tsx`
-
-WORKSの入口。
-
-`components/pages/works/work-card.tsx`
-
-実績カード。PCの hover 表現と SP 軽量表示。
-
-`components/pages/pricing-page.tsx`
-
-PRICINGの入口。
-
-`components/pages/pricing/pricing-sections.tsx`
-
-料金ページの Hero、注意書き、料金カテゴリ、FAQ、CTA。
-
-`components/pages/contact-page.tsx`
-
-CONTACTの入口。送信完了画面とフォーム画面を切り替える。
-
-`components/pages/contact/contact-sections.tsx`
-
-CONTACTの Hero、問い合わせ先、フォーム、送信完了画面。
-
-`components/pages/contact/use-contact-form.ts`
-
-フォーム状態、入力検証、送信処理。
-
-`components/pages/privacy-page.tsx`
-
-PRIVACY本文。
-
-### 共通UIと演出
-
-`components/navigation.tsx`
-
-右上メニューの開閉制御。
-
-`components/navigation/*`
-
-ナビ設定、メニュー開閉hook、フルスクリーンoverlay。
-
-`components/text-reveal/*`
-
-テキスト、セクション、単語、行の reveal 演出。
-
-`components/scatter-text.tsx`
-
-文字をスクロールで散らす演出。
-
-`components/scatter-block.tsx`
-
-ブロックをスクロールで散らす演出。CTAにも使う。
-
-`components/hero-section-v2.tsx`
-
-TOP Hero本体。
-
-`components/marquee-section-v2.tsx`
-
-TOPの横流れテキスト。
-
-`components/services-section-v2.tsx`
-
-TOPサービスセクション。
-
-`components/cta-section-v2.tsx`
-
-TOP最終CTA。
-
-`components/page-transition.tsx`
-
-ページ遷移時のフェード。
-
-`components/smooth-scroll.tsx`
-
-LenisとScrollTriggerの同期。SPでは無効。
-
-`components/deferred-visual-effects.tsx`
-
-カスタムカーソル、背景パーティクル、下部陽炎を初回描画後に遅延読み込みする。
-
-`components/deferred-site-widgets.tsx`
-
-SoundToggleとCookieConsentを初回描画後に遅延読み込みする。
-
-`components/loading-provider.tsx`
-
-初回ロード、session判定、プリロード、音楽選択ロック。
-
-`components/loading-screen.tsx`
-
-初回ローディング画面。
-
-`components/floating-particles.tsx`
-
-PC用背景パーティクル。
-
-`components/custom-cursor.tsx`
-
-PC用カスタムカーソル。
-
-`components/bottom-heat-haze.tsx`
-
-PC下部の虹色陽炎。
-
-`components/sound-toggle.tsx`
-
-右下の音楽ON/OFF。
-
-`components/cookie-consent.tsx`
-
-Cookie同意UI。
-
-`components/footer.tsx`
-
-全ページ共通Footer。
-
-### データ、型、補助処理
-
-`content/home-page.ts`
-
-TOPの文言と preview 動画URL。
-
-`content/about-page.ts`
-
-ABOUTの team、values、process。
-
-`content/works-page.ts`
-
-WORKSの作品一覧とカテゴリ。
-
-`content/pricing-page.ts`
-
-PRICINGの料金カテゴリ、サービス項目、FAQ。
-
-`content/contact-page.ts`
-
-CONTACTフォームの選択肢。
-
-`types/<page>.ts`
-
-ページ固有のデータ型と section props。
-
-`types/component-props.ts`
-
-共通UI / 演出コンポーネントの props。
-
-`types/effects.ts`
-
-パーティクルやカーソルなど演出状態の型。
-
-`types/english-text.ts`
-
-英字タイポグラフィ系 props。
-
-`types/hooks.ts` / `types/toast.ts`
-
-hook用の補助型。
-
-`contexts/audio-context.tsx`
-
-背景音楽の再生、停止、音量、保存設定。
-
-`contexts/transition-context.tsx`
-
-ページ遷移状態、`router.push`、prefetch。
-
-`hooks/use-mobile.ts`
-
-SP判定。
-
-`hooks/use-in-view.ts`
-
-IntersectionObserver共通hook。
-
-`hooks/use-element-in-view.ts`
-
-ref付きの可視判定hook。
-
-`hooks/use-scroll-progress.ts`
-
-Lenisの scroll progress。
-
-`hooks/use-toast.ts`
-
-toast状態管理。
-
-`lib/seo.ts`
-
-ページ別 metadata helper。
-
-`lib/structured-data.ts`
-
-JSON-LD生成。
-
-`lib/schema.ts`
-
-問い合わせフォームの Zod schema。
-
-`lib/scatter.ts`
-
-散り演出の値生成。
-
-`lib/scroll-manager.ts`
-
-scroll listener を集約して rAF で通知。
-
-`actions/contact.ts`
-
-問い合わせ送信の Server Action。
-
-### その他
-
-`public/audio/128_BPM124.mp3`
-
-背景音楽。
-
-`public/images/`
-
-画像置き場。
-
-`package.json`
-
-scripts と dependencies。
-
-`pnpm-lock.yaml`
-
-pnpm lockfile。
-
-`tsconfig.json`
-
-TypeScript設定。
-
-`components.json`
-
-shadcn/ui系の設定。
-
-## 実装メモ
-
-### 初回ロード
-
-`LoadingProvider` で初回ロード、進捗、音楽選択ロック、プリロードを管理している。
-
-以前は初回ロード中に下層ページ、Three.js、React Three Fiber、動画、音声まで先に温めていた。
-
-PageSpeedでは、そのプリロードが FCP / LCP を阻害しやすかった。
-
-今は初回描画を優先し、重い演出やウィジェットは描画後に遅延読み込みする。
-
-### パフォーマンス方針
-
-PC
-
-演出あり。
-
-SP
-
-演出を削って軽くする。
-
-SPの優先順位
-
-LCP / FCP を最優先にする。
-
-ファーストビュー外
-
-装飾、Canvas、WebGL、Cookie UI、音楽UIは急いで読まない。
-
-スクロール更新
-
-`scroll-manager.ts` で散りアニメーションのスクロール更新を集約する。
-
-SEO用テキスト
-
-HTMLテキストは残し、重い文字演出は Canvas や要素単位のアニメーションに寄せる。
-
-1文字DOM分割
-
-レイヤー数が増えやすいので避ける。
-
-`ScatterText`
-
-HTMLテキストを残し、散る瞬間だけ `aria-hidden` の Canvas で描画する。
-
-SPの `ScatterText`
-
-Canvas、散布計算、スクロール購読を作らない。
-
-画像
-
-`next/image` の最適化を使う。`next.config.mjs` では AVIF / WebP と長期キャッシュを有効にする。
-
-装飾UI
-
-`SoundToggle`、`CookieConsent`、背景パーティクル、カスタムカーソル、下部陽炎は初回描画後に遅延する。
-
-GTM
-
-`afterInteractive` で読み込む。
-
-### 軽量化の履歴 2026-05-03
-
-きっかけ
-
-PageSpeed Insightsで最初は `NO_FCP` が出て、Lighthouseが描画を検出できないことがあった。
-
-DevTools計測
-
-`Layerize` と `Paint` の比率が高く、1文字DOM化する演出でレイヤー数が増えていた。
-
-実ユーザーデータ
-
-LCPは約4.3〜4.4秒だった。過去28日集計なので改善反映には時間がかかる。
-
-方針
-
-デザインと演出の印象は変えない。
-
-SEOとアクセシビリティ用のテキストはHTMLとして残す。
-
-表示直後に不要な JS、WebGL、Canvas、Cookie UI、音楽UIは遅延する。
-
-1文字DOM、常時 `will-change`、初回の過剰プリロードを減らす。
-
-画像は Next.js の画像最適化に任せる。
-
-PageSpeed / Lighthouse などの監査環境では、音楽選択待ちや装飾ウィジェットを計測に乗せない。
-
-改良箇所
-
-`components/scatter-text.tsx`
-
-HTMLテキストを残し、PCでは散る表現だけ Canvas で描画する。SPでは Canvas、散布計算、スクロール購読を作らない。
-
-`components/hero-section-v2.tsx`
-
-Hero見出しは1文字DOM分割に戻さず、Canvas版 `ScatterText` でスクロール時のバラバラ演出を復帰。
-
-`components/marquee-section-v2.tsx`
-
-Marqueeもテキスト単位のまま、スクロール進捗に合わせて Canvas 散布を適用。
-
-`components/navigation/navigation-menu-overlay.tsx`
-
-メニュー文字はラベル単位の組み立てを維持しつつ、Canvas散布で「散った状態からまとまる」表現を復帰。
-
-`components/text-reveal/text-reveal.tsx`
-
-1文字分割をやめ、要素単位の reveal に変更。
-
-`components/loading-screen.tsx`
-
-文字分割と常時レイヤー化を削減。
-
-`components/deferred-visual-effects.tsx`
-
-カスタムカーソル、背景パーティクル、下部WebGL陽炎を初回描画後に読み込む。SPと監査環境では読み込まない。
-
-`components/deferred-site-widgets.tsx`
-
-SoundToggle と CookieConsent を初回描画後に読み込む。SPではさらに遅延し、監査環境では読み込まない。
-
-`components/loading-provider.tsx`
-
-初回ロード中の過剰なプリロードを削減。SPや監査環境では短い待機で自動 Silent Start へ進める。
-
-`components/smooth-scroll.tsx`
-
-ScrollTrigger遅延読み込み時の runtime error を修正。SPでは Lenis / GSAP / ScrollTrigger を読み込まない。
-
-`app/layout.tsx`
-
-GTMを `afterInteractive` に変更した。
-
-`app/globals.css`
-
-SPでファーストビュー外セクションに `content-visibility: auto` を適用。
-
-`next.config.mjs`
-
-`images.unoptimized: true` をやめ、AVIF / WebP 配信と長期キャッシュを有効化。
-
-`components/pages/about/about-sections.tsx`
-
-About画像に `quality` と SP 実寸に近い `sizes` を指定。
-
-結果
-
-`https://junkbranding.com/about` の PageSpeed Insights デスクトップで Performance 97、Accessibility 96、Best Practices 100、SEO 100。
-
-ラボ値
-
-FCP 0.7秒、LCP 0.8秒、TBT 80ms、CLS 0.005、Speed Index 1.6秒。
-
-`NO_FCP`
-
-解消済み。
-
-SP追加対応
-
-Canvas生成停止、Lenis / GSAP 読み込み停止、装飾 dynamic import 停止、下層セクションの `content-visibility` 適用を行った。
-
-TOPのSP対応
-
-fast start、監査環境での装飾ウィジェット停止、idle warmup停止、本文フェード時間短縮を行った。
-
-PCのTBT対応
-
-監査 / Headless 判定を `lib/performance-mode.ts` に共通化し、`navigator.webdriver` も見るようにした。
-
-TOPのSP表示
-
-下層セクションを `components/pages/home/home-deferred-sections.tsx` に分け、viewport接近後に読み込む。
-
-TOPのPC表示
-
-通常の下スクロール操作のまま、仮想ステージ内の見え方だけを `Hero` から上方向のセクションへ進める。
-
-実ユーザーデータ
-
-LCP 4.3秒前後は過去28日集計なので、デプロイ後しばらくしてから改善が反映される見込み。
-
-### 反省点
-
-PageSpeed改善
-
-急いだ結果、最初の軽量化で「重い実装」と「大事な見た目」を一緒に削ってしまった。
-
-Hero、Marquee、Navigation
-
-サイトの印象を作る重要な演出なので、単純に外すのではなく最初から Canvas 版へ置き換えるべきだった。
-
-1文字DOM分割
-
-重いこと自体は正しかったが、「1文字DOMをやめる = バラバラ演出もやめる」と判断したのが粗かった。
-
-正しい方針
-
-HTMLテキストは1ノードで残し、見た目だけ Canvas で散らす。
-
-`ScatterText`
-
-`scatterProgress` を追加したことで、外部制御の演出にも同じ軽量実装を使えるようになった。
-
-PCとSP
-
-SPでは LCP / FCP 優先で Canvas 散布を止める。PCでは演出を残す。
-
-確認不足
-
-PageSpeedの数値だけでなく、主要導線の見た目チェックを必ず行う。
-
-README
-
-「軽くした」だけでなく、「何を残すべきだったか」「次に触る時の判断基準」まで残す。
-
-今後の文字演出
-
-まず `ScatterText` の HTML + Canvas 方針に乗せられるかを確認する。
-
-監査環境向け最適化
-
-実ユーザー向けの体験と混ぜすぎない。
-
-### 確認コマンド
-
-```bash
-pnpm exec tsc --noEmit
-pnpm lint
-pnpm build
-```
+SPではCanvas散布、スクロール購読、重い散布計算を作らない。
 
 ### ページ遷移
 
-内部遷移
+ページ遷移は以下で制御。
 
-`TransitionLink` か `navigateWithTransition()` を使う。
+- `contexts/transition-context.tsx`
+- `components/layout/page-transition.tsx`
+- `components/layout/transition-link.tsx`
 
-`tel:` や外部リンク
+遷移中はオーバーレイと霧状の演出を表示。SPでは演出を軽くする。
 
-通常リンクのままにする。
+### スクロール
+
+- PC: LenisとScrollTriggerを使用
+- SP: Lenis / GSAP / ScrollTriggerを基本的に読み込まない
+- Scatter系スクロール更新: `lib/scroll-manager.ts` で購読を集約
+
+### Canvas / WebGL
+
+PC向けに以下を使う。
+
+- `components/effects/top-canvas-film-overlay.tsx`: 全ページ上の幻想的なCanvas加工
+- `components/effects/floating-particles.tsx`: 背景パーティクル
+- `components/effects/custom-cursor.tsx`: カスタムカーソル
+- `components/effects/bottom-heat-haze.tsx`: 下部ヒートヘイズ
+- `components/navigation/menu-heat-haze-background.tsx`: メニュー背景WebGL
+- `lib/shaders/heat-haze-shaders.ts`: GLSL定義
+
+SPでは基本的に無効化。PCでも初期表示直後には読み込まず、idleや遅延レンダーで後回し。
+
+## パフォーマンス方針
+
+### 基本方針
+
+- 初期表示はLCP / FCPを優先
+- ファーストビュー外の装飾は急いで読まない
+- SPでは演出より操作性を優先
+- 画像は軽量化し、未使用画像は残さない
+- Canvas/WebGL/常駐ウィジェットは遅延読み込みする
+- `prefers-reduced-motion` を尊重する
+
+### 遅延読み込み
+
+- `components/deferred/deferred-visual-effects.tsx`: カーソル、粒子、オーブ、下部陽炎
+- `components/deferred/deferred-site-widgets.tsx`: SoundToggle、CookieConsent
+- `hooks/use-deferred-render.ts`: 下層ページや重いセクションの遅延描画
+- `lib/performance-mode.ts`: SP判定、idle task、fast start判定
+
+### 画像
+
+現在使う主要画像。
+
+- `public/ogp.jpg`
+- `public/images/home-office-two-person-rainbow.webp`
+- `public/images/hero-parallax-junk-letter-j.jpg`
+- `public/images/hero-parallax-junk-letter-b.jpg`
+- `public/images/team/yuki.webp`
+- `public/images/team/tsukasa.webp`
+
+古いplaceholder、旧favicon、旧OG画像、未使用のPNGチーム画像などは削除済み。
+
+## SEO / OGP / アクセシビリティ
 
 ### SEO
 
-`app/layout.tsx`
+- 共通metadata: `app/layout.tsx`
+- ページ別metadata: `lib/seo.ts`
+- 構造化データ: `lib/structured-data.ts`
+- robots: `app/robots.ts`
+- sitemap: `app/sitemap.ts`
+- Search Console用XML: `app/search-console-sitemap.xml/route.ts`
+- LLM向け説明: `app/llms.txt/route.ts`
 
-全体の metadata、OGP、robots、icons、構造化データ、スキップリンク。
+OGP画像は `/ogp.jpg` に統一。`app/opengraph-image.tsx` は静的OGPへ一本化するため削除済み。
 
-`lib/seo.ts`
+### JSON-LD
 
-ページ別 metadata を共通化。
+主に以下を使う。
 
-`lib/structured-data.ts`
-
-JSON-LD。
-
-`app/sitemap.ts` / `app/robots.ts` / `app/llms.txt/route.ts` / `app/search-console-sitemap.xml/route.ts`
-
-検索 / AIクローラー用。
+- `WebSite`
+- `Organization`
+- `LocalBusiness`
+- `Service`
+- `FAQPage`
+- `BreadcrumbList`
+- 各ページ用schema
 
 ### アクセシビリティ
 
-`main`
+- skip linkで `#main-content` へ移動
+- ナビメニューは `role="dialog"` / `aria-modal` / `aria-controls` / `aria-expanded`
+- 現在ページは `aria-current`
+- 音楽ボタンは `aria-pressed`
+- Cookie切り替えは `role="switch"` / `aria-checked`
+- 装飾Canvas、背景、アイコンは可能な範囲で `aria-hidden`
+- クリック可能なものは `button` / `a` を維持
+
+## ディレクトリ構成
+
+```txt
+app/
+  layout.tsx
+  page.tsx
+  about/page.tsx
+  works/page.tsx
+  pricing/page.tsx
+  contact/page.tsx
+  privacy/page.tsx
+  icon.svg
+  sitemap.ts
+  robots.ts
+  llms.txt/route.ts
+  search-console-sitemap.xml/route.ts
+
+actions/
+  contact.ts
+
+components/
+  deferred/
+  effects/
+  layout/
+  loading/
+  motion/
+  navigation/
+  pages/
+  sections/
+  ui/
+  widgets/
+
+content/
+  about-page.ts
+  contact-page.ts
+  home-page.ts
+  pricing-page.ts
+  privacy-page.ts
+  works-page.ts
+
+contexts/
+  audio-context.tsx
+  transition-context.tsx
+
+hooks/
+  use-deferred-render.ts
+  use-pointer-tilt.ts
+  use-scroll-scatter-progress.ts
+  use-toast.ts
+  ...
+
+lib/
+  performance-mode.ts
+  scatter.ts
+  schema.ts
+  scroll-manager.ts
+  seo.ts
+  structured-data.ts
+  shaders/
+
+types/
+  component-props.ts
+  effects.ts
+  navigation.ts
+  seo.ts
+  ...
+
+public/
+  audio/
+  images/
+  ogp.jpg
+```
+
+## 主要ファイル
+
+### app
+
+- `app/layout.tsx`: 共通metadata、Provider、Navigation、PageTransition、skip link
+- `app/page.tsx`: TOPページのServer Component
+- `app/*/page.tsx`: 各ページのmetadataとJSON-LD
+- `app/icon.svg`: ファビコン。文字なしの虹色アイコン
+- `app/not-found.tsx`: Canvas粒子を使った404
+
+### components/pages
+
+- `components/pages/home-page.tsx`: TOPのPC/SPレイアウト切り替え
+- `components/pages/home/home-desktop-page.tsx`: PC用TOP構成
+- `components/pages/home/mobile-home-page.tsx`: SP用TOP構成
+- `components/pages/home/home-inverted-scroll.tsx`: PC反転スクロール
+- `components/pages/about-page.tsx`: ABOUT入口
+- `components/pages/about/about-sections.tsx`: ABOUT主要セクション
+- `components/pages/about/about-process-section.tsx`: ABOUT Process
+- `components/pages/works-page.tsx`: WORKS入口
+- `components/pages/works/works-sections.tsx`: WORKS主要セクション
+- `components/pages/works/immersive-work-card.tsx`: WORKSカード
+- `components/pages/pricing-page.tsx`: PRICING入口
+- `components/pages/pricing/pricing-sections.tsx`: PRICING主要セクション
+- `components/pages/pricing/pricing-service-card.tsx`: 料金サービスカード
+- `components/pages/contact-page.tsx`: CONTACT入口
+- `components/pages/contact/contact-form.tsx`: 問い合わせフォーム
+- `components/pages/contact/contact-info-section.tsx`: 問い合わせ先
+- `components/pages/contact/use-contact-form.ts`: フォーム状態管理
+- `components/pages/privacy-page.tsx`: PRIVACY本文
 
-`id="main-content"` を付け、スキップリンクの移動先にする。
+### components/sections
 
-クリックできるもの
+- `components/sections/hero-section-v2.tsx`: TOP HERO。PC限定のJ/B写真パララックスあり
+- `components/sections/services-section-v2.tsx`: TOPサービス
+- `components/sections/marquee-section-v2.tsx`: TOPマーキー
+- `components/sections/cta-section-v2.tsx`: TOP最終CTA
 
-必ず `button` / `a` のままにする。
+### motion / effects
 
-アイコンだけのボタン
+- `components/motion/scatter-text.tsx`: Canvas散布テキスト
+- `components/motion/scatter-block.tsx`: CTAなどブロックの組み上げ
+- `components/motion/text-reveal/*`: text / word / line / section reveal
+- `components/effects/top-canvas-film-overlay.tsx`: 全ページCanvas加工
+- `components/effects/rising-rainbow-orb.tsx`: TOP2個/下層1個の虹色オーブ
+- `components/effects/bottom-heat-haze.tsx`: 下部WebGL陽炎
+- `components/effects/floating-particles.tsx`: PC背景粒子
+- `components/effects/custom-cursor.tsx`: PCカスタムカーソル
 
-`aria-label` を付ける。
+## 実装ルール
 
-状態を持つボタン
+### ファイル分割
 
-`aria-pressed` または `aria-checked` を使う。
+大きいページは以下に分ける。
 
-入力エラー
+- データ: `content/<page>.ts`
+- 表示セクション: `components/pages/<page>/`
+- ページ入口: `components/pages/<page>-page.tsx`
+- 型: `types/<page>.ts`
+- ページ固有hook: `components/pages/<page>/use-*.ts`
+- 再利用hook: `hooks/`
 
-見た目だけでなく `role="alert"` で伝える。
+### 型
 
-装飾文字
+型は `types/` に切り出す。
 
-1文字ずつ分解する場合は、親にラベルを持たせて子を `aria-hidden` にする。
+- 共通props: `types/component-props.ts`
+- 演出状態: `types/effects.ts`
+- ナビゲーション: `types/navigation.ts`
+- SEO: `types/seo.ts`
+- 音声: `types/audio.ts`
+- スクロール管理: `types/scroll-manager.ts`
 
-文字演出
+### コメント
 
-基本は1文字DOM分割を避け、SEO用HTMLテキストと `aria-hidden` の Canvas 演出を分ける。
+コメントは日本語で統一。  
+「何をしているか」の直訳ではなく、「なぜそうしているか」「何を避けているか」「ライフサイクル上の注意」を書く。
 
-## 工夫したところ
+良い例:
 
-ロード画面
+- Lighthouse対策として初回表示後のidleまで重いエフェクトを遅らせる
+- TOPページでは親がtransformで動くため、window scrollではなく画面内位置を直接見る
 
-音楽ON/OFFを選べるようにした。
+避ける例:
 
-音楽OFF
+- 配列をmapする
+- stateを更新する
+- refに値を入れる
 
-ページ遷移後も勝手に鳴らないようにした。
+### 触るときに注意するもの
 
-初回ロード
+- `ScatterText` の `distance` / `scrollStart` / `scrollEnd`
+- `ScatterBlock` の `seed`
+- GSAP / RAF / WebGLの更新頻度
+- SPで無効にしている演出
+- `TransitionLink` と通常リンクの使い分け
+- OGP / icon / sitemap / JSON-LDの参照パス
 
-FCP / LCP 優先。重い演出やウィジェットは描画後に遅延読み込みする。
+見た目だけの変更でも、PageSpeed、アクセシビリティ、SP表示に影響する可能性あり。
 
-SP
+## 確認コマンド
 
-余計なアニメーションを止めた。
+```bash
+pnpm lint
+pnpm exec tsc --noEmit
+pnpm build
+```
 
-SPの初期読み込み
+画像やOGPを触った場合は、参照パスも確認。
 
-背景演出、Canvas散布、Lenis / GSAP を外した。
+```bash
+pnpm dev
+```
 
-SPのファーストビュー外セクション
+確認するページ:
 
-`content-visibility: auto` で描画を遅らせる。
+- `/`
+- `/about`
+- `/works`
+- `/pricing`
+- `/contact`
+- `/privacy`
 
-文字の散りアニメーション
+## 運用メモ
 
-`scroll-manager.ts` に寄せてスクロールリスナーを減らした。
-
-`ScatterText`
-
-1文字DOM分割を避けるため、HTMLテキスト + Canvas描画にした。
-
-PageSpeed
-
-`NO_FCP` 解消、Lighthouseデスクトップ Performance 97 まで改善した。
-
-ページデータ
-
-`about` / `works` / `pricing` / `contact` の表示データを `content/` に分けた。
-
-TOP
-
-`content/home-page.ts`、`components/pages/home/home-sections.tsx`、`use-lazy-video.ts` に分けた。
-
-pricing
-
-料金データ、FAQ、表示セクションを分けて、ページ本体を薄くした。
-
-contact
-
-フォーム選択肢、フォーム状態hook、表示セクションを分けた。
-
-navigation と text-reveal
-
-大きくなったので小分けした。
-
-型
-
-共通props、英字テキスト演出、パーティクル、カーソル、toast を `types/` に寄せた。
-
-hook
-
-重複していた `useInView` を `hooks/use-in-view.ts` に集約した。
-
-CTA
-
-色味を `cta-primary` / `cta-secondary` に寄せて、全体のトーンを揃えた。
-
-問い合わせフォーム
-
-バリデーション、レート制限、honeypot、自動返信を入れた。
-
-虹色陽炎
-
-PC用に追加した。ただしSPでは止める。
-
-SEO / WAI-ARIA
-
-スクリーンリーダー対応を強化した。
-
-## 自分用ルール
-
-見た目を変えないリファクタ
-
-className、`ScatterText` の props、seed、duration、easing を不用意に変えない。
-
-内部リンク
-
-基本 `TransitionLink`。
-
-CTA
-
-基本 `.cta-primary` / `.cta-secondary`。
-
-ページ固有データ
-
-`content/<page>.ts`
-
-ページ固有型
-
-`types/<page>.ts`
-
-ページ固有セクション
-
-`components/pages/<page>/<page>-sections.tsx`
-
-ページ固有hook
-
-`components/pages/<page>/use-*.ts`
-
-共通props型
-
-`types/component-props.ts`
-
-演出系の状態型
-
-`types/effects.ts`
-
-再利用できる処理
-
-component に閉じ込めず `hooks/` に出す。
-
-大きいファイル
-
-「データ」「セクション」「hook/helper」に分ける。
-
-SP
-
-軽さ優先。PCの演出をそのまま持ち込まない。
+- OGPは `public/ogp.jpg`
+- faviconは `app/icon.svg`
+- sitemapは通常用とSearch Console用の2系統
+- 画像を追加したら、使われていない古い画像を残さない
+- SPではPC演出をそのまま持ち込まない
+- 主要演出を外す前に、Canvas化や遅延読み込みで残せるか確認する
