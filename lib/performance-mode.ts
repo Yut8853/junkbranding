@@ -25,7 +25,7 @@ export const isSmallScreen = () => {
   return window.matchMedia('(max-width: 767px)').matches
 }
 
-export const shouldUseFastStart = () => isSmallScreen() || isSyntheticAudit()
+export const shouldUseFastStart = () => isSmallScreen()
 
 export const scheduleIdleTask = (
   task: () => void,

@@ -2,7 +2,7 @@
 
 import dynamic from 'next/dynamic'
 import { useEffect, useState } from 'react'
-import { isSmallScreen, isSyntheticAudit, scheduleIdleTask } from '@/lib/performance-mode'
+import { isSmallScreen, scheduleIdleTask } from '@/lib/performance-mode'
 
 const CustomCursor = dynamic(
   () => import('@/components/custom-cursor').then((mod) => mod.CustomCursor),
@@ -26,7 +26,7 @@ export function DeferredVisualEffects() {
   const [shouldRenderEffects, setShouldRenderEffects] = useState(false)
 
   useEffect(() => {
-    if (isSyntheticAudit() || isSmallScreen()) {
+    if (isSmallScreen()) {
       return
     }
 

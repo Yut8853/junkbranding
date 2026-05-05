@@ -613,6 +613,28 @@
   z-index: 9999;
 }
 
+html[data-performance-mode='lean'] .noise-overlay::before {
+  content: none;
+}
+
+html[data-performance-mode='lean'] .gradient-text,
+html[data-performance-mode='lean'] .gradient-text-animated,
+html[data-performance-mode='lean'] .gradient-text-soft,
+html[data-performance-mode='lean'] .gradient-highlight,
+html[data-performance-mode='lean'] .cta-primary,
+html[data-performance-mode='lean'] .rainbow-border::before,
+html[data-performance-mode='lean'] .animate-rainbow-line {
+  animation: none !important;
+}
+
+html[data-performance-mode='lean'] .glass,
+html[data-performance-mode='lean'] .glass-light,
+html[data-performance-mode='lean'] .glass-card,
+html[data-performance-mode='lean'] .cta-secondary {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
 /* Magnetic button effect */
 .magnetic-btn {
   transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);

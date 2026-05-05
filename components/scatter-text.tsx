@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useRef, useMemo, useState } from 'react'
 import { clamp01, createScatterValue } from '@/lib/scatter'
 import { useIsMobile } from '@/hooks/use-mobile'
-import { isSyntheticAudit } from '@/lib/performance-mode'
 import type { ScatterTextProps } from '@/types/component-props'
 
 const SOFT_GRADIENT_STOPS = [
@@ -63,11 +62,10 @@ export function ScatterText({
   const [isVisible, setIsVisible] = useState(false)
   const [hasMounted, setHasMounted] = useState(false)
   const [isScattering, setIsScattering] = useState(false)
-  const [isAudit, setIsAudit] = useState(false)
   const [hasActivatedCanvas, setHasActivatedCanvas] = useState(!deferUntilActive)
   const [scatterRenderProgress, setScatterRenderProgress] = useState(0)
   const isMobile = useIsMobile()
-  const canUseScatter = hasMounted && !isMobile && !isAudit
+  const canUseScatter = hasMounted && !isMobile
   const shouldPrepareScatter = canUseScatter && hasActivatedCanvas
   const hasControlledProgress = typeof scatterProgress === 'number'
   const currentProgress = scatterRenderProgress
@@ -97,7 +95,6 @@ export function ScatterText({
 
   useEffect(() => {
     setHasMounted(true)
-    setIsAudit(isSyntheticAudit())
   }, [])
 
   useEffect(() => {
@@ -307,7 +304,7 @@ export function ScatterText({
   useEffect(() => {
     if (!containerRef.current) return
 
-    if (isMobile || isAudit) {
+    if (isMobile) {
       isVisibleRef.current = true
       setIsVisible(true)
       return
@@ -351,7 +348,7 @@ export function ScatterText({
     observer.observe(container)
 
     return () => observer.disconnect()
-  }, [applyScatter, canUseScatter, deferUntilActive, hasActivatedCanvas, hasControlledProgress, isAudit, isMobile, playAssembleIntro, scatterProgress, scrollStart])
+  }, [applyScatter, canUseScatter, deferUntilActive, hasActivatedCanvas, hasControlledProgress, isMobile, playAssembleIntro, scatterProgress, scrollStart])
 
   useEffect(() => {
     return () => {
@@ -372,7 +369,7 @@ export function ScatterText({
 
   const delay = Math.min(children.length * 0.008, 0.35)
 
-  if (isMobile || isAudit) {
+  if (isMobile) {
     return (
       <Component
         ref={containerRef as React.RefObject<HTMLDivElement>}

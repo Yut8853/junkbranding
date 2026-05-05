@@ -1,17 +1,18 @@
 'use client'
 
+import dynamic from 'next/dynamic'
 import { useLayoutEffect, useState } from 'react'
 import Link from 'next/link'
-import { homeAboutPreview, homeArea, homePreviewVideoSrc, homeWorksPreview } from '@/content/home-page'
-import {
-  HomeAboutPreviewSection,
-  HomeHeroSection,
-  HomeMarqueeSection,
-} from '@/components/pages/home/home-sections'
-import { HomeAscentSection } from '@/components/pages/home/home-ascent-section'
-import { HomeDeferredSections } from '@/components/pages/home/home-deferred-sections'
-import { HomeInvertedScroll } from '@/components/pages/home/home-inverted-scroll'
+import { homeAboutPreview, homeArea, homeWorksPreview } from '@/content/home-page'
 import { Footer } from '@/components/footer'
+
+const HomeDesktopPage = dynamic(
+  () => import('@/components/pages/home/home-desktop-page').then((mod) => mod.HomeDesktopPage),
+  {
+    loading: () => null,
+    ssr: false,
+  },
+)
 
 const mobileServices = [
   {
@@ -142,29 +143,7 @@ export default function HomePageClient() {
   }, [])
 
   if (isDesktopInverted) {
-    return (
-      <div className="home-ascent-page home-ascent-page--inverted">
-        <HomeInvertedScroll>
-          <HomeDeferredSections
-            worksPreview={homeWorksPreview}
-            area={homeArea}
-            inverted
-          />
-          <HomeAscentSection label="ABOUT US">
-            <HomeAboutPreviewSection
-              aboutPreview={homeAboutPreview}
-              videoSrc={homePreviewVideoSrc}
-            />
-          </HomeAscentSection>
-          <HomeAscentSection label="MARQUEE">
-            <HomeMarqueeSection />
-          </HomeAscentSection>
-          <HomeAscentSection label="HERO">
-            <HomeHeroSection />
-          </HomeAscentSection>
-        </HomeInvertedScroll>
-      </div>
-    )
+    return <HomeDesktopPage />
   }
 
   return (

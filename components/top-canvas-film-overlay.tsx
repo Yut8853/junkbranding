@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { usePathname } from 'next/navigation'
+import { isSmallScreen } from '@/lib/performance-mode'
 
 type FilmParticle = {
   x: number
@@ -31,25 +32,29 @@ export function TopCanvasFilmOverlay() {
     const canvas = canvasRef.current
     if (!canvas) return
 
+    if (isSmallScreen()) {
+      return
+    }
+
     const ctx = canvas.getContext('2d', { alpha: true })
     if (!ctx) return
 
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    const isCompact = window.matchMedia('(max-width: 767px)').matches
     const particles: FilmParticle[] = []
-    const particleCount = isCompact ? 12 : 24
+    const particleCount = 24
     let width = 0
     let height = 0
     let dpr = 1
     let animationFrameId = 0
     let lastFrameTime = 0
+    let shouldResize = true
 
     const createParticle = (): FilmParticle => ({
       x: Math.random() * width,
       y: Math.random() * height,
       vx: (Math.random() - 0.5) * 0.08,
       vy: -0.03 - Math.random() * 0.05,
-      size: 10 + Math.random() * (isCompact ? 18 : 28),
+      size: 10 + Math.random() * 28,
       hue: 190 + Math.random() * 170,
       alpha: 0.025 + Math.random() * 0.055,
       phase: Math.random() * Math.PI * 2,
@@ -75,6 +80,10 @@ export function TopCanvasFilmOverlay() {
           particles.push(createParticle())
         }
       }
+    }
+
+    const queueResize = () => {
+      shouldResize = true
     }
 
     const drawFilm = (time: number) => {
@@ -188,7 +197,10 @@ export function TopCanvasFilmOverlay() {
 
       if (now - lastFrameTime >= frameInterval) {
         lastFrameTime = now
-        resize()
+        if (shouldResize) {
+          resize()
+          shouldResize = false
+        }
         drawFilm(now * 0.001)
       }
 
@@ -198,21 +210,22 @@ export function TopCanvasFilmOverlay() {
     }
 
     resize()
+    shouldResize = false
     drawFilm(0)
 
     if (!prefersReducedMotion) {
       animationFrameId = window.requestAnimationFrame(render)
     }
 
-    window.addEventListener('resize', resize, { passive: true })
+    window.addEventListener('resize', queueResize, { passive: true })
 
     return () => {
-      window.removeEventListener('resize', resize)
+      window.removeEventListener('resize', queueResize)
       window.cancelAnimationFrame(animationFrameId)
     }
   }, [isHome, mounted])
 
-  if (!mounted) return null
+  if (!mounted || isSmallScreen()) return null
 
   return createPortal(
     <div

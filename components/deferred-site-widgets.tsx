@@ -2,7 +2,7 @@
 
 import dynamic from 'next/dynamic'
 import { useEffect, useState } from 'react'
-import { isSmallScreen, isSyntheticAudit, scheduleIdleTask } from '@/lib/performance-mode'
+import { isSmallScreen, scheduleIdleTask } from '@/lib/performance-mode'
 
 const SoundToggle = dynamic(
   () => import('@/components/sound-toggle').then((mod) => mod.SoundToggle),
@@ -17,10 +17,6 @@ export function DeferredSiteWidgets() {
   const [shouldRenderWidgets, setShouldRenderWidgets] = useState(false)
 
   useEffect(() => {
-    if (isSyntheticAudit()) {
-      return
-    }
-
     const idleTask = scheduleIdleTask(() => {
       setShouldRenderWidgets(true)
     }, isSmallScreen() ? 5000 : 3200, isSmallScreen() ? 3600 : 1800)
