@@ -9,7 +9,7 @@ import type { LoadingContextType, LoadingProviderProps } from '@/types/component
 const LOADING_SEEN_KEY = 'junkbranding-loading-seen-session-v3'
 const AUDIO_PREFERENCE_KEY = 'junkbranding-audio-preference'
 const FAST_START_AUDIO_FALLBACK_MS = 180
-const DEFAULT_AUDIO_FALLBACK_MS = 1200
+const DEFAULT_AUDIO_FALLBACK_MS = 6000
 const FAST_START_COMPLETE_MS = 80
 const DEFAULT_COMPLETE_MS = 420
 const DEFAULT_PROGRESS_STEPS = [
