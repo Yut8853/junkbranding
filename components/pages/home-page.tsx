@@ -10,7 +10,6 @@ const HomeDesktopPage = dynamic(
   () => import('@/components/pages/home/home-desktop-page').then((mod) => mod.HomeDesktopPage),
   {
     loading: () => null,
-    ssr: false,
   },
 )
 
@@ -127,7 +126,7 @@ function MobileHomePage() {
 }
 
 export default function HomePageClient() {
-  const [layoutMode, setLayoutMode] = useState<'desktop-inverted' | 'mobile-normal'>('mobile-normal')
+  const [layoutMode, setLayoutMode] = useState<'desktop-inverted' | 'mobile-normal'>('desktop-inverted')
   const isDesktopInverted = layoutMode === 'desktop-inverted'
 
   useLayoutEffect(() => {

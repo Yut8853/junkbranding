@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react'
 
 type HomeInvertedScrollProps = {
   children: ReactNode
@@ -54,7 +54,7 @@ export function HomeInvertedScroll({ children }: HomeInvertedScrollProps) {
     }
   }, [heroOffset, measure])
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     measure()
     const firstFrame = requestAnimationFrame(measure)
     const secondFrame = requestAnimationFrame(() => requestAnimationFrame(measure))
