@@ -14,6 +14,12 @@ const getIsLowPowerDevice = () => {
   )
 }
 
+const canUseOffscreenCanvas = () => (
+  typeof Worker !== 'undefined' &&
+  typeof OffscreenCanvas !== 'undefined' &&
+  'transferControlToOffscreen' in HTMLCanvasElement.prototype
+)
+
 export function FloatingParticles() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const particlesRef = useRef<FloatingParticle[]>([])
@@ -27,6 +33,9 @@ export function FloatingParticles() {
   const targetMouseRef = useRef({ x: 0, y: 0 })
   const isTransitioningRef = useRef(false)
   const transitionIntensityRef = useRef(0)
+  const workerRef = useRef<Worker | null>(null)
+  const workerTeardownRef = useRef<number | null>(null)
+  const hasTransferredCanvasRef = useRef(false)
   const { isTransitioning } = useTransition()
 
   useEffect(() => {
@@ -35,6 +44,7 @@ export function FloatingParticles() {
 
   useEffect(() => {
     isTransitioningRef.current = isTransitioning
+    workerRef.current?.postMessage({ type: 'transition', active: isTransitioning })
 
     if (isTransitioning) {
       setIsTransitionLayerActive(true)
@@ -54,10 +64,95 @@ export function FloatingParticles() {
     const canvas = canvasRef.current
     if (!canvas) return
 
+    const isLowPowerDevice = getIsLowPowerDevice()
+    let worker = workerRef.current
+
+    if (canUseOffscreenCanvas()) {
+      try {
+        if (workerTeardownRef.current !== null) {
+          window.clearTimeout(workerTeardownRef.current)
+          workerTeardownRef.current = null
+        }
+
+        if (!worker) {
+          worker = new Worker(new URL('./floating-particles.worker.ts', import.meta.url), {
+            type: 'module',
+          })
+          workerRef.current = worker
+        }
+
+        if (!hasTransferredCanvasRef.current) {
+          const offscreenCanvas = canvas.transferControlToOffscreen()
+          hasTransferredCanvasRef.current = true
+          worker.postMessage(
+            {
+              type: 'init',
+              canvas: offscreenCanvas,
+              width: window.innerWidth,
+              height: window.innerHeight,
+              isLowPowerDevice,
+            },
+            [offscreenCanvas],
+          )
+        }
+
+        const postResize = () => {
+          canvas.style.width = `${window.innerWidth}px`
+          canvas.style.height = `${window.innerHeight}px`
+          worker?.postMessage({
+            type: 'resize',
+            width: window.innerWidth,
+            height: window.innerHeight,
+          })
+        }
+
+        const handleMouseMove = (e: MouseEvent) => {
+          worker?.postMessage({ type: 'mouse', x: e.clientX, y: e.clientY })
+        }
+
+        const handleVisibilityChange = () => {
+          worker?.postMessage({
+            type: 'visibility',
+            visible: document.visibilityState === 'visible',
+          })
+        }
+
+        postResize()
+        worker.postMessage({ type: 'transition', active: isTransitioningRef.current })
+        worker.postMessage({
+          type: 'visibility',
+          visible: document.visibilityState === 'visible',
+        })
+
+        window.addEventListener('resize', postResize, { passive: true })
+        window.addEventListener('mousemove', handleMouseMove, { passive: true })
+        document.addEventListener('visibilitychange', handleVisibilityChange)
+
+        return () => {
+          window.removeEventListener('resize', postResize)
+          window.removeEventListener('mousemove', handleMouseMove)
+          document.removeEventListener('visibilitychange', handleVisibilityChange)
+          worker?.postMessage({ type: 'visibility', visible: false })
+
+          // React Strict Modeの開発時再実行では同じcanvasを再transferできないため、少し待ってから破棄する。
+          workerTeardownRef.current = window.setTimeout(() => {
+            worker?.postMessage({ type: 'destroy' })
+            worker?.terminate()
+            workerRef.current = null
+            hasTransferredCanvasRef.current = false
+            workerTeardownRef.current = null
+          }, 120)
+        }
+      } catch {
+        worker?.terminate()
+        workerRef.current = null
+        hasTransferredCanvasRef.current = false
+      }
+    }
+
     const ctx = canvas.getContext('2d', { alpha: true })
     if (!ctx) return
 
-    const isLowPowerDevice = getIsLowPowerDevice()
     const dpr = 1
     const attractionRadius = 400
     const attractionRadiusSq = attractionRadius * attractionRadius

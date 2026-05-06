@@ -6,8 +6,17 @@ import { usePathname } from 'next/navigation'
 import { isSmallScreen } from '@/lib/performance-mode'
 import type { FilmParticle } from '@/types/effects'
 
+const canUseOffscreenCanvas = () => (
+  typeof Worker !== 'undefined' &&
+  typeof OffscreenCanvas !== 'undefined' &&
+  'transferControlToOffscreen' in HTMLCanvasElement.prototype
+)
+
 export function TopCanvasFilmOverlay() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
+  const workerRef = useRef<Worker | null>(null)
+  const workerTeardownRef = useRef<number | null>(null)
+  const hasTransferredCanvasRef = useRef(false)
   const [mounted, setMounted] = useState(false)
   const [shouldStartCanvas, setShouldStartCanvas] = useState(false)
   const pathname = usePathname()
@@ -38,10 +47,83 @@ export function TopCanvasFilmOverlay() {
       return
     }
 
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    let worker = workerRef.current
+
+    if (canUseOffscreenCanvas()) {
+      try {
+        if (workerTeardownRef.current !== null) {
+          window.clearTimeout(workerTeardownRef.current)
+          workerTeardownRef.current = null
+        }
+
+        if (!worker) {
+          worker = new Worker(new URL('./top-canvas-film-overlay.worker.ts', import.meta.url), {
+            type: 'module',
+          })
+          workerRef.current = worker
+        }
+
+        const getDpr = () => Math.min(window.devicePixelRatio || 1, 1.5)
+        const postResize = () => {
+          canvas.style.width = `${window.innerWidth}px`
+          canvas.style.height = `${window.innerHeight}px`
+          worker?.postMessage({
+            type: 'resize',
+            width: window.innerWidth,
+            height: window.innerHeight,
+            dpr: getDpr(),
+          })
+        }
+
+        if (!hasTransferredCanvasRef.current) {
+          const offscreenCanvas = canvas.transferControlToOffscreen()
+          hasTransferredCanvasRef.current = true
+          worker.postMessage(
+            {
+              type: 'init',
+              canvas: offscreenCanvas,
+              width: window.innerWidth,
+              height: window.innerHeight,
+              dpr: getDpr(),
+              isHome,
+              prefersReducedMotion,
+            },
+            [offscreenCanvas],
+          )
+        } else {
+          worker.postMessage({
+            type: 'config',
+            isHome,
+            prefersReducedMotion,
+          })
+        }
+
+        postResize()
+        window.addEventListener('resize', postResize, { passive: true })
+
+        return () => {
+          window.removeEventListener('resize', postResize)
+
+          // React Strict Modeの再実行では同じcanvasを再transferできないため、短時間だけWorkerを残す。
+          workerTeardownRef.current = window.setTimeout(() => {
+            worker?.postMessage({ type: 'destroy' })
+            worker?.terminate()
+            workerRef.current = null
+            hasTransferredCanvasRef.current = false
+            workerTeardownRef.current = null
+          }, 120)
+        }
+      } catch {
+        worker?.terminate()
+        workerRef.current = null
+        hasTransferredCanvasRef.current = false
+      }
+    }
+
     const ctx = canvas.getContext('2d', { alpha: true })
     if (!ctx) return
 
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     const particles: FilmParticle[] = []
     const particleCount = 24
     let width = 0
