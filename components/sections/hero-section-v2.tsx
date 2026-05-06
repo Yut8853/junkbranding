@@ -33,10 +33,10 @@ export function HeroSectionV2() {
       if (!el) return
 
       const direction = index === 0 ? -1 : 1
-      const mouseX = currentMousePos.current.x * (index === 0 ? 36 : -48)
-      const mouseY = currentMousePos.current.y * (index === 0 ? 24 : -32)
-      const scrollX = direction * lastHeroScrollProgress.current * (index === 0 ? 130 : 170)
-      const scrollY = lastHeroScrollProgress.current * (index === 0 ? -180 : -240)
+      const mouseX = currentMousePos.current.x * (index === 0 ? 24 : -30)
+      const mouseY = currentMousePos.current.y * (index === 0 ? 16 : -20)
+      const scrollX = direction * lastHeroScrollProgress.current * (index === 0 ? 78 : 96)
+      const scrollY = lastHeroScrollProgress.current * (index === 0 ? -76 : -92)
       const rotate = direction * (lastHeroScrollProgress.current * 5 + currentMousePos.current.x * 1.8)
 
       el.style.transform = `translate3d(${mouseX + scrollX}px, ${mouseY + scrollY}px, 0) rotate(${rotate}deg)`
@@ -125,10 +125,12 @@ export function HeroSectionV2() {
       ...cornerRefs.current.filter(Boolean),
     ].filter(Boolean)
     let rafId = 0
+    let isScheduled = false
     let lastScatterProgress = -1
     let lastPhotoProgress = -1
 
     const updateHeroMotion = () => {
+      isScheduled = false
       const rect = containerRef.current?.getBoundingClientRect()
       if (!rect) return
 
@@ -156,13 +158,22 @@ export function HeroSectionV2() {
         })
       }
 
+    }
+
+    const scheduleUpdate = () => {
+      if (isScheduled) return
+      isScheduled = true
       rafId = requestAnimationFrame(updateHeroMotion)
     }
 
-    rafId = requestAnimationFrame(updateHeroMotion)
+    scheduleUpdate()
+    window.addEventListener('scroll', scheduleUpdate, { passive: true })
+    window.addEventListener('resize', scheduleUpdate, { passive: true })
 
     return () => {
       cancelAnimationFrame(rafId)
+      window.removeEventListener('scroll', scheduleUpdate)
+      window.removeEventListener('resize', scheduleUpdate)
     }
   }, [applyPhotoParallax, isLoaded, isMobile])
 
@@ -172,12 +183,12 @@ export function HeroSectionV2() {
       className="relative h-[100svh] md:h-[110vh]"
     >
       {/* スクロール中に画面へ留まるHEROコンテナ */}
-      <div className="relative h-[100svh] w-full overflow-hidden md:sticky md:top-0 md:h-screen md:overflow-visible">
+      <div className="relative h-[100svh] w-full overflow-hidden md:sticky md:top-0 md:h-screen">
         {shouldRenderDesktopPhotos && (
           <div className="pointer-events-none absolute inset-0 z-[8] hidden md:block" aria-hidden="true">
             <div
               ref={(el) => { photoRefs.current[0] = el }}
-              className="absolute left-[4vw] top-[8vh] h-[48vh] w-[24vw] will-change-transform overflow-hidden rounded-[2rem] opacity-[0.64] mix-blend-normal shadow-[0_34px_100px_rgba(0,0,0,0.3)]"
+              className="absolute left-[5vw] top-[14vh] h-[42vh] w-[23vw] will-change-transform overflow-hidden rounded-[2rem] opacity-[0.64] mix-blend-normal shadow-[0_24px_60px_rgba(0,0,0,0.22)]"
               style={{
                 transition: isLoaded ? 'opacity 1.6s ease 0.35s' : 'none',
                 opacity: isLoaded ? 0.64 : 0,
@@ -195,7 +206,7 @@ export function HeroSectionV2() {
 
             <div
               ref={(el) => { photoRefs.current[1] = el }}
-              className="absolute bottom-[7vh] right-[4vw] h-[52vh] w-[25vw] will-change-transform overflow-hidden rounded-[2rem] opacity-[0.66] mix-blend-normal shadow-[0_34px_120px_rgba(0,0,0,0.3)]"
+              className="absolute bottom-[12vh] right-[5vw] h-[44vh] w-[23vw] will-change-transform overflow-hidden rounded-[2rem] opacity-[0.66] mix-blend-normal shadow-[0_24px_64px_rgba(0,0,0,0.22)]"
               style={{
                 transition: isLoaded ? 'opacity 1.6s ease 0.55s' : 'none',
                 opacity: isLoaded ? 0.66 : 0,

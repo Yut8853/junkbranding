@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react'
 import { ReactLenis, useLenis } from 'lenis/react'
-import { scheduleIdleTask } from '@/lib/performance-mode'
 import type { SmoothScrollProps } from '@/types/component-props'
 
 export function DesktopSmoothScroll({ children }: SmoothScrollProps) {
@@ -30,7 +29,6 @@ function LenisScrollTriggerSync() {
 
   useEffect(() => {
     let active = true
-    let idleTask: ReturnType<typeof scheduleIdleTask> | null = null
 
     const loadScrollTrigger = async () => {
       const [{ gsap }, { ScrollTrigger }] = await Promise.all([
@@ -44,14 +42,10 @@ function LenisScrollTriggerSync() {
       }
     }
 
-    // ScrollTrigger同期は初期描画に必須ではないため、GSAPの評価をload後のidleへ逃がす。
-    idleTask = scheduleIdleTask(() => {
-      void loadScrollTrigger()
-    }, 6500, 4200)
+    void loadScrollTrigger()
 
     return () => {
       active = false
-      idleTask?.cancel()
     }
   }, [])
 

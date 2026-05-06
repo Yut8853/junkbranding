@@ -192,15 +192,20 @@ export function LoadingProvider({ children }: LoadingProviderProps) {
     setIsSelectingAudio(true)
 
     if (withSound) {
-      const playing = await startSound()
-      if (playing) {
-        window.localStorage.setItem(AUDIO_PREFERENCE_KEY, 'sound-on')
-        setAudioChoice('sound-on')
-      } else {
+      // 音声のload/play完了を待つと、クリック操作とローディング退場が音声I/Oに引きずられる。
+      // ユーザー操作内で再生開始だけ投げ、画面はすぐ先へ進める。
+      const soundStart = startSound()
+      window.localStorage.setItem(AUDIO_PREFERENCE_KEY, 'sound-on')
+      setAudioChoice('sound-on')
+      setIsSelectingAudio(false)
+
+      void soundStart.then((playing) => {
+        if (playing) return
         window.localStorage.setItem(AUDIO_PREFERENCE_KEY, 'sound-off')
+        setAudioChoice('sound-off')
+      }).finally(() => {
         selectionInFlightRef.current = false
-        setIsSelectingAudio(false)
-      }
+      })
       return
     }
 
@@ -208,6 +213,7 @@ export function LoadingProvider({ children }: LoadingProviderProps) {
     window.localStorage.setItem(AUDIO_PREFERENCE_KEY, 'sound-off')
     setAudioChoice('sound-off')
     setIsSelectingAudio(false)
+    selectionInFlightRef.current = false
   }
 
   return (

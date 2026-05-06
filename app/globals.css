@@ -1456,6 +1456,7 @@ html[data-performance-mode='lean'] .cta-secondary {
   top: 0;
   height: 100vh;
   overflow: hidden;
+  contain: paint;
 }
 
 .home-inverted-scroll__content {

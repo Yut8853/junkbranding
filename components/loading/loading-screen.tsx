@@ -1,10 +1,38 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import type { LoadingScreenProps } from '@/types/component-props'
 
 export function LoadingScreen({ progress, canSelectAudio, audioChoice, onSelectAudio }: LoadingScreenProps) {
+  const [displayProgress, setDisplayProgress] = useState(0)
   const [phase, setPhase] = useState<'loading' | 'complete' | 'exit'>('loading')
+  const animationRef = useRef<number>(0)
+
+  // 実際の進捗をそのまま出さず、ローディング画面上では滑らかに追従させる。
+  useEffect(() => {
+    if (animationRef.current) {
+      cancelAnimationFrame(animationRef.current)
+    }
+
+    const animate = () => {
+      setDisplayProgress(prev => {
+        const diff = progress - prev
+        const step = diff * 0.08
+        if (Math.abs(diff) < 0.5) {
+          animationRef.current = 0
+          return progress
+        }
+
+        animationRef.current = requestAnimationFrame(animate)
+        return prev + step
+      })
+    }
+
+    animationRef.current = requestAnimationFrame(animate)
+    return () => {
+      if (animationRef.current) cancelAnimationFrame(animationRef.current)
+    }
+  }, [progress])
 
   // 読み込み完了と音声選択が揃ったら、完了表示から退場アニメーションへ進める。
   useEffect(() => {
@@ -18,7 +46,7 @@ export function LoadingScreen({ progress, canSelectAudio, audioChoice, onSelectA
     }
   }, [audioChoice, progress])
 
-  const progressValue = Math.min(100, Math.max(0, Math.round(progress)))
+  const progressValue = Math.min(100, Math.max(0, Math.round(displayProgress)))
 
   return (
     <div 
@@ -40,15 +68,17 @@ export function LoadingScreen({ progress, canSelectAudio, audioChoice, onSelectA
       {/* 背景のグラデーションオーブ */}
       <div className="absolute inset-0 overflow-hidden" aria-hidden="true">
         <div 
-          className="absolute top-1/4 left-1/4 w-[500px] h-[500px] rounded-full blur-[120px] opacity-30"
+          className="absolute top-1/4 left-1/4 w-[500px] h-[500px] rounded-full blur-[120px] opacity-30 animate-spin"
           style={{
             background: 'conic-gradient(from 0deg, hsl(350, 65%, 72%), hsl(25, 70%, 72%), hsl(95, 45%, 65%), hsl(200, 60%, 72%), hsl(280, 50%, 72%), hsl(350, 65%, 72%))',
+            animationDuration: '10s',
           }}
         />
         <div 
-          className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] rounded-full blur-[100px] opacity-25"
+          className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] rounded-full blur-[100px] opacity-25 animate-spin-reverse"
           style={{
             background: 'conic-gradient(from 180deg, hsl(175, 50%, 65%), hsl(240, 55%, 75%), hsl(320, 60%, 72%), hsl(50, 65%, 70%), hsl(175, 50%, 65%))',
+            animationDuration: '8s',
           }}
         />
       </div>
@@ -81,6 +111,8 @@ export function LoadingScreen({ progress, canSelectAudio, audioChoice, onSelectA
               className="group relative overflow-hidden rounded-full px-8 py-4 text-sm font-bold uppercase tracking-[0.25em] text-white shadow-[0_18px_50px_rgba(120,60,255,0.32)] transition-transform duration-300 hover:scale-105 disabled:cursor-default disabled:opacity-80 disabled:hover:scale-100"
               style={{
                 background: 'linear-gradient(90deg, hsl(350, 65%, 72%), hsl(25, 70%, 72%), hsl(50, 65%, 70%), hsl(95, 45%, 65%), hsl(175, 50%, 65%), hsl(200, 60%, 72%), hsl(240, 55%, 75%), hsl(280, 50%, 72%), hsl(320, 60%, 72%))',
+                backgroundSize: '300% 100%',
+                animation: 'rainbow-flow 4s linear infinite',
               }}
             >
               <span className="relative z-10">
@@ -108,13 +140,13 @@ export function LoadingScreen({ progress, canSelectAudio, audioChoice, onSelectA
             role="status"
             aria-live="polite"
           >
-            {progressValue < 30 && 'Loading assets ...'}
-            {progressValue >= 30 && progressValue < 60 && 'Preparing experience ...'}
-            {progressValue >= 60 && progressValue < 90 && 'Warming up pages ...'}
-            {progressValue >= 90 && progressValue < 100 && 'Almost ready'}
-            {progressValue >= 100 && !canSelectAudio && 'Finalizing ...'}
-            {progressValue >= 100 && canSelectAudio && !audioChoice && 'Choose your sound'}
-            {progressValue >= 100 && audioChoice && phase !== 'exit' && 'Starting'}
+            {displayProgress < 30 && 'Loading assets ...'}
+            {displayProgress >= 30 && displayProgress < 60 && 'Preparing experience ...'}
+            {displayProgress >= 60 && displayProgress < 90 && 'Warming up pages ...'}
+            {displayProgress >= 90 && displayProgress < 100 && 'Almost ready'}
+            {displayProgress >= 100 && !canSelectAudio && 'Finalizing ...'}
+            {displayProgress >= 100 && canSelectAudio && !audioChoice && 'Choose your sound'}
+            {displayProgress >= 100 && audioChoice && phase !== 'exit' && 'Starting'}
           </p>
         </div>
       </div>
@@ -140,6 +172,8 @@ export function LoadingScreen({ progress, canSelectAudio, audioChoice, onSelectA
           style={{
             width: `${progressValue}%`,
             background: 'linear-gradient(90deg, hsl(350, 65%, 72%), hsl(25, 70%, 72%), hsl(50, 65%, 70%), hsl(95, 45%, 65%), hsl(175, 50%, 65%), hsl(200, 60%, 72%), hsl(240, 55%, 75%), hsl(280, 50%, 72%), hsl(320, 60%, 72%))',
+            backgroundSize: '300% 100%',
+            animation: 'rainbow-flow 4s linear infinite',
             boxShadow: '0 -6px 28px rgba(255,255,255,0.22)',
             transition: 'width 0.1s ease-out',
           }}
