@@ -17,6 +17,23 @@ const TransitionContext = createContext<TransitionContextType>({
   prefetchRoute: () => {},
 })
 
+const scrollToPageTop = () => {
+  window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
+  document.documentElement.scrollTop = 0
+  document.body.scrollTop = 0
+
+  const lenis = (window as Window & {
+    lenis?: {
+      scrollTo?: (target: number, options?: { immediate?: boolean; force?: boolean }) => void
+    }
+  }).lenis
+
+  lenis?.scrollTo?.(0, {
+    force: true,
+    immediate: true,
+  })
+}
+
 export function TransitionProvider({ children }: { children: ReactNode }) {
   const [hasNavigated, setHasNavigated] = useState(false)
   const [isTransitioning, setIsTransitioning] = useState(false)
@@ -86,7 +103,7 @@ export function TransitionProvider({ children }: { children: ReactNode }) {
     if (nextPath === pathname) return
 
     if (shouldUseFastStart()) {
-      router.push(href)
+      router.push(href, { scroll: true })
       return
     }
 
@@ -101,7 +118,7 @@ export function TransitionProvider({ children }: { children: ReactNode }) {
     
     // フェーズ2: コンテンツがフェードアウトした後にNext.jsの遷移を実行する。
     pushTimer.current = window.setTimeout(() => {
-      router.push(href)
+      router.push(href, { scroll: true })
     }, EXIT_DURATION_MS)
 
     // ルート確定イベントを取りこぼしても画面が固まらないよう、保険の完了タイマーを置く。
@@ -118,6 +135,8 @@ export function TransitionProvider({ children }: { children: ReactNode }) {
     if (pathname !== pendingHref.current) return
 
     if (completeTimer.current) window.clearTimeout(completeTimer.current)
+    scrollToPageTop()
+    requestAnimationFrame(scrollToPageTop)
 
     // pathnameが目的地に変わったら、入場アニメーション分だけ待って遷移状態を解除する。
     completeTimer.current = window.setTimeout(() => {
@@ -131,6 +150,15 @@ export function TransitionProvider({ children }: { children: ReactNode }) {
         fallbackTimer.current = null
       }
     }, ENTER_DURATION_MS)
+  }, [pathname])
+
+  useEffect(() => {
+    if (isNavigating.current) return
+
+    // ブラウザ戻る/進むや通常pushでも、前ページの中途半端な位置を持ち越さない。
+    scrollToPageTop()
+    const frameId = requestAnimationFrame(scrollToPageTop)
+    return () => cancelAnimationFrame(frameId)
   }, [pathname])
 
   useEffect(() => {
