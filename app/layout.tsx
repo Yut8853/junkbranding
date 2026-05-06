@@ -180,13 +180,32 @@ export default function RootLayout({
       className={`${notoSansJp.variable} ${barlowCondensed.variable}`}
     >
       <head>
-        {/* GTMはafterInteractiveにして、初期描画より計測タグを後回しにする。 */}
+        {/* GTMは全ユーザーでload後のidleまで遅らせ、初期操作と描画を優先する。 */}
         <Script id="google-tag-manager" strategy="afterInteractive">
           {`
-            (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-            'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+            (function(w,d,s,l,i){
+              w[l]=w[l]||[];
+              function loadGtm(){
+                w[l].push({'gtm.start': new Date().getTime(),event:'gtm.js'});
+                var f=d.getElementsByTagName(s)[0];
+                var j=d.createElement(s);
+                var dl=l!='dataLayer'?'&l='+l:'';
+                j.async=true;
+                j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+                f.parentNode.insertBefore(j,f);
+              }
+              function scheduleGtm(){
+                if ('requestIdleCallback' in w) {
+                  w.requestIdleCallback(loadGtm, { timeout: 5000 });
+                } else {
+                  w.setTimeout(loadGtm, 3500);
+                }
+              }
+              if (d.readyState === 'complete') {
+                scheduleGtm();
+              } else {
+                w.addEventListener('load', scheduleGtm, { once: true });
+              }
             })(window,document,'script','dataLayer','${GTM_ID}');
           `}
         </Script>

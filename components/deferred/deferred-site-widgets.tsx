@@ -19,7 +19,7 @@ export function DeferredSiteWidgets() {
   useEffect(() => {
     const idleTask = scheduleIdleTask(() => {
       setShouldRenderWidgets(true)
-    }, isSmallScreen() ? 5000 : 3200, isSmallScreen() ? 3600 : 1800)
+    }, isSmallScreen() ? 6500 : 5200, isSmallScreen() ? 5200 : 3600)
 
     return () => idleTask.cancel()
   }, [])

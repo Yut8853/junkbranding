@@ -1,5 +1,6 @@
 'use client'
 
+import dynamic from 'next/dynamic'
 import { homeAboutPreview, homeArea, homePreviewVideoSrc, homeWorksPreview } from '@/content/home-page'
 import {
   HomeAboutPreviewSection,
@@ -7,8 +8,15 @@ import {
   HomeMarqueeSection,
 } from '@/components/pages/home/home-sections'
 import { HomeAscentSection } from '@/components/pages/home/home-ascent-section'
-import { HomeDeferredSections } from '@/components/pages/home/home-deferred-sections'
 import { HomeInvertedScroll } from '@/components/pages/home/home-inverted-scroll'
+
+const HomeDeferredSections = dynamic(
+  () => import('@/components/pages/home/home-deferred-sections').then((mod) => mod.HomeDeferredSections),
+  {
+    loading: () => null,
+    ssr: false,
+  },
+)
 
 export function HomeDesktopPage() {
   return (

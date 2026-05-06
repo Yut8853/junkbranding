@@ -4,20 +4,6 @@ import type { IdleTaskHandle } from '@/types/performance'
 
 export const isBrowser = () => typeof window !== 'undefined'
 
-export const isSyntheticAudit = () => {
-  if (!isBrowser()) return false
-
-  const userAgent = navigator.userAgent.toLowerCase()
-  return (
-    navigator.webdriver === true ||
-    userAgent.includes('chrome-lighthouse') ||
-    userAgent.includes('lighthouse') ||
-    userAgent.includes('pagespeed') ||
-    userAgent.includes('page speed') ||
-    userAgent.includes('headless')
-  )
-}
-
 export const isSmallScreen = () => {
   if (!isBrowser()) return false
   return window.matchMedia('(max-width: 767px)').matches
