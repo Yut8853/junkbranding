@@ -164,8 +164,7 @@ export function Navigation() {
                 : 'linear-gradient(var(--background), var(--background)), linear-gradient(var(--foreground), var(--foreground))',
             backgroundOrigin: 'border-box',
             backgroundClip: 'padding-box, border-box',
-            backgroundSize: '100% 100%, 300% 100%',
-            animation: hasHeaderIntroCompleted && !isMobile && !isLeanMotion ? 'rainbow-flow 4s linear infinite' : 'none',
+            backgroundSize: '100% 100%, 100% 100%',
           }}
         />
         
@@ -174,7 +173,7 @@ export function Navigation() {
           <span
             className={`w-full h-[2px] transition-all duration-500 origin-center ${
               isOpen ? 'rotate-45 translate-y-[9px]' : 'rotate-0 translate-y-0'
-            } ${!isOpen && hasHeaderIntroCompleted ? 'animate-rainbow-line' : ''}`}
+            }`}
             style={{
               backgroundImage: isOpen
                 ? 'linear-gradient(white, white)'
@@ -187,7 +186,7 @@ export function Navigation() {
           <span
             className={`w-full h-[2px] transition-all duration-300 ${
               isOpen ? 'opacity-0 scale-x-0' : 'opacity-100 scale-x-100'
-            } ${!isOpen && hasHeaderIntroCompleted ? 'animate-rainbow-line' : ''}`}
+            }`}
             style={{
               backgroundImage: hasHeaderIntroCompleted
                 ? 'linear-gradient(90deg, hsl(60,65%,70%), hsl(150,50%,65%), hsl(280,50%,72%))'
@@ -198,7 +197,7 @@ export function Navigation() {
           <span
             className={`w-full h-[2px] transition-all duration-500 origin-center ${
               isOpen ? '-rotate-45 -translate-y-[9px]' : 'rotate-0 translate-y-0'
-            } ${!isOpen && hasHeaderIntroCompleted ? 'animate-rainbow-line' : ''}`}
+            }`}
             style={{
               backgroundImage: isOpen
                 ? 'linear-gradient(white, white)'
