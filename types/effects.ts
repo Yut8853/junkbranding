@@ -15,6 +15,48 @@ export type FloatingParticle = {
   opacity: number
 }
 
+export type FloatingParticlesInitMessage = {
+  type: 'init'
+  canvas: OffscreenCanvas
+  width: number
+  height: number
+  isLowPowerDevice: boolean
+}
+
+export type FloatingParticlesResizeMessage = {
+  type: 'resize'
+  width: number
+  height: number
+}
+
+export type FloatingParticlesMouseMessage = {
+  type: 'mouse'
+  x: number
+  y: number
+}
+
+export type FloatingParticlesVisibilityMessage = {
+  type: 'visibility'
+  visible: boolean
+}
+
+export type FloatingParticlesTransitionMessage = {
+  type: 'transition'
+  active: boolean
+}
+
+export type FloatingParticlesDestroyMessage = {
+  type: 'destroy'
+}
+
+export type FloatingParticlesWorkerMessage =
+  | FloatingParticlesInitMessage
+  | FloatingParticlesResizeMessage
+  | FloatingParticlesMouseMessage
+  | FloatingParticlesVisibilityMessage
+  | FloatingParticlesTransitionMessage
+  | FloatingParticlesDestroyMessage
+
 export type CursorParticle = {
   id: number
   x: number
@@ -38,6 +80,11 @@ export type CtaParticle = {
   hue: number
 }
 
+export type CanvasPoint = {
+  x: number
+  y: number
+}
+
 export type FilmParticle = {
   x: number
   y: number
@@ -47,6 +94,47 @@ export type FilmParticle = {
   hue: number
   alpha: number
   phase: number
+}
+
+export type TopCanvasFilmOverlayInitMessage = {
+  type: 'init'
+  canvas: OffscreenCanvas
+  width: number
+  height: number
+  dpr: number
+  isHome: boolean
+  prefersReducedMotion: boolean
+}
+
+export type TopCanvasFilmOverlayResizeMessage = {
+  type: 'resize'
+  width: number
+  height: number
+  dpr: number
+}
+
+export type TopCanvasFilmOverlayConfigMessage = {
+  type: 'config'
+  isHome: boolean
+  prefersReducedMotion: boolean
+}
+
+export type TopCanvasFilmOverlayDestroyMessage = {
+  type: 'destroy'
+}
+
+export type TopCanvasFilmOverlayWorkerMessage =
+  | TopCanvasFilmOverlayInitMessage
+  | TopCanvasFilmOverlayResizeMessage
+  | TopCanvasFilmOverlayConfigMessage
+  | TopCanvasFilmOverlayDestroyMessage
+
+export type AnimationWorkerScope<TMessage> = {
+  onmessage: ((event: MessageEvent<TMessage>) => void) | null
+  requestAnimationFrame?: (callback: FrameRequestCallback) => number
+  cancelAnimationFrame?: (handle: number) => void
+  setTimeout: typeof setTimeout
+  clearTimeout: typeof clearTimeout
 }
 
 export type OrbPhase = 'hidden' | 'floating' | 'attracted' | 'absorbed'

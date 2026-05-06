@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, useCallback } from 'react'
 import { ScatterText } from '@/components/motion/scatter-text'
 import { useTransition } from '@/contexts/transition-context'
 import { useIsMobile } from '@/hooks/use-mobile'
-import type { CtaParticle } from '@/types/effects'
+import type { CanvasPoint, CtaParticle } from '@/types/effects'
 
 export function CTASectionV2() {
   const sectionRef = useRef<HTMLElement>(null)
@@ -115,7 +115,7 @@ export function CTASectionV2() {
       lastFrameTime = currentTime
 
       ctx.clearRect(0, 0, canvas.width, canvas.height)
-      let buttonCenter: { x: number; y: number } | null = null
+      let buttonCenter: CanvasPoint | null = null
       const sectionTop = sectionRef.current?.getBoundingClientRect().top || 0
 
       if (isHoveringRef.current && buttonRef.current) {

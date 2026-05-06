@@ -1,45 +1,6 @@
-import type { FilmParticle } from '@/types/effects'
+import type { AnimationWorkerScope, FilmParticle, TopCanvasFilmOverlayWorkerMessage } from '@/types/effects'
 
-type InitMessage = {
-  type: 'init'
-  canvas: OffscreenCanvas
-  width: number
-  height: number
-  dpr: number
-  isHome: boolean
-  prefersReducedMotion: boolean
-}
-
-type ResizeMessage = {
-  type: 'resize'
-  width: number
-  height: number
-  dpr: number
-}
-
-type ConfigMessage = {
-  type: 'config'
-  isHome: boolean
-  prefersReducedMotion: boolean
-}
-
-type DestroyMessage = {
-  type: 'destroy'
-}
-
-type WorkerMessage =
-  | InitMessage
-  | ResizeMessage
-  | ConfigMessage
-  | DestroyMessage
-
-const workerScope = self as unknown as {
-  onmessage: ((event: MessageEvent<WorkerMessage>) => void) | null
-  requestAnimationFrame?: (callback: FrameRequestCallback) => number
-  cancelAnimationFrame?: (handle: number) => void
-  setTimeout: typeof setTimeout
-  clearTimeout: typeof clearTimeout
-}
+const workerScope = self as unknown as AnimationWorkerScope<TopCanvasFilmOverlayWorkerMessage>
 
 let canvas: OffscreenCanvas | null = null
 let ctx: OffscreenCanvasRenderingContext2D | null = null

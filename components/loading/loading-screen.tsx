@@ -1,11 +1,11 @@
 'use client'
 
 import { useEffect, useState, useRef } from 'react'
-import type { LoadingScreenProps } from '@/types/component-props'
+import type { LoadingScreenPhase, LoadingScreenProps } from '@/types/component-props'
 
 export function LoadingScreen({ progress, canSelectAudio, audioChoice, onSelectAudio }: LoadingScreenProps) {
   const [displayProgress, setDisplayProgress] = useState(0)
-  const [phase, setPhase] = useState<'loading' | 'complete' | 'exit'>('loading')
+  const [phase, setPhase] = useState<LoadingScreenPhase>('loading')
   const animationRef = useRef<number>(0)
 
   // 実際の進捗をそのまま出さず、ローディング画面上では滑らかに追従させる。

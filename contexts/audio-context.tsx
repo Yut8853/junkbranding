@@ -1,7 +1,8 @@
 'use client'
 
-import { createContext, useContext, useState, useRef, useEffect, useCallback, type ReactNode } from 'react'
+import { createContext, useContext, useState, useRef, useEffect, useCallback } from 'react'
 import type { AudioContextConstructor, AudioContextValue } from '@/types/audio'
+import type { AudioProviderProps } from '@/types/component-props'
 
 const BACKGROUND_AUDIO_SRC = '/audio/128_BPM124.mp3'
 const AUDIO_PREFERENCE_KEY = 'junkbranding-audio-preference'
@@ -250,7 +251,7 @@ function getAudioPlayer() {
 
 const AudioCtx = createContext<AudioContextValue | null>(null)
 
-export function AudioProvider({ children }: { children: ReactNode }) {
+export function AudioProvider({ children }: AudioProviderProps) {
   const [isPlaying, setIsPlaying] = useState(false)
   const [hasStarted, setHasStarted] = useState(false)
   const audioPlayerRef = useRef<BackgroundAudioPlayer | null>(null)

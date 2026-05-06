@@ -6,7 +6,7 @@ import { SectionReveal } from '@/components/motion/text-reveal'
 import { ScatterBlock } from '@/components/motion/scatter-block'
 import { ScatterText } from '@/components/motion/scatter-text'
 import { ServiceCard } from '@/components/pages/pricing/pricing-service-card'
-import type { PricingFaqSectionProps, PricingServiceCategoriesSectionProps } from '@/types/pricing-page'
+import type { PricingFaqItemProps, PricingFaqSectionProps, PricingServiceCategoriesSectionProps } from '@/types/pricing-page'
 
 export function PricingHeroSection() {
   return (
@@ -288,12 +288,7 @@ function FaqItem({
   index,
   isOpen,
   onToggle,
-}: {
-  faq: { question: string; answer: string }
-  index: number
-  isOpen: boolean
-  onToggle: () => void
-}) {
+}: PricingFaqItemProps) {
   return (
     <SectionReveal delay={index * 0.1} duration={0.6}>
       <div

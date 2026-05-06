@@ -16,6 +16,10 @@ const BottomHeatHaze = dynamic(
   () => import('@/components/effects/bottom-heat-haze').then((mod) => mod.BottomHeatHaze),
   { ssr: false }
 )
+const TopCanvasFilmOverlay = dynamic(
+  () => import('@/components/effects/top-canvas-film-overlay').then((mod) => mod.TopCanvasFilmOverlay),
+  { ssr: false }
+)
 const RisingRainbowOrb = dynamic(
   () => import('@/components/effects/rising-rainbow-orb').then((mod) => mod.RisingRainbowOrb),
   { ssr: false }
@@ -57,6 +61,7 @@ export function DeferredVisualEffects() {
           <FloatingParticles />
           <RisingRainbowOrb />
           <BottomHeatHaze />
+          <TopCanvasFilmOverlay />
         </>
       )}
     </>

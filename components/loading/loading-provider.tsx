@@ -4,7 +4,7 @@ import { createContext, useContext, useState, useEffect, useLayoutEffect, useRef
 import { useAudio } from '@/contexts/audio-context'
 import { LoadingScreen } from './loading-screen'
 import { scheduleIdleTask, shouldUseFastStart } from '@/lib/performance-mode'
-import type { LoadingContextType, LoadingProviderProps } from '@/types/component-props'
+import type { LoadingAudioChoice, LoadingContextType, LoadingProviderProps } from '@/types/component-props'
 
 const LOADING_SEEN_KEY = 'junkbranding-loading-seen-session-v3'
 const AUDIO_PREFERENCE_KEY = 'junkbranding-audio-preference'
@@ -48,7 +48,7 @@ export function LoadingProvider({ children }: LoadingProviderProps) {
   const [isLoading, setIsLoading] = useState(!initialFastStart)
   const [progress, setProgress] = useState(initialFastStart ? 100 : 0)
   const [isFirstLoad, setIsFirstLoad] = useState(!initialFastStart)
-  const [audioChoice, setAudioChoice] = useState<'sound-on' | 'sound-off' | null>(initialFastStart ? 'sound-off' : null)
+  const [audioChoice, setAudioChoice] = useState<LoadingAudioChoice>(initialFastStart ? 'sound-off' : null)
   const [isSelectingAudio, setIsSelectingAudio] = useState(false)
   const [preloadComplete, setPreloadComplete] = useState(initialFastStart)
   const [isFastStart, setIsFastStart] = useState(initialFastStart)

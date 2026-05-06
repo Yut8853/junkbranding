@@ -1,9 +1,9 @@
 'use client'
 
-import { createContext, useContext, useState, type ReactNode, useCallback, useMemo, useRef, useEffect } from 'react'
+import { createContext, useContext, useState, useCallback, useMemo, useRef, useEffect } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 import { shouldUseFastStart } from '@/lib/performance-mode'
-import type { TransitionContextType } from '@/types/navigation'
+import type { TransitionContextType, TransitionProviderProps, WindowWithLenis } from '@/types/navigation'
 
 const PREFETCH_ROUTES = ['/', '/about', '/works', '/pricing', '/contact', '/privacy'] as const
 const EXIT_DURATION_MS = 420
@@ -22,11 +22,7 @@ const scrollToPageTop = () => {
   document.documentElement.scrollTop = 0
   document.body.scrollTop = 0
 
-  const lenis = (window as Window & {
-    lenis?: {
-      scrollTo?: (target: number, options?: { immediate?: boolean; force?: boolean }) => void
-    }
-  }).lenis
+  const lenis = (window as WindowWithLenis).lenis
 
   lenis?.scrollTo?.(0, {
     force: true,
@@ -34,7 +30,7 @@ const scrollToPageTop = () => {
   })
 }
 
-export function TransitionProvider({ children }: { children: ReactNode }) {
+export function TransitionProvider({ children }: TransitionProviderProps) {
   const [hasNavigated, setHasNavigated] = useState(false)
   const [isTransitioning, setIsTransitioning] = useState(false)
   const router = useRouter()

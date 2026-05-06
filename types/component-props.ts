@@ -9,10 +9,14 @@ export type CookiePreferences = {
   marketing: boolean
 }
 
+export type LoadingAudioChoice = 'sound-on' | 'sound-off' | null
+
+export type LoadingScreenPhase = 'loading' | 'complete' | 'exit'
+
 export type LoadingScreenProps = {
   progress: number
   canSelectAudio: boolean
-  audioChoice: 'sound-on' | 'sound-off' | null
+  audioChoice: LoadingAudioChoice
   onSelectAudio: (withSound: boolean) => void
 }
 
@@ -24,6 +28,10 @@ export type LoadingContextType = {
 }
 
 export type LoadingProviderProps = {
+  children: ReactNode
+}
+
+export type AudioProviderProps = {
   children: ReactNode
 }
 

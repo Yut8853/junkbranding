@@ -30,6 +30,13 @@ export type PricingFaqSectionProps = {
   faqs: PricingFaq[]
 }
 
+export type PricingFaqItemProps = {
+  faq: PricingFaq
+  index: number
+  isOpen: boolean
+  onToggle: () => void
+}
+
 export type PricingServiceCardProps = {
   service: PricingServiceItem
   index: number

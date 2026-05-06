@@ -1,6 +1,8 @@
 import type { ReactNode } from 'react'
 
 // TOPページはPCで反転スクロール、SPで通常レイアウトを使うため、セクション間で渡す表示データを明確に分ける。
+export type HomeLayoutMode = 'desktop-inverted' | 'mobile-normal'
+
 export type HomeAboutPreview = {
   eyebrow: string
   title: string

@@ -1,54 +1,6 @@
-import type { FloatingParticle } from '@/types/effects'
+import type { AnimationWorkerScope, FloatingParticle, FloatingParticlesWorkerMessage } from '@/types/effects'
 
-type InitMessage = {
-  type: 'init'
-  canvas: OffscreenCanvas
-  width: number
-  height: number
-  isLowPowerDevice: boolean
-}
-
-type ResizeMessage = {
-  type: 'resize'
-  width: number
-  height: number
-}
-
-type MouseMessage = {
-  type: 'mouse'
-  x: number
-  y: number
-}
-
-type VisibilityMessage = {
-  type: 'visibility'
-  visible: boolean
-}
-
-type TransitionMessage = {
-  type: 'transition'
-  active: boolean
-}
-
-type DestroyMessage = {
-  type: 'destroy'
-}
-
-type WorkerMessage =
-  | InitMessage
-  | ResizeMessage
-  | MouseMessage
-  | VisibilityMessage
-  | TransitionMessage
-  | DestroyMessage
-
-const workerScope = self as unknown as {
-  onmessage: ((event: MessageEvent<WorkerMessage>) => void) | null
-  requestAnimationFrame?: (callback: FrameRequestCallback) => number
-  cancelAnimationFrame?: (handle: number) => void
-  setTimeout: typeof setTimeout
-  clearTimeout: typeof clearTimeout
-}
+const workerScope = self as unknown as AnimationWorkerScope<FloatingParticlesWorkerMessage>
 
 let canvas: OffscreenCanvas | null = null
 let ctx: OffscreenCanvasRenderingContext2D | null = null

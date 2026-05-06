@@ -3,6 +3,7 @@
 import dynamic from 'next/dynamic'
 import { useLayoutEffect, useState } from 'react'
 import { MobileHomePage } from '@/components/pages/home/mobile-home-page'
+import type { HomeLayoutMode } from '@/types/home-page'
 
 const HomeDesktopPage = dynamic(
   () => import('@/components/pages/home/home-desktop-page').then((mod) => mod.HomeDesktopPage),
@@ -12,7 +13,7 @@ const HomeDesktopPage = dynamic(
 )
 
 export default function HomePageClient() {
-  const [layoutMode, setLayoutMode] = useState<'desktop-inverted' | 'mobile-normal'>('desktop-inverted')
+  const [layoutMode, setLayoutMode] = useState<HomeLayoutMode>('desktop-inverted')
   const isDesktopInverted = layoutMode === 'desktop-inverted'
 
   useLayoutEffect(() => {

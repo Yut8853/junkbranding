@@ -1,9 +1,4 @@
-export type NavItem = {
-  href: string
-  label: string
-  labelJa: string
-  num: string
-}
+import type { NavItem } from '@/types/navigation'
 
 export const navItems: NavItem[] = [
   { href: '/', label: 'Home', labelJa: 'トップ', num: '01' },
