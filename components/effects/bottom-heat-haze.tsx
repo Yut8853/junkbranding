@@ -105,6 +105,7 @@ export function BottomHeatHaze() {
     let lastFrameTime = 0;
     let width = 0;
     let height = 0;
+    let isVisible = document.visibilityState === 'visible';
 
     if (!positionBuffer || positionLocation < 0 || !timeLocation || !resolutionLocation) {
       gl.deleteProgram(program);
@@ -140,11 +141,10 @@ export function BottomHeatHaze() {
 
     const render = (now: number) => {
       // 常時60fpsにせず、煙として自然に見える範囲で更新頻度を制限する。
-      const frameInterval = prefersReducedMotion ? 90 : 33;
+      const frameInterval = prefersReducedMotion ? 120 : 66;
 
-      if (now - lastFrameTime >= frameInterval) {
+      if (isVisible && now - lastFrameTime >= frameInterval) {
         lastFrameTime = now;
-        resize();
         gl.clearColor(0, 0, 0, 0);
         gl.clear(gl.COLOR_BUFFER_BIT);
         gl.uniform1f(timeLocation, now * 0.001);
@@ -155,13 +155,19 @@ export function BottomHeatHaze() {
       animationFrameId = window.requestAnimationFrame(render);
     };
 
+    const handleVisibilityChange = () => {
+      isVisible = document.visibilityState === 'visible';
+    };
+
     resize();
     animationFrameId = window.requestAnimationFrame(render);
     window.addEventListener('resize', resize, { passive: true });
+    document.addEventListener('visibilitychange', handleVisibilityChange);
 
     return () => {
       window.cancelAnimationFrame(animationFrameId);
       window.removeEventListener('resize', resize);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
       gl.deleteBuffer(positionBuffer);
       gl.deleteProgram(program);
     };

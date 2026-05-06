@@ -22,6 +22,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
+Trace-*.json
 
 # local env files
 # ここが重要です！APIキーを公開しないための設定
