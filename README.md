@@ -389,22 +389,6 @@ public/
 - 音声: `types/audio.ts`
 - スクロール管理: `types/scroll-manager.ts`
 
-### コメント
-
-コメントは日本語で統一。  
-「何をしているか」の直訳ではなく、「なぜそうしているか」「何を避けているか」「ライフサイクル上の注意」を書く。
-
-良い例:
-
-- 初回表示後のidleまで重いエフェクトを遅らせる
-- TOPページでは親がtransformで動くため、window scrollではなく画面内位置を直接見る
-
-避ける例:
-
-- 配列をmapする
-- stateを更新する
-- refに値を入れる
-
 ### 触るときに注意するもの
 
 - `ScatterText` の `distance` / `scrollStart` / `scrollEnd`

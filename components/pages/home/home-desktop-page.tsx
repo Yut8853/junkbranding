@@ -1,6 +1,7 @@
 'use client'
 
 import dynamic from 'next/dynamic'
+import { useEffect } from 'react'
 import { homeAboutPreview, homeArea, homePreviewVideoSrc, homeWorksPreview } from '@/content/home-page'
 import {
   HomeAboutPreviewSection,
@@ -19,6 +20,21 @@ const HomeDeferredSections = dynamic(
 )
 
 export function HomeDesktopPage() {
+  useEffect(() => {
+    const previousScrollRestoration = window.history.scrollRestoration
+    window.history.scrollRestoration = 'manual'
+    window.scrollTo(0, 0)
+
+    const frameId = requestAnimationFrame(() => {
+      window.scrollTo(0, 0)
+    })
+
+    return () => {
+      cancelAnimationFrame(frameId)
+      window.history.scrollRestoration = previousScrollRestoration
+    }
+  }, [])
+
   return (
     <div className="home-ascent-page home-ascent-page--inverted">
       <HomeInvertedScroll>

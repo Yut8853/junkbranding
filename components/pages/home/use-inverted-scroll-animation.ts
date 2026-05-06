@@ -12,12 +12,16 @@ export function useInvertedScrollAnimation(children: ReactNode) {
 
   const measure = useCallback(() => {
     const content = contentRef.current
+    const scene = sceneRef.current
     if (!content) return
 
     const lastSection = content.lastElementChild as HTMLElement | null
     const nextHeroOffset = lastSection?.offsetTop ?? 0
+    const progress = scene && nextHeroOffset > 0
+      ? clamp01(-scene.getBoundingClientRect().top / nextHeroOffset)
+      : 0
     setHeroOffset(nextHeroOffset)
-    setTranslateY(-nextHeroOffset)
+    setTranslateY(-nextHeroOffset + nextHeroOffset * progress)
   }, [])
 
   useEffect(() => {
@@ -60,6 +64,19 @@ export function useInvertedScrollAnimation(children: ReactNode) {
       cancelAnimationFrame(secondFrame)
     }
   }, [measure, children])
+
+  useEffect(() => {
+    const content = contentRef.current
+    if (!content || typeof ResizeObserver === 'undefined') return
+
+    // dynamic importされた下層セクションが後から入るため、DOMサイズ変化でHERO開始位置を測り直す。
+    const observer = new ResizeObserver(() => {
+      requestAnimationFrame(measure)
+    })
+    observer.observe(content)
+
+    return () => observer.disconnect()
+  }, [measure])
 
   return {
     contentRef,
