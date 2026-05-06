@@ -172,7 +172,7 @@ export function HeroSectionV2() {
       className="relative h-[100svh] md:h-[110vh]"
     >
       {/* スクロール中に画面へ留まるHEROコンテナ */}
-      <div className="relative h-[100svh] w-full overflow-hidden md:sticky md:top-0 md:h-screen">
+      <div className="relative h-[100svh] w-full overflow-hidden md:sticky md:top-0 md:h-screen md:overflow-visible">
         {shouldRenderDesktopPhotos && (
           <div className="pointer-events-none absolute inset-0 z-[8] hidden md:block" aria-hidden="true">
             <div

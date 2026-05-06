@@ -76,21 +76,74 @@ export function MobileHomePage() {
         <p className="type-body mt-6 text-base text-muted-foreground">
           {homeWorksPreview.description}
         </p>
+        
+        {/* 実績ピックアップ */}
+        <div className="mt-8 space-y-4">
+          {[
+            { title: 'TO PLACE', category: 'コーポレートサイト', year: '2024', url: 'https://to-place.co.jp/' },
+            { title: 'LUZ REAL', category: 'コーポレートサイト', year: '2025', url: 'https://luz-real.com/' },
+          ].map((work) => (
+            <Link
+              key={work.title}
+              href={work.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block p-5 rounded-2xl bg-background/50 border border-foreground/10 active:scale-[0.98] transition-transform"
+            >
+              <div className="flex items-start justify-between">
+                <div>
+                  <p className="type-label text-xs text-primary/80 mb-1">{work.category}</p>
+                  <p className="type-eyebrow text-2xl">{work.title}</p>
+                </div>
+                <span className="type-mono text-xs text-muted-foreground/60">{work.year}</span>
+              </div>
+            </Link>
+          ))}
+        </div>
+        
         <Link
           href={homeWorksPreview.href}
-          className="cta-primary type-cta mt-10 inline-flex rounded-full px-7 py-4 text-sm"
+          className="cta-primary type-cta mt-8 inline-flex rounded-full px-7 py-4 text-sm"
         >
           {homeWorksPreview.cta}
         </Link>
       </section>
 
-      <section className="px-6 py-20 glass-card">
-        <p className="type-eyebrow text-5xl text-foreground/45">{homeArea.eyebrow}</p>
-        <h2 className="type-section-title mt-6 text-3xl">{homeArea.title}</h2>
-        <p className="type-hero-title mt-4 text-4xl gradient-text">{homeArea.area}</p>
-        <p className="type-body mt-6 text-base text-muted-foreground">
-          {homeArea.description}
-        </p>
+      <section className="px-6 py-20 glass-card relative overflow-hidden">
+        {/* 背景マーキー */}
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden">
+          <div className="flex whitespace-nowrap">
+            <div
+              className="flex"
+              style={{
+                animation: 'marquee-left 20s linear infinite',
+              }}
+            >
+              {Array.from({ length: 4 }).map((_, i) => (
+                <span
+                  key={i}
+                  className="type-display font-bold text-[8rem] mx-6 select-none"
+                  style={{
+                    WebkitTextStroke: '1px oklch(0.75 0.12 300 / 0.12)',
+                    WebkitTextFillColor: 'transparent',
+                    lineHeight: 1,
+                  }}
+                >
+                  NATIONWIDE
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div className="relative z-10">
+          <p className="type-eyebrow text-5xl text-foreground/45">{homeArea.eyebrow}</p>
+          <h2 className="type-section-title mt-6 text-3xl">{homeArea.title}</h2>
+          <p className="type-hero-title mt-4 text-4xl gradient-text">{homeArea.area}</p>
+          <p className="type-body mt-6 text-base text-muted-foreground">
+            {homeArea.description}
+          </p>
+        </div>
       </section>
 
       <section className="px-6 py-20 text-center glass-light">
