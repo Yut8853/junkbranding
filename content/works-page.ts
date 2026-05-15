@@ -55,6 +55,28 @@ export const works = [
     url: 'https://luz-real.com/',
     year: '2025',
   },
+{
+  id: 4,
+  title: 'NEXT',
+  category: 'コーポレートサイト',
+  description:
+    '短期間での制作を前提に、ブランドの印象を損なわず、視覚的な上質さと情報の分かりやすさを両立したコーポレートサイト。限られた時間の中でも、ファーストビューの印象設計、スマートフォンでの見やすさ、問い合わせにつながる導線設計を意識して構築しました。',
+  role: 'UIデザイン / フロントエンド実装 / ブランディング補助',
+  scope:
+    'サイト構成、ビジュアル設計、ページデザイン、アニメーション実装、スマートフォン最適化',
+  outcome:
+    '1日という短い制作期間の中で、ブランドの品位を保ちながら、サービス理解とアクションを促すコーポレートサイトとして整理。',
+  highlights: [
+    '短期間でもブランドイメージが伝わるファーストビューを設計',
+    'スマートフォンでも読みやすい余白、文字サイズ、導線を調整',
+    '過度な装飾を避け、必要な情報が埋もれない演出バランスに調整',
+    '1日制作を前提に、優先度を絞ってデザインと実装を効率的に進行',
+  ],
+  tags: ['Web Design', 'Development', 'Corporate', 'UI/UX'],
+  stack: ['HTML', 'CSS', 'JavaScript', 'Three.js', 'GSAP'],
+  url: 'https://next-inc.group/',
+  year: '2026',
+}
 ] satisfies PortfolioWork[]
 
 export const categories = ['すべて', ...Array.from(new Set(works.map((work) => work.category)))]
