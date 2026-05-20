@@ -2,10 +2,10 @@ import type { MetadataRoute } from 'next'
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'JunkBranding | 茨城・東京・神奈川のブランディング & Web制作',
+    name: 'JunkBranding | 茨城のHP制作・Web制作スタジオ',
     short_name: 'JunkBranding',
     description:
-      '茨城・東京・神奈川を中心に活動する、2人だけの小さなブランディング&Web制作スタジオ。',
+      '茨城県を拠点に、ホームページ制作・Web制作を中心に手がける小さなクリエイティブスタジオ。',
     start_url: '/',
     scope: '/',
     display: 'standalone',

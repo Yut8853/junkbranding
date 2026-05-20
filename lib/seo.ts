@@ -5,11 +5,13 @@ const SITE_URL = 'https://junkbranding.com'
 const SITE_NAME = 'JunkBranding'
 const DEFAULT_OG_IMAGE = '/ogp.jpg'
 const DEFAULT_DESCRIPTION =
-  '茨城・東京・神奈川を中心に活動する、2人だけの小さなブランディング&Web制作スタジオ。Webサイト制作、ロゴ制作、ブランド設計、マーケティング支援まで、事業のらしさを成果につながる形へ整えます。'
+  '茨城県を拠点に、ホームページ制作・Web制作を中心に手がける小さなクリエイティブスタジオ。Webサイト制作、LP制作、ロゴ制作、ブランド設計まで、事業のらしさを成果につながる形へ整えます。'
 
 const defaultKeywords = [
+  'HP制作',
   'Web制作',
   'ホームページ制作',
+  'Webサイト制作',
   'ブランディング',
   'Webデザイン',
   'ロゴ制作',
@@ -21,6 +23,9 @@ const defaultKeywords = [
   'LLMO',
   'AIO',
   '茨城',
+  '茨城 HP制作',
+  '茨城 ホームページ制作',
+  '茨城 Web制作',
   '東京',
   '神奈川',
 ]
@@ -31,7 +36,7 @@ export function createPageMetadata({
   path = '',
   keywords = [],
   image = DEFAULT_OG_IMAGE,
-  imageAlt = `${SITE_NAME} - ブランディング&Web制作スタジオ`,
+  imageAlt = `${SITE_NAME} - 茨城のHP制作・Web制作スタジオ`,
   index = true,
   category = 'Web制作・ブランディング',
 }: PageMetadataOptions): Metadata {
@@ -95,7 +100,7 @@ export function createPageMetadata({
       'ai-summary': description,
       'service-area': '茨城県, 東京都, 神奈川県, 全国オンライン対応',
       'primary-services':
-        'ブランディング, Web制作, Webデザイン, ロゴ制作, SEO対策, マーケティング支援',
+        'ホームページ制作, Web制作, Webサイト制作, LP制作, ロゴ制作, ブランディング, SEO対策',
       'accessibility-summary':
         'キーボード操作、スクリーンリーダー、WAI-ARIA属性、SPでのモーション削減に配慮しています。',
     },

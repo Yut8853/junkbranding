@@ -32,7 +32,7 @@ export function MobileHomePage() {
           あなたの「らしさ」をカタチに。
         </p>
         <p className="type-body mt-6 text-base text-muted-foreground">
-          茨城・東京・神奈川を中心に活動する、2人だけのブランディング&Web制作スタジオです。
+          茨城県を拠点に、ホームページ制作・Web制作を中心に手がける、2人だけの小さなスタジオです。
         </p>
       </section>
 

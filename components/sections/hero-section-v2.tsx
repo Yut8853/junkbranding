@@ -26,7 +26,7 @@ export function HeroSectionV2() {
   const line1 = 'JUNK'
   const line2 = 'BRANDING'
   const logoText = `${line1}${line2}`
-  const line3 = 'あなたの「らしさ」を、選ばれるカタチに。'
+  const line3 = '茨城のホームページ制作とWeb制作を、らしく。'
 
   const applyPhotoParallax = useCallback(() => {
     photoRefs.current.forEach((el, index) => {

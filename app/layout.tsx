@@ -42,20 +42,25 @@ export const metadata: Metadata = {
   referrer: 'origin-when-cross-origin',
   generator: 'Next.js',
   title: {
-    default: 'JunkBranding | 茨城・東京・神奈川のブランディング & Web制作',
+    default: 'JunkBranding | 茨城のHP制作・Web制作スタジオ',
     template: '%s | JunkBranding',
   },
   description:
-    '茨城・東京・神奈川を中心に活動する、2人だけの小さなブランディング&Web制作スタジオ。大手にはできない、丁寧なものづくりを。Webサイト制作、ロゴ制作、ブランディングならJunkBrandingへ。',
+    '茨城県を拠点に、ホームページ制作・Web制作を中心に手がける小さなクリエイティブスタジオ。コーポレートサイト、LP、Webサイト制作からロゴ制作やブランディングまで、丁寧に対応します。',
   keywords: [
+    'HP制作',
+    'ホームページ制作',
     'Web制作',
+    'Webサイト制作',
     'ブランディング',
     'Webデザイン',
     'ロゴ制作',
     '茨城',
+    '茨城 HP制作',
+    '茨城 ホームページ制作',
+    '茨城 Web制作',
     '東京',
     '神奈川',
-    'ホームページ制作',
     'コーポレートサイト',
     'ランディングページ',
     'ECサイト',
@@ -81,23 +86,23 @@ export const metadata: Metadata = {
     locale: 'ja_JP',
     url: 'https://junkbranding.com',
     siteName: 'JunkBranding',
-    title: 'JunkBranding | 茨城・東京・神奈川のブランディング & Web制作',
+    title: 'JunkBranding | 茨城のHP制作・Web制作スタジオ',
     description:
-      '茨城・東京・神奈川を中心に活動する、2人だけの小さなブランディング&Web制作スタジオ。大手にはできない、丁寧なものづくりを。',
+      '茨城県を拠点に、ホームページ制作・Web制作を中心に手がける小さなクリエイティブスタジオ。コーポレートサイトやLP制作にも対応します。',
     images: [
       {
         url: '/ogp.jpg',
         width: 1200,
         height: 630,
-        alt: 'JunkBranding - 茨城・東京・神奈川のブランディング & Web制作スタジオ',
+        alt: 'JunkBranding - 茨城のHP制作・Web制作スタジオ',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'JunkBranding | 茨城・東京・神奈川のブランディング & Web制作',
+    title: 'JunkBranding | 茨城のHP制作・Web制作スタジオ',
     description:
-      '茨城・東京・神奈川を中心に活動する、2人だけの小さなブランディング&Web制作スタジオ。',
+      '茨城県を拠点に、ホームページ制作・Web制作を中心に手がける小さなクリエイティブスタジオ。',
     images: ['/ogp.jpg'],
   },
   robots: {
@@ -141,9 +146,9 @@ export const metadata: Metadata = {
   other: {
     'llms-txt': 'https://junkbranding.com/llms.txt',
     'ai-summary':
-      'JunkBrandingは茨城・東京・神奈川を中心に、ブランディング、Web制作、ロゴ制作、マーケティング支援を行う小規模クリエイティブスタジオです。',
+      'JunkBrandingは茨城県を拠点に、ホームページ制作、Web制作、LP制作、ロゴ制作、ブランディングを行う小規模クリエイティブスタジオです。',
     'service-area': '茨城県, 東京都, 神奈川県, 全国オンライン対応',
-    'primary-services': 'ブランディング, Web制作, Webデザイン, ロゴ制作, SEO対策, マーケティング支援',
+    'primary-services': 'ホームページ制作, Web制作, Webサイト制作, LP制作, ロゴ制作, ブランディング, SEO対策',
     'accessibility-summary': 'キーボード操作、スクリーンリーダー、WAI-ARIA属性、SPでのモーション削減に配慮しています。',
   },
 };

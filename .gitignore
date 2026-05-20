@@ -39,3 +39,5 @@ Trace-*.json
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+node_modules/
+node_modules (1)/

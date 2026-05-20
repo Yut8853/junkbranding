@@ -15,6 +15,7 @@ const areaServed = [
 ]
 
 const knowsAbout = [
+  'HP制作',
   'Web制作',
   'ホームページ制作',
   'LP制作',
@@ -38,7 +39,7 @@ const serviceCatalog = {
       '@type': 'Offer',
       itemOffered: {
         '@type': 'Service',
-        name: 'Webサイト制作',
+        name: 'ホームページ制作・Webサイト制作',
         serviceType: 'Web Design and Development',
       },
     },
@@ -117,7 +118,7 @@ export const organizationSchema = {
   alternateName: ['ジャンクブランディング', 'JUNKBRANDING'],
   slogan: 'あなたの「らしさ」をカタチに。',
   description:
-    '茨城・東京・神奈川を中心に活動するブランディング&Web制作スタジオ。',
+    '茨城県を拠点に、ホームページ制作・Web制作を中心に手がけるクリエイティブスタジオ。',
   url: BASE_URL,
   logo: {
     '@type': 'ImageObject',
@@ -144,7 +145,7 @@ export const localBusinessSchema = {
   image: OG_IMAGE_URL,
   logo: LOGO_URL,
   description:
-    '茨城・東京・神奈川を中心に、全国オンライン対応でブランディングとWeb制作を行うクリエイティブスタジオ。',
+    '茨城県を拠点に、全国オンライン対応でホームページ制作・Web制作・LP制作を行うクリエイティブスタジオ。',
   priceRange: '¥¥',
   areaServed,
   knowsAbout,
@@ -168,7 +169,7 @@ export function generateWebsiteSchema() {
     name: 'JunkBranding',
     alternateName: ['ジャンクブランディング', 'JUNKBRANDING'],
     description:
-      '茨城・東京・神奈川を中心に活動する、ブランディングとWeb制作のクリエイティブスタジオ。',
+      '茨城県を拠点に、ホームページ制作・Web制作を中心に手がけるクリエイティブスタジオ。',
     inLanguage: 'ja',
     publisher: {
       '@id': `${BASE_URL}/#organization`,
@@ -422,9 +423,9 @@ export function generateServiceSchema() {
         position: 1,
         item: {
           '@type': 'Service',
-          name: 'Webサイト制作',
+          name: 'ホームページ制作・Webサイト制作',
           description:
-            'ブランドの世界観とユーザー導線を両立したWebサイトを設計・デザイン・実装します。',
+            '茨城県を拠点に、企業や店舗向けのホームページ制作・Webサイト制作を設計からデザイン、実装まで一貫して行います。',
           serviceType: 'Web Design and Development',
           areaServed,
           provider: {
@@ -713,7 +714,7 @@ export function generateFaqSchema() {
         name: 'JunkBrandingはどの地域に対応していますか？',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: '茨城・東京・神奈川を中心に、オンラインで全国からのWeb制作・ブランディング相談に対応しています。',
+          text: '茨城県を拠点に、東京・神奈川を含む近隣エリアと、オンラインで全国からのホームページ制作・Web制作相談に対応しています。',
         },
       },
       {
