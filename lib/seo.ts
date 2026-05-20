@@ -1,11 +1,11 @@
-import type { Metadata } from 'next'
-import type { PageMetadataOptions } from '@/types/seo'
+import type { Metadata } from 'next';
+import type { PageMetadataOptions } from '@/types/seo';
 
-const SITE_URL = 'https://junkbranding.com'
-const SITE_NAME = 'JunkBranding'
-const DEFAULT_OG_IMAGE = '/ogp.jpg'
+const SITE_URL = 'https://junkbranding.com';
+const SITE_NAME = 'JunkBranding';
+const DEFAULT_OG_IMAGE = '/ogp.jpg';
 const DEFAULT_DESCRIPTION =
-  '茨城県を拠点に、ホームページ制作・Web制作を中心に手がける小さなクリエイティブスタジオ。Webサイト制作、LP制作、ロゴ制作、ブランド設計まで、事業のらしさを成果につながる形へ整えます。'
+  '茨城県を拠点に、ホームページ制作・Web制作を中心に手がける小さなクリエイティブスタジオ。Webサイト制作、LP制作、ロゴ制作、ブランド設計まで、事業のらしさを成果につながる形へ整えます。';
 
 const defaultKeywords = [
   'HP制作',
@@ -28,7 +28,7 @@ const defaultKeywords = [
   '茨城 Web制作',
   '東京',
   '神奈川',
-]
+];
 
 export function createPageMetadata({
   title,
@@ -40,9 +40,11 @@ export function createPageMetadata({
   index = true,
   category = 'Web制作・ブランディング',
 }: PageMetadataOptions): Metadata {
-  const url = `${SITE_URL}${path}`
-  const fullTitle = title.includes(SITE_NAME) ? title : `${title} | ${SITE_NAME}`
-  const mergedKeywords = Array.from(new Set([...defaultKeywords, ...keywords]))
+  const url = `${SITE_URL}${path}`;
+  const fullTitle = title.includes(SITE_NAME)
+    ? title
+    : `${title} | ${SITE_NAME}`;
+  const mergedKeywords = Array.from(new Set([...defaultKeywords, ...keywords]));
 
   return {
     metadataBase: new URL(SITE_URL),
@@ -104,5 +106,5 @@ export function createPageMetadata({
       'accessibility-summary':
         'キーボード操作、スクリーンリーダー、WAI-ARIA属性、SPでのモーション削減に配慮しています。',
     },
-  }
+  };
 }

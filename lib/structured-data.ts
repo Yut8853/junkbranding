@@ -1,18 +1,18 @@
 // SEO用の構造化データ(JSON-LD)を生成するヘルパー。
 // 各ページでは必要なschemaだけを組み合わせ、最終的に@graphへ正規化して出力する。
 
-import type { JsonLdNode } from '@/types/seo'
+import type { JsonLdNode } from '@/types/seo';
 
-const BASE_URL = 'https://junkbranding.com'
-const LOGO_URL = `${BASE_URL}/icon.svg`
-const OG_IMAGE_URL = `${BASE_URL}/ogp.jpg`
+const BASE_URL = 'https://junkbranding.com';
+const LOGO_URL = `${BASE_URL}/icon.svg`;
+const OG_IMAGE_URL = `${BASE_URL}/ogp.jpg`;
 
 const areaServed = [
   { '@type': 'State', name: '茨城県' },
   { '@type': 'State', name: '東京都' },
   { '@type': 'State', name: '神奈川県' },
   { '@type': 'Country', name: '日本' },
-]
+];
 
 const knowsAbout = [
   'HP制作',
@@ -29,7 +29,7 @@ const knowsAbout = [
   'WordPress',
   'SEO対策',
   'マーケティング支援',
-]
+];
 
 const serviceCatalog = {
   '@type': 'OfferCatalog',
@@ -84,29 +84,29 @@ const serviceCatalog = {
       },
     },
   ],
-}
+};
 
 function pageId(path = '') {
-  return `${BASE_URL}${path}#webpage`
+  return `${BASE_URL}${path}#webpage`;
 }
 
 function pageUrl(path = '') {
-  return `${BASE_URL}${path}`
+  return `${BASE_URL}${path}`;
 }
 
 export function generateJsonLdGraph(items: JsonLdNode[]) {
   return {
     '@context': 'https://schema.org',
-    '@graph': items.flatMap((item) => {
+    '@graph': items.flatMap(item => {
       if (Array.isArray(item['@graph'])) {
-        return item['@graph'] as JsonLdNode[]
+        return item['@graph'] as JsonLdNode[];
       }
 
-      const node = { ...item }
-      delete node['@context']
-      return [node]
+      const node = { ...item };
+      delete node['@context'];
+      return [node];
     }),
-  }
+  };
 }
 
 // 全ページ共通の事業者情報。WebSite / WebPage / 各サービスschemaから参照される土台。
@@ -135,7 +135,7 @@ export const organizationSchema = {
   areaServed,
   knowsAbout,
   makesOffer: serviceCatalog,
-}
+};
 
 export const localBusinessSchema = {
   '@type': 'LocalBusiness',
@@ -158,7 +158,7 @@ export const localBusinessSchema = {
     addressRegion: '茨城県',
     addressCountry: 'JP',
   },
-}
+};
 
 // サイト全体を表すschema。検索エンジンにサイト名・運営者・相談導線を伝える。
 export function generateWebsiteSchema() {
@@ -182,7 +182,7 @@ export function generateWebsiteSchema() {
       name: 'Web制作・ブランディングについて相談する',
       target: `${BASE_URL}/contact`,
     },
-  }
+  };
 }
 
 // 汎用WebPage schema。個別ページで特別な型が不要な場合のベースとして使う。
@@ -192,10 +192,10 @@ export function generateWebPageSchema({
   path = '',
   type = 'WebPage',
 }: {
-  title: string
-  description: string
-  path?: string
-  type?: string
+  title: string;
+  description: string;
+  path?: string;
+  type?: string;
 }) {
   return {
     '@type': type,
@@ -219,7 +219,7 @@ export function generateWebPageSchema({
       '@id': `${BASE_URL}/#organization`,
     },
     inLanguage: 'ja',
-  }
+  };
 }
 
 // Aboutページ用schema。スタジオ情報に加えて、メンバーや拠点の文脈を補う。
@@ -275,7 +275,7 @@ export function generateAboutPageSchema() {
         },
       },
     ],
-  }
+  };
 }
 
 // Contactページ用schema。問い合わせ導線が事業者情報と結びつくようにする。
@@ -305,7 +305,7 @@ export function generateContactPageSchema() {
       },
       organizationSchema,
     ],
-  }
+  };
 }
 
 // Worksページ用schema。制作実績をCollectionPageとItemListで表現する。
@@ -383,7 +383,7 @@ export function generateWorksPageSchema() {
       },
       organizationSchema,
     ],
-  }
+  };
 }
 
 // プライバシーポリシー用schema。法務系ページとして最終確認日も含める。
@@ -409,7 +409,7 @@ export function generatePrivacyPageSchema() {
     },
     inLanguage: 'ja',
     lastReviewed: '2026-04-01',
-  }
+  };
 }
 
 // TOPページ用の主要サービスschema。サービス名と提供者の関係を明示する。
@@ -509,7 +509,7 @@ export function generateServiceSchema() {
         },
       },
     ],
-  }
+  };
 }
 
 // Pricingページ用schema。価格目安をOfferとして出し、料金ページの意味を補強する。
@@ -699,7 +699,7 @@ export function generatePricingPageSchema() {
       },
       organizationSchema,
     ],
-  }
+  };
 }
 
 // FAQページ用schema。
@@ -734,11 +734,13 @@ export function generateFaqSchema() {
         },
       },
     ],
-  }
+  };
 }
 
 // パンくずリストschema。各ページの階層関係を検索エンジンへ渡す。
-export function generateBreadcrumbSchema(items: { name: string; url: string }[]) {
+export function generateBreadcrumbSchema(
+  items: { name: string; url: string }[]
+) {
   return {
     '@type': 'BreadcrumbList',
     '@id': `${items[items.length - 1]?.url ?? BASE_URL}#breadcrumb`,
@@ -748,5 +750,5 @@ export function generateBreadcrumbSchema(items: { name: string; url: string }[])
       name: item.name,
       item: item.url,
     })),
-  }
+  };
 }

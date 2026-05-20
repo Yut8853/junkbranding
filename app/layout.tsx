@@ -148,8 +148,10 @@ export const metadata: Metadata = {
     'ai-summary':
       'JunkBrandingは茨城県を拠点に、ホームページ制作、Web制作、LP制作、ロゴ制作、ブランディングを行う小規模クリエイティブスタジオです。',
     'service-area': '茨城県, 東京都, 神奈川県, 全国オンライン対応',
-    'primary-services': 'ホームページ制作, Web制作, Webサイト制作, LP制作, ロゴ制作, ブランディング, SEO対策',
-    'accessibility-summary': 'キーボード操作、スクリーンリーダー、WAI-ARIA属性、SPでのモーション削減に配慮しています。',
+    'primary-services':
+      'ホームページ制作, Web制作, Webサイト制作, LP制作, ロゴ制作, ブランディング, SEO対策',
+    'accessibility-summary':
+      'キーボード操作、スクリーンリーダー、WAI-ARIA属性、SPでのモーション削減に配慮しています。',
   },
 };
 
@@ -175,9 +177,7 @@ const jsonLd = generateJsonLdGraph([
 
 const GTM_ID = 'GTM-KWQHTTTJ';
 
-export default function RootLayout({
-  children,
-}: Readonly<LayoutProps>) {
+export default function RootLayout({ children }: Readonly<LayoutProps>) {
   return (
     <html
       lang="ja"
@@ -238,7 +238,11 @@ export default function RootLayout({
               <SmoothScroll>
                 <Navigation />
                 <PageTransition>
-                  <main id="main-content" className="noise-overlay relative" tabIndex={-1}>
+                  <main
+                    id="main-content"
+                    className="noise-overlay relative"
+                    tabIndex={-1}
+                  >
                     {children}
                   </main>
                 </PageTransition>

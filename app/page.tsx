@@ -1,11 +1,11 @@
-import type { Metadata } from 'next'
+import type { Metadata } from 'next';
 import {
   generateServiceSchema,
   generateBreadcrumbSchema,
   generateJsonLdGraph,
-} from '@/lib/structured-data'
-import { createPageMetadata } from '@/lib/seo'
-import HomePageClient from '@/components/pages/home-page'
+} from '@/lib/structured-data';
+import { createPageMetadata } from '@/lib/seo';
+import HomePageClient from '@/components/pages/home-page';
 
 export const metadata: Metadata = createPageMetadata({
   title: '茨城のHP制作・Web制作スタジオ',
@@ -26,7 +26,7 @@ export const metadata: Metadata = createPageMetadata({
     'ロゴ制作',
     'ブランド設計',
   ],
-})
+});
 
 const homeJsonLd = generateJsonLdGraph([
   {
@@ -45,8 +45,10 @@ const homeJsonLd = generateJsonLdGraph([
     inLanguage: 'ja',
   },
   generateServiceSchema(),
-  generateBreadcrumbSchema([{ name: 'ホーム', url: 'https://junkbranding.com' }]),
-])
+  generateBreadcrumbSchema([
+    { name: 'ホーム', url: 'https://junkbranding.com' },
+  ]),
+]);
 
 export default function HomePage() {
   return (
@@ -58,5 +60,5 @@ export default function HomePage() {
       />
       <HomePageClient />
     </>
-  )
+  );
 }
