@@ -5,7 +5,7 @@ import { ArrowRight, Phone, MessageCircle } from 'lucide-react'
 import { ScatterBlock } from '@/components/motion/scatter-block'
 import { ScatterText } from '@/components/motion/scatter-text'
 import { SectionReveal } from '@/components/motion/text-reveal'
-import { WorkCodePanel } from '@/components/pages/works/work-code-panel'
+import { DIRECOS_PLANNED_STACK, WorkCodePanel } from '@/components/pages/works/work-code-panel'
 import { WorkSignalPanel } from '@/components/pages/works/work-signal-panel'
 import { categories, works } from '@/content/works-page'
 import { cn } from '@/lib/utils'
@@ -49,6 +49,31 @@ function WorksProjectPanel({ project, index }: { project: CurrentProject; index:
       label="Live Interaction Map"
       accentHue={0.9 - index * 0.08}
     />
+  )
+}
+
+function DirecOSPlannedStack() {
+  return (
+    <div className="md:col-span-2 rounded-[1.35rem] border border-border/45 bg-background/45 p-4">
+      <span className="type-label mb-3 block text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+        Planned Stack
+      </span>
+      <div className="grid gap-2 md:grid-cols-3">
+        {DIRECOS_PLANNED_STACK.map((item) => (
+          <div
+            key={item.label}
+            className="rounded-xl border border-border/40 bg-card/60 px-3 py-3"
+          >
+            <p className="type-label text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+              {item.label}
+            </p>
+            <p className="mt-1 text-xs leading-5 text-foreground/75 md:text-[11px]">
+              {item.value}
+            </p>
+          </div>
+        ))}
+      </div>
+    </div>
   )
 }
 
@@ -250,6 +275,8 @@ export function WorksCurrentProjectsSection({ projects }: WorksCurrentProjectsSe
                           {project.targetUser}
                         </ScatterText>
                       </div>
+
+                      {project.title === 'DirecOS' && <DirecOSPlannedStack />}
                     </div>
                   </div>
 
