@@ -5,6 +5,8 @@ import { ArrowRight, Phone, MessageCircle } from 'lucide-react'
 import { ScatterBlock } from '@/components/motion/scatter-block'
 import { ScatterText } from '@/components/motion/scatter-text'
 import { SectionReveal } from '@/components/motion/text-reveal'
+import { WorkCodePanel } from '@/components/pages/works/work-code-panel'
+import { WorkSignalPanel } from '@/components/pages/works/work-signal-panel'
 import { categories, works } from '@/content/works-page'
 import { cn } from '@/lib/utils'
 import type { CurrentProject, PortfolioWork, WorksFilterSectionProps } from '@/types/works-page'
@@ -30,6 +32,25 @@ const worksApproach = [
     description: 'スマートフォン表示、速度、SEO、問い合わせ導線まで確認し、公開後に活きる形で仕上げます。',
   },
 ]
+
+function WorksProjectPanel({ project, index }: { project: CurrentProject; index: number }) {
+  if (project.title === 'DirecOS') {
+    return (
+      <WorkCodePanel
+        title={project.title}
+        label="Live Source Draft"
+      />
+    )
+  }
+
+  return (
+    <WorkSignalPanel
+      title={project.title}
+      label="Live Interaction Map"
+      accentHue={0.9 - index * 0.08}
+    />
+  )
+}
 
 export function WorksHeroSection() {
   return (
@@ -233,6 +254,8 @@ export function WorksCurrentProjectsSection({ projects }: WorksCurrentProjectsSe
                   </div>
 
                   <div className="grid gap-4">
+                    <WorksProjectPanel project={project} index={index} />
+
                     {[
                       ['Entry Flow', project.entryFlow],
                       ['Principle', project.principle],
@@ -342,7 +365,7 @@ export function WorksOwnedShowcaseSection({ works }: WorksOwnedShowcaseSectionPr
           scrollEnd={350}
           distance={220}
         >
-          目的は、表現と実装の限界を常に超えておくこと。JunkBranding、LAB、PIZZA。表現・設計・実装を継続的にアップデートする、3つの完全自社検証プロジェクトです。
+          目的は、表現と実装の限界を常に超えておくこと。 JunkBranding、LAB、PIZZA。表現・設計・実装を継続的にアップデートする、3つの完全自社検証プロジェクトです。
         </ScatterText>
       </div>
 
@@ -497,6 +520,12 @@ function OwnedWorkShowcaseCard({ work, index }: OwnedWorkShowcaseCardProps) {
             </div>
 
             <div className="space-y-6">
+              <WorkSignalPanel
+                title={work.title}
+                label="Creative Signal Field"
+                accentHue={0.78 - index * 0.1}
+              />
+
               <div className="rounded-[1.7rem] border border-border/45 bg-background/40 p-5 md:p-6">
                 <ScatterText
                   as="p"
