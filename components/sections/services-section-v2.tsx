@@ -153,7 +153,7 @@ export function ServicesSectionV2() {
         }}
       />
 
-      <div className="container mx-auto px-6 md:px-12 lg:px-16 relative z-10">
+      <div className="container mx-auto px-6 md:px-14 lg:px-20 relative z-10">
         {/* 見出し */}
         <div ref={headerRef} className="mb-16 lg:mb-24 text-center">
           <div className="mb-6 lg:mb-8">

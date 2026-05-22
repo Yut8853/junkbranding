@@ -5,6 +5,7 @@ import { Analytics } from '@vercel/analytics/next';
 import './globals.css';
 
 import { PageTransition } from '@/components/layout/page-transition';
+import { AutoJapaneseLineBreaks } from '@/components/layout/auto-japanese-line-breaks';
 import { Navigation } from '@/components/navigation/navigation';
 import { SmoothScroll } from '@/components/layout/smooth-scroll';
 import { DeferredVisualEffects } from '@/components/deferred/deferred-visual-effects';
@@ -219,6 +220,7 @@ export default function RootLayout({ children }: Readonly<LayoutProps>) {
         />
       </head>
       <body className="font-sans antialiased bg-transparent text-foreground overflow-x-hidden">
+        <AutoJapaneseLineBreaks />
         <noscript>
           <iframe
             src={`https://www.googletagmanager.com/ns.html?id=${GTM_ID}`}

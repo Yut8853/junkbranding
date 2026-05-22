@@ -13,7 +13,7 @@ import type { ContactFormProps } from '@/types/contact-page'
 export function ContactSuccessSection() {
   return (
     <section className="min-h-[100svh] flex items-center justify-center pt-20 sm:pt-24">
-      <div className="container mx-auto px-4 sm:px-6 md:px-12 py-16 sm:py-24 text-center">
+      <div className="container mx-auto px-5 sm:px-7 md:px-14 py-16 sm:py-24 text-center">
         <SectionReveal>
           <div className="max-w-lg mx-auto">
             <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-6 sm:mb-8 rounded-full bg-primary/10 flex items-center justify-center">
@@ -75,7 +75,7 @@ export function ContactHeroSection() {
         </div>
       </div>
 
-      <div className="container relative z-10 mx-auto px-6 md:px-12 lg:px-16 text-center">
+      <div className="container relative z-10 mx-auto px-6 md:px-14 lg:px-20 text-center">
         <div className="overflow-visible">
           <ScatterText
             as="h1"
@@ -117,7 +117,7 @@ export function ContactHeroSection() {
 export function ContactInfoAndFormSection(props: ContactFormProps) {
   return (
     <section className="py-32 md:py-40 lg:py-56 glass-light">
-      <div className="container mx-auto px-6 md:px-12 lg:px-16">
+      <div className="container mx-auto px-6 md:px-14 lg:px-20">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-16 lg:gap-20">
           <ContactInfoSection />
           <ContactForm {...props} />

@@ -15,7 +15,7 @@ export function AboutProcessSection({ process }: AboutProcessSectionProps) {
       <div className="fixed top-[30vh] left-[10%] w-px h-32 bg-gradient-to-b from-transparent via-foreground/5 to-transparent pointer-events-none" />
       <div className="fixed bottom-[25vh] right-[12%] w-px h-24 bg-gradient-to-b from-transparent via-primary/10 to-transparent pointer-events-none" />
 
-      <div className="container relative z-10 mx-auto px-6 md:px-12 lg:px-16">
+      <div className="container relative z-10 mx-auto px-6 md:px-14 lg:px-20">
         <div className="text-center mb-16 lg:mb-28">
           <div className="overflow-visible">
             <ScatterText

@@ -57,7 +57,7 @@ export function WorksHeroSection() {
         </div>
       </div>
 
-      <div className="container relative z-10 mx-auto px-6 md:px-12 lg:px-16 text-center">
+      <div className="container relative z-10 mx-auto px-6 md:px-14 lg:px-20 text-center">
         <div className="overflow-visible">
           <ScatterText
             as="h1"
@@ -91,7 +91,7 @@ export function WorksHeroSection() {
 export function WorksSummarySection() {
   return (
     <section className="relative glass-light border-y border-border/20 py-16 md:py-20">
-      <div className="container mx-auto px-6 md:px-12 lg:px-16">
+      <div className="container mx-auto px-6 md:px-14 lg:px-20">
         <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
           {worksSummary.map((item, index) => (
             <SectionReveal key={item.label} delay={index * 0.08}>
@@ -284,7 +284,7 @@ export function WorksFilterSection({
 }: WorksFilterSectionProps) {
   return (
     <section className="sticky top-20 z-30 py-4 glass-light border-y border-border/20">
-      <div className="container mx-auto px-6 md:px-12 lg:px-16">
+      <div className="container mx-auto px-6 md:px-14 lg:px-20">
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8">
           <span className="type-label text-muted-foreground">Filter</span>
           <div className="flex flex-wrap justify-center gap-3">
@@ -586,7 +586,7 @@ export function WorksApproachSection() {
         </span>
       </div>
 
-      <div className="container relative z-10 mx-auto px-6 md:px-12 lg:px-16">
+      <div className="container relative z-10 mx-auto px-6 md:px-14 lg:px-20">
         <div className="mb-12 max-w-3xl">
           <SectionReveal>
             <p className="type-label mb-4 text-muted-foreground">
@@ -656,7 +656,7 @@ export function WorksCtaSection() {
         </span>
       </div>
 
-      <div className="container relative z-10 mx-auto px-6 md:px-12 lg:px-16 text-center">
+      <div className="container relative z-10 mx-auto px-6 md:px-14 lg:px-20 text-center">
         <div className="overflow-visible mb-8">
           <ScatterText
             as="h2"

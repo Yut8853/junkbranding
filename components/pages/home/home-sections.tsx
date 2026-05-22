@@ -24,7 +24,7 @@ export function HomeAboutPreviewSection({
 
   return (
     <section className="py-32 md:py-40 lg:py-56 glass-light">
-      <div className="container mx-auto px-6 md:px-12 lg:px-16">
+      <div className="container mx-auto px-6 md:px-14 lg:px-20">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
           <div className="lg:pr-8">
             <div className="mb-6 lg:mb-8">

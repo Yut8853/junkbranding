@@ -9,7 +9,7 @@ import { privacyContactItems, privacySections } from '@/content/privacy-page';
 export default function PrivacyPageClient() {
   return (
     <div className="relative z-10 min-h-screen overflow-hidden">
-      <main className="container mx-auto px-6 md:px-12 lg:px-16 py-28 md:py-36 lg:py-44">
+      <main className="container mx-auto px-6 md:px-14 lg:px-20 py-28 md:py-36 lg:py-44">
         <div className="mx-auto max-w-6xl">
           {/* ヒーロー */}
           <section className="relative mb-20 lg:mb-28">

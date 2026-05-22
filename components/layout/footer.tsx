@@ -21,7 +21,7 @@ export function Footer() {
   return (
     <footer className="relative glass-card border-t border-border/20">
       {/* フッター本文 */}
-      <div className="container mx-auto px-6 md:px-12 lg:px-16 py-16 md:py-20 lg:py-28">
+      <div className="container mx-auto px-6 md:px-14 lg:px-20 py-16 md:py-20 lg:py-28">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-12">
           {/* ブランド列 */}
           <RevealSection className="sm:col-span-2 lg:col-span-5" delay={0}>
@@ -107,7 +107,7 @@ export function Footer() {
 
       {/* 最下部バー */}
       <div className="border-t border-border/20">
-        <div className="container mx-auto px-6 md:px-12 lg:px-16 py-6 md:py-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="container mx-auto px-6 md:px-14 lg:px-20 py-6 md:py-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="type-body-compact text-xs text-muted-foreground">
             &copy; {currentYear} JunkBranding. All rights reserved.
           </p>

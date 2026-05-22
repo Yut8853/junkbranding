@@ -34,7 +34,7 @@ export function PricingHeroSection() {
         </div>
       </div>
 
-      <div className="container relative z-10 mx-auto px-6 md:px-12 lg:px-16 text-center">
+      <div className="container relative z-10 mx-auto px-6 md:px-14 lg:px-20 text-center">
         <div className="overflow-visible">
           <ScatterText
             as="h1"
@@ -72,7 +72,7 @@ export function PricingNoticeSection() {
   return (
     <SectionReveal delay={0.1} duration={0.8}>
       <section className="py-8 glass-card rainbow-border sticky top-20 z-30">
-        <div className="container mx-auto px-6 md:px-12 lg:px-16">
+        <div className="container mx-auto px-6 md:px-14 lg:px-20">
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 text-center sm:text-left">
             <div className="w-12 h-12 rounded-full bg-foreground/5 flex items-center justify-center shrink-0">
               <Sparkles className="w-5 h-5 text-muted-foreground" />
@@ -94,7 +94,7 @@ export function PricingServiceCategoriesSection({
 }: PricingServiceCategoriesSectionProps) {
   return (
     <section className="relative py-24 md:py-32 lg:py-40 glass-light overflow-hidden">
-      <div className="container relative z-10 mx-auto px-6 md:px-12 lg:px-16">
+      <div className="container relative z-10 mx-auto px-6 md:px-14 lg:px-20">
         <div className="space-y-20 lg:space-y-32">
           {serviceCategories.map((category, categoryIndex) => (
             <ServiceCategoryCard
@@ -242,7 +242,7 @@ export function PricingFaqSection({ faqs }: PricingFaqSectionProps) {
         <span className="type-display text-[28vw] whitespace-nowrap">FAQ</span>
       </div>
 
-      <div className="container relative z-10 mx-auto px-6 md:px-12 lg:px-16">
+      <div className="container relative z-10 mx-auto px-6 md:px-14 lg:px-20">
         <div className="text-center mb-16 lg:mb-24">
           <div className="overflow-visible">
             <ScatterText
@@ -353,7 +353,7 @@ export function PricingCtaSection() {
         <span className="type-display text-[28vw] whitespace-nowrap">START</span>
       </div>
 
-      <div className="container relative z-10 mx-auto px-6 md:px-12 lg:px-16 text-center">
+      <div className="container relative z-10 mx-auto px-6 md:px-14 lg:px-20 text-center">
         <div className="overflow-visible mb-8">
           <ScatterText
             as="h2"

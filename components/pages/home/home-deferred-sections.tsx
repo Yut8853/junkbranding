@@ -40,7 +40,7 @@ function HomeWorksPreviewSection({
 }: HomeWorksPreviewSectionProps) {
   return (
     <section className="py-32 md:py-40 lg:py-56 glass-light relative overflow-hidden">
-      <div className="container mx-auto px-6 md:px-12 lg:px-16 relative z-10">
+      <div className="container mx-auto px-6 md:px-14 lg:px-20 relative z-10">
         {/* ヘッダー */}
         <div className="text-center mb-16 lg:mb-20">
           <div className="mb-6 lg:mb-8">
@@ -200,7 +200,7 @@ function HomeAreaSection({ area }: HomeAreaSectionProps) {
         </div>
       </div>
 
-      <div className="container mx-auto px-6 md:px-12 lg:px-16 text-center relative z-10">
+      <div className="container mx-auto px-6 md:px-14 lg:px-20 text-center relative z-10">
         <div className="mb-6 lg:mb-8">
           <ScatterText
             as="span"

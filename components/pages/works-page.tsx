@@ -67,7 +67,7 @@ export default function WorksPageClient() {
           <section className="relative glass-light">
             <div ref={sectionTopAnchorRef} aria-hidden="true" className="absolute inset-x-0 top-0 h-px" />
 
-            <div className="container mx-auto px-6 pt-10 md:px-12 md:pt-14 lg:px-16 lg:pt-16">
+            <div className="container mx-auto px-6 pt-10 md:px-14 md:pt-14 lg:px-20 lg:pt-16">
               <WorksCurrentProjectsSection projects={currentProjects} />
             </div>
 
@@ -76,7 +76,7 @@ export default function WorksPageClient() {
               onSelectCategory={handleCategorySelect}
             />
 
-            <div className="container mx-auto px-6 py-10 md:px-12 md:py-14 lg:px-16 lg:py-16">
+            <div className="container mx-auto px-6 py-10 md:px-14 md:py-14 lg:px-20 lg:py-16">
               {shouldShowOwnedShowcase && <WorksOwnedShowcaseSection works={ownedWorks} />}
 
               {filteredWorks.length > 0 && (

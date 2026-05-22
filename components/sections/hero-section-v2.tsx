@@ -28,7 +28,7 @@ export function HeroSectionV2() {
   const line1 = 'JUNK';
   const line2 = 'BRANDING';
   const logoText = `${line1}${line2}`;
-  const line3 = '茨城のホームページ制作とWeb制作を、らしく。';
+  const line3 = '茨城を拠点に、全国対応で活動するクリエイティブスタジオ';
 
   const applyPhotoParallax = useCallback(() => {
     photoRefs.current.forEach((el, index) => {

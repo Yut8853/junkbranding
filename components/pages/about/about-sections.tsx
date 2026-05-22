@@ -39,7 +39,7 @@ export function AboutHeroSection() {
         </div>
       </div>
 
-      <div className="container relative z-10 mx-auto px-6 md:px-12 lg:px-16 text-center">
+      <div className="container relative z-10 mx-auto px-6 md:px-14 lg:px-20 text-center">
         <div className="overflow-visible">
           <ScatterText
             as="h1"
@@ -76,7 +76,7 @@ export function AboutHeroSection() {
 export function AboutIntroSection() {
   return (
     <section className="relative py-24 md:py-32 lg:py-40 glass-light overflow-hidden">
-      <div className="container mx-auto px-6 md:px-12 lg:px-16">
+      <div className="container mx-auto px-6 md:px-14 lg:px-20">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
           <div className="lg:pr-8">
             <div className="mb-8 overflow-visible">
@@ -159,7 +159,7 @@ export function AboutTeamSection({ team }: AboutTeamSectionProps) {
         <span className="type-display text-[32vw] whitespace-nowrap">TEAM</span>
       </div>
 
-      <div className="container relative z-10 mx-auto px-6 md:px-12 lg:px-16">
+      <div className="container relative z-10 mx-auto px-6 md:px-14 lg:px-20">
         <div className="text-center mb-16 lg:mb-24">
           <div className="overflow-visible">
             <ScatterText
@@ -250,7 +250,7 @@ export function AboutValuesSection({ values }: AboutValuesSectionProps) {
         <span className="type-display text-[30vw] whitespace-nowrap">VALUES</span>
       </div>
 
-      <div className="container relative z-10 mx-auto px-6 md:px-12 lg:px-16">
+      <div className="container relative z-10 mx-auto px-6 md:px-14 lg:px-20">
         <div className="text-center mb-16 lg:mb-24">
           <div className="overflow-visible">
             <ScatterText
@@ -344,7 +344,7 @@ export function AboutContactSection() {
         <span className="type-display text-[30vw] whitespace-nowrap">CONTACT</span>
       </div>
 
-      <div className="container relative z-10 mx-auto px-6 md:px-12 lg:px-16 text-center">
+      <div className="container relative z-10 mx-auto px-6 md:px-14 lg:px-20 text-center">
         <div className="overflow-visible mb-8">
           <ScatterText
             as="h2"
