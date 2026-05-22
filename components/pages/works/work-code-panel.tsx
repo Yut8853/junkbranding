@@ -193,6 +193,21 @@ const TYPING_CHUNK_SIZE = 2
 const LINE_HOLD_MS = 70
 const LOOP_PAUSE_MS = 1100
 
+const PLANNED_STACK = [
+  {
+    label: 'Front',
+    value: 'Next.js / TypeScript / Tailwind CSS',
+  },
+  {
+    label: 'Back',
+    value: 'Hono / PostgreSQL / Drizzle ORM',
+  },
+  {
+    label: 'Infra',
+    value: 'AWS ECS / RDS / Cloudflare R2',
+  },
+]
+
 type WorkCodePanelProps = {
   title: string
   label: string
@@ -282,6 +297,22 @@ export function WorkCodePanel({ title, label }: WorkCodePanelProps) {
         </div>
 
         <div className="relative z-10 mt-8 flex h-full flex-col justify-between">
+          <div className="mb-4 grid gap-2 md:grid-cols-3">
+            {PLANNED_STACK.map((item) => (
+              <div
+                key={item.label}
+                className="rounded-xl border border-white/8 bg-white/4 px-3 py-2.5"
+              >
+                <p className="text-[10px] uppercase tracking-[0.2em] text-cyan-200/58">
+                  {item.label}
+                </p>
+                <p className="mt-1 text-[11px] leading-5 text-white/72 md:text-[10px]">
+                  {item.value}
+                </p>
+              </div>
+            ))}
+          </div>
+
           <div
             ref={scrollRef}
             className="h-full overflow-y-auto pr-2 font-mono text-[11px] leading-6 text-sky-100/92 [scrollbar-color:rgba(125,211,252,0.35)_transparent] [scrollbar-width:thin] md:text-xs"
