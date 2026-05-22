@@ -3,12 +3,16 @@
 import { useTransition } from '@/contexts/transition-context'
 import { MouseEvent } from 'react'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import type { TransitionLinkProps } from '@/types/component-props'
 
 export function TransitionLink({ href, children, className, onClick, ...props }: TransitionLinkProps) {
   const { navigateWithTransition, isTransitioning, prefetchRoute } = useTransition()
+  const pathname = usePathname()
 
   const handleClick = (e: MouseEvent<HTMLAnchorElement>) => {
+    const nextPath = href.split('#')[0].split('?')[0] || '/'
+
     if (
       e.defaultPrevented ||
       e.metaKey ||
@@ -16,7 +20,8 @@ export function TransitionLink({ href, children, className, onClick, ...props }:
       e.shiftKey ||
       e.altKey ||
       e.button !== 0 ||
-      !href.startsWith('/')
+      !href.startsWith('/') ||
+      nextPath === pathname
     ) {
       return
     }
