@@ -388,6 +388,7 @@ function OwnedWorkShowcaseCard({ work, index }: OwnedWorkShowcaseCardProps) {
     'from-amber-400/18 via-background/92 to-background/98',
     'from-cyan-400/18 via-background/92 to-background/98',
   ]
+  const isCurrentProject = work.title === 'JunkBranding'
 
   return (
     <SectionReveal delay={0.08 * (index + 1)} duration={0.8}>
@@ -562,15 +563,21 @@ function OwnedWorkShowcaseCard({ work, index }: OwnedWorkShowcaseCardProps) {
                   ))}
                 </div>
 
-                <Link
-                  href={work.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="cta-primary type-cta inline-flex items-center gap-3 rounded-full px-6 py-3 text-sm transition-all duration-300"
-                >
-                  <span>View Project</span>
-                  <ArrowRight className="h-4 w-4" />
-                </Link>
+                {isCurrentProject ? (
+                  <span className="cta-primary type-cta inline-flex items-center gap-3 rounded-full px-6 py-3 text-sm transition-all duration-300 opacity-80">
+                    <span>You are viewing it</span>
+                  </span>
+                ) : (
+                  <Link
+                    href={work.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="cta-primary type-cta inline-flex items-center gap-3 rounded-full px-6 py-3 text-sm transition-all duration-300"
+                  >
+                    <span>View Project</span>
+                    <ArrowRight className="h-4 w-4" />
+                  </Link>
+                )}
               </div>
             </div>
           </div>
