@@ -342,7 +342,7 @@ export function WorksOwnedShowcaseSection({ works }: WorksOwnedShowcaseSectionPr
             distance={360}
             gradient
           >
-            {'クライアントワークとは別に、\n私たちは3つの自社プロジェクトを\n動かしています。'}
+            {'クライアントワークとは別に、\n3つのプロジェクトを\n動かしています。'}
           </ScatterText>
         </div>
         <ScatterText
