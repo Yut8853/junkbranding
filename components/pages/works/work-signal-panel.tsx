@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { useIsMobile } from '@/hooks/use-mobile'
+import type { WorkSignalPanelProps } from '@/types/works-page'
 
 const VERTEX_SHADER_SOURCE = `
   attribute vec2 a_position;
@@ -133,12 +134,6 @@ function createProgram(gl: WebGLRenderingContext) {
   }
 
   return program
-}
-
-type WorkSignalPanelProps = {
-  title: string
-  label: string
-  accentHue: number
 }
 
 export function WorkSignalPanel({ title, label, accentHue }: WorkSignalPanelProps) {

@@ -5,11 +5,20 @@ import { ArrowRight, Phone, MessageCircle } from 'lucide-react'
 import { ScatterBlock } from '@/components/motion/scatter-block'
 import { ScatterText } from '@/components/motion/scatter-text'
 import { SectionReveal } from '@/components/motion/text-reveal'
-import { DIRECOS_PLANNED_STACK, WorkCodePanel } from '@/components/pages/works/work-code-panel'
+import { WorkCodePanel } from '@/components/pages/works/work-code-panel'
 import { WorkSignalPanel } from '@/components/pages/works/work-signal-panel'
 import { categories, works } from '@/content/works-page'
+import { DIRECOS_PLANNED_STACK } from '@/lib/direcos-code-panel'
 import { cn } from '@/lib/utils'
-import type { CurrentProject, PortfolioWork, WorksFilterSectionProps } from '@/types/works-page'
+import type {
+  CurrentProject,
+  OwnedWorkShowcaseCardProps,
+  PortfolioWork,
+  WorksCurrentProjectsSectionProps,
+  WorksFilterSectionProps,
+  WorksOwnedShowcaseSectionProps,
+  WorksProjectPanelProps,
+} from '@/types/works-page'
 
 const worksSummary = [
   { label: 'Projects', value: `${works.length}+` },
@@ -33,7 +42,7 @@ const worksApproach = [
   },
 ]
 
-function WorksProjectPanel({ project, index }: { project: CurrentProject; index: number }) {
+function WorksProjectPanel({ project, index }: WorksProjectPanelProps) {
   if (project.title === 'DirecOS') {
     return (
       <WorkCodePanel
@@ -155,10 +164,6 @@ export function WorksSummarySection() {
       </div>
     </section>
   )
-}
-
-type WorksCurrentProjectsSectionProps = {
-  projects: CurrentProject[]
 }
 
 export function WorksCurrentProjectsSection({ projects }: WorksCurrentProjectsSectionProps) {
@@ -360,10 +365,6 @@ export function WorksFilterSection({
   )
 }
 
-type WorksOwnedShowcaseSectionProps = {
-  works: PortfolioWork[]
-}
-
 export function WorksOwnedShowcaseSection({ works }: WorksOwnedShowcaseSectionProps) {
   if (works.length === 0) return null
 
@@ -415,11 +416,6 @@ export function WorksOwnedShowcaseSection({ works }: WorksOwnedShowcaseSectionPr
       </div>
     </section>
   )
-}
-
-type OwnedWorkShowcaseCardProps = {
-  work: PortfolioWork
-  index: number
 }
 
 function OwnedWorkShowcaseCard({ work, index }: OwnedWorkShowcaseCardProps) {

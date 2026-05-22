@@ -43,3 +43,37 @@ export type WorksFilterSectionProps = {
   selectedCategory: string
   onSelectCategory: (category: string) => void
 }
+
+export type WorksProjectPanelProps = {
+  project: CurrentProject
+  index: number
+}
+
+export type WorksCurrentProjectsSectionProps = {
+  projects: CurrentProject[]
+}
+
+export type WorksOwnedShowcaseSectionProps = {
+  works: PortfolioWork[]
+}
+
+export type OwnedWorkShowcaseCardProps = {
+  work: PortfolioWork
+  index: number
+}
+
+export type WorkSignalPanelProps = {
+  title: string
+  label: string
+  accentHue: number
+}
+
+export type WorkCodePanelProps = {
+  title: string
+  label: string
+}
+
+export type DirecOSPlannedStackItem = {
+  label: string
+  value: string
+}

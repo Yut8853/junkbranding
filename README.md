@@ -173,6 +173,7 @@ components/
   sections/
   ui/
   widgets/
+  README.md
 
 content/
   about-page.ts
@@ -235,6 +236,8 @@ Next.js App Router の入口です。
 - `app/` を薄く保つため
 - ページの見た目と演出の責務を分離するため
 - ページごとに大きく育っても整理しやすいため
+
+`components` 配下の使い分けは [components/README.md](components/README.md) にまとめています。
 
 ### `content/`
 
