@@ -9,7 +9,6 @@ const PREFETCH_ROUTES = ['/', '/about', '/works', '/pricing', '/contact', '/priv
 const EXIT_DURATION_MS = 420
 const ENTER_DURATION_MS = 420
 const TRANSITION_FALLBACK_MS = 2400
-const NATIVE_NAVIGATION_FALLBACK_MS = 900
 
 const TransitionContext = createContext<TransitionContextType>({
   hasNavigated: false,
@@ -31,11 +30,6 @@ const scrollToPageTop = () => {
   })
 }
 
-const getComparableHref = (href: string) => {
-  const url = new URL(href, window.location.origin)
-  return `${url.pathname}${url.search}${url.hash}`
-}
-
 export function TransitionProvider({ children }: TransitionProviderProps) {
   const [hasNavigated, setHasNavigated] = useState(false)
   const [isTransitioning, setIsTransitioning] = useState(false)
@@ -46,7 +40,6 @@ export function TransitionProvider({ children }: TransitionProviderProps) {
   const pushTimer = useRef<number | null>(null)
   const completeTimer = useRef<number | null>(null)
   const fallbackTimer = useRef<number | null>(null)
-  const nativeNavigationTimer = useRef<number | null>(null)
   const isRouterReady = useRef(false)
   const prefetchedRoutes = useRef(new Set<string>())
 
@@ -122,15 +115,6 @@ export function TransitionProvider({ children }: TransitionProviderProps) {
     // フェーズ2: コンテンツがフェードアウトした後にNext.jsの遷移を実行する。
     pushTimer.current = window.setTimeout(() => {
       router.push(href, { scroll: true })
-
-      if (nativeNavigationTimer.current) {
-        window.clearTimeout(nativeNavigationTimer.current)
-      }
-
-      nativeNavigationTimer.current = window.setTimeout(() => {
-        if (getComparableHref(window.location.href) === getComparableHref(href)) return
-        window.location.assign(href)
-      }, NATIVE_NAVIGATION_FALLBACK_MS)
     }, EXIT_DURATION_MS)
 
     // ルート確定イベントを取りこぼしても画面が固まらないよう、保険の完了タイマーを置く。
@@ -161,11 +145,6 @@ export function TransitionProvider({ children }: TransitionProviderProps) {
         window.clearTimeout(fallbackTimer.current)
         fallbackTimer.current = null
       }
-
-      if (nativeNavigationTimer.current) {
-        window.clearTimeout(nativeNavigationTimer.current)
-        nativeNavigationTimer.current = null
-      }
     }, ENTER_DURATION_MS)
   }, [pathname])
 
@@ -183,7 +162,6 @@ export function TransitionProvider({ children }: TransitionProviderProps) {
       if (pushTimer.current) window.clearTimeout(pushTimer.current)
       if (completeTimer.current) window.clearTimeout(completeTimer.current)
       if (fallbackTimer.current) window.clearTimeout(fallbackTimer.current)
-      if (nativeNavigationTimer.current) window.clearTimeout(nativeNavigationTimer.current)
     }
   }, [])
 

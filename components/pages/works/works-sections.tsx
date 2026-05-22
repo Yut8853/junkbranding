@@ -1,11 +1,13 @@
 'use client'
 
+import Link from 'next/link'
 import { ArrowRight, Phone, MessageCircle } from 'lucide-react'
 import { ScatterBlock } from '@/components/motion/scatter-block'
 import { ScatterText } from '@/components/motion/scatter-text'
 import { SectionReveal } from '@/components/motion/text-reveal'
 import { categories, works } from '@/content/works-page'
-import type { WorksFilterSectionProps } from '@/types/works-page'
+import { cn } from '@/lib/utils'
+import type { CurrentProject, PortfolioWork, WorksFilterSectionProps } from '@/types/works-page'
 
 const worksSummary = [
   { label: 'Projects', value: `${works.length}+` },
@@ -109,9 +111,186 @@ export function WorksSummarySection() {
   )
 }
 
+type WorksCurrentProjectsSectionProps = {
+  projects: CurrentProject[]
+}
+
+export function WorksCurrentProjectsSection({ projects }: WorksCurrentProjectsSectionProps) {
+  if (projects.length === 0) return null
+
+  return (
+    <section className="relative mb-10 md:mb-12 lg:mb-14">
+      <div className="mb-8 max-w-3xl">
+        <SectionReveal>
+          <p className="type-label mb-4 text-muted-foreground">Now Running</p>
+        </SectionReveal>
+        <div className="overflow-visible">
+          <ScatterText
+            as="h2"
+            className="type-section-title text-3xl md:text-5xl"
+            scrollStart={50}
+            scrollEnd={350}
+            distance={360}
+            gradient
+          >
+            今、並行して動いているプロジェクト。
+          </ScatterText>
+        </div>
+        <ScatterText
+          as="p"
+          className="type-body mt-5 max-w-2xl text-sm leading-7 text-muted-foreground md:text-base"
+          scrollStart={50}
+          scrollEnd={350}
+          distance={220}
+        >
+          公開済みの実績とは別に、現在進行形で設計と実装を詰めている案件も掲載しています。今どの領域に取り組んでいるかを、そのまま見える形で共有します。
+        </ScatterText>
+      </div>
+
+      <div className="grid gap-6">
+        {projects.map((project, index) => (
+          <SectionReveal key={project.id} delay={0.08 * (index + 1)} duration={0.8}>
+            <article className="relative overflow-hidden rounded-[2rem] border border-border/40 bg-card/60 p-5 shadow-[0_24px_80px_rgba(15,23,42,0.12)] backdrop-blur-md md:p-7 lg:p-8">
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.16),transparent_32%),linear-gradient(135deg,rgba(255,188,95,0.12),rgba(255,255,255,0.02)_42%,rgba(83,208,255,0.1))]" />
+
+              <div className="relative z-10">
+                <div className="mb-8 flex flex-col gap-5 border-b border-border/40 pb-6 lg:flex-row lg:items-end lg:justify-between">
+                  <div>
+                    <ScatterText
+                      as="p"
+                      className="type-label mb-3 text-[11px] uppercase tracking-[0.24em] text-muted-foreground"
+                      scrollStart={50}
+                      scrollEnd={320}
+                      distance={160}
+                    >
+                      {project.category}
+                    </ScatterText>
+                    <ScatterText
+                      as="h3"
+                      className="type-section-title text-3xl leading-tight md:text-[2.8rem]"
+                      scrollStart={50}
+                      scrollEnd={400}
+                      distance={360}
+                      gradient
+                    >
+                      {project.title}
+                    </ScatterText>
+                  </div>
+
+                  <div className="flex flex-wrap items-center gap-3">
+                    <span className="type-label rounded-full border border-border/50 bg-background/60 px-4 py-2 text-[10px] uppercase tracking-[0.22em] text-muted-foreground backdrop-blur-md">
+                      Current Project
+                    </span>
+                    <span className="type-label rounded-full bg-foreground px-4 py-2 text-[10px] uppercase tracking-[0.22em] text-background shadow-[0_8px_24px_rgba(0,0,0,0.14)]">
+                      {project.status}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="grid gap-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(320px,0.85fr)] lg:gap-8 xl:gap-10">
+                  <div className="space-y-6">
+                    <div className="rounded-[1.7rem] border border-white/20 bg-background/45 p-6 md:p-7">
+                      <ScatterText
+                        as="p"
+                        className="type-body text-sm leading-7 text-muted-foreground md:text-base"
+                        scrollStart={50}
+                        scrollEnd={360}
+                        distance={240}
+                      >
+                        {project.description}
+                      </ScatterText>
+                    </div>
+
+                    <div className="grid gap-3 md:grid-cols-2">
+                      {[
+                        ['Target User', project.targetUser],
+                        ['Current Focus', project.focus],
+                        ['Entry Flow', project.entryFlow],
+                        ['Principle', project.principle],
+                      ].map(([label, value]) => (
+                        <div
+                          key={label}
+                          className="rounded-[1.35rem] border border-border/45 bg-background/45 p-4"
+                        >
+                          <ScatterText
+                            as="span"
+                            className="type-label mb-2 block text-[10px] uppercase tracking-[0.2em] text-muted-foreground"
+                            scrollStart={50}
+                            scrollEnd={320}
+                            distance={140}
+                          >
+                            {label}
+                          </ScatterText>
+                          <ScatterText
+                            as="span"
+                            className="type-body-compact text-sm leading-6 text-foreground/80"
+                            scrollStart={50}
+                            scrollEnd={320}
+                            distance={160}
+                          >
+                            {value}
+                          </ScatterText>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="space-y-6">
+                    <div className="rounded-[1.7rem] border border-primary/20 bg-primary/6 p-5 md:p-6">
+                      <ScatterText
+                        as="p"
+                        className="type-label mb-3 text-[10px] uppercase tracking-[0.2em] text-muted-foreground"
+                        scrollStart={50}
+                        scrollEnd={320}
+                        distance={140}
+                      >
+                        Display Direction
+                      </ScatterText>
+                      <ScatterText
+                        as="p"
+                        className="type-body-compact text-sm leading-7 text-foreground/80"
+                        scrollStart={50}
+                        scrollEnd={320}
+                        distance={160}
+                      >
+                        {project.displayPolicy}
+                      </ScatterText>
+                    </div>
+
+                    <div className="rounded-[1.7rem] border border-border/45 bg-background/40 p-5 md:p-6">
+                      <ScatterText
+                        as="p"
+                        className="type-label mb-3 text-[10px] uppercase tracking-[0.2em] text-muted-foreground"
+                        scrollStart={50}
+                        scrollEnd={320}
+                        distance={140}
+                      >
+                        Updated
+                      </ScatterText>
+                      <ScatterText
+                        as="p"
+                        className="type-body-compact text-sm leading-7 text-foreground/80"
+                        scrollStart={50}
+                        scrollEnd={320}
+                        distance={160}
+                      >
+                        {project.updatedAt}
+                      </ScatterText>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </article>
+          </SectionReveal>
+        ))}
+      </div>
+    </section>
+  )
+}
+
 export function WorksFilterSection({
   selectedCategory,
-  setSelectedCategory,
+  onSelectCategory,
 }: WorksFilterSectionProps) {
   return (
     <section className="sticky top-20 z-30 py-4 glass-light border-y border-border/20">
@@ -123,7 +302,7 @@ export function WorksFilterSection({
               <button
                 key={category}
                 type="button"
-                onClick={() => setSelectedCategory(category)}
+                onClick={() => onSelectCategory(category)}
                 aria-pressed={selectedCategory === category}
                 className={`type-label px-5 py-2.5 text-xs rounded-full transition-all duration-300 ${
                   selectedCategory === category
@@ -138,6 +317,266 @@ export function WorksFilterSection({
         </div>
       </div>
     </section>
+  )
+}
+
+type WorksOwnedShowcaseSectionProps = {
+  works: PortfolioWork[]
+}
+
+export function WorksOwnedShowcaseSection({ works }: WorksOwnedShowcaseSectionProps) {
+  if (works.length === 0) return null
+
+  return (
+    <section className="relative mb-16 md:mb-20 lg:mb-24">
+      <div className="mb-10 max-w-3xl">
+        <SectionReveal>
+          <p className="type-label mb-4 text-muted-foreground">Owned Projects</p>
+        </SectionReveal>
+        <div className="overflow-visible">
+          <ScatterText
+            as="h2"
+            className="type-section-title whitespace-pre-line text-3xl md:text-5xl"
+            scrollStart={50}
+            scrollEnd={350}
+            distance={360}
+            gradient
+          >
+            {'クライアントワークとは別に、\n私たちは3つの自社プロジェクトを\n動かしています。'}
+          </ScatterText>
+        </div>
+        <ScatterText
+          as="p"
+          className="type-body mt-5 max-w-2xl text-sm leading-7 text-muted-foreground md:text-base"
+          scrollStart={50}
+          scrollEnd={350}
+          distance={220}
+        >
+          目的は、表現と実装の限界を常に超えておくこと。JunkBranding、LAB、PIZZA。表現・設計・実装を継続的にアップデートする、3つの完全自社検証プロジェクトです。
+        </ScatterText>
+      </div>
+
+      <div className="relative">
+        {works.map((work, index) => (
+          <div
+            key={work.id}
+            className={cn(
+              'sticky pb-8',
+              index > 0 && '-mt-[10svh] md:-mt-[8svh] lg:-mt-[6svh]',
+              index === 0 && 'top-24',
+              index === 1 && 'top-48',
+              index >= 2 && 'top-72'
+            )}
+            style={{ zIndex: index + 1 }}
+          >
+            <OwnedWorkShowcaseCard work={work} index={index} />
+          </div>
+        ))}
+      </div>
+    </section>
+  )
+}
+
+type OwnedWorkShowcaseCardProps = {
+  work: PortfolioWork
+  index: number
+}
+
+function OwnedWorkShowcaseCard({ work, index }: OwnedWorkShowcaseCardProps) {
+  const accentClassNames = [
+    'from-primary/20 via-background/92 to-background/98',
+    'from-amber-400/18 via-background/92 to-background/98',
+    'from-cyan-400/18 via-background/92 to-background/98',
+  ]
+
+  return (
+    <SectionReveal delay={0.08 * (index + 1)} duration={0.8}>
+      <article
+        className="relative overflow-hidden rounded-[2rem] border border-border/40 bg-card/70 p-5 shadow-[0_30px_120px_rgba(15,23,42,0.16)] backdrop-blur-md md:p-7 lg:p-8"
+        style={{
+          transform: `scale(${1 - index * 0.025})`,
+          transformOrigin: 'top center',
+        }}
+      >
+        <div
+          className={cn(
+            'absolute inset-0 bg-gradient-to-br opacity-90',
+            accentClassNames[index] ?? accentClassNames[0]
+          )}
+        />
+        <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-white/10 to-transparent" />
+
+        <div className="relative z-10">
+          <div className="mb-8 flex flex-col gap-5 border-b border-border/40 pb-6 lg:flex-row lg:items-end lg:justify-between">
+            <div>
+              <ScatterText
+                as="p"
+                className="type-label mb-3 text-[11px] uppercase tracking-[0.24em] text-muted-foreground"
+                scrollStart={50}
+                scrollEnd={320}
+                distance={160}
+              >
+                {work.category}
+              </ScatterText>
+              <ScatterText
+                as="h3"
+                className="type-section-title text-3xl leading-tight md:text-[2.8rem]"
+                scrollStart={50}
+                scrollEnd={400}
+                distance={360}
+                gradient
+              >
+                {work.title}
+              </ScatterText>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-3">
+              <span className="type-label rounded-full border border-border/50 bg-background/60 px-4 py-2 text-[10px] uppercase tracking-[0.22em] text-muted-foreground backdrop-blur-md">
+                Owned Project
+              </span>
+              <span className="type-label rounded-full bg-foreground px-4 py-2 text-[10px] uppercase tracking-[0.22em] text-background shadow-[0_8px_24px_rgba(0,0,0,0.14)]">
+                {work.year}
+              </span>
+            </div>
+          </div>
+
+          <div className="grid gap-6 lg:grid-cols-[minmax(0,1.2fr)_minmax(320px,0.8fr)] lg:gap-8 xl:gap-10">
+            <div className="space-y-6">
+              <div className="relative overflow-hidden rounded-[1.7rem] border border-white/20 bg-background/45 p-6 md:p-7">
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.2),transparent_40%)]" />
+                <div className="relative z-10">
+                  <ScatterText
+                    as="p"
+                    className="type-body text-sm leading-7 text-muted-foreground md:text-base"
+                    scrollStart={50}
+                    scrollEnd={360}
+                    distance={240}
+                  >
+                    {work.description}
+                  </ScatterText>
+
+                  <div className="mt-6 flex flex-wrap gap-2.5">
+                    {work.tags.map((tag) => (
+                      <ScatterText
+                        as="span"
+                        key={tag}
+                        className="type-body-compact rounded-full border border-border/60 bg-card/70 px-3.5 py-2 text-xs text-muted-foreground"
+                        scrollStart={50}
+                        scrollEnd={320}
+                        distance={130}
+                      >
+                        {tag}
+                      </ScatterText>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid gap-3 md:grid-cols-3">
+                {[
+                  ['Role', work.role],
+                  ['Scope', work.scope],
+                  ['Outcome', work.outcome],
+                ].map(([label, value]) => (
+                  <div
+                    key={label}
+                    className="rounded-[1.35rem] border border-border/45 bg-background/45 p-4"
+                  >
+                    <ScatterText
+                      as="span"
+                      className="type-label mb-2 block text-[10px] uppercase tracking-[0.2em] text-muted-foreground"
+                      scrollStart={50}
+                      scrollEnd={320}
+                      distance={140}
+                    >
+                      {label}
+                    </ScatterText>
+                    <ScatterText
+                      as="span"
+                      className="type-body-compact text-sm leading-6 text-foreground/80"
+                      scrollStart={50}
+                      scrollEnd={320}
+                      distance={160}
+                    >
+                      {value}
+                    </ScatterText>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="space-y-6">
+              <div className="rounded-[1.7rem] border border-border/45 bg-background/40 p-5 md:p-6">
+                <ScatterText
+                  as="p"
+                  className="type-label mb-3 text-[10px] uppercase tracking-[0.2em] text-muted-foreground"
+                  scrollStart={50}
+                  scrollEnd={320}
+                  distance={140}
+                >
+                  Highlights
+                </ScatterText>
+                <ul className="grid gap-3">
+                  {work.highlights.map((highlight) => (
+                    <li
+                      key={highlight}
+                      className="type-body-compact flex items-start gap-3 text-sm leading-6 text-muted-foreground"
+                    >
+                      <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
+                      <ScatterText
+                        as="span"
+                        className="inline-block"
+                        scrollStart={50}
+                        scrollEnd={320}
+                        distance={160}
+                      >
+                        {highlight}
+                      </ScatterText>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="rounded-[1.7rem] border border-primary/20 bg-primary/6 p-5 md:p-6">
+                <ScatterText
+                  as="p"
+                  className="type-label mb-3 text-[10px] uppercase tracking-[0.2em] text-muted-foreground"
+                  scrollStart={50}
+                  scrollEnd={320}
+                  distance={140}
+                >
+                  Stack
+                </ScatterText>
+                <div className="mb-6 flex flex-wrap gap-2.5">
+                  {work.stack.map((tech) => (
+                    <ScatterText
+                      as="span"
+                      key={tech}
+                      className="type-body-compact rounded-full border border-primary/25 bg-background/70 px-3.5 py-2 text-xs text-primary"
+                      scrollStart={50}
+                      scrollEnd={320}
+                      distance={130}
+                    >
+                      {tech}
+                    </ScatterText>
+                  ))}
+                </div>
+
+                <Link
+                  href={work.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="cta-primary type-cta inline-flex items-center gap-3 rounded-full px-6 py-3 text-sm transition-all duration-300"
+                >
+                  <span>View Project</span>
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+    </SectionReveal>
   )
 }
 

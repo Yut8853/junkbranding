@@ -2,6 +2,7 @@ export type PortfolioWork = {
   id: number
   title: string
   category: string
+  ownerType: 'owned' | 'client'
   description: string
   role: string
   scope: string
@@ -11,6 +12,20 @@ export type PortfolioWork = {
   stack: string[]
   url: string
   year: string
+}
+
+export type CurrentProject = {
+  id: number
+  title: string
+  category: string
+  status: string
+  description: string
+  targetUser: string
+  focus: string
+  entryFlow: string
+  principle: string
+  displayPolicy: string
+  updatedAt: string
 }
 
 export type WorkCardProps = {
@@ -27,5 +42,5 @@ export type ImmersiveWorkCardProps = {
 
 export type WorksFilterSectionProps = {
   selectedCategory: string
-  setSelectedCategory: (category: string) => void
+  onSelectCategory: (category: string) => void
 }

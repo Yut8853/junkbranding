@@ -1,16 +1,20 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { usePathname } from 'next/navigation'
 import { useTransition } from '@/contexts/transition-context'
 import { isSmallScreen, scheduleIdleTask } from '@/lib/performance-mode'
 
 export function useDeferredRender(delay = 9000, idleTimeout = 3200) {
   const [shouldRender, setShouldRender] = useState(false)
   const { hasNavigated } = useTransition()
+  const pathname = usePathname()
 
   useEffect(() => {
-    if (hasNavigated) {
-      // 遷移後の下層ページでは、遅延しすぎると空白に見えるため即時描画へ切り替える。
+    const isSubPage = pathname !== '/'
+
+    if (hasNavigated || isSubPage) {
+      // 下層ページは直アクセスや途中リロードでも即時描画し、空白状態を作らない。
       setShouldRender(true)
       return
     }
@@ -30,7 +34,7 @@ export function useDeferredRender(delay = 9000, idleTimeout = 3200) {
       window.clearTimeout(delayTimer)
       idleTask?.cancel()
     }
-  }, [delay, hasNavigated, idleTimeout])
+  }, [delay, hasNavigated, idleTimeout, pathname])
 
   return shouldRender
 }

@@ -2,7 +2,6 @@
 
 import { useRef, useState, type MouseEvent } from 'react'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
 import { useTransition } from '@/contexts/transition-context'
 import type { MagneticButtonProps } from '@/types/component-props'
 
@@ -19,7 +18,6 @@ export function MagneticButton({
   const buttonRef = useRef<HTMLButtonElement | HTMLAnchorElement>(null)
   const [position, setPosition] = useState({ x: 0, y: 0 })
   const { navigateWithTransition, isTransitioning, prefetchRoute } = useTransition()
-  const pathname = usePathname()
 
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!buttonRef.current) return
@@ -39,8 +37,6 @@ export function MagneticButton({
   }
 
   const handleLinkClick = (e: MouseEvent<HTMLAnchorElement>) => {
-    const nextPath = href?.split('#')[0].split('?')[0] || '/'
-
     onClick?.()
 
     if (
@@ -51,7 +47,6 @@ export function MagneticButton({
       e.altKey ||
       e.button !== 0 ||
       !href?.startsWith('/') ||
-      nextPath === pathname ||
       isTransitioning
     ) {
       return

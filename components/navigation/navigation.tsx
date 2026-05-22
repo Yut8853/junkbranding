@@ -73,7 +73,6 @@ export function Navigation() {
   }
 
   const shouldRenderMenu = hasMounted && (isOpen || isAnimating || assembleProgress > 0)
-  const shouldShowDesktopLinks = hasMounted && !isOpen
 
   // ページ遷移が確定したら、開いたままのメニューを強制的に閉じる。
   useEffect(() => {
@@ -98,20 +97,16 @@ export function Navigation() {
 
   return (
     <>
-      {shouldShowDesktopLinks && (
+      {showHeaderIntro && !isOpen && (
         <nav
-          className={`fixed right-28 top-8 z-[120] hidden h-16 items-center gap-2 md:right-36 md:top-10 md:flex md:h-20 ${
-            showHeaderIntro ? 'global-nav-intro header-link-intro' : 'global-nav-intro'
-          }`}
+          className="global-nav-intro header-link-intro fixed right-28 top-8 z-[120] hidden h-16 items-center gap-2 md:right-36 md:top-10 md:flex md:h-20"
           aria-label="ページリンク"
         >
           {navItems.map((item, index) => (
             <TransitionLink
               key={item.href}
               href={item.href}
-              className={`type-label rounded-full px-4 py-2 text-[0.68rem] transition-colors hover:text-foreground ${
-                showHeaderIntro ? 'header-link-intro__item' : ''
-              } ${
+              className={`header-link-intro__item type-label rounded-full px-4 py-2 text-[0.68rem] transition-colors hover:text-foreground ${
                 pathname === item.href ? 'text-foreground' : 'text-muted-foreground'
               }`}
               style={{

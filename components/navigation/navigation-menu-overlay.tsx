@@ -285,20 +285,8 @@ export function NavigationMenuOverlay({
               <span className="hidden sm:inline">hello@junkbranding.com</span>
             </div>
           </div>
-          <div className="flex items-center gap-4 sm:gap-6">
-            <a
-              href="https://lab.junkbranding.com/"
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center gap-2 text-xs text-white/40 transition-colors hover:text-white/70"
-              aria-label="Creative Dev Blog を新しいタブで開く"
-            >
-              <span>Creative Dev Blog</span>
-              <ArrowUpRight size={12} aria-hidden="true" />
-            </a>
-            <div className="text-xs text-white/40">
-              &copy; 2026 JunkBranding
-            </div>
+          <div className="text-xs text-white/40">
+            &copy; 2026 JunkBranding
           </div>
         </div>
       </nav>
