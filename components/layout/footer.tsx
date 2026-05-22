@@ -1,7 +1,6 @@
 'use client'
 
-import Link from 'next/link'
-import { Phone, Mail, MapPin } from 'lucide-react'
+import { ArrowUpRight, Phone, Mail, MapPin } from 'lucide-react'
 import { RevealSection } from '@/components/motion/reveal-section'
 import { MagneticButton } from '@/components/ui/magnetic-button'
 import { TransitionLink } from '@/components/layout/transition-link'
@@ -113,6 +112,16 @@ export function Footer() {
             &copy; {currentYear} JunkBranding. All rights reserved.
           </p>
           <div className="flex items-center gap-6 text-xs text-muted-foreground">
+            <a
+              href="https://lab.junkbranding.com/"
+              target="_blank"
+              rel="noreferrer"
+              className="type-cta inline-flex items-center gap-1.5 hover:text-foreground transition-all duration-300"
+              aria-label="Creative Dev Blog を新しいタブで開く"
+            >
+              <span>Creative Dev Blog</span>
+              <ArrowUpRight size={12} aria-hidden="true" />
+            </a>
             <TransitionLink 
               href="/privacy" 
               className="type-cta hover:text-foreground transition-all duration-300"
