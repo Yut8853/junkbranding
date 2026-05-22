@@ -150,24 +150,47 @@ export function WorksCurrentProjectsSection({ projects }: WorksCurrentProjectsSe
       <div className="grid gap-6">
         {projects.map((project, index) => (
           <SectionReveal key={project.id} delay={0.08 * (index + 1)} duration={0.8}>
-            <article className="relative overflow-hidden rounded-[2rem] border border-border/40 bg-card/60 p-5 shadow-[0_24px_80px_rgba(15,23,42,0.12)] backdrop-blur-md md:p-7 lg:p-8">
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.16),transparent_32%),linear-gradient(135deg,rgba(255,188,95,0.12),rgba(255,255,255,0.02)_42%,rgba(83,208,255,0.1))]" />
+            <article className="relative overflow-hidden rounded-[2.25rem] border border-border/40 bg-[linear-gradient(135deg,rgba(255,255,255,0.06),rgba(255,255,255,0.02))] p-5 shadow-[0_30px_110px_rgba(15,23,42,0.14)] backdrop-blur-md md:p-7 lg:p-8">
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.18),transparent_28%),linear-gradient(135deg,rgba(255,173,95,0.18),rgba(255,255,255,0.02)_42%,rgba(70,198,255,0.12))]" />
+              <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/55 to-transparent" />
 
               <div className="relative z-10">
-                <div className="mb-8 flex flex-col gap-5 border-b border-border/40 pb-6 lg:flex-row lg:items-end lg:justify-between">
-                  <div>
+                <div className="mb-6 rounded-[1.35rem] border border-white/15 bg-background/35 px-4 py-3 backdrop-blur-sm md:px-5">
+                  <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+                    <div className="flex flex-wrap items-center gap-3">
+                      <span className="type-label rounded-full bg-foreground px-3 py-1.5 text-[10px] uppercase tracking-[0.22em] text-background">
+                        Now Running
+                      </span>
+                      <span className="type-label text-[10px] uppercase tracking-[0.24em] text-muted-foreground">
+                        {project.category}
+                      </span>
+                    </div>
+
+                    <div className="flex flex-wrap items-center gap-3 text-right">
+                      <span className="type-label rounded-full border border-border/50 bg-background/60 px-4 py-2 text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
+                        {project.status}
+                      </span>
+                      <span className="type-readable-number text-sm text-foreground/75">
+                        Updated {project.updatedAt}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="grid gap-6 xl:grid-cols-[minmax(0,1.35fr)_minmax(360px,0.9fr)] xl:gap-8">
+                  <div className="rounded-[2rem] border border-white/15 bg-background/38 p-6 md:p-8">
                     <ScatterText
                       as="p"
-                      className="type-label mb-3 text-[11px] uppercase tracking-[0.24em] text-muted-foreground"
+                      className="type-label mb-4 text-[10px] uppercase tracking-[0.28em] text-muted-foreground"
                       scrollStart={50}
                       scrollEnd={320}
-                      distance={160}
+                      distance={140}
                     >
-                      {project.category}
+                      Live Build Board
                     </ScatterText>
                     <ScatterText
                       as="h3"
-                      className="type-section-title text-3xl leading-tight md:text-[2.8rem]"
+                      className="type-section-title max-w-3xl text-4xl leading-[0.95] md:text-[4.6rem]"
                       scrollStart={50}
                       scrollEnd={400}
                       distance={360}
@@ -175,108 +198,75 @@ export function WorksCurrentProjectsSection({ projects }: WorksCurrentProjectsSe
                     >
                       {project.title}
                     </ScatterText>
-                  </div>
+                    <ScatterText
+                      as="p"
+                      className="type-body mt-6 max-w-3xl text-sm leading-7 text-muted-foreground md:text-base"
+                      scrollStart={50}
+                      scrollEnd={360}
+                      distance={240}
+                    >
+                      {project.description}
+                    </ScatterText>
 
-                  <div className="flex flex-wrap items-center gap-3">
-                    <span className="type-label rounded-full border border-border/50 bg-background/60 px-4 py-2 text-[10px] uppercase tracking-[0.22em] text-muted-foreground backdrop-blur-md">
-                      Current Project
-                    </span>
-                    <span className="type-label rounded-full bg-foreground px-4 py-2 text-[10px] uppercase tracking-[0.22em] text-background shadow-[0_8px_24px_rgba(0,0,0,0.14)]">
-                      {project.status}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="grid gap-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(320px,0.85fr)] lg:gap-8 xl:gap-10">
-                  <div className="space-y-6">
-                    <div className="rounded-[1.7rem] border border-white/20 bg-background/45 p-6 md:p-7">
-                      <ScatterText
-                        as="p"
-                        className="type-body text-sm leading-7 text-muted-foreground md:text-base"
-                        scrollStart={50}
-                        scrollEnd={360}
-                        distance={240}
-                      >
-                        {project.description}
-                      </ScatterText>
-                    </div>
-
-                    <div className="grid gap-3 md:grid-cols-2">
-                      {[
-                        ['Target User', project.targetUser],
-                        ['Current Focus', project.focus],
-                        ['Entry Flow', project.entryFlow],
-                        ['Principle', project.principle],
-                      ].map(([label, value]) => (
-                        <div
-                          key={label}
-                          className="rounded-[1.35rem] border border-border/45 bg-background/45 p-4"
+                    <div className="mt-8 grid gap-3 md:grid-cols-2">
+                      <div className="rounded-[1.35rem] border border-border/45 bg-background/45 p-4">
+                        <ScatterText
+                          as="span"
+                          className="type-label mb-2 block text-[10px] uppercase tracking-[0.2em] text-muted-foreground"
+                          scrollStart={50}
+                          scrollEnd={320}
+                          distance={140}
                         >
-                          <ScatterText
-                            as="span"
-                            className="type-label mb-2 block text-[10px] uppercase tracking-[0.2em] text-muted-foreground"
-                            scrollStart={50}
-                            scrollEnd={320}
-                            distance={140}
-                          >
-                            {label}
-                          </ScatterText>
-                          <ScatterText
-                            as="span"
-                            className="type-body-compact text-sm leading-6 text-foreground/80"
-                            scrollStart={50}
-                            scrollEnd={320}
-                            distance={160}
-                          >
-                            {value}
-                          </ScatterText>
-                        </div>
-                      ))}
+                          Target User
+                        </ScatterText>
+                        <ScatterText
+                          as="span"
+                          className="type-body-compact text-sm leading-6 text-foreground/80"
+                          scrollStart={50}
+                          scrollEnd={320}
+                          distance={160}
+                        >
+                          {project.targetUser}
+                        </ScatterText>
+                      </div>
                     </div>
                   </div>
 
-                  <div className="space-y-6">
-                    <div className="rounded-[1.7rem] border border-primary/20 bg-primary/6 p-5 md:p-6">
-                      <ScatterText
-                        as="p"
-                        className="type-label mb-3 text-[10px] uppercase tracking-[0.2em] text-muted-foreground"
-                        scrollStart={50}
-                        scrollEnd={320}
-                        distance={140}
+                  <div className="grid gap-4">
+                    {[
+                      ['Entry Flow', project.entryFlow],
+                      ['Principle', project.principle],
+                      ['Display Direction', project.displayPolicy],
+                    ].map(([label, value], detailIndex) => (
+                      <div
+                        key={label}
+                        className={cn(
+                          'rounded-[1.7rem] border p-5 md:p-6',
+                          detailIndex === 2
+                            ? 'border-primary/20 bg-primary/6'
+                            : 'border-border/45 bg-background/40'
+                        )}
                       >
-                        Display Direction
-                      </ScatterText>
-                      <ScatterText
-                        as="p"
-                        className="type-body-compact text-sm leading-7 text-foreground/80"
-                        scrollStart={50}
-                        scrollEnd={320}
-                        distance={160}
-                      >
-                        {project.displayPolicy}
-                      </ScatterText>
-                    </div>
-
-                    <div className="rounded-[1.7rem] border border-border/45 bg-background/40 p-5 md:p-6">
-                      <ScatterText
-                        as="p"
-                        className="type-label mb-3 text-[10px] uppercase tracking-[0.2em] text-muted-foreground"
-                        scrollStart={50}
-                        scrollEnd={320}
-                        distance={140}
-                      >
-                        Updated
-                      </ScatterText>
-                      <ScatterText
-                        as="p"
-                        className="type-body-compact text-sm leading-7 text-foreground/80"
-                        scrollStart={50}
-                        scrollEnd={320}
-                        distance={160}
-                      >
-                        {project.updatedAt}
-                      </ScatterText>
-                    </div>
+                        <ScatterText
+                          as="p"
+                          className="type-label mb-3 text-[10px] uppercase tracking-[0.2em] text-muted-foreground"
+                          scrollStart={50}
+                          scrollEnd={320}
+                          distance={140}
+                        >
+                          {label}
+                        </ScatterText>
+                        <ScatterText
+                          as="p"
+                          className="type-body-compact text-sm leading-7 text-foreground/80"
+                          scrollStart={50}
+                          scrollEnd={320}
+                          distance={160}
+                        >
+                          {value}
+                        </ScatterText>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>

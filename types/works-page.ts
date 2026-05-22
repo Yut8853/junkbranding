@@ -21,7 +21,6 @@ export type CurrentProject = {
   status: string
   description: string
   targetUser: string
-  focus: string
   entryFlow: string
   principle: string
   displayPolicy: string
