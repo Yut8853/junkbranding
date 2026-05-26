@@ -25,6 +25,9 @@ export type CurrentProject = {
   principle: string
   displayPolicy: string
   updatedAt: string
+  url?: string
+  repoUrl?: string
+  siteUrl?: string
 }
 
 export type WorkCardProps = {

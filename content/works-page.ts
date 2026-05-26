@@ -15,6 +15,21 @@ export const currentProjects = [
       '文字量を減らし、数字・短いラベル・タブ・折りたたみ・右ドックで視認性を上げる',
     updatedAt: '2026-05-17',
   },
+  {
+    id: 2,
+    title: 'JunkBranding EC SaaSプロジェクト',
+    category: 'ブランド特化ECサイトパッケージ',
+    status: 'In Progress',
+    description:
+      'ブランド体験を重視したECサイトの新規構築・運用プロジェクト。Next.jsを活用し、柔軟なEC基盤とUI/UXを開発中。',
+    targetUser: 'ブランド運営者・EC担当者',
+    entryFlow: 'トップページ → 商品一覧 → 商品詳細 → カート → 決済',
+    principle: 'ブランド体験と購入体験の両立、柔軟な商品管理・運用',
+    displayPolicy:
+      'ブランド世界観を損なわないUI設計と、購入までのストレスを最小化した導線設計',
+    updatedAt: '2026-05-26',
+    url: 'https://ec.junkbranding.com',
+  },
 ] satisfies CurrentProject[]
 
 export const works = [
