@@ -277,6 +277,20 @@ export function WorksCurrentProjectsSection({ projects }: WorksCurrentProjectsSe
                       {project.description}
                     </ScatterText>
 
+                    {project.url && (
+                      <SectionReveal delay={0.18}>
+                        <Link
+                          href={project.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="cta-primary type-cta mt-7 inline-flex items-center gap-3 rounded-full px-6 py-3 text-sm transition-all duration-300 hover:gap-4"
+                        >
+                          <span>サイトを見る</span>
+                          <ArrowRight className="h-4 w-4" />
+                        </Link>
+                      </SectionReveal>
+                    )}
+
                     <div className="mt-8 grid gap-3 md:grid-cols-2">
                       <div className="rounded-[1.35rem] border border-border/45 bg-background/45 p-4">
                         <ScatterText
