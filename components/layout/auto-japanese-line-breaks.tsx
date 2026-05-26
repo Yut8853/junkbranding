@@ -31,6 +31,7 @@ function isEligibleElement(element: HTMLElement | null) {
 
 function processTextNode(textNode: Text) {
   const parentElement = textNode.parentElement
+  if (!parentElement) return
   if (!isEligibleElement(parentElement)) return
 
   const originalText = textNode.textContent

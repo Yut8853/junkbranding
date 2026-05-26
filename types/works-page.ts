@@ -74,6 +74,8 @@ export type WorkSignalPanelProps = {
 export type WorkCodePanelProps = {
   title: string
   label: string
+  lines?: string[]
+  footerItems?: string[]
 }
 
 export type DirecOSPlannedStackItem = {

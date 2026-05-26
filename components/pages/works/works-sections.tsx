@@ -9,6 +9,7 @@ import { WorkCodePanel } from '@/components/pages/works/work-code-panel'
 import { WorkSignalPanel } from '@/components/pages/works/work-signal-panel'
 import { categories, works } from '@/content/works-page'
 import { DIRECOS_PLANNED_STACK } from '@/lib/direcos-code-panel'
+import { EC_CODE_LINES, EC_PANEL_FOOTER_ITEMS, EC_PLANNED_STACK } from '@/lib/ec-code-panel'
 import { cn } from '@/lib/utils'
 import type {
   CurrentProject,
@@ -52,6 +53,17 @@ function WorksProjectPanel({ project, index }: WorksProjectPanelProps) {
     )
   }
 
+  if (project.title.includes('EC SaaS')) {
+    return (
+      <WorkCodePanel
+        title="Small Brand EC SaaS"
+        label="Storefront Source Draft"
+        lines={EC_CODE_LINES}
+        footerItems={EC_PANEL_FOOTER_ITEMS}
+      />
+    )
+  }
+
   return (
     <WorkSignalPanel
       title={project.title}
@@ -61,14 +73,20 @@ function WorksProjectPanel({ project, index }: WorksProjectPanelProps) {
   )
 }
 
-function DirecOSPlannedStack() {
+function CurrentProjectStack({
+  items,
+  label = 'Planned Stack',
+}: {
+  items: typeof DIRECOS_PLANNED_STACK
+  label?: string
+}) {
   return (
     <div className="md:col-span-2 rounded-[1.35rem] border border-border/45 bg-background/45 p-4">
       <span className="type-label mb-3 block text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
-        Planned Stack
+        {label}
       </span>
       <div className="grid gap-2 md:grid-cols-3">
-        {DIRECOS_PLANNED_STACK.map((item) => (
+        {items.map((item) => (
           <div
             key={item.label}
             className="rounded-xl border border-border/40 bg-card/60 px-3 py-3"
@@ -281,7 +299,15 @@ export function WorksCurrentProjectsSection({ projects }: WorksCurrentProjectsSe
                         </ScatterText>
                       </div>
 
-                      {project.title === 'DirecOS' && <DirecOSPlannedStack />}
+                      {project.title === 'DirecOS' && (
+                        <CurrentProjectStack items={DIRECOS_PLANNED_STACK} />
+                      )}
+                      {project.title.includes('EC SaaS') && (
+                        <CurrentProjectStack
+                          items={EC_PLANNED_STACK}
+                          label="EC Build Scope"
+                        />
+                      )}
                     </div>
                   </div>
 

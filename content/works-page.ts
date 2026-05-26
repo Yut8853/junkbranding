@@ -21,14 +21,15 @@ export const currentProjects = [
     category: 'ブランド特化ECサイトパッケージ',
     status: 'In Progress',
     description:
-      'ブランド体験を重視したECサイトの新規構築・運用プロジェクト。Next.jsを活用し、柔軟なEC基盤とUI/UXを開発中。',
-    targetUser: 'ブランド運営者・EC担当者',
-    entryFlow: 'トップページ → 商品一覧 → 商品詳細 → カート → 決済',
-    principle: 'ブランド体験と購入体験の両立、柔軟な商品管理・運用',
+      '小規模ブランド、アパレル、雑貨、ライフスタイルショップ向けのEC SaaS。JUNK CLOTHINGを初期テナントに、商品・画像・注文・会員・販促・SEOを管理できる本番運用前提の基盤として構築しています。',
+    targetUser: '小規模ブランド運営者・EC担当者・複数店舗へ横展開したい事業者',
+    entryFlow: 'トップページ → 商品一覧 → 商品詳細 → カート → ログイン/会員登録 → 決済',
+    principle: '店舗ごとに必要な機能を切り替え、運営者が自分で更新できるSaaS型EC基盤',
     displayPolicy:
-      'ブランド世界観を損なわないUI設計と、購入までのストレスを最小化した導線設計',
+      'フロントはブランド世界観と購入導線を両立し、管理画面は密度高め・装飾控えめ・スキャンしやすい業務UIで設計',
     updatedAt: '2026-05-26',
     url: 'https://ec.junkbranding.com',
+    repoUrl: 'https://github.com/Yut8853/ec-project',
   },
 ] satisfies CurrentProject[]
 

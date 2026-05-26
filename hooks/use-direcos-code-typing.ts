@@ -9,7 +9,7 @@ import {
   DIRECOS_TYPING_INTERVAL_MS,
 } from '@/lib/direcos-code-panel'
 
-export function useDirecOSCodeTyping() {
+export function useDirecOSCodeTyping(lines = DIRECOS_CODE_LINES) {
   const scrollRef = useRef<HTMLDivElement>(null)
   const [lineIndex, setLineIndex] = useState(0)
   const [charIndex, setCharIndex] = useState(0)
@@ -17,13 +17,13 @@ export function useDirecOSCodeTyping() {
 
   useEffect(() => {
     if (isPausing) {
-      const pauseDuration = lineIndex === DIRECOS_CODE_LINES.length - 1
+      const pauseDuration = lineIndex === lines.length - 1
         ? DIRECOS_LOOP_PAUSE_MS
         : DIRECOS_LINE_HOLD_MS
       const pauseTimer = window.setTimeout(() => {
         setIsPausing(false)
 
-        if (lineIndex === DIRECOS_CODE_LINES.length - 1) {
+        if (lineIndex === lines.length - 1) {
           setLineIndex(0)
           setCharIndex(0)
           return
@@ -36,7 +36,7 @@ export function useDirecOSCodeTyping() {
       return () => window.clearTimeout(pauseTimer)
     }
 
-    const activeLine = DIRECOS_CODE_LINES[lineIndex]
+    const activeLine = lines[lineIndex] ?? ''
 
     if (charIndex >= activeLine.length) {
       setIsPausing(true)
@@ -48,7 +48,7 @@ export function useDirecOSCodeTyping() {
     }, DIRECOS_TYPING_INTERVAL_MS)
 
     return () => window.clearTimeout(typingTimer)
-  }, [charIndex, isPausing, lineIndex])
+  }, [charIndex, isPausing, lineIndex, lines])
 
   useEffect(() => {
     const container = scrollRef.current
@@ -62,12 +62,12 @@ export function useDirecOSCodeTyping() {
   }, [charIndex, lineIndex])
 
   const renderedLines = useMemo(() => {
-    return DIRECOS_CODE_LINES.map((line, index) => {
+    return lines.map((line, index) => {
       if (index < lineIndex) return line
       if (index > lineIndex) return ''
       return line.slice(0, charIndex)
     })
-  }, [charIndex, lineIndex])
+  }, [charIndex, lineIndex, lines])
 
   return {
     scrollRef,

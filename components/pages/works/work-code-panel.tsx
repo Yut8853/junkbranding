@@ -3,8 +3,15 @@
 import { useDirecOSCodeTyping } from '@/hooks/use-direcos-code-typing'
 import type { WorkCodePanelProps } from '@/types/works-page'
 
-export function WorkCodePanel({ title, label }: WorkCodePanelProps) {
-  const { scrollRef, renderedLines, lineIndex, isPausing } = useDirecOSCodeTyping()
+const DEFAULT_FOOTER_ITEMS = ['board sync', 'task graph', 'right dock', 'live status']
+
+export function WorkCodePanel({
+  title,
+  label,
+  lines,
+  footerItems = DEFAULT_FOOTER_ITEMS,
+}: WorkCodePanelProps) {
+  const { scrollRef, renderedLines, lineIndex, isPausing } = useDirecOSCodeTyping(lines)
 
   return (
     <div className="relative overflow-hidden rounded-[1.7rem] border border-border/45 bg-[linear-gradient(135deg,rgba(15,23,42,0.96),rgba(30,41,59,0.94))] p-4 shadow-[0_20px_70px_rgba(15,23,42,0.22)]">
@@ -68,10 +75,14 @@ export function WorkCodePanel({ title, label }: WorkCodePanelProps) {
           </div>
 
           <div className="mt-4 grid grid-cols-2 gap-2 text-[10px] uppercase tracking-[0.18em] text-white/42">
-            <div className="rounded-xl border border-white/8 bg-white/4 px-3 py-2">board sync</div>
-            <div className="rounded-xl border border-white/8 bg-white/4 px-3 py-2">task graph</div>
-            <div className="rounded-xl border border-white/8 bg-white/4 px-3 py-2">right dock</div>
-            <div className="rounded-xl border border-white/8 bg-white/4 px-3 py-2">live status</div>
+            {footerItems.map((item) => (
+              <div
+                key={item}
+                className="rounded-xl border border-white/8 bg-white/4 px-3 py-2"
+              >
+                {item}
+              </div>
+            ))}
           </div>
         </div>
       </div>
