@@ -442,8 +442,8 @@ export function WorksOwnedShowcaseSection({ works }: WorksOwnedShowcaseSectionPr
           <div
             key={work.id}
             className={cn(
-              'relative pb-8 lg:min-h-[calc(100svh+18rem)] xl:min-h-[calc(100svh+14rem)]',
-              index > 0 && 'lg:-mt-[6svh]'
+              'relative pb-8 lg:min-h-[calc(100svh+4rem)]',
+              index > 0 && 'lg:-mt-[42svh] xl:-mt-[38svh]'
             )}
             style={{ zIndex: index + 1 }}
           >
