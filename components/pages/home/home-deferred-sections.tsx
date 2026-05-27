@@ -244,6 +244,14 @@ function HomeAreaSection({ area }: HomeAreaSectionProps) {
         >
           {area.description}
         </ScatterText>
+        <div className="mt-10">
+          <Link
+            href="/ibaraki-hp-production"
+            className="type-cta inline-flex rounded-full border border-border/60 px-6 py-3 text-sm text-foreground transition-colors hover:bg-card"
+          >
+            茨城のHP制作・Web制作について
+          </Link>
+        </div>
       </div>
     </section>
   )

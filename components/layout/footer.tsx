@@ -11,6 +11,7 @@ const footerLinks = {
     { href: '/about', label: 'About' },
     { href: '/works', label: 'Works' },
     { href: '/pricing', label: 'Pricing' },
+    { href: '/ibaraki-hp-production', label: 'Ibaraki Web' },
     { href: '/contact', label: 'Contact' },
   ],
 }
