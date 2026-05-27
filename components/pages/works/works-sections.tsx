@@ -442,15 +442,15 @@ export function WorksOwnedShowcaseSection({ works }: WorksOwnedShowcaseSectionPr
           <div
             key={work.id}
             className={cn(
-              'relative pb-8 lg:min-h-[calc(100svh+4rem)]',
-              index > 0 && 'lg:-mt-[42svh] xl:-mt-[38svh]'
+              'relative pb-8 lg:min-h-[calc(130svh+4rem)]',
+              index > 0 && 'lg:-mt-[18svh] xl:-mt-[16svh]'
             )}
             style={{ zIndex: index + 1 }}
           >
             <div
               className="lg:sticky"
               style={{
-                top: `calc(5.5rem + ${Math.min(index, 2) * 1.25}rem)`,
+                top: `calc(-42svh + ${Math.min(index, 2) * 1.25}rem)`,
               }}
             >
               <OwnedWorkShowcaseCard work={work} index={index} />
