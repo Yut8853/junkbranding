@@ -442,13 +442,13 @@ export function WorksOwnedShowcaseSection({ works }: WorksOwnedShowcaseSectionPr
           <div
             key={work.id}
             className={cn(
-              'sticky pb-8',
-              index > 0 && '-mt-[10svh] md:-mt-[8svh] lg:-mt-[6svh]',
-              index === 0 && 'top-24',
-              index === 1 && 'top-48',
-              index >= 2 && 'top-72'
+              'pb-8 lg:sticky',
+              index > 0 && 'lg:-mt-[6svh]'
             )}
-            style={{ zIndex: index + 1 }}
+            style={{
+              zIndex: index + 1,
+              top: `calc(5.5rem + ${Math.min(index, 2) * 1.25}rem)`,
+            }}
           >
             <OwnedWorkShowcaseCard work={work} index={index} />
           </div>
