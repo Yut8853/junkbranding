@@ -1,16 +1,20 @@
-'use client'
+'use client';
 
-import Link from 'next/link'
-import { ArrowRight, Phone, MessageCircle } from 'lucide-react'
-import { ScatterBlock } from '@/components/motion/scatter-block'
-import { ScatterText } from '@/components/motion/scatter-text'
-import { SectionReveal } from '@/components/motion/text-reveal'
-import { WorkCodePanel } from '@/components/pages/works/work-code-panel'
-import { WorkSignalPanel } from '@/components/pages/works/work-signal-panel'
-import { categories, works } from '@/content/works-page'
-import { DIRECOS_PLANNED_STACK } from '@/lib/direcos-code-panel'
-import { EC_CODE_LINES, EC_PANEL_FOOTER_ITEMS, EC_PLANNED_STACK } from '@/lib/ec-code-panel'
-import { cn } from '@/lib/utils'
+import Link from 'next/link';
+import { ArrowRight, Phone, MessageCircle } from 'lucide-react';
+import { ScatterBlock } from '@/components/motion/scatter-block';
+import { ScatterText } from '@/components/motion/scatter-text';
+import { SectionReveal } from '@/components/motion/text-reveal';
+import { WorkCodePanel } from '@/components/pages/works/work-code-panel';
+import { WorkSignalPanel } from '@/components/pages/works/work-signal-panel';
+import { categories, works } from '@/content/works-page';
+import { DIRECOS_PLANNED_STACK } from '@/lib/direcos-code-panel';
+import {
+  EC_CODE_LINES,
+  EC_PANEL_FOOTER_ITEMS,
+  EC_PLANNED_STACK,
+} from '@/lib/ec-code-panel';
+import { cn } from '@/lib/utils';
 import type {
   CurrentProject,
   OwnedWorkShowcaseCardProps,
@@ -19,38 +23,36 @@ import type {
   WorksFilterSectionProps,
   WorksOwnedShowcaseSectionProps,
   WorksProjectPanelProps,
-} from '@/types/works-page'
+} from '@/types/works-page';
 
 const worksSummary = [
   { label: 'Projects', value: `${works.length}+` },
   { label: 'Period', value: '2024-2026' },
   { label: 'Scope', value: 'Design / Dev / Branding' },
   { label: 'Style', value: 'Corporate / Portfolio' },
-]
+];
 
 const worksApproach = [
   {
     title: 'Context',
-    description: '事業内容、ターゲット、競合、既存課題を整理し、サイトで伝えるべき優先順位を決めます。',
+    description:
+      '事業内容、ターゲット、競合、既存課題を整理し、サイトで伝えるべき優先順位を決めます。',
   },
   {
     title: 'Experience',
-    description: 'ファーストビュー、導線、余白、モーションを含めて、ブランドらしい体験として設計します。',
+    description:
+      'ファーストビュー、導線、余白、モーションを含めて、ブランドらしい体験として設計します。',
   },
   {
     title: 'Delivery',
-    description: 'スマートフォン表示、速度、SEO、問い合わせ導線まで確認し、公開後に活きる形で仕上げます。',
+    description:
+      'スマートフォン表示、速度、SEO、問い合わせ導線まで確認し、公開後に活きる形で仕上げます。',
   },
-]
+];
 
 function WorksProjectPanel({ project, index }: WorksProjectPanelProps) {
   if (project.title === 'DirecOS') {
-    return (
-      <WorkCodePanel
-        title={project.title}
-        label="Live Source Draft"
-      />
-    )
+    return <WorkCodePanel title={project.title} label="Live Source Draft" />;
   }
 
   if (project.title.includes('EC SaaS')) {
@@ -61,7 +63,7 @@ function WorksProjectPanel({ project, index }: WorksProjectPanelProps) {
         lines={EC_CODE_LINES}
         footerItems={EC_PANEL_FOOTER_ITEMS}
       />
-    )
+    );
   }
 
   return (
@@ -70,15 +72,15 @@ function WorksProjectPanel({ project, index }: WorksProjectPanelProps) {
       label="Live Interaction Map"
       accentHue={0.9 - index * 0.08}
     />
-  )
+  );
 }
 
 function CurrentProjectStack({
   items,
   label = 'Planned Stack',
 }: {
-  items: typeof DIRECOS_PLANNED_STACK
-  label?: string
+  items: typeof DIRECOS_PLANNED_STACK;
+  label?: string;
 }) {
   return (
     <div className="md:col-span-2 rounded-[1.35rem] border border-border/45 bg-background/45 p-4">
@@ -86,7 +88,7 @@ function CurrentProjectStack({
         {label}
       </span>
       <div className="grid gap-2 md:grid-cols-3">
-        {items.map((item) => (
+        {items.map(item => (
           <div
             key={item.label}
             className="rounded-xl border border-border/40 bg-card/60 px-3 py-3"
@@ -101,12 +103,12 @@ function CurrentProjectStack({
         ))}
       </div>
     </div>
-  )
+  );
 }
 
 export function WorksHeroSection() {
   return (
-    <section className="relative min-h-[100svh] flex items-center justify-center overflow-x-clip overflow-y-visible">
+    <section className="relative min-h-svh flex items-center justify-center overflow-x-clip overflow-y-visible">
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none opacity-[0.03]">
         <span className="type-display text-[42vw] whitespace-nowrap">
           WORKS
@@ -116,14 +118,20 @@ export function WorksHeroSection() {
       <div className="pointer-events-none absolute inset-y-0 left-[calc(50%-50vw)] right-[calc(50%-50vw)] flex select-none flex-col justify-center overflow-hidden opacity-[0.04]">
         <div className="flex min-w-max whitespace-nowrap animate-marquee-slow">
           {Array.from({ length: 12 }).map((_, i) => (
-            <span key={`marquee-1-${i}`} className="type-display mx-8 text-[6vw] marquee-stroke">
+            <span
+              key={`marquee-1-${i}`}
+              className="type-display mx-8 text-[6vw] marquee-stroke"
+            >
               WORKS
             </span>
           ))}
         </div>
         <div className="mt-4 flex min-w-max whitespace-nowrap animate-marquee-slow-reverse">
           {Array.from({ length: 12 }).map((_, i) => (
-            <span key={`marquee-2-${i}`} className="type-display mx-8 text-[6vw] marquee-stroke">
+            <span
+              key={`marquee-2-${i}`}
+              className="type-display mx-8 text-[6vw] marquee-stroke"
+            >
               PORTFOLIO
             </span>
           ))}
@@ -154,11 +162,13 @@ export function WorksHeroSection() {
       </div>
 
       <div className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4">
-        <span className="type-label text-muted-foreground text-xs">Scroll to explore</span>
-        <div className="w-px h-16 bg-gradient-to-b from-foreground/40 to-transparent animate-pulse" />
+        <span className="type-label text-muted-foreground text-xs">
+          Scroll to explore
+        </span>
+        <div className="w-px h-16 bg-linear-to-b from-foreground/40 to-transparent animate-pulse" />
       </div>
     </section>
-  )
+  );
 }
 
 export function WorksSummarySection() {
@@ -181,11 +191,13 @@ export function WorksSummarySection() {
         </div>
       </div>
     </section>
-  )
+  );
 }
 
-export function WorksCurrentProjectsSection({ projects }: WorksCurrentProjectsSectionProps) {
-  if (projects.length === 0) return null
+export function WorksCurrentProjectsSection({
+  projects,
+}: WorksCurrentProjectsSectionProps) {
+  if (projects.length === 0) return null;
 
   return (
     <section className="relative mb-10 md:mb-12 lg:mb-14">
@@ -218,10 +230,14 @@ export function WorksCurrentProjectsSection({ projects }: WorksCurrentProjectsSe
 
       <div className="grid gap-6">
         {projects.map((project, index) => (
-          <SectionReveal key={project.id} delay={0.08 * (index + 1)} duration={0.8}>
+          <SectionReveal
+            key={project.id}
+            delay={0.08 * (index + 1)}
+            duration={0.8}
+          >
             <article className="relative overflow-hidden rounded-[2.25rem] border border-border/40 bg-[linear-gradient(135deg,rgba(255,255,255,0.06),rgba(255,255,255,0.02))] p-5 shadow-[0_30px_110px_rgba(15,23,42,0.14)] backdrop-blur-md md:p-7 lg:p-8">
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.18),transparent_28%),linear-gradient(135deg,rgba(255,173,95,0.18),rgba(255,255,255,0.02)_42%,rgba(70,198,255,0.12))]" />
-              <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/55 to-transparent" />
+              <div className="absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-white/55 to-transparent" />
 
               <div className="relative z-10">
                 <div className="mb-6 rounded-[1.35rem] border border-white/15 bg-background/35 px-4 py-3 backdrop-blur-sm md:px-5">
@@ -247,7 +263,7 @@ export function WorksCurrentProjectsSection({ projects }: WorksCurrentProjectsSe
                 </div>
 
                 <div className="grid gap-6 xl:grid-cols-[minmax(0,1.35fr)_minmax(360px,0.9fr)] xl:gap-8">
-                  <div className="rounded-[2rem] border border-white/15 bg-background/38 p-6 md:p-8">
+                  <div className="rounded-4xl border border-white/15 bg-background/38 p-6 md:p-8">
                     <ScatterText
                       as="p"
                       className="type-label mb-4 text-[10px] uppercase tracking-[0.28em] text-muted-foreground"
@@ -370,7 +386,7 @@ export function WorksCurrentProjectsSection({ projects }: WorksCurrentProjectsSe
         ))}
       </div>
     </section>
-  )
+  );
 }
 
 export function WorksFilterSection({
@@ -383,7 +399,7 @@ export function WorksFilterSection({
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8">
           <span className="type-label text-muted-foreground">Filter</span>
           <div className="flex flex-wrap justify-center gap-3">
-            {categories.map((category) => (
+            {categories.map(category => (
               <button
                 key={category}
                 type="button"
@@ -402,17 +418,21 @@ export function WorksFilterSection({
         </div>
       </div>
     </section>
-  )
+  );
 }
 
-export function WorksOwnedShowcaseSection({ works }: WorksOwnedShowcaseSectionProps) {
-  if (works.length === 0) return null
+export function WorksOwnedShowcaseSection({
+  works,
+}: WorksOwnedShowcaseSectionProps) {
+  if (works.length === 0) return null;
 
   return (
     <section className="relative mb-16 md:mb-20 lg:mb-24">
       <div className="mb-10 max-w-3xl">
         <SectionReveal>
-          <p className="type-label mb-4 text-muted-foreground">Owned Projects</p>
+          <p className="type-label mb-4 text-muted-foreground">
+            Owned Projects
+          </p>
         </SectionReveal>
         <div className="overflow-visible">
           <ScatterText
@@ -423,7 +443,9 @@ export function WorksOwnedShowcaseSection({ works }: WorksOwnedShowcaseSectionPr
             distance={360}
             gradient
           >
-            {'クライアントワークとは別に、\n3つのプロジェクトを\n動かしています。'}
+            {
+              'クライアントワークとは別に、\n3つのプロジェクトを\n動かしています。'
+            }
           </ScatterText>
         </div>
         <ScatterText
@@ -433,7 +455,8 @@ export function WorksOwnedShowcaseSection({ works }: WorksOwnedShowcaseSectionPr
           scrollEnd={350}
           distance={220}
         >
-          目的は、表現と実装の限界を常に超えておくこと。 JunkBranding、LAB、PIZZA。表現・設計・実装を継続的にアップデートする、3つの完全自社検証プロジェクトです。
+          目的は、表現と実装の限界を常に超えておくこと。
+          本サイト、LAB、飲食店、企業サイト。表現・設計・実装を継続的にアップデートする、4つの完全自社検証プロジェクトです。
         </ScatterText>
       </div>
 
@@ -459,7 +482,7 @@ export function WorksOwnedShowcaseSection({ works }: WorksOwnedShowcaseSectionPr
         ))}
       </div>
     </section>
-  )
+  );
 }
 
 function OwnedWorkShowcaseCard({ work, index }: OwnedWorkShowcaseCardProps) {
@@ -467,13 +490,13 @@ function OwnedWorkShowcaseCard({ work, index }: OwnedWorkShowcaseCardProps) {
     'from-primary/20 via-background/92 to-background/98',
     'from-amber-400/18 via-background/92 to-background/98',
     'from-cyan-400/18 via-background/92 to-background/98',
-  ]
-  const isCurrentProject = work.title === 'JunkBranding'
+  ];
+  const isCurrentProject = work.title === 'JunkBranding';
 
   return (
     <SectionReveal delay={0.08 * (index + 1)} duration={0.8}>
       <article
-        className="relative overflow-hidden rounded-[2rem] border border-border/40 bg-card/70 p-5 shadow-[0_30px_120px_rgba(15,23,42,0.16)] backdrop-blur-md md:p-7 lg:p-8"
+        className="relative overflow-hidden rounded-4xl border border-border/40 bg-card/70 p-5 shadow-[0_30px_120px_rgba(15,23,42,0.16)] backdrop-blur-md md:p-7 lg:p-8"
         style={{
           transform: `scale(${1 - index * 0.025})`,
           transformOrigin: 'top center',
@@ -481,11 +504,11 @@ function OwnedWorkShowcaseCard({ work, index }: OwnedWorkShowcaseCardProps) {
       >
         <div
           className={cn(
-            'absolute inset-0 bg-gradient-to-br opacity-90',
+            'absolute inset-0 bg-linear-to-br opacity-90',
             accentClassNames[index] ?? accentClassNames[0]
           )}
         />
-        <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-white/10 to-transparent" />
+        <div className="absolute inset-x-0 top-0 h-28 bg-linear-to-b from-white/10 to-transparent" />
 
         <div className="relative z-10">
           <div className="mb-8 flex flex-col gap-5 border-b border-border/40 pb-6 lg:flex-row lg:items-end lg:justify-between">
@@ -537,7 +560,7 @@ function OwnedWorkShowcaseCard({ work, index }: OwnedWorkShowcaseCardProps) {
                   </ScatterText>
 
                   <div className="mt-6 flex flex-wrap gap-2.5">
-                    {work.tags.map((tag) => (
+                    {work.tags.map(tag => (
                       <ScatterText
                         as="span"
                         key={tag}
@@ -604,7 +627,7 @@ function OwnedWorkShowcaseCard({ work, index }: OwnedWorkShowcaseCardProps) {
                   Highlights
                 </ScatterText>
                 <ul className="grid gap-3">
-                  {work.highlights.map((highlight) => (
+                  {work.highlights.map(highlight => (
                     <li
                       key={highlight}
                       className="type-body-compact flex items-start gap-3 text-sm leading-6 text-muted-foreground"
@@ -635,7 +658,7 @@ function OwnedWorkShowcaseCard({ work, index }: OwnedWorkShowcaseCardProps) {
                   Stack
                 </ScatterText>
                 <div className="mb-6 flex flex-wrap gap-2.5">
-                  {work.stack.map((tech) => (
+                  {work.stack.map(tech => (
                     <ScatterText
                       as="span"
                       key={tech}
@@ -670,14 +693,14 @@ function OwnedWorkShowcaseCard({ work, index }: OwnedWorkShowcaseCardProps) {
         </div>
       </article>
     </SectionReveal>
-  )
+  );
 }
 
 export function WorksApproachSection() {
   return (
     <section className="relative py-20 md:py-28">
       <div className="absolute inset-0 pointer-events-none select-none overflow-hidden">
-        <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 type-display text-[18vw] text-foreground/[0.02] whitespace-nowrap">
+        <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 type-display text-[18vw] text-foreground/2 whitespace-nowrap">
           PROCESS
         </span>
       </div>
@@ -740,14 +763,14 @@ export function WorksApproachSection() {
         </div>
       </div>
     </section>
-  )
+  );
 }
 
 export function WorksCtaSection() {
   return (
     <section className="relative min-h-[60svh] flex items-center justify-center py-24 md:py-32 lg:py-40 overflow-hidden">
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none">
-        <span className="type-display text-[24vw] text-foreground/[0.02] whitespace-nowrap">
+        <span className="type-display text-[24vw] text-foreground/2 whitespace-nowrap">
           CONTACT
         </span>
       </div>
@@ -818,5 +841,5 @@ export function WorksCtaSection() {
         </div>
       </div>
     </section>
-  )
+  );
 }
