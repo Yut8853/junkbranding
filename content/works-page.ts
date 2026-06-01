@@ -195,7 +195,7 @@ export const works = [
       'Three.js',
       'Tailwind CSS',
     ],
-    url: '/',
+    url: 'https://corporate.junkbranding.com/',
     year: '2026',
   },
 ] satisfies PortfolioWork[];
