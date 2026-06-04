@@ -5,7 +5,7 @@ import {
   generateJsonLdGraph,
 } from '@/lib/structured-data';
 import { createPageMetadata } from '@/lib/seo';
-import HomePageClient from '@/components/pages/home-page';
+import { ModeRouter } from '@/components/mode/mode-router';
 
 export const metadata: Metadata = createPageMetadata({
   title: '茨城のHP制作・Web制作スタジオ',
@@ -58,7 +58,7 @@ export default function HomePage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(homeJsonLd) }}
       />
-      <HomePageClient />
+      <ModeRouter />
     </>
   );
 }

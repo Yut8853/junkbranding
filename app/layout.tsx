@@ -13,6 +13,8 @@ import { DeferredSiteWidgets } from '@/components/deferred/deferred-site-widgets
 import { LoadingProvider } from '@/components/loading/loading-provider';
 import { AudioProvider } from '@/contexts/audio-context';
 import { TransitionProvider } from '@/contexts/transition-context';
+import { ModeProvider } from '@/contexts/mode-context';
+import { ModeToggle } from '@/components/mode/mode-toggle';
 import type { LayoutProps } from '@/types/layout';
 import {
   generateFaqSchema,
@@ -233,26 +235,29 @@ export default function RootLayout({ children }: Readonly<LayoutProps>) {
         <a href="#main-content" className="skip-link">
           メインコンテンツへ移動
         </a>
-        <TransitionProvider>
-          <AudioProvider>
-            <DeferredVisualEffects />
-            <LoadingProvider>
-              <SmoothScroll>
-                <Navigation />
-                <PageTransition>
-                  <main
-                    id="main-content"
-                    className="noise-overlay relative"
-                    tabIndex={-1}
-                  >
-                    {children}
-                  </main>
-                </PageTransition>
-              </SmoothScroll>
-              <DeferredSiteWidgets />
-            </LoadingProvider>
-          </AudioProvider>
-        </TransitionProvider>
+        <ModeProvider>
+          <TransitionProvider>
+            <AudioProvider>
+              <DeferredVisualEffects />
+              <LoadingProvider>
+                <SmoothScroll>
+                  <Navigation />
+                  <ModeToggle />
+                  <PageTransition>
+                    <main
+                      id="main-content"
+                      className="noise-overlay relative"
+                      tabIndex={-1}
+                    >
+                      {children}
+                    </main>
+                  </PageTransition>
+                </SmoothScroll>
+                <DeferredSiteWidgets />
+              </LoadingProvider>
+            </AudioProvider>
+          </TransitionProvider>
+        </ModeProvider>
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
     </html>
