@@ -544,6 +544,10 @@ Next.js App Router の入口です。
 
 ## 開発環境
 
+デプロイ先は npm のみ対応のため、`package-lock.json` をリポジトリに含める。
+依存関係を変更した場合は、pnpm の `node_modules` がない環境で `npm install --package-lock-only` を実行して更新し、`package.json` と一緒にコミットする。
+デプロイ時は `npm ci`、`npm run build`、`npm start` を使用する。
+
 メモ:
 
 - Node.js: Next.js 16 が動作するバージョン
